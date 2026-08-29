@@ -113,35 +113,35 @@ jobs:
       - name: Check the MSI
         shell: pwsh
         run: |
-          # read the package back, so that a broken database is not mistaken
-          # for a success just because light.exe returned 0
-          $msi = Join-Path $env:GITHUB_WORKSPACE "7zip-fork.msi"
-          $installer = New-Object -ComObject WindowsInstaller.Installer
-          $db = $installer.GetType().InvokeMember(
-              'OpenDatabase', 'InvokeMethod', $null, $installer, @($msi, 0))
-          function Get-MsiProperty($name) {
-            $view = $db.GetType().InvokeMember('OpenView', 'InvokeMethod', $null, $db,
-                @("SELECT Value FROM Property WHERE Property = '$name'"))
-            $view.GetType().InvokeMember('Execute', 'InvokeMethod', $null, $view, $null)
-            $rec = $view.GetType().InvokeMember('Fetch', 'InvokeMethod', $null, $view, $null)
-            if ($null -eq $rec) { return $null }
-            return $rec.GetType().InvokeMember('StringData', 'GetProperty', $null, $rec, 1)
+          # An administrative install unpacks the payload without installing
+          # anything, so it proves both that the database opens and that the
+          # files are really in the package - not just that light.exe was happy.
+          $ws = $env:GITHUB_WORKSPACE
+          $msi = Join-Path $ws "7zip-fork.msi"
+          $out = Join-Path $ws "msi-check"
+          $p = Start-Process msiexec.exe -Wait -PassThru -ArgumentList @(
+              '/a', "`"$msi`"", '/qn', "TARGETDIR=`"$out`"")
+          if ($p.ExitCode -ne 0) { throw "msiexec /a returned $($p.ExitCode)" }
+
+          $expected = @('7z.exe', '7zz.exe', '7z.dll', '7zG.exe', '7zFM.exe',
+                        '7z.sfx', '7zCon.sfx', 'License.txt', 'readme.txt')
+          foreach ($e in $expected) {
+            if (-not (Get-ChildItem -Path $out -Recurse -Filter $e -ErrorAction SilentlyContinue)) {
+              throw "the package does not contain $e"
+            }
           }
-          $name = Get-MsiProperty 'ProductName'
-          $ver  = Get-MsiProperty 'ProductVersion'
-          $upg  = Get-MsiProperty 'UpgradeCode'
-          Write-Host "ProductName    = $name"
-          Write-Host "ProductVersion = $ver"
-          Write-Host "UpgradeCode    = $upg"
-          if (-not $name) { throw "no ProductName in the package" }
-          if ($name -notmatch 'fork') {
-            throw "the name must say that this is not the official 7-Zip: $name"
+          Write-Host "the package contains all $($expected.Count) expected files"
+
+          # and that it is marked as a fork build, so that it cannot take over
+          # an official 7-Zip installation
+          & dark.exe -nologo "$msi" -o "$ws\decompiled.wxs" | Out-Null
+          if ($LASTEXITCODE -ne 0) { throw "dark failed" }
+          $x = Get-Content "$ws\decompiled.wxs" -Raw
+          if ($x -notmatch 'fork') { throw "the name does not say that this is a fork build" }
+          if ($x -notmatch '123DA846-FD92-4158-B7D8-1C522FE5EB09') {
+            throw "the UpgradeCode of this fork is not in the package"
           }
-          if (-not $ver) { throw "no ProductVersion in the package" }
-          if ($upg -ne '{123DA846-FD92-4158-B7D8-1C522FE5EB09}') {
-            throw "unexpected UpgradeCode, it must not be the one of 7-Zip: $upg"
-          }
-          Write-Host "the package is readable and is marked as a fork build"
+          Write-Host "the package is marked as a fork build with its own UpgradeCode"
 
       - uses: actions/upload-artifact@v4
         with:

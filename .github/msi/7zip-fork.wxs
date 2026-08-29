@@ -77,13 +77,13 @@
       </Directory>
 
       <Directory Id="ProgramMenuFolder">
-        <Directory Id="APPMENUFOLDER" Name="$(var.ProductName)" />
+        <Directory Id="AppMenuFolder" Name="$(var.ProductName)" />
       </Directory>
     </Directory>
 
     <!-- the shortcut needs a registry key as its KeyPath, because a per-user
          resource can't be kept by a file in a per-machine folder -->
-    <DirectoryRef Id="APPMENUFOLDER">
+    <DirectoryRef Id="AppMenuFolder">
       <Component Id="C_Shortcut" Guid="*" Win64="yes">
         <Shortcut Id="S_FileManager"
             Name="$(var.ProductName) File Manager"
