@@ -35,6 +35,9 @@ jobs:
             "CPP\7zip\Bundles\Format7zF"
             "CPP\7zip\UI\GUI"
             "CPP\7zip\UI\FileManager"
+            "CPP\7zip\UI\Console"
+            "CPP\7zip\Bundles\SFXWin"
+            "CPP\7zip\Bundles\SFXCon"
           ) do (
             echo ::group::nmake %%~T
             pushd "%GITHUB_WORKSPACE%\%%~T" || exit /b 1
@@ -52,6 +55,103 @@ jobs:
         shell: cmd
         run: python .github\tests\zip_name_encoding.py "%GITHUB_WORKSPACE%\CPP\7zip\Bundles\Alone2\x64\7zz.exe"
 
+      - name: Package the MSI
+        shell: pwsh
+        run: |
+          $ws = $env:GITHUB_WORKSPACE
+          $stage = Join-Path $ws "msi-stage"
+          New-Item -ItemType Directory -Force -Path $stage | Out-Null
+
+          $src = Join-Path $ws "CPP\7zip"
+          $files = @(
+            "$src\UI\Console\x64\7z.exe",
+            "$src\Bundles\Alone2\x64\7zz.exe",
+            "$src\Bundles\Format7zF\x64\7z.dll",
+            "$src\UI\GUI\x64\7zG.exe",
+            "$src\UI\FileManager\x64\7zFM.exe",
+            "$src\Bundles\SFXWin\x64\7z.sfx",
+            "$src\Bundles\SFXCon\x64\7zCon.sfx",
+            "$ws\DOC\License.txt",
+            "$ws\DOC\readme.txt"
+          )
+          foreach ($f in $files) {
+            if (-not (Test-Path $f)) { throw "missing file for the package: $f" }
+            Copy-Item $f $stage
+          }
+
+          # a document that only some branches carry: install it if it is here,
+          # and leave the component out of the package if it is not. A stand-in
+          # file under the real name would only mislead whoever installs it.
+          $defines = @()
+          $doc = "$ws\DOC\zip-name-encoding.txt"
+          if (Test-Path $doc) {
+            Copy-Item $doc $stage
+            $defines += '-dZipNamesDoc=1'
+            Write-Host "including zip-name-encoding.txt"
+          } else {
+            Write-Host "zip-name-encoding.txt is not in this branch, left out of the package"
+          }
+
+          # the version follows the upstream tag, so a rebase can't leave it behind
+          $line = Get-Content (Join-Path $ws "DOC\readme.txt") -First 1
+          if ($line -notmatch '(\d+)\.(\d+)') { throw "no version in readme.txt: $line" }
+          $version = "$($Matches[1]).$([int]$Matches[2]).0"
+          Write-Host "version from readme.txt: $version"
+
+          Set-Content -Path "$ws\msi-version.txt" -Value $version
+          & candle.exe -nologo -arch x64 -dBinDir="$stage" -dVersion="$version" @defines `
+              -out "$ws\7zip-fork.wixobj" "$ws\.github\msi\7zip-fork.wxs"
+          if ($LASTEXITCODE -ne 0) { throw "candle failed" }
+          & light.exe -nologo -out "$ws\7zip-fork.msi" "$ws\7zip-fork.wixobj"
+          if ($LASTEXITCODE -ne 0) { throw "light failed" }
+
+      - name: Check the MSI
+        shell: pwsh
+        run: |
+          # An administrative install unpacks the payload without installing
+          # anything, so it proves both that the database opens and that the
+          # files are really in the package - not just that light.exe was happy.
+          $ws = $env:GITHUB_WORKSPACE
+          $msi = Join-Path $ws "7zip-fork.msi"
+          $out = Join-Path $ws "msi-check"
+          $p = Start-Process msiexec.exe -Wait -PassThru -ArgumentList @(
+              '/a', "`"$msi`"", '/qn', "TARGETDIR=`"$out`"")
+          if ($p.ExitCode -ne 0) { throw "msiexec /a returned $($p.ExitCode)" }
+
+          $expected = @('7z.exe', '7zz.exe', '7z.dll', '7zG.exe', '7zFM.exe',
+                        '7z.sfx', '7zCon.sfx', 'License.txt', 'readme.txt')
+          foreach ($e in $expected) {
+            if (-not (Get-ChildItem -Path $out -Recurse -Filter $e -ErrorAction SilentlyContinue)) {
+              throw "the package does not contain $e"
+            }
+          }
+          Write-Host "the package contains all $($expected.Count) expected files"
+
+          # and that it is marked as a fork build, so that it cannot take over
+          # an official 7-Zip installation
+          & dark.exe -nologo "$msi" -o "$ws\decompiled.wxs" | Out-Null
+          if ($LASTEXITCODE -ne 0) { throw "dark failed" }
+          $x = Get-Content "$ws\decompiled.wxs" -Raw
+          # look at the Product element itself: searching the whole file for a
+          # word would pass on a wrong name too, because the same word is in
+          # the install folder and in the registry key
+          if ($x -notmatch '<Product\b[^>]*>') { throw "no Product element in the package" }
+          $product = $Matches[0]
+          $expectedVersion = (Get-Content (Join-Path $ws "msi-version.txt") -Raw).Trim()
+          $expectedName = "7-Zip (fork build) $expectedVersion"
+          if ($product -notmatch 'Name="([^"]*)"') { throw "the Product element has no Name" }
+          $gotName = $Matches[1]
+          if ($product -notmatch 'Version="([^"]*)"') { throw "the Product element has no Version" }
+          $gotVersion = $Matches[1]
+          if ($product -notmatch 'UpgradeCode="([^"]*)"') { throw "the Product element has no UpgradeCode" }
+          $gotUpgrade = $Matches[1]
+          Write-Host "Name=$gotName  Version=$gotVersion  UpgradeCode=$gotUpgrade"
+          if ($gotName -ne $expectedName) { throw "Name is '$gotName', expected '$expectedName'" }
+          if ($gotVersion -ne $expectedVersion) { throw "Version is '$gotVersion', expected '$expectedVersion'" }
+          if ($gotUpgrade -notmatch '123DA846-FD92-4158-B7D8-1C522FE5EB09') {
+            throw "UpgradeCode is '$gotUpgrade', it must be the one of this fork"
+          }
+
       - uses: actions/upload-artifact@v4
         with:
           name: 7zip-win-x64
@@ -61,3 +161,7 @@ jobs:
             CPP/7zip/Bundles/Format7zF/x64/7z.dll
             CPP/7zip/UI/GUI/x64/7zG.exe
             CPP/7zip/UI/FileManager/x64/7zFM.exe
+            CPP/7zip/UI/Console/x64/7z.exe
+            CPP/7zip/Bundles/SFXWin/x64/7z.sfx
+            CPP/7zip/Bundles/SFXCon/x64/7zCon.sfx
+            7zip-fork.msi
