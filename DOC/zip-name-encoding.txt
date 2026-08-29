@@ -1,0 +1,102 @@
+Encoding of file names in zip archives
+--------------------------------------
+
+Version: 26.02 (fork)
+Date: 2026-08-29
+
+
+The problem
+-----------
+
+The zip format does not record which encoding the file names are in. A tool
+writes the bytes of its own code page, and a tool that reads the archive has
+to guess. So an archive made on a Chinese Windows shows garbled names on a
+Japanese one, and the other way round.
+
+There are two ways for an archive to describe its names:
+
+  bit 11 of the general purpose flags (EFS)
+      The name field itself is UTF-8. It is defined by the zip specification,
+      so any conforming reader understands it.
+
+  extra field 0x7075 (Info-ZIP Unicode Path)
+      An additional UTF-8 copy of the name, next to the name in the local
+      encoding. It is an extension, so fewer readers understand it.
+
+7-Zip understands both when it reads, and can write either one.
+
+
+How 7-Zip decides the encoding when it reads
+--------------------------------------------
+
+For each item, in this order:
+
+  1. If bit 11 is set, the name is read as UTF-8. Nothing else is consulted.
+  2. Else, if the 0x7075 extra field is present and its CRC matches the name,
+     the UTF-8 name from that field is used.
+  3. Else, the code page given by -mcp is used, if there is one.
+  4. Else, the code page of the local system is used.
+
+So -mcp is a fallback, not an override: it changes nothing for an archive
+that describes its own names.
+
+
+How 7-Zip decides the encoding when it writes
+---------------------------------------------
+
+By default, the name is written in the code page of the local system, and the
+0x7075 extra field is added. Only if the name cannot be written in that code
+page, the name is written as UTF-8 with bit 11 set.
+
+That means an archive of Chinese names made on a Chinese Windows does NOT get
+bit 11: the names fit the local code page, so nothing marks them as anything.
+This is the case that produces garbled names elsewhere.
+
+
+Switches
+--------
+
+  -mcu     write the names as UTF-8 and set bit 11.
+           This is what an archive that travels between systems of different
+           languages needs.
+
+  -mcl     write the names in the local code page.
+
+  -mcp={N} use the code page N instead of the local one, both when reading
+           and when writing.
+
+           Note: on Linux and macOS the conversion to a code page is not
+           implemented, so -mcp has no effect there.
+
+
+Sending a property to one archive type only (this fork)
+-------------------------------------------------------
+
+Only zip and tar know the "cp" property. Any other handler fails to open the
+archive if it gets a property it does not know, so "7z x -mcp=936 a.7z" fails.
+
+The name of a property can be prefixed with the name of an archive type and a
+dot. Such a property is sent only to the handler of that type:
+
+  7z x -mzip.cp=936 archive.zip     use code page 936 for zip
+  7z x -mzip.cp=936 archive.7z      the property is not sent, the 7z opens
+
+A property without a prefix is sent to any handler, as before.
+
+
+In the graphical interface
+--------------------------
+
+  Add to Archive dialog, for zip:
+      "Use UTF-8 for file names" writes the names as UTF-8 with bit 11.
+      It is on by default and is remembered. A "cu", "cl" or "cp" written in
+      the Parameters field overrides it.
+
+  Extract dialog:
+      "Name code page" reads the names of an archive that does not describe
+      them. It starts at Auto every time and is not remembered: a code page
+      fixes one archive, and keeping it would garble the names of the next
+      archive that needs another one.
+
+      The list holds the common code pages. Another one can be used from the
+      command line with -mzip.cp={N}.

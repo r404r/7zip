@@ -53,6 +53,9 @@ BEGIN
 //            g2x, m + 104, g2xs, 10
   CONTROL   "Restore file security", IDX_EXTRACT_NT_SECUR, MY_CHECKBOX,
             g2x, m + 104, g2xs, 10
+
+  LTEXT     "Name code page:", IDT_EXTRACT_CODEPAGE, g2x, m + 118, g2xs, 8
+  COMBOBOX  IDC_EXTRACT_CODEPAGE, g2x, m + 130, g2xs, 140, MY_COMBO_WITH_EDIT
   
   DEFPUSHBUTTON  "OK",     IDOK,     bx3, by, bxs, bys, WS_GROUP
   PUSHBUTTON     "Cancel", IDCANCEL, bx2, by, bxs, bys

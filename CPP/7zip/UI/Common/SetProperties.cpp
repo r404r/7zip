@@ -42,6 +42,27 @@ struct CPropPropetiesVector
 };
 
 
+HRESULT SetProperties(IUnknown *unknown, const CObjectVector<CProperty> &properties,
+    const UString &arcType)
+{
+  CObjectVector<CProperty> props;
+  FOR_VECTOR (i, properties)
+  {
+    const CProperty &property = properties[i];
+    const int dotPos = property.Name.Find(L'.');
+    if (dotPos <= 0)
+      props.Add(property);
+    else if (property.Name.Left((unsigned)dotPos).IsEqualTo_NoCase(arcType.Ptr()))
+    {
+      CProperty &prop2 = props.AddNew();
+      prop2.Name = property.Name.Ptr((unsigned)(dotPos + 1));
+      prop2.Value = property.Value;
+    }
+  }
+  return SetProperties(unknown, props);
+}
+
+
 HRESULT SetProperties(IUnknown *unknown, const CObjectVector<CProperty> &properties)
 {
   if (properties.IsEmpty())

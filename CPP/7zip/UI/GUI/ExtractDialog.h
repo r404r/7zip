@@ -10,6 +10,13 @@
 
 #include "../Common/ExtractMode.h"
 
+/* the code page control is in IDD_EXTRACT only, and the SFX has no place to
+   put the property, so it exists in the main configuration only */
+#if !defined(Z7_SFX) && !defined(UNDER_CE)
+#define Z7_EXTRACT_DIALOG_CODE_PAGE
+#include "../Common/NameCodePageProps.h"
+#endif
+
 #include "../FileManager/DialogSize.h"
 
 #ifndef Z7_NO_REGISTRY
@@ -44,6 +51,9 @@ class CExtractDialog: public NWindows::NControl::CModalDialog
   NWindows::NControl::CEdit _passwordControl;
   NWindows::NControl::CComboBox _pathMode;
   NWindows::NControl::CComboBox _overwriteMode;
+  #endif
+  #ifdef Z7_EXTRACT_DIALOG_CODE_PAGE
+  NWindows::NControl::CComboBox _codePage;
   #endif
 
   #ifndef Z7_SFX
@@ -84,6 +94,10 @@ public:
   NExtract::NPathMode::EEnum PathMode;
   NExtract::NOverwriteMode::EEnum OverwriteMode;
 
+  #ifdef Z7_EXTRACT_DIALOG_CODE_PAGE
+  UInt32 CodePage;
+  #endif
+
   #ifndef Z7_SFX
   // CBoolPair AltStreams;
   CBoolPair NtSecurity;
@@ -104,6 +118,9 @@ public:
   CExtractDialog():
     PathMode_Force(false),
     OverwriteMode_Force(false)
+    #ifdef Z7_EXTRACT_DIALOG_CODE_PAGE
+    , CodePage(kNameCodePage_Auto)
+    #endif
   {
     ElimDup.Val = true;
   }

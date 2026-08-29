@@ -18,6 +18,8 @@
 #include "../FileManager/LangUtils.h"
 #include "../FileManager/resourceGui.h"
 
+#include "../Explorer/MyMessages.h"
+
 #include "ExtractDialog.h"
 #include "ExtractDialogRes.h"
 #include "ExtractRes.h"
@@ -44,6 +46,36 @@ static const UInt32 kOverwriteMode_IDs[] =
   IDS_EXTRACT_OVERWRITE_SKIP_EXISTING,
   IDS_EXTRACT_OVERWRITE_RENAME,
   IDS_EXTRACT_OVERWRITE_RENAME_EXISTING
+};
+
+struct CCodePagePair
+{
+  UInt32 CodePage;
+  const char *Name;
+};
+
+/* the list holds the common code pages; another one can be typed in */
+static const CCodePagePair kCodePages[] =
+{
+  { 65001, "UTF-8" },
+  {   932, "Japanese" },
+  {   936, "Chinese Simplified" },
+  {   949, "Korean" },
+  {   950, "Chinese Traditional" },
+  {   874, "Thai" },
+  {  1250, "Central European" },
+  {  1251, "Cyrillic" },
+  {  1252, "Western European" },
+  {  1253, "Greek" },
+  {  1254, "Turkish" },
+  {  1255, "Hebrew" },
+  {  1256, "Arabic" },
+  {  1257, "Baltic" },
+  {  1258, "Vietnamese" },
+  {   437, "OEM United States" },
+  {   850, "OEM Latin 1" },
+  {   852, "OEM Latin 2" },
+  {   866, "OEM Cyrillic" }
 };
 
 static const
@@ -77,6 +109,7 @@ static const UInt32 kLangIDs[] =
   IDT_EXTRACT_EXTRACT_TO,
   IDT_EXTRACT_PATH_MODE,
   IDT_EXTRACT_OVERWRITE_MODE,
+  IDT_EXTRACT_CODEPAGE,
   // IDX_EXTRACT_ALT_STREAMS,
   IDX_EXTRACT_NT_SECUR,
   IDX_EXTRACT_ELIM_DUP,
@@ -231,6 +264,28 @@ bool CExtractDialog::OnInit()
 
   #endif
 
+  #ifdef Z7_EXTRACT_DIALOG_CODE_PAGE
+  _codePage.Attach(GetItem(IDC_EXTRACT_CODEPAGE));
+  {
+    UString s;
+    LangString(IDS_EXTRACT_CODEPAGE_AUTO, s);
+    if (s.IsEmpty())
+      s = "Auto";
+    _codePage.AddString_SetItemData(s, (LPARAM)(Int32)-1);
+    for (unsigned i = 0; i < Z7_ARRAY_SIZE(kCodePages); i++)
+    {
+      const CCodePagePair &pair = kCodePages[i];
+      UString s2;
+      s2.Add_UInt32(pair.CodePage);
+      s2 += " (";
+      s2 += pair.Name;
+      s2 += ")";
+      _codePage.AddString_SetItemData(s2, (LPARAM)pair.CodePage);
+    }
+    _codePage.SetCurSel(0); // always Auto: it fixes one archive, not the next
+  }
+  #endif
+
   HICON icon = LoadIcon(g_hInstance, MAKEINTRESOURCE(IDI_ICON));
   SetIcon(ICON_BIG, icon);
  
@@ -310,6 +365,28 @@ void CExtractDialog::OnOK()
 
   _passwordControl.GetText(Password);
 
+  #endif
+
+  #ifdef Z7_EXTRACT_DIALOG_CODE_PAGE
+  {
+    const int sel = _codePage.GetCurSel();
+    if (sel >= 0)
+    {
+      const LPARAM v = _codePage.GetItemData(sel);
+      CodePage = (v < 0) ? kNameCodePage_Auto : (UInt32)v;
+    }
+    else
+    {
+      UString s;
+      _codePage.GetText(s);
+      if (!ParseNameCodePage(s, CodePage)
+          || (CodePage != kNameCodePage_Auto && !IsValidCodePage(CodePage)))
+      {
+        ShowErrorMessageHwndRes(*this, IDS_EXTRACT_CODEPAGE_INCORRECT);
+        return;
+      }
+    }
+  }
   #endif
 
   #ifndef Z7_NO_REGISTRY

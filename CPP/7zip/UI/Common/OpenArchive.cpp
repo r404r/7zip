@@ -1386,7 +1386,7 @@ HRESULT CArc::PrepareToOpen(const COpenOptions &op, unsigned formatIndex, CMyCom
       }
     }
     */
-    RINOK(SetProperties(archive, *op.props))
+    RINOK(SetProperties(archive, *op.props, ai.Name))
   }
   
   #endif
