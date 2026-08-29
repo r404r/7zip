@@ -13,6 +13,8 @@
 
 #include "../Common/WorkDir.h"
 
+#include "../Common/NameCodePageProps.h"
+
 #include "Agent.h"
 
 using namespace NWindows;
@@ -29,8 +31,9 @@ void CAgentFolder::GetPathParts(UStringVector &pathParts, bool &isAltStreamFolde
 
 
 HRESULT CAgentFolder::SetNameCodePage_ReOpen(UInt32 codePage,
-    IArchiveOpenCallback *openCallback)
+    IArchiveOpenCallback *openCallback, bool &folderIsUsable)
 {
+  folderIsUsable = true;
   if (!_agentSpec)
     return E_NOTIMPL;
   const UInt32 oldCodePage = _agentSpec->_nameCodePage;
@@ -49,14 +52,24 @@ HRESULT CAgentFolder::SetNameCodePage_ReOpen(UInt32 codePage,
 
   if (res != S_OK)
   {
-    /* the archive is now closed or half open, and the folder points to
-       proxies that are gone. Go back to the code page that worked. */
+    /* ReOpen() deletes the proxies before it opens, so after a failure the
+       ones here point to freed memory. Clear them before anything else. */
+    _proxy = NULL;
+    _proxy2 = NULL;
+    // go back to the code page that worked
     _agentSpec->_nameCodePage = oldCodePage;
     _proxyDirIndex = k_Proxy_RootDirIndex;
-    if (_agent->ReOpen(openCallback) == S_OK)
-      RestoreFolder_AfterReOpen(pathParts, isAltStreamFolder);
-    /* if even that failed, the folder is not usable any more and the caller
-       has to close it. The original error is returned. */
+    HRESULT res2 = _agent->ReOpen(openCallback);
+    if (res2 == S_OK)
+      res2 = RestoreFolder_AfterReOpen(pathParts, isAltStreamFolder);
+    if (res2 != S_OK)
+    {
+      /* the folder shows an archive that is no longer open. The caller must
+         close it: reading from it now would use proxies that are gone. */
+      _proxy = NULL;
+      _proxy2 = NULL;
+      folderIsUsable = false;
+    }
   }
   return res;
 }
@@ -123,47 +136,6 @@ HRESULT CAgentFolder::RestoreFolder_AfterReOpen(const UStringVector &pathParts,
     }
   }
 
-  /*
-  if (pathParts.IsEmpty() && isAltStreamFolder)
-  {
-    CMyComPtr<IFolderAltStreams> folderAltStreams;
-    archiveFolder.QueryInterface(IID_IFolderAltStreams, &folderAltStreams);
-    if (folderAltStreams)
-    {
-      CMyComPtr<IFolderFolder> newFolder;
-      folderAltStreams->BindToAltStreams((UInt32)(Int32)-1, &newFolder);
-      if (newFolder)
-        archiveFolder = newFolder;
-    }
-  }
-
-  FOR_VECTOR (i, pathParts)
-  {
-    CMyComPtr<IFolderFolder> newFolder;
-  
-    if (isAltStreamFolder && i == pathParts.Size() - 1)
-    {
-      CMyComPtr<IFolderAltStreams> folderAltStreams;
-      archiveFolder.QueryInterface(IID_IFolderAltStreams, &folderAltStreams);
-      if (folderAltStreams)
-        folderAltStreams->BindToAltStreams(pathParts[i], &newFolder);
-    }
-    else
-      archiveFolder->BindToFolder(pathParts[i], &newFolder);
-    
-    if (!newFolder)
-      break;
-    archiveFolder = newFolder;
-  }
-
-  CMyComPtr<IArchiveFolderInternal> archiveFolderInternal;
-  RINOK(archiveFolder.QueryInterface(IID_IArchiveFolderInternal, &archiveFolderInternal));
-  CAgentFolder *agentFolder;
-  RINOK(archiveFolderInternal->GetAgentFolder(&agentFolder));
-  _proxyDirIndex = agentFolder->_proxyDirIndex;
-  // _parentFolder = agentFolder->_parentFolder;
-  */
-  
   if (_proxy2)
     _isAltStreamFolder = _proxy2->IsAltDir(_proxyDirIndex);
   return S_OK;
@@ -401,6 +373,48 @@ HRESULT CAgentFolder::CommonUpdateOperation(
   }
    
   RINOK(RestoreFolder_AfterReOpen(pathParts, isAltStreamFolder))
+
+  /*
+  if (pathParts.IsEmpty() && isAltStreamFolder)
+  {
+    CMyComPtr<IFolderAltStreams> folderAltStreams;
+    archiveFolder.QueryInterface(IID_IFolderAltStreams, &folderAltStreams);
+    if (folderAltStreams)
+    {
+      CMyComPtr<IFolderFolder> newFolder;
+      folderAltStreams->BindToAltStreams((UInt32)(Int32)-1, &newFolder);
+      if (newFolder)
+        archiveFolder = newFolder;
+    }
+  }
+
+  FOR_VECTOR (i, pathParts)
+  {
+    CMyComPtr<IFolderFolder> newFolder;
+  
+    if (isAltStreamFolder && i == pathParts.Size() - 1)
+    {
+      CMyComPtr<IFolderAltStreams> folderAltStreams;
+      archiveFolder.QueryInterface(IID_IFolderAltStreams, &folderAltStreams);
+      if (folderAltStreams)
+        folderAltStreams->BindToAltStreams(pathParts[i], &newFolder);
+    }
+    else
+      archiveFolder->BindToFolder(pathParts[i], &newFolder);
+    
+    if (!newFolder)
+      break;
+    archiveFolder = newFolder;
+  }
+
+  CMyComPtr<IArchiveFolderInternal> archiveFolderInternal;
+  RINOK(archiveFolder.QueryInterface(IID_IArchiveFolderInternal, &archiveFolderInternal));
+  CAgentFolder *agentFolder;
+  RINOK(archiveFolderInternal->GetAgentFolder(&agentFolder));
+  _proxyDirIndex = agentFolder->_proxyDirIndex;
+  // _parentFolder = agentFolder->_parentFolder;
+  */
+  
 
   return res;
 

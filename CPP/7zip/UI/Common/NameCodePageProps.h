@@ -5,6 +5,9 @@
 
 #include "Property.h"
 
+/* kNameCodePage_Auto means that no code page is asked for */
+const UInt32 kNameCodePage_Auto = (UInt32)(Int32)-1;
+
 struct CCodePagePair
 {
   UInt32 CodePage;
@@ -35,10 +38,20 @@ static const CCodePagePair k_CodePages[] =
   {   866, "OEM Cyrillic" }
 };
 
-/* "936 (Chinese Simplified)" - the form the user sees and can type back */
+/* the token for Auto. It is not translated: it is also read back by
+   ParseNameCodePage(), so both sides must use the same text. */
+#define k_NameCodePage_AutoText "Auto"
+
+/* "936 (Chinese Simplified)" - the form the user sees and can type back.
+   Whatever it writes, ParseNameCodePage() must be able to read again. */
 inline void NameCodePage_ToString(UString &s, UInt32 codePage)
 {
   s.Empty();
+  if (codePage == kNameCodePage_Auto)
+  {
+    s = k_NameCodePage_AutoText;
+    return;
+  }
   s.Add_UInt32(codePage);
   for (unsigned i = 0; i < Z7_ARRAY_SIZE(k_CodePages); i++)
     if (k_CodePages[i].CodePage == codePage)
@@ -50,8 +63,6 @@ inline void NameCodePage_ToString(UString &s, UInt32 codePage)
     }
 }
 
-/* kNameCodePage_Auto means that no code page is asked for */
-const UInt32 kNameCodePage_Auto = (UInt32)(Int32)-1;
 
 /* Parse what the user typed in the combo box. An empty string means Auto.
    The text of a list item ("936 (Chinese Simplified)") is accepted too, so
@@ -62,6 +73,11 @@ inline bool ParseNameCodePage(const UString &s, UInt32 &codePage)
   while (i < s.Len() && s[i] == L' ')
     i++;
   if (i == s.Len())
+  {
+    codePage = kNameCodePage_Auto;
+    return true;
+  }
+  if (StringsAreEqualNoCase_Ascii(s.Ptr(i), k_NameCodePage_AutoText))
   {
     codePage = kNameCodePage_Auto;
     return true;

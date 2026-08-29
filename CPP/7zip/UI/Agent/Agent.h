@@ -8,7 +8,6 @@
 #include "../../../Windows/PropVariant.h"
 
 #include "../Common/LoadCodecs.h"
-#include "../Common/NameCodePageProps.h"
 #include "../Common/OpenArchive.h"
 #include "../Common/UpdateAction.h"
 
@@ -139,12 +138,13 @@ public:
      the path is walked down from wherever _proxyDirIndex points */
   HRESULT RestoreFolder_AfterReOpen(const UStringVector &pathParts, bool isAltStreamFolder);
 
-  /* Set the code page for the names and reopen the archive with it, staying in
-     the same directory. It is one operation on purpose: a code page that is
-     stored but not applied would leave the folder showing names from another
-     one. If it fails, the previous code page is put back and the archive is
-     reopened with it, so that the folder keeps working. */
-  HRESULT SetNameCodePage_ReOpen(UInt32 codePage, IArchiveOpenCallback *openCallback);
+  /* Set the code page and reopen with it, staying in the same directory. It is
+     one operation: a code page that is stored but not applied would leave the
+     folder showing names from another one. On failure the previous code page is
+     restored; if that reopen fails too, folderIsUsable is set to false and the
+     caller must close this folder. */
+  HRESULT SetNameCodePage_ReOpen(UInt32 codePage, IArchiveOpenCallback *openCallback,
+      bool &folderIsUsable);
   HRESULT CommonUpdateOperation(
       AGENT_OP operation,
       bool moveMode,

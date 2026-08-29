@@ -19,6 +19,8 @@
 #include "../Common/ArchiveExtractCallback.h"
 #include "../FileManager/RegistryUtils.h"
 
+#include "../Common/NameCodePageProps.h"
+
 #include "Agent.h"
 
 using namespace NWindows;

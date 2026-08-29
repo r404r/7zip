@@ -11,6 +11,7 @@
 #include "../../../Windows/PropVariant.h"
 
 #include "../Agent/Agent.h"
+#include "../Common/NameCodePageProps.h"
 
 #include "ComboDialog.h"
 
@@ -425,13 +426,10 @@ void CPanel::CreateFolder()
   RefreshListCtrl(state);
 }
 
-/* Change the code page that is used for the names of an archive that doesn't
-   say which encoding they are in, and show the archive again with it. The
-   point is to see the result at once: pick one, look at the names, pick
-   another if they are still wrong.
-
+/* Show the archive again with another code page for its names, so that the
+   right one can be found by looking at the result.
    This is a prototype: the strings are not in the language files yet, and the
-   choice is not remembered anywhere. */
+   choice is not remembered. */
 void CPanel::NameCodePage()
 {
   if (!IsArcFolder())
@@ -442,20 +440,25 @@ void CPanel::NameCodePage()
       || !archiveFolderInternal)
     return;
   CAgentFolder *agentFolder = NULL;
-  if (archiveFolderInternal->GetAgentFolder(&agentFolder) != S_OK || !agentFolder)
+  if (archiveFolderInternal->GetAgentFolder(&agentFolder) != S_OK
+      || !agentFolder || !agentFolder->_agentSpec)
     return;
 
   CComboDialog dlg;
   dlg.Title = "Name Code Page";
   dlg.Static = "Read the names of this archive as:";
-  dlg.Strings.Add(UString("Auto"));
-  for (unsigned i = 0; i < Z7_ARRAY_SIZE(k_CodePages); i++)
   {
-    UString s2;
-    NameCodePage_ToString(s2, k_CodePages[i].CodePage);
-    dlg.Strings.Add(s2);
+    UString s;
+    NameCodePage_ToString(s, kNameCodePage_Auto);
+    dlg.Strings.Add(s);
+    for (unsigned i = 0; i < Z7_ARRAY_SIZE(k_CodePages); i++)
+    {
+      NameCodePage_ToString(s, k_CodePages[i].CodePage);
+      dlg.Strings.Add(s);
+    }
+    // start at the one that is in use, so that it is visible which one it is
+    NameCodePage_ToString(dlg.Value, agentFolder->_agentSpec->_nameCodePage);
   }
-  dlg.Value = dlg.Strings[0];
 
   if (dlg.Create(GetParent()) != IDOK)
     return;
@@ -470,13 +473,23 @@ void CPanel::NameCodePage()
   CDisableTimerProcessing disableTimerProcessing(*this);
   CSelectedState state;
   SaveSelectedState(state);
+  HRESULT res;
+  bool folderIsUsable = true;
   {
     CDisableNotify disableNotify(*this);
-    const HRESULT res = agentFolder->SetNameCodePage_ReOpen(codePage, NULL);
-    if (res != S_OK)
-      MessageBox_Error_HRESULT(res);
+    res = agentFolder->SetNameCodePage_ReOpen(codePage, NULL, folderIsUsable);
   }
-  RefreshListCtrl(state);
+  if (res != S_OK)
+    MessageBox_Error_HRESULT(res);
+  if (!folderIsUsable)
+  {
+    // the archive is not open any more, so there is nothing to show
+    CloseOpenFolders();
+    return;
+  }
+  res = RefreshListCtrl(state);
+  if (res != S_OK)
+    MessageBox_Error_HRESULT(res);
 }
 
 
