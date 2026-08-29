@@ -173,6 +173,32 @@ static bool IsThereMethodOverride(bool is7z, const UStringVector &strings)
   return false;
 }
 
+/* "cu", "cl" and "cp" set the encoding of names in different ways, and one
+   doesn't cancel another: "cu" and "cl" set the flags, while "cp" sets the
+   code page. So the checkbox must not add its property, if the user has
+   written any of them in the Parameters field. */
+static bool IsThereNameEncodingOverride(const UStringVector &strings)
+{
+  FOR_VECTOR (i, strings)
+  {
+    UString name = strings[i];
+    const int pos = name.Find(L'=');
+    if (pos >= 0)
+      name.DeleteFrom((unsigned)pos);
+    if (!name.IsEmpty())
+    {
+      const wchar_t c = name.Back();
+      if (c == L'-' || c == L'+')
+        name.DeleteBack();
+    }
+    if (name.IsEqualTo_Ascii_NoCase("cu")
+        || name.IsEqualTo_Ascii_NoCase("cl")
+        || name.IsEqualTo_Ascii_NoCase("cp"))
+      return true;
+  }
+  return false;
+}
+
 static void ParseAndAddPropertires(CObjectVector<CProperty> &properties,
     const UStringVector &strings)
 {
@@ -206,7 +232,8 @@ static void SetOutProperties(
     CObjectVector<CProperty> &properties,
     const NCompressDialog::CInfo &di,
     bool is7z,
-    bool setMethod)
+    bool setMethod,
+    bool setNameEncoding)
 {
   if (di.Level != (UInt32)(Int32)-1)
     AddProp_UInt32(properties, "x", (UInt32)di.Level);
@@ -251,7 +278,7 @@ static void SetOutProperties(
   /* "cu" writes the names as UTF-8 and sets the UTF-8 flag in the header.
      Such archive describes its own name encoding, so it can be opened
      on a system with another language without garbled names. */
-  if (di.Utf8Names_IsAllowed)
+  if (di.Utf8Names_IsAllowed && setNameEncoding)
     AddProp_bool(properties, "cu", di.Utf8Names);
 
   if (di.SolidIsSpecified)
@@ -514,7 +541,8 @@ static HRESULT ShowDialog(
 
   SetOutProperties(options.MethodMode.Properties, di,
       is7z,
-      !methodOverride); // setMethod
+      !methodOverride, // setMethod
+      !IsThereNameEncodingOverride(optionStrings)); // setNameEncoding
   
   options.OpenShareForWrite = di.OpenShareForWrite;
   ParseAndAddPropertires(options.MethodMode.Properties, optionStrings);
