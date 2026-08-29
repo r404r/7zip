@@ -146,6 +146,7 @@ public:
 
   void CreateFolder() { GetFocusedPanel().CreateFolder(); }
   void CreateFile() { GetFocusedPanel().CreateFile(); }
+  void NameCodePage() { GetFocusedPanel().NameCodePage(); }
 
   // Edit
   void EditCut() { GetFocusedPanel().EditCut(); }

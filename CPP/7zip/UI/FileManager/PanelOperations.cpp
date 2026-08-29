@@ -10,6 +10,8 @@
 #include "../../../Windows/FileName.h"
 #include "../../../Windows/PropVariant.h"
 
+#include "../Agent/Agent.h"
+
 #include "ComboDialog.h"
 
 #include "FSFolder.h"
@@ -422,6 +424,61 @@ void CPanel::CreateFolder()
   RefreshTitleAlways();
   RefreshListCtrl(state);
 }
+
+/* Change the code page that is used for the names of an archive that doesn't
+   say which encoding they are in, and show the archive again with it. The
+   point is to see the result at once: pick one, look at the names, pick
+   another if they are still wrong.
+
+   This is a prototype: the strings are not in the language files yet, and the
+   choice is not remembered anywhere. */
+void CPanel::NameCodePage()
+{
+  if (!IsArcFolder())
+    return;
+
+  CMyComPtr<IArchiveFolderInternal> archiveFolderInternal;
+  if (_folder.QueryInterface(IID_IArchiveFolderInternal, &archiveFolderInternal) != S_OK
+      || !archiveFolderInternal)
+    return;
+  CAgentFolder *agentFolder = NULL;
+  if (archiveFolderInternal->GetAgentFolder(&agentFolder) != S_OK || !agentFolder)
+    return;
+
+  CComboDialog dlg;
+  dlg.Title = "Name Code Page";
+  dlg.Static = "Read the names of this archive as:";
+  dlg.Strings.Add(UString("Auto"));
+  for (unsigned i = 0; i < Z7_ARRAY_SIZE(k_CodePages); i++)
+  {
+    UString s2;
+    NameCodePage_ToString(s2, k_CodePages[i].CodePage);
+    dlg.Strings.Add(s2);
+  }
+  dlg.Value = dlg.Strings[0];
+
+  if (dlg.Create(GetParent()) != IDOK)
+    return;
+
+  UInt32 codePage;
+  if (!ParseNameCodePage(dlg.Value, codePage))
+  {
+    MessageBox_Error_HRESULT(E_INVALIDARG);
+    return;
+  }
+
+  CDisableTimerProcessing disableTimerProcessing(*this);
+  CSelectedState state;
+  SaveSelectedState(state);
+  {
+    CDisableNotify disableNotify(*this);
+    const HRESULT res = agentFolder->SetNameCodePage_ReOpen(codePage, NULL);
+    if (res != S_OK)
+      MessageBox_Error_HRESULT(res);
+  }
+  RefreshListCtrl(state);
+}
+
 
 void CPanel::CreateFile()
 {

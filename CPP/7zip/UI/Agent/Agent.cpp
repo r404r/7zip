@@ -1574,7 +1574,8 @@ CAgent::CAgent():
     _proxy2(NULL),
     _updatePathPrefix_is_AltFolder(false),
     _isDeviceFile(false),
-    _isHashHandler(false)
+    _isHashHandler(false),
+    _nameCodePage(kNameCodePage_Auto)
 {
 }
 
@@ -1648,8 +1649,14 @@ Z7_COM7F_IMF(CAgent::Open(
   }
   */
 
+  /* only Zip and Tar know the "cp" property, so it is addressed to those
+     types by the prefix that SetProperties() understands. Auto adds nothing,
+     which leaves the behavior as it was. */
+  CObjectVector<CProperty> props;
+  AddNameCodePageProps(props, _nameCodePage);
+
   COpenOptions options;
-  options.props = NULL;
+  options.props = &props;
   options.codecs = g_CodecsObj;
   options.types = &types;
   CIntVector exl;
@@ -1703,8 +1710,11 @@ Z7_COM7F_IMF(CAgent::ReOpen(IArchiveOpenCallback *openArchiveCallback))
   CObjectVector<COpenType> incl;
   CIntVector exl;
 
+  CObjectVector<CProperty> props;
+  AddNameCodePageProps(props, _nameCodePage);
+
   COpenOptions options;
-  options.props = NULL;
+  options.props = &props;
   options.codecs = g_CodecsObj;
   options.types = &incl;
   options.excludedFormats = &exl;

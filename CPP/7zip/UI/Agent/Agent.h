@@ -8,6 +8,7 @@
 #include "../../../Windows/PropVariant.h"
 
 #include "../Common/LoadCodecs.h"
+#include "../Common/NameCodePageProps.h"
 #include "../Common/OpenArchive.h"
 #include "../Common/UpdateAction.h"
 
@@ -134,7 +135,16 @@ public:
   }
 
   void GetPathParts(UStringVector &pathParts, bool &isAltStreamFolder);
+  /* the caller must set _proxyDirIndex to the root before calling it:
+     the path is walked down from wherever _proxyDirIndex points */
   HRESULT RestoreFolder_AfterReOpen(const UStringVector &pathParts, bool isAltStreamFolder);
+
+  /* Set the code page for the names and reopen the archive with it, staying in
+     the same directory. It is one operation on purpose: a code page that is
+     stored but not applied would leave the folder showing names from another
+     one. If it fails, the previous code page is put back and the archive is
+     reopened with it, so that the folder keeps working. */
+  HRESULT SetNameCodePage_ReOpen(UInt32 codePage, IArchiveOpenCallback *openCallback);
   HRESULT CommonUpdateOperation(
       AGENT_OP operation,
       bool moveMode,
@@ -228,6 +238,10 @@ public:
   CAgentFolder *_agentFolder;
 
   UString _archiveFilePath; // it can be path of non-existing file if file is virtual
+
+  /* the code page for the names that the archive doesn't describe itself.
+     It is used by Open() and by ReOpen(), so that reopening keeps it. */
+  UInt32 _nameCodePage;
   
   DWORD _attrib;
   bool _updatePathPrefix_is_AltFolder;

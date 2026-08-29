@@ -28,6 +28,40 @@ void CAgentFolder::GetPathParts(UStringVector &pathParts, bool &isAltStreamFolde
 }
 
 
+HRESULT CAgentFolder::SetNameCodePage_ReOpen(UInt32 codePage,
+    IArchiveOpenCallback *openCallback)
+{
+  if (!_agentSpec)
+    return E_NOTIMPL;
+  const UInt32 oldCodePage = _agentSpec->_nameCodePage;
+  if (codePage == oldCodePage)
+    return S_OK;
+
+  UStringVector pathParts;
+  bool isAltStreamFolder = false;
+  GetPathParts(pathParts, isAltStreamFolder);
+
+  _agentSpec->_nameCodePage = codePage;
+  _proxyDirIndex = k_Proxy_RootDirIndex;
+  HRESULT res = _agent->ReOpen(openCallback);
+  if (res == S_OK)
+    res = RestoreFolder_AfterReOpen(pathParts, isAltStreamFolder);
+
+  if (res != S_OK)
+  {
+    /* the archive is now closed or half open, and the folder points to
+       proxies that are gone. Go back to the code page that worked. */
+    _agentSpec->_nameCodePage = oldCodePage;
+    _proxyDirIndex = k_Proxy_RootDirIndex;
+    if (_agent->ReOpen(openCallback) == S_OK)
+      RestoreFolder_AfterReOpen(pathParts, isAltStreamFolder);
+    /* if even that failed, the folder is not usable any more and the caller
+       has to close it. The original error is returned. */
+  }
+  return res;
+}
+
+
 /* After CAgent::ReOpen() the old proxies are gone, so the folder has to be
    bound again and the path walked down once more to get back to the directory
    the user was in. It is used by the update operation and by anything else

@@ -5,6 +5,51 @@
 
 #include "Property.h"
 
+struct CCodePagePair
+{
+  UInt32 CodePage;
+  const char *Name;
+};
+
+/* the common ones; another code page can be typed in */
+static const CCodePagePair k_CodePages[] =
+{
+  { 65001, "UTF-8" },
+  {   932, "Japanese" },
+  {   936, "Chinese Simplified" },
+  {   949, "Korean" },
+  {   950, "Chinese Traditional" },
+  {   874, "Thai" },
+  {  1250, "Central European" },
+  {  1251, "Cyrillic" },
+  {  1252, "Western European" },
+  {  1253, "Greek" },
+  {  1254, "Turkish" },
+  {  1255, "Hebrew" },
+  {  1256, "Arabic" },
+  {  1257, "Baltic" },
+  {  1258, "Vietnamese" },
+  {   437, "OEM United States" },
+  {   850, "OEM Latin 1" },
+  {   852, "OEM Latin 2" },
+  {   866, "OEM Cyrillic" }
+};
+
+/* "936 (Chinese Simplified)" - the form the user sees and can type back */
+inline void NameCodePage_ToString(UString &s, UInt32 codePage)
+{
+  s.Empty();
+  s.Add_UInt32(codePage);
+  for (unsigned i = 0; i < Z7_ARRAY_SIZE(k_CodePages); i++)
+    if (k_CodePages[i].CodePage == codePage)
+    {
+      s += " (";
+      s += k_CodePages[i].Name;
+      s += ")";
+      break;
+    }
+}
+
 /* kNameCodePage_Auto means that no code page is asked for */
 const UInt32 kNameCodePage_Auto = (UInt32)(Int32)-1;
 
