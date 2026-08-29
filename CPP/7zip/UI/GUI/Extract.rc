@@ -33,6 +33,7 @@ BEGIN
   IDS_EXTRACT_OVERWRITE_RENAME_EXISTING "Auto rename existing files"
 
   IDS_EXTRACT_CODEPAGE_AUTO             "Auto"
+  IDS_EXTRACT_CODEPAGE_INCORRECT        "Incorrect code page"
 
   IDS_EXTRACT_MESSAGE_UNSUPPORTED_METHOD   "Unsupported compression method for '{0}'."
   IDS_EXTRACT_MESSAGE_DATA_ERROR           "Data error in '{0}'. File is broken"

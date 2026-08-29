@@ -18,6 +18,8 @@
 #include "../FileManager/LangUtils.h"
 #include "../FileManager/resourceGui.h"
 
+#include "../Explorer/MyMessages.h"
+
 #include "ExtractDialog.h"
 #include "ExtractDialogRes.h"
 #include "ExtractRes.h"
@@ -52,8 +54,7 @@ struct CCodePagePair
   const char *Name;
 };
 
-/* the combo box is read only, so there is nothing to check.
-   Another code page can be used from the command line: "-mzip.cp=N" */
+/* the list holds the common code pages; another one can be typed in */
 static const CCodePagePair kCodePages[] =
 {
   { 65001, "UTF-8" },
@@ -368,8 +369,23 @@ void CExtractDialog::OnOK()
 
   #ifdef Z7_EXTRACT_DIALOG_CODE_PAGE
   {
-    const LPARAM v = _codePage.GetItemData_of_CurSel();
-    CodePage = (v < 0) ? kNameCodePage_Auto : (UInt32)v;
+    const int sel = _codePage.GetCurSel();
+    if (sel >= 0)
+    {
+      const LPARAM v = _codePage.GetItemData(sel);
+      CodePage = (v < 0) ? kNameCodePage_Auto : (UInt32)v;
+    }
+    else
+    {
+      UString s;
+      _codePage.GetText(s);
+      if (!ParseNameCodePage(s, CodePage)
+          || (CodePage != kNameCodePage_Auto && !IsValidCodePage(CodePage)))
+      {
+        ShowErrorMessageHwndRes(*this, IDS_EXTRACT_CODEPAGE_INCORRECT);
+        return;
+      }
+    }
   }
   #endif
 
