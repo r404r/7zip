@@ -20,6 +20,8 @@
 #include "../FileManager/resourceGui.h"
 
 #include "CompressDialog.h"
+#include "../Common/NameEncodingOverride.h"
+
 #include "UpdateGUI.h"
 
 #include "resource2.h"
@@ -206,7 +208,8 @@ static void SetOutProperties(
     CObjectVector<CProperty> &properties,
     const NCompressDialog::CInfo &di,
     bool is7z,
-    bool setMethod)
+    bool setMethod,
+    bool setNameEncoding)
 {
   if (di.Level != (UInt32)(Int32)-1)
     AddProp_UInt32(properties, "x", (UInt32)di.Level);
@@ -247,6 +250,9 @@ static void SetOutProperties(
 
   if (di.EncryptHeadersIsAllowed)
     AddProp_bool(properties, "he", di.EncryptHeaders);
+
+  if (di.Utf8Names_IsAllowed && setNameEncoding)
+    AddProp_bool(properties, "cu", di.Utf8Names);
 
   if (di.SolidIsSpecified)
     AddProp_Size(properties, "s", di.SolidBlockSize);
@@ -508,7 +514,8 @@ static HRESULT ShowDialog(
 
   SetOutProperties(options.MethodMode.Properties, di,
       is7z,
-      !methodOverride); // setMethod
+      !methodOverride, // setMethod
+      !IsThereNameEncodingOverride(optionStrings)); // setNameEncoding
   
   options.OpenShareForWrite = di.OpenShareForWrite;
   ParseAndAddPropertires(options.MethodMode.Properties, optionStrings);

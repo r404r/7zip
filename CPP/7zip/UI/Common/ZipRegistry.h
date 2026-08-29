@@ -138,6 +138,7 @@ namespace NCompression
     UInt32 Level;
     bool ShowPassword;
     bool EncryptHeaders;
+    bool Utf8Names;
 
     CBoolPair NtSecurity;
     CBoolPair AltStreams;

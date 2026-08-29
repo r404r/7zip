@@ -61,6 +61,7 @@ static const UInt32 kLangIDs[] =
   IDX_COMPRESS_SFX,
   IDX_COMPRESS_SHARED,
   IDX_COMPRESS_DEL,
+  IDX_COMPRESS_UTF8_NAMES,
 
   IDT_COMPRESS_MEMORY,
   IDT_COMPRESS_MEMORY_DE,
@@ -240,6 +241,7 @@ static const UInt32 kFF_Encrypt     = 1 << 3;
 static const UInt32 kFF_EncryptFileNames  = 1 << 4;
 static const UInt32 kFF_MemUse      = 1 << 5;
 static const UInt32 kFF_SFX         = 1 << 6;
+static const UInt32 kFF_Utf8Names   = 1 << 7;
 
 /*
 static const UInt32 kFF_Time_Win  = 1 << 10;
@@ -264,6 +266,7 @@ struct CFormatInfo
   bool EncryptFileNames_() const { return (Flags & kFF_EncryptFileNames) != 0; }
   bool MemUse_() const { return (Flags & kFF_MemUse) != 0; }
   bool SFX_() const { return (Flags & kFF_SFX) != 0; }
+  bool Utf8Names_() const { return (Flags & kFF_Utf8Names) != 0; }
 };
 
 #define METHODS_PAIR(x) Z7_ARRAY_SIZE(x), x
@@ -291,7 +294,7 @@ static const CFormatInfo g_Formats[] =
     "Zip",
     (1 << 0) | (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9),
     METHODS_PAIR(g_ZipMethods),
-    kFF_MultiThread | kFF_Encrypt | kFF_MemUse
+    kFF_MultiThread | kFF_Encrypt | kFF_MemUse | kFF_Utf8Names
     // | kFF_Time_Win | kFF_Time_Unix | kFF_Time_DOS
   },
   {
@@ -497,6 +500,7 @@ bool CCompressDialog::OnInit()
   m_RegistryInfo.Load();
   CheckButton(IDX_PASSWORD_SHOW, m_RegistryInfo.ShowPassword);
   CheckButton(IDX_COMPRESS_ENCRYPT_FILE_NAMES, m_RegistryInfo.EncryptHeaders);
+  CheckButton(IDX_COMPRESS_UTF8_NAMES, m_RegistryInfo.Utf8Names);
   
   UpdatePasswordControl();
 
@@ -706,6 +710,7 @@ void CCompressDialog::FormatChanged(bool isChanged)
   const CFormatInfo &fi = g_Formats[GetStaticFormatIndex()];
   Info.SolidIsSpecified = fi.Solid_();
   Info.EncryptHeadersIsAllowed = fi.EncryptFileNames_();
+  Info.Utf8Names_IsAllowed = fi.Utf8Names_();
   
   /*
   const bool multiThreadEnable = fi.MultiThread;
@@ -758,6 +763,9 @@ void CCompressDialog::FormatChanged(bool isChanged)
   EnableItem(IDX_COMPRESS_ENCRYPT_FILE_NAMES, fi.EncryptFileNames_());
 
   ShowItem_Bool(IDX_COMPRESS_ENCRYPT_FILE_NAMES, fi.EncryptFileNames_());
+
+  EnableItem(IDX_COMPRESS_UTF8_NAMES, fi.Utf8Names_());
+  ShowItem_Bool(IDX_COMPRESS_UTF8_NAMES, fi.Utf8Names_());
 
   SetEncryptionMethod();
   SetMemoryUsage();
@@ -1176,6 +1184,9 @@ void CCompressDialog::OnOK()
 
   m_RegistryInfo.EncryptHeaders =
     Info.EncryptHeaders = IsButtonCheckedBool(IDX_COMPRESS_ENCRYPT_FILE_NAMES);
+
+  m_RegistryInfo.Utf8Names =
+    Info.Utf8Names = IsButtonCheckedBool(IDX_COMPRESS_UTF8_NAMES);
 
 
   /* (Info) is for saving to registry:
