@@ -69,9 +69,11 @@
           <Component Id="C_Readme" Guid="*" Win64="yes">
             <File Id="F_Readme" Source="$(var.BinDir)\readme.txt" KeyPath="yes" />
           </Component>
+          <?ifdef ZipNamesDoc ?>
           <Component Id="C_ZipNames" Guid="*" Win64="yes">
             <File Id="F_ZipNames" Source="$(var.BinDir)\zip-name-encoding.txt" KeyPath="yes" />
           </Component>
+          <?endif ?>
 
         </Directory>
       </Directory>
@@ -106,7 +108,9 @@
       <ComponentRef Id="C_7zCon_sfx" />
       <ComponentRef Id="C_License" />
       <ComponentRef Id="C_Readme" />
+      <?ifdef ZipNamesDoc ?>
       <ComponentRef Id="C_ZipNames" />
+      <?endif ?>
       <ComponentRef Id="C_Shortcut" />
     </Feature>
 
