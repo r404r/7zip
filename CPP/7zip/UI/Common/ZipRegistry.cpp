@@ -315,7 +315,6 @@ void CInfo::Load()
   ArcType = L"7z";
   ShowPassword = false;
   EncryptHeaders = false;
-  // an archive that travels between systems of different languages needs it
   Utf8Names = true;
 
   CS_LOCK
