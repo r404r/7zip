@@ -52,6 +52,20 @@ jobs:
         shell: cmd
         run: python .github\tests\zip_name_encoding.py "%GITHUB_WORKSPACE%\CPP\7zip\Bundles\Alone2\x64\7zz.exe"
 
+      - name: Probe the WiX toolset
+        shell: cmd
+        run: |
+          echo ---- candle/light on PATH? ----
+          where candle.exe 2>nul || echo candle.exe not on PATH
+          where light.exe  2>nul || echo light.exe  not on PATH
+          echo ---- wix (v4+) on PATH? ----
+          where wix.exe 2>nul || echo wix.exe not on PATH
+          echo ---- installed WiX directories ----
+          if exist "%WIX%" (echo WIX=%WIX%) else (echo WIX variable not set)
+          dir /b "C:\Program Files (x86)\WiX Toolset*" 2>nul || echo no WiX Toolset dir in Program Files ^(x86^)
+          dir /b "C:\Program Files\WiX Toolset*" 2>nul || echo no WiX Toolset dir in Program Files
+          exit /b 0
+
       - uses: actions/upload-artifact@v4
         with:
           name: 7zip-win-x64
