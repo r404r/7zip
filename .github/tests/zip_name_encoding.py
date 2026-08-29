@@ -117,14 +117,16 @@ def check_decoding(exe, d):
         r = subprocess.run([exe, "x", "-y", "-o" + out_dir] + args + [zip_path],
                            cwd=d, capture_output=True, text=True)
         got = os.listdir(out_dir)
-        name = got[0] if len(got) == 1 else repr(got)
         ok = (len(got) == 1 and got[0] == NAME)
-        print("    %-14s -> %-28s %s" % (label, name, "correct" if ok else "not the name"))
+        # the console of the runner is not UTF-8, and the wrong name is by
+        # definition not printable there, so escape it
+        shown = ascii(got[0] if len(got) == 1 else got)
+        print("    %-14s -> %-34s %s" % (label, shown, "correct" if ok else "not the name"))
         if r.returncode != 0:
             failures.append("%s: 7zz x failed: %s" % (label, (r.stdout + r.stderr)[-200:]))
         elif ok != want_ok:
-            failures.append("%s: name is %r, expected %s"
-                            % (label, name, "the right one" if want_ok else "a wrong one"))
+            failures.append("%s: name is %s, expected %s"
+                            % (label, shown, "the right one" if want_ok else "a wrong one"))
     return failures
 
 
