@@ -72,12 +72,30 @@ jobs:
             "$src\Bundles\SFXWin\x64\7z.sfx",
             "$src\Bundles\SFXCon\x64\7zCon.sfx",
             "$ws\DOC\License.txt",
-            "$ws\DOC\readme.txt",
-            "$ws\DOC\zip-name-encoding.txt"
+            "$ws\DOC\readme.txt"
           )
           foreach ($f in $files) {
             if (-not (Test-Path $f)) { throw "missing file for the package: $f" }
             Copy-Item $f $stage
+          }
+
+          # documents that only some branches carry: take them if they are here
+          $optional = @("$ws\DOC\zip-name-encoding.txt")
+          $extraRefs = @()
+          foreach ($f in $optional) {
+            $leaf = Split-Path $f -Leaf
+            if (Test-Path $f) {
+              Copy-Item $f $stage
+              $extraRefs += $leaf
+              Write-Host "including $leaf"
+            } else {
+              # WiX needs the file to exist, so give it an empty stand-in that
+              # says why, rather than making the package depend on the branch
+              Set-Content -Path (Join-Path $stage $leaf) -Value @(
+                "This document is not part of this build.",
+                "It comes with the change that adds the code page options.")
+              Write-Host "$leaf is not in this branch, a stand-in is used"
+            }
           }
 
           # the version follows the upstream tag, so a rebase can't leave it behind
