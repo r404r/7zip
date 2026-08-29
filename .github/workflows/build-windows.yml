@@ -48,6 +48,10 @@ jobs:
         shell: cmd
         run: dir /s /b "%GITHUB_WORKSPACE%\CPP\7zip\*.exe" "%GITHUB_WORKSPACE%\CPP\7zip\*.dll" 2>nul
 
+      - name: Check zip file name encoding
+        shell: cmd
+        run: python .github\tests\zip_name_encoding.py "%GITHUB_WORKSPACE%\CPP\7zip\Bundles\Alone2\x64\7zz.exe"
+
       - uses: actions/upload-artifact@v4
         with:
           name: 7zip-win-x64
