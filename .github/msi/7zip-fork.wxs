@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  A small installer for the binaries built from this fork.
+
+  It is NOT the 7-Zip installer. It has its own name, its own UpgradeCode and
+  its own folder, and it registers no shell extension and no file association,
+  so that it can be installed next to an official 7-Zip without the two
+  replacing each other on every update.
+
+  The source tree has no Lang directory and no help file, so the interface is
+  in English and the Help button does nothing.
+
+  Built with WiX v3:
+    candle -dBinDir=<dir> -dVersion=<x.y.z> 7zip-fork.wxs
+    light  -o 7zip-fork.msi 7zip-fork.wixobj
+-->
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+
+  <?define ProductName = "7-Zip (fork build)" ?>
+  <?define Manufacturer = "r404r" ?>
+
+  <Product Id="*"
+      Name="$(var.ProductName) $(var.Version)"
+      Language="1033"
+      Version="$(var.Version)"
+      Manufacturer="$(var.Manufacturer)"
+      UpgradeCode="123DA846-FD92-4158-B7D8-1C522FE5EB09">
+
+    <Package InstallerVersion="200" Compressed="yes"
+        InstallScope="perMachine" Platform="x64"
+        Description="$(var.ProductName) $(var.Version)"
+        Manufacturer="$(var.Manufacturer)" />
+
+    <MajorUpgrade DowngradeErrorMessage=
+        "A newer version of $(var.ProductName) is already installed." />
+
+    <MediaTemplate EmbedCab="yes" />
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFiles64Folder">
+        <Directory Id="INSTALLFOLDER" Name="7-Zip-fork">
+
+          <Component Id="C_7z_exe" Guid="*" Win64="yes">
+            <File Id="F_7z_exe" Source="$(var.BinDir)\7z.exe" KeyPath="yes" />
+          </Component>
+          <Component Id="C_7zz_exe" Guid="*" Win64="yes">
+            <File Id="F_7zz_exe" Source="$(var.BinDir)\7zz.exe" KeyPath="yes" />
+          </Component>
+          <Component Id="C_7z_dll" Guid="*" Win64="yes">
+            <File Id="F_7z_dll" Source="$(var.BinDir)\7z.dll" KeyPath="yes" />
+          </Component>
+          <Component Id="C_7zG_exe" Guid="*" Win64="yes">
+            <File Id="F_7zG_exe" Source="$(var.BinDir)\7zG.exe" KeyPath="yes" />
+          </Component>
+          <Component Id="C_7zFM_exe" Guid="*" Win64="yes">
+            <File Id="F_7zFM_exe" Source="$(var.BinDir)\7zFM.exe" KeyPath="yes" />
+          </Component>
+          <Component Id="C_7z_sfx" Guid="*" Win64="yes">
+            <File Id="F_7z_sfx" Source="$(var.BinDir)\7z.sfx" KeyPath="yes" />
+          </Component>
+          <Component Id="C_7zCon_sfx" Guid="*" Win64="yes">
+            <File Id="F_7zCon_sfx" Source="$(var.BinDir)\7zCon.sfx" KeyPath="yes" />
+          </Component>
+          <Component Id="C_License" Guid="*" Win64="yes">
+            <File Id="F_License" Source="$(var.BinDir)\License.txt" KeyPath="yes" />
+          </Component>
+          <Component Id="C_Readme" Guid="*" Win64="yes">
+            <File Id="F_Readme" Source="$(var.BinDir)\readme.txt" KeyPath="yes" />
+          </Component>
+          <Component Id="C_ZipNames" Guid="*" Win64="yes">
+            <File Id="F_ZipNames" Source="$(var.BinDir)\zip-name-encoding.txt" KeyPath="yes" />
+          </Component>
+
+        </Directory>
+      </Directory>
+
+      <Directory Id="ProgramMenuFolder">
+        <Directory Id="APPMENUFOLDER" Name="$(var.ProductName)" />
+      </Directory>
+    </Directory>
+
+    <!-- the shortcut needs a registry key as its KeyPath, because a per-user
+         resource can't be kept by a file in a per-machine folder -->
+    <DirectoryRef Id="APPMENUFOLDER">
+      <Component Id="C_Shortcut" Guid="*" Win64="yes">
+        <Shortcut Id="S_FileManager"
+            Name="$(var.ProductName) File Manager"
+            Target="[INSTALLFOLDER]7zFM.exe"
+            WorkingDirectory="INSTALLFOLDER" />
+        <RemoveFolder Id="R_AppMenuFolder" On="uninstall" />
+        <RegistryValue Root="HKCU"
+            Key="Software\$(var.Manufacturer)\7-Zip-fork"
+            Name="installed" Type="integer" Value="1" KeyPath="yes" />
+      </Component>
+    </DirectoryRef>
+
+    <Feature Id="F_Main" Title="$(var.ProductName)" Level="1">
+      <ComponentRef Id="C_7z_exe" />
+      <ComponentRef Id="C_7zz_exe" />
+      <ComponentRef Id="C_7z_dll" />
+      <ComponentRef Id="C_7zG_exe" />
+      <ComponentRef Id="C_7zFM_exe" />
+      <ComponentRef Id="C_7z_sfx" />
+      <ComponentRef Id="C_7zCon_sfx" />
+      <ComponentRef Id="C_License" />
+      <ComponentRef Id="C_Readme" />
+      <ComponentRef Id="C_ZipNames" />
+      <ComponentRef Id="C_Shortcut" />
+    </Feature>
+
+  </Product>
+</Wix>

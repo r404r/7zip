@@ -35,6 +35,9 @@ jobs:
             "CPP\7zip\Bundles\Format7zF"
             "CPP\7zip\UI\GUI"
             "CPP\7zip\UI\FileManager"
+            "CPP\7zip\UI\Console"
+            "CPP\7zip\Bundles\SFXWin"
+            "CPP\7zip\Bundles\SFXCon"
           ) do (
             echo ::group::nmake %%~T
             pushd "%GITHUB_WORKSPACE%\%%~T" || exit /b 1
@@ -52,19 +55,75 @@ jobs:
         shell: cmd
         run: python .github\tests\zip_name_encoding.py "%GITHUB_WORKSPACE%\CPP\7zip\Bundles\Alone2\x64\7zz.exe"
 
-      - name: Probe the WiX toolset
-        shell: cmd
+      - name: Package the MSI
+        shell: pwsh
         run: |
-          echo ---- candle/light on PATH? ----
-          where candle.exe 2>nul || echo candle.exe not on PATH
-          where light.exe  2>nul || echo light.exe  not on PATH
-          echo ---- wix (v4+) on PATH? ----
-          where wix.exe 2>nul || echo wix.exe not on PATH
-          echo ---- installed WiX directories ----
-          if exist "%WIX%" (echo WIX=%WIX%) else (echo WIX variable not set)
-          dir /b "C:\Program Files (x86)\WiX Toolset*" 2>nul || echo no WiX Toolset dir in Program Files ^(x86^)
-          dir /b "C:\Program Files\WiX Toolset*" 2>nul || echo no WiX Toolset dir in Program Files
-          exit /b 0
+          $ws = $env:GITHUB_WORKSPACE
+          $stage = Join-Path $ws "msi-stage"
+          New-Item -ItemType Directory -Force -Path $stage | Out-Null
+
+          $src = Join-Path $ws "CPP\7zip"
+          $files = @(
+            "$src\UI\Console\x64\7z.exe",
+            "$src\Bundles\Alone2\x64\7zz.exe",
+            "$src\Bundles\Format7zF\x64\7z.dll",
+            "$src\UI\GUI\x64\7zG.exe",
+            "$src\UI\FileManager\x64\7zFM.exe",
+            "$src\Bundles\SFXWin\x64\7z.sfx",
+            "$src\Bundles\SFXCon\x64\7zCon.sfx",
+            "$ws\DOC\License.txt",
+            "$ws\DOC\readme.txt",
+            "$ws\DOC\zip-name-encoding.txt"
+          )
+          foreach ($f in $files) {
+            if (-not (Test-Path $f)) { throw "missing file for the package: $f" }
+            Copy-Item $f $stage
+          }
+
+          # the version follows the upstream tag, so a rebase can't leave it behind
+          $line = Get-Content (Join-Path $ws "DOC\readme.txt") -First 1
+          if ($line -notmatch '(\d+)\.(\d+)') { throw "no version in readme.txt: $line" }
+          $version = "$($Matches[1]).$([int]$Matches[2]).0"
+          Write-Host "version from readme.txt: $version"
+
+          & candle.exe -nologo -arch x64 -dBinDir="$stage" -dVersion="$version" `
+              -out "$ws\7zip-fork.wixobj" "$ws\.github\msi\7zip-fork.wxs"
+          if ($LASTEXITCODE -ne 0) { throw "candle failed" }
+          & light.exe -nologo -out "$ws\7zip-fork.msi" "$ws\7zip-fork.wixobj"
+          if ($LASTEXITCODE -ne 0) { throw "light failed" }
+
+      - name: Check the MSI
+        shell: pwsh
+        run: |
+          # read the package back, so that a broken database is not mistaken
+          # for a success just because light.exe returned 0
+          $msi = Join-Path $env:GITHUB_WORKSPACE "7zip-fork.msi"
+          $installer = New-Object -ComObject WindowsInstaller.Installer
+          $db = $installer.GetType().InvokeMember(
+              'OpenDatabase', 'InvokeMethod', $null, $installer, @($msi, 0))
+          function Get-MsiProperty($name) {
+            $view = $db.GetType().InvokeMember('OpenView', 'InvokeMethod', $null, $db,
+                @("SELECT Value FROM Property WHERE Property = '$name'"))
+            $view.GetType().InvokeMember('Execute', 'InvokeMethod', $null, $view, $null)
+            $rec = $view.GetType().InvokeMember('Fetch', 'InvokeMethod', $null, $view, $null)
+            if ($null -eq $rec) { return $null }
+            return $rec.GetType().InvokeMember('StringData', 'GetProperty', $null, $rec, 1)
+          }
+          $name = Get-MsiProperty 'ProductName'
+          $ver  = Get-MsiProperty 'ProductVersion'
+          $upg  = Get-MsiProperty 'UpgradeCode'
+          Write-Host "ProductName    = $name"
+          Write-Host "ProductVersion = $ver"
+          Write-Host "UpgradeCode    = $upg"
+          if (-not $name) { throw "no ProductName in the package" }
+          if ($name -notmatch 'fork') {
+            throw "the name must say that this is not the official 7-Zip: $name"
+          }
+          if (-not $ver) { throw "no ProductVersion in the package" }
+          if ($upg -ne '{123DA846-FD92-4158-B7D8-1C522FE5EB09}') {
+            throw "unexpected UpgradeCode, it must not be the one of 7-Zip: $upg"
+          }
+          Write-Host "the package is readable and is marked as a fork build"
 
       - uses: actions/upload-artifact@v4
         with:
@@ -75,3 +134,6 @@ jobs:
             CPP/7zip/Bundles/Format7zF/x64/7z.dll
             CPP/7zip/UI/GUI/x64/7zG.exe
             CPP/7zip/UI/FileManager/x64/7zFM.exe
+            CPP/7zip/UI/Console/x64/7z.exe
+            CPP/7zip/Bundles/SFXWin/x64/7z.sfx
+            CPP/7zip/Bundles/SFXCon/x64/7zCon.sfx
