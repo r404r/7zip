@@ -134,6 +134,7 @@ public:
   }
 
   void GetPathParts(UStringVector &pathParts, bool &isAltStreamFolder);
+  HRESULT RestoreFolder_AfterReOpen(const UStringVector &pathParts, bool isAltStreamFolder);
   HRESULT CommonUpdateOperation(
       AGENT_OP operation,
       bool moveMode,
