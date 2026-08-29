@@ -52,10 +52,9 @@ struct CCodePagePair
   const char *Name;
 };
 
-/* The list is fixed and the combo box is read only, so there is no input to
-   check. A code page that is not here can still be used from the command
-   line: "-mzip.cp=N". */
-static const CCodePagePair k_CodePages[] =
+/* the combo box is read only, so there is nothing to check.
+   Another code page can be used from the command line: "-mzip.cp=N" */
+static const CCodePagePair kCodePages[] =
 {
   { 65001, "UTF-8" },
   {   932, "Japanese" },
@@ -262,6 +261,9 @@ bool CExtractDialog::OnInit()
   AddComboItems(_pathMode, kPathMode_IDs, Z7_ARRAY_SIZE(kPathMode_IDs), kPathModeButtonsVals, PathMode);
   AddComboItems(_overwriteMode, kOverwriteMode_IDs, Z7_ARRAY_SIZE(kOverwriteMode_IDs), kOverwriteButtonsVals, OverwriteMode);
 
+  #endif
+
+  #ifdef Z7_EXTRACT_DIALOG_CODE_PAGE
   _codePage.Attach(GetItem(IDC_EXTRACT_CODEPAGE));
   {
     UString s;
@@ -269,9 +271,9 @@ bool CExtractDialog::OnInit()
     if (s.IsEmpty())
       s = "Auto";
     _codePage.AddString_SetItemData(s, (LPARAM)(Int32)-1);
-    for (unsigned i = 0; i < Z7_ARRAY_SIZE(k_CodePages); i++)
+    for (unsigned i = 0; i < Z7_ARRAY_SIZE(kCodePages); i++)
     {
-      const CCodePagePair &pair = k_CodePages[i];
+      const CCodePagePair &pair = kCodePages[i];
       UString s2;
       s2.Add_UInt32(pair.CodePage);
       s2 += " (";
@@ -279,11 +281,8 @@ bool CExtractDialog::OnInit()
       s2 += ")";
       _codePage.AddString_SetItemData(s2, (LPARAM)pair.CodePage);
     }
-    /* the dialog always starts with Auto: the code page fixes one archive,
-       and keeping it would garble the names of the next one */
-    _codePage.SetCurSel(0);
+    _codePage.SetCurSel(0); // always Auto: it fixes one archive, not the next
   }
-
   #endif
 
   HICON icon = LoadIcon(g_hInstance, MAKEINTRESOURCE(IDI_ICON));
@@ -365,11 +364,13 @@ void CExtractDialog::OnOK()
 
   _passwordControl.GetText(Password);
 
+  #endif
+
+  #ifdef Z7_EXTRACT_DIALOG_CODE_PAGE
   {
     const LPARAM v = _codePage.GetItemData_of_CurSel();
     CodePage = (v < 0) ? kNameCodePage_Auto : (UInt32)v;
   }
-
   #endif
 
   #ifndef Z7_NO_REGISTRY

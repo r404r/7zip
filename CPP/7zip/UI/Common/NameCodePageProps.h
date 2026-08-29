@@ -5,14 +5,11 @@
 
 #include "Property.h"
 
-/* The code page for the names that the archive doesn't describe itself.
-   kNameCodePage_Auto means that no code page is asked for. */
+/* kNameCodePage_Auto means that no code page is asked for */
 const UInt32 kNameCodePage_Auto = (UInt32)(Int32)-1;
 
-/* Only Zip and Tar know the "cp" property, and a handler that gets a property
-   it doesn't know fails to open the archive. So the property is addressed to
-   these types by the prefix that SetProperties() understands. Auto must add
-   nothing at all: an empty list keeps the current behavior. */
+/* only Zip and Tar know "cp", and a handler that gets a property it doesn't
+   know fails to open the archive, so the type is named in the prefix */
 inline void AddNameCodePageProps(CObjectVector<CProperty> &props, UInt32 codePage)
 {
   if (codePage == kNameCodePage_Auto)

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check how zip file names are encoded by this build of 7-Zip.
+"""Check how zip file names are encoded and decoded by this build of 7-Zip.
 
     python3 .github/tests/zip_name_encoding.py <path to 7zz>
 
@@ -30,6 +30,7 @@ import sys
 import tempfile
 
 NAME = "中文文件名.txt"          # 中文文件名.txt
+LOCAL_SIG = 0x04034B50
 EOCD_SIG = b"\x50\x4b\x05\x06"
 CD_SIG = 0x02014B50
 ID_UNICODE_PATH = 0x7075
@@ -73,6 +74,58 @@ def encoding_of(raw):
     except UnicodeDecodeError:
         pass
     return "other"
+
+
+def write_legacy_zip(path, encoding):
+    """Write a zip whose name is in a legacy encoding, with no UTF-8 flag and
+       no 0x7075 field: the archive says nothing about its encoding, which is
+       what an archive from another language system looks like."""
+    raw = NAME.encode(encoding)
+    data = b"x\n"
+    crc = 0
+    import zlib
+    crc = zlib.crc32(data) & 0xFFFFFFFF
+    out = bytearray()
+    out += struct.pack("<IHHHHHIIIHH", LOCAL_SIG, 20, 0, 0, 0, 0x21,
+                       crc, len(data), len(data), len(raw), 0)
+    out += raw + data
+    cd_off = len(out)
+    cd = struct.pack("<IHHHHHHIIIHHHHHII", CD_SIG, 20, 20, 0, 0, 0, 0x21,
+                     crc, len(data), len(data), len(raw), 0, 0, 0, 0, 0, 0) + raw
+    out += cd
+    out += struct.pack("<IHHHHIIH", 0x06054B50, 0, 0, 1, 1, len(cd), cd_off, 0)
+    with open(path, "wb") as f:
+        f.write(bytes(out))
+
+
+def check_decoding(exe, d):
+    """Extract an archive that doesn't describe its encoding, with and without
+       a code page, and look at the name that lands on disk.
+
+       This is the point of the whole thing: accepting the property proves
+       nothing, the name has to come out right."""
+    failures = []
+    print("\n  extracting an archive with cp936 names and no UTF-8 flag:")
+    zip_path = os.path.join(d, "legacy.zip")
+    write_legacy_zip(zip_path, "gbk")
+
+    for label, args, want_ok in (
+            ("no code page", [], False),
+            ("-mzip.cp=936", ["-mzip.cp=936"], True)):
+        out_dir = os.path.join(d, "out-" + label.replace(" ", "-").replace("=", ""))
+        os.makedirs(out_dir, exist_ok=True)
+        r = subprocess.run([exe, "x", "-y", "-o" + out_dir] + args + [zip_path],
+                           cwd=d, capture_output=True, text=True)
+        got = os.listdir(out_dir)
+        name = got[0] if len(got) == 1 else repr(got)
+        ok = (len(got) == 1 and got[0] == NAME)
+        print("    %-14s -> %-28s %s" % (label, name, "correct" if ok else "not the name"))
+        if r.returncode != 0:
+            failures.append("%s: 7zz x failed: %s" % (label, (r.stdout + r.stderr)[-200:]))
+        elif ok != want_ok:
+            failures.append("%s: name is %r, expected %s"
+                            % (label, name, "the right one" if want_ok else "a wrong one"))
+    return failures
 
 
 # (label, extra 7zz arguments, expected bit 11, expected encoding, expected 0x7075)
@@ -125,6 +178,9 @@ def main(argv):
                                 ("0x7075", got_extra, want_extra)):
             if want is not None and got != want:
                 failures.append("%s: %s is %r, expected %r" % (label, what, got, want))
+
+    if on_windows:
+        failures += check_decoding(exe, d)
 
     print()
     if failures:

@@ -9,7 +9,13 @@
 #include "../../../Windows/Control/Edit.h"
 
 #include "../Common/ExtractMode.h"
+
+/* the code page control is in IDD_EXTRACT only, and the SFX has no place to
+   put the property, so it exists in the main configuration only */
+#if !defined(Z7_SFX) && !defined(UNDER_CE)
+#define Z7_EXTRACT_DIALOG_CODE_PAGE
 #include "../Common/NameCodePageProps.h"
+#endif
 
 #include "../FileManager/DialogSize.h"
 
@@ -45,6 +51,8 @@ class CExtractDialog: public NWindows::NControl::CModalDialog
   NWindows::NControl::CEdit _passwordControl;
   NWindows::NControl::CComboBox _pathMode;
   NWindows::NControl::CComboBox _overwriteMode;
+  #endif
+  #ifdef Z7_EXTRACT_DIALOG_CODE_PAGE
   NWindows::NControl::CComboBox _codePage;
   #endif
 
@@ -86,10 +94,7 @@ public:
   NExtract::NPathMode::EEnum PathMode;
   NExtract::NOverwriteMode::EEnum OverwriteMode;
 
-  #ifndef Z7_SFX
-  /* the code page for the names that the archive doesn't describe itself.
-     It is not stored in the registry: it fixes one archive, and keeping it
-     would garble the names of the next archive that needs another one. */
+  #ifdef Z7_EXTRACT_DIALOG_CODE_PAGE
   UInt32 CodePage;
   #endif
 
@@ -113,7 +118,7 @@ public:
   CExtractDialog():
     PathMode_Force(false),
     OverwriteMode_Force(false)
-    #ifndef Z7_SFX
+    #ifdef Z7_EXTRACT_DIALOG_CODE_PAGE
     , CodePage(kNameCodePage_Auto)
     #endif
   {

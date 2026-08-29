@@ -244,6 +244,8 @@ HRESULT ExtractGUI(
       options.NtOptions.NtSecurity = dialog.NtSecurity;
       extractCallback->Password = dialog.Password;
       extractCallback->PasswordIsDefined = !dialog.Password.IsEmpty();
+      #endif
+      #ifdef Z7_EXTRACT_DIALOG_CODE_PAGE
       AddNameCodePageProps(options.Properties, dialog.CodePage);
       #endif
     }
