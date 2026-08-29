@@ -9,6 +9,7 @@
 #include "../../../Windows/Control/Edit.h"
 
 #include "../Common/ExtractMode.h"
+#include "../Common/NameCodePageProps.h"
 
 #include "../FileManager/DialogSize.h"
 
@@ -44,6 +45,7 @@ class CExtractDialog: public NWindows::NControl::CModalDialog
   NWindows::NControl::CEdit _passwordControl;
   NWindows::NControl::CComboBox _pathMode;
   NWindows::NControl::CComboBox _overwriteMode;
+  NWindows::NControl::CComboBox _codePage;
   #endif
 
   #ifndef Z7_SFX
@@ -85,6 +87,13 @@ public:
   NExtract::NOverwriteMode::EEnum OverwriteMode;
 
   #ifndef Z7_SFX
+  /* the code page for the names that the archive doesn't describe itself.
+     It is not stored in the registry: it fixes one archive, and keeping it
+     would garble the names of the next archive that needs another one. */
+  UInt32 CodePage;
+  #endif
+
+  #ifndef Z7_SFX
   // CBoolPair AltStreams;
   CBoolPair NtSecurity;
   #endif
@@ -104,6 +113,9 @@ public:
   CExtractDialog():
     PathMode_Force(false),
     OverwriteMode_Force(false)
+    #ifndef Z7_SFX
+    , CodePage(kNameCodePage_Auto)
+    #endif
   {
     ElimDup.Val = true;
   }

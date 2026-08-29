@@ -13,7 +13,7 @@ const UInt32 kNameCodePage_Auto = (UInt32)(Int32)-1;
    it doesn't know fails to open the archive. So the property is addressed to
    these types by the prefix that SetProperties() understands. Auto must add
    nothing at all: an empty list keeps the current behavior. */
-static void AddNameCodePageProps(CObjectVector<CProperty> &props, UInt32 codePage)
+inline void AddNameCodePageProps(CObjectVector<CProperty> &props, UInt32 codePage)
 {
   if (codePage == kNameCodePage_Auto)
     return;

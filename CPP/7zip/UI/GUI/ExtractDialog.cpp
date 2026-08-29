@@ -46,6 +46,38 @@ static const UInt32 kOverwriteMode_IDs[] =
   IDS_EXTRACT_OVERWRITE_RENAME_EXISTING
 };
 
+struct CCodePagePair
+{
+  UInt32 CodePage;
+  const char *Name;
+};
+
+/* The list is fixed and the combo box is read only, so there is no input to
+   check. A code page that is not here can still be used from the command
+   line: "-mzip.cp=N". */
+static const CCodePagePair k_CodePages[] =
+{
+  { 65001, "UTF-8" },
+  {   932, "Japanese" },
+  {   936, "Chinese Simplified" },
+  {   949, "Korean" },
+  {   950, "Chinese Traditional" },
+  {   874, "Thai" },
+  {  1250, "Central European" },
+  {  1251, "Cyrillic" },
+  {  1252, "Western European" },
+  {  1253, "Greek" },
+  {  1254, "Turkish" },
+  {  1255, "Hebrew" },
+  {  1256, "Arabic" },
+  {  1257, "Baltic" },
+  {  1258, "Vietnamese" },
+  {   437, "OEM United States" },
+  {   850, "OEM Latin 1" },
+  {   852, "OEM Latin 2" },
+  {   866, "OEM Cyrillic" }
+};
+
 static const
   // NExtract::NPathMode::EEnum
   int
@@ -77,6 +109,7 @@ static const UInt32 kLangIDs[] =
   IDT_EXTRACT_EXTRACT_TO,
   IDT_EXTRACT_PATH_MODE,
   IDT_EXTRACT_OVERWRITE_MODE,
+  IDT_EXTRACT_CODEPAGE,
   // IDX_EXTRACT_ALT_STREAMS,
   IDX_EXTRACT_NT_SECUR,
   IDX_EXTRACT_ELIM_DUP,
@@ -229,6 +262,28 @@ bool CExtractDialog::OnInit()
   AddComboItems(_pathMode, kPathMode_IDs, Z7_ARRAY_SIZE(kPathMode_IDs), kPathModeButtonsVals, PathMode);
   AddComboItems(_overwriteMode, kOverwriteMode_IDs, Z7_ARRAY_SIZE(kOverwriteMode_IDs), kOverwriteButtonsVals, OverwriteMode);
 
+  _codePage.Attach(GetItem(IDC_EXTRACT_CODEPAGE));
+  {
+    UString s;
+    LangString(IDS_EXTRACT_CODEPAGE_AUTO, s);
+    if (s.IsEmpty())
+      s = "Auto";
+    _codePage.AddString_SetItemData(s, (LPARAM)(Int32)-1);
+    for (unsigned i = 0; i < Z7_ARRAY_SIZE(k_CodePages); i++)
+    {
+      const CCodePagePair &pair = k_CodePages[i];
+      UString s2;
+      s2.Add_UInt32(pair.CodePage);
+      s2 += " (";
+      s2 += pair.Name;
+      s2 += ")";
+      _codePage.AddString_SetItemData(s2, (LPARAM)pair.CodePage);
+    }
+    /* the dialog always starts with Auto: the code page fixes one archive,
+       and keeping it would garble the names of the next one */
+    _codePage.SetCurSel(0);
+  }
+
   #endif
 
   HICON icon = LoadIcon(g_hInstance, MAKEINTRESOURCE(IDI_ICON));
@@ -309,6 +364,11 @@ void CExtractDialog::OnOK()
   // _filesMode = (NExtractionDialog::NFilesMode::EEnum)GetFilesMode();
 
   _passwordControl.GetText(Password);
+
+  {
+    const LPARAM v = _codePage.GetItemData_of_CurSel();
+    CodePage = (v < 0) ? kNameCodePage_Auto : (UInt32)v;
+  }
 
   #endif
 

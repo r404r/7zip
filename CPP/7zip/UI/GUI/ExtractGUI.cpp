@@ -244,6 +244,7 @@ HRESULT ExtractGUI(
       options.NtOptions.NtSecurity = dialog.NtSecurity;
       extractCallback->Password = dialog.Password;
       extractCallback->PasswordIsDefined = !dialog.Password.IsEmpty();
+      AddNameCodePageProps(options.Properties, dialog.CodePage);
       #endif
     }
     if (!MyGetFullPathName(outputDir, options.OutputDir))
