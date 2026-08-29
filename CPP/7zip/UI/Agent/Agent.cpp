@@ -1572,10 +1572,10 @@ Z7_COM7F_IMF(CAgentFolder::Extract(const UInt32 *indices,
 CAgent::CAgent():
     _proxy(NULL),
     _proxy2(NULL),
+    _nameCodePage(kNameCodePage_Auto),
     _updatePathPrefix_is_AltFolder(false),
     _isDeviceFile(false),
-    _isHashHandler(false),
-    _nameCodePage(kNameCodePage_Auto)
+    _isHashHandler(false)
 {
 }
 
