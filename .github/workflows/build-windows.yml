@@ -35,6 +35,7 @@ jobs:
             "CPP\7zip\Bundles\Format7zF"
             "CPP\7zip\UI\GUI"
             "CPP\7zip\UI\FileManager"
+            "CPP\7zip\Bundles\SFXWin"
           ) do (
             echo ::group::nmake %%~T
             pushd "%GITHUB_WORKSPACE%\%%~T" || exit /b 1
@@ -61,3 +62,4 @@ jobs:
             CPP/7zip/Bundles/Format7zF/x64/7z.dll
             CPP/7zip/UI/GUI/x64/7zG.exe
             CPP/7zip/UI/FileManager/x64/7zFM.exe
+            CPP/7zip/Bundles/SFXWin/x64/7z.sfx
