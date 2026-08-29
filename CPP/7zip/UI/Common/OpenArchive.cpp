@@ -1386,24 +1386,7 @@ HRESULT CArc::PrepareToOpen(const COpenOptions &op, unsigned formatIndex, CMyCom
       }
     }
     */
-    /* the name of property can be prefixed with the name of archive type
-       and the dot: "zip.cp=936". Such property will be sent only to the handler
-       of that type. The properties without prefix are sent to any handler. */
-    CObjectVector<CProperty> props;
-    FOR_VECTOR (y, *op.props)
-    {
-      const CProperty &prop = (*op.props)[y];
-      const int dotPos = prop.Name.Find(L'.');
-      if (dotPos <= 0)
-        props.Add(prop);
-      else if (prop.Name.Left((unsigned)dotPos).IsEqualTo_NoCase(ai.Name.Ptr()))
-      {
-        CProperty &prop2 = props.AddNew();
-        prop2.Name = prop.Name.Ptr((unsigned)(dotPos + 1));
-        prop2.Value = prop.Value;
-      }
-    }
-    RINOK(SetProperties(archive, props))
+    RINOK(SetProperties(archive, *op.props, ai.Name))
   }
   
   #endif

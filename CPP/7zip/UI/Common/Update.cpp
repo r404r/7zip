@@ -394,7 +394,8 @@ static HRESULT Compress(
     throw kUpdateIsNotSupoorted;
 
   // we need to set properties to get fileTimeType.
-  RINOK(SetProperties(outArchive, options.MethodMode.Properties))
+  RINOK(SetProperties(outArchive, options.MethodMode.Properties,
+      codecs->Formats[(unsigned)formatIndex].Name))
 
   NFileTimeType::EEnum fileTimeType;
   {
