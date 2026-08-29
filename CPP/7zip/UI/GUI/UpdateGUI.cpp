@@ -248,6 +248,12 @@ static void SetOutProperties(
   if (di.EncryptHeadersIsAllowed)
     AddProp_bool(properties, "he", di.EncryptHeaders);
 
+  /* "cu" writes the names as UTF-8 and sets the UTF-8 flag in the header.
+     Such archive describes its own name encoding, so it can be opened
+     on a system with another language without garbled names. */
+  if (di.Utf8Names_IsAllowed)
+    AddProp_bool(properties, "cu", di.Utf8Names);
+
   if (di.SolidIsSpecified)
     AddProp_Size(properties, "s", di.SolidBlockSize);
   

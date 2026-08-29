@@ -206,6 +206,7 @@ static LPCTSTR const kArcHistory = TEXT("ArcHistory");
 static LPCWSTR const kArchiver = L"Archiver";
 static LPCTSTR const kShowPassword = TEXT("ShowPassword");
 static LPCTSTR const kEncryptHeaders = TEXT("EncryptHeaders");
+static LPCTSTR const kUtf8Names = TEXT("Utf8Names");
 
 static LPCTSTR const kOptionsKeyName = TEXT("Options");
 
@@ -270,6 +271,7 @@ void CInfo::Save() const
   key.SetValue(kArchiver, ArcType);
   key.SetValue(kShowPassword, ShowPassword);
   key.SetValue(kEncryptHeaders, EncryptHeaders);
+  key.SetValue(kUtf8Names, Utf8Names);
   key.RecurseDeleteKey(kArcHistory);
   key.SetValue_Strings(kArcHistory, ArcPaths);
 
@@ -313,6 +315,8 @@ void CInfo::Load()
   ArcType = L"7z";
   ShowPassword = false;
   EncryptHeaders = false;
+  // an archive that travels between systems of different languages needs it
+  Utf8Names = true;
 
   CS_LOCK
   CKey key;
@@ -371,6 +375,7 @@ void CInfo::Load()
   key.GetValue_UInt32_IfOk(kLevel, Level);
   key.GetValue_bool_IfOk(kShowPassword, ShowPassword);
   key.GetValue_bool_IfOk(kEncryptHeaders, EncryptHeaders);
+  key.GetValue_bool_IfOk(kUtf8Names, Utf8Names);
 }
 
 

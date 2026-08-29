@@ -82,6 +82,9 @@ namespace NCompressDialog
     bool EncryptHeadersIsAllowed;
     bool EncryptHeaders;
 
+    bool Utf8Names_IsAllowed;
+    bool Utf8Names;
+
     CInfo():
         UpdateMode(NCompressDialog::NUpdateMode::kAdd),
         PathMode(NWildcard::k_RelatPath),
