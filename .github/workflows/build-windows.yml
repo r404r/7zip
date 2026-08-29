@@ -1,0 +1,59 @@
+# Windows x64 build for this fork.
+#
+# 7-Zip is built with nmake and MSVC on Windows; the runner already provides
+# both, plus ml64 for the x64 assembly. We locate Visual Studio with vswhere
+# and call vcvars64.bat, so no third-party action is needed.
+name: build-windows-x64
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: nmake / MSVC x64
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build
+        shell: cmd
+        run: |
+          for /f "usebackq tokens=*" %%i in (`"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath`) do set "VSPATH=%%i"
+          if not defined VSPATH (echo Visual Studio with the C++ toolset was not found & exit /b 1)
+          echo Visual Studio: %VSPATH%
+          call "%VSPATH%\VC\Auxiliary\Build\vcvars64.bat" || exit /b 1
+          cl 2>&1 | findstr /C:"Version"
+          for %%T in (
+            "CPP\7zip\Bundles\Alone2"
+            "CPP\7zip\Bundles\Format7zF"
+            "CPP\7zip\UI\GUI"
+            "CPP\7zip\UI\FileManager"
+          ) do (
+            echo ::group::nmake %%~T
+            pushd "%GITHUB_WORKSPACE%\%%~T" || exit /b 1
+            nmake /NOLOGO PLATFORM=x64 || exit /b 1
+            popd
+            echo ::endgroup::
+          )
+
+      - name: List build output
+        if: always()
+        shell: cmd
+        run: dir /s /b "%GITHUB_WORKSPACE%\CPP\7zip\*.exe" "%GITHUB_WORKSPACE%\CPP\7zip\*.dll" 2>nul
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: 7zip-win-x64
+          if-no-files-found: error
+          path: |
+            CPP/7zip/Bundles/Alone2/x64/7zz.exe
+            CPP/7zip/Bundles/Format7zF/x64/7z.dll
+            CPP/7zip/UI/GUI/x64/7zG.exe
+            CPP/7zip/UI/FileManager/x64/7zFM.exe
