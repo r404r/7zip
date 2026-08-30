@@ -250,8 +250,14 @@ jobs:
         id: tag
         run: |
           tag="${GITHUB_REF_NAME}"
-          # an annotated tag carries the alias in its subject; a lightweight one has none
-          alias="$(git tag -l --format='%(contents:subject)' "$tag")"
+          # checkout leaves a lightweight ref for the tag: fetch the tag object
+          # itself, an annotated tag carries the alias in its subject
+          git fetch --force --no-tags origin "refs/tags/$tag:refs/tags/$tag"
+          alias=""
+          if [ "$(git cat-file -t "$tag")" = "tag" ]; then
+            alias="$(git tag -l --format='%(contents:subject)' "$tag")"
+          fi
+          echo "alias: '$alias'"
           python3 .github/tests/release_version.py "$tag" DOC/readme.txt "$alias" | tee -a "$GITHUB_OUTPUT"
           # a release must point into dev-main, the integration branch. A release
           # candidate may be cut from any branch: that is what it is for.
@@ -270,27 +276,32 @@ jobs:
           path: artifact
 
       - name: Name the assets
+        env:
+          stem: ${{ steps.tag.outputs.ASSET_STEM }}
         run: |
-          stem="${{ steps.tag.outputs.ASSET_STEM }}"
           mkdir -p out
           cp artifact/7zip-fork.msi "out/$stem-x64.msi"
           (cd artifact/portable && zip -q -r "../../out/$stem-portable-x64.zip" .)
           (cd out && sha256sum * > SHA256SUMS.txt && cat SHA256SUMS.txt)
 
       - name: Write the notes
+        env:
+          prev: ${{ steps.tag.outputs.PREV }}
+          upstream: ${{ steps.tag.outputs.UPSTREAM }}
+          fork: ${{ steps.tag.outputs.FORK }}
+          msi_version: ${{ steps.tag.outputs.MSI_VERSION }}
         run: |
           tag="${GITHUB_REF_NAME}"
-          prev="${{ steps.tag.outputs.PREV }}"
           {
-            echo "Built from 7-Zip **${{ steps.tag.outputs.UPSTREAM }}** (upstream tag), fork release **${{ steps.tag.outputs.FORK }}**."
-            echo "MSI version ${{ steps.tag.outputs.MSI_VERSION }}. The portable zip runs without installing."
+            echo "Built from 7-Zip **$upstream** (upstream tag), fork release **$fork**."
+            echo "MSI version $msi_version. The portable zip runs without installing."
             echo
             if [ -n "$prev" ]; then
               echo "## Changes since $prev"
               git log --no-merges --format='- %s' "$prev..$tag" -- . ':!DOC/readme.txt' | grep -v '^- Merge ' || true
             else
-              echo "## Changes on top of 7-Zip ${{ steps.tag.outputs.UPSTREAM }}"
-              git log --no-merges --format='- %s' "${{ steps.tag.outputs.UPSTREAM }}..$tag" || true
+              echo "## Changes on top of 7-Zip $upstream"
+              git log --no-merges --format='- %s' "$upstream..$tag" || true
             fi
             echo
             echo "## SHA256"
@@ -303,10 +314,13 @@ jobs:
       - name: Create the release
         env:
           GH_TOKEN: ${{ github.token }}
+          # through the environment: a title with an alias holds quotes
+          title: ${{ steps.tag.outputs.TITLE }}
+          prerelease: ${{ steps.tag.outputs.PRERELEASE }}
         run: |
           pre=""
-          [ "${{ steps.tag.outputs.PRERELEASE }}" = "true" ] && pre="--prerelease"
+          [ "$prerelease" = "true" ] && pre="--prerelease"
           gh release create "${GITHUB_REF_NAME}" $pre \
-            --title "${{ steps.tag.outputs.TITLE }}" \
+            --title "$title" \
             --notes-file notes.md \
             out/*
