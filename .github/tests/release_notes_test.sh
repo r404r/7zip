@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# The release notes list the commits of the fork and nothing else, also after
-# the integration branch was rebased onto a newer upstream: the old tag then
-# points into the old history, and a plain "prev..tag" would list the new
-# upstream commits and every fork commit again under its new hash.
+# The release notes list the commits of the fork and nothing else: not the
+# upstream commits that were merged into the integration branch, and not the
+# fork commits again after a rebase (the old tag then points into the old
+# history, and a plain "prev..tag" would list them under their new hashes).
 #
 #   bash .github/tests/release_notes_test.sh
 set -euo pipefail
@@ -42,11 +42,20 @@ check "only the fork commit that is new" "- fork c" "$("$script" 26.03-fork.1 ma
 check "first release on the new upstream, without a previous: all fork commits" \
   "$(printf -- '- fork c\n- fork b\n- fork a')" "$("$script" 26.03-fork.1 main)"
 
-git merge -q --no-ff -m "Merge pr/x" main 2>/dev/null || true
+# from now on upstream is merged into dev-main, not rebased (PR-009)
+git switch -q main
+c "upstream 26.04"
+git switch -q dev-main
+git merge -q --no-ff -m "Merge main: 7-Zip 26.04" main
 c "fork d"
-git tag 26.03-fork.2
-echo "-- merges are left out"
-check "d only, no merge commit" "- fork d" "$("$script" 26.03-fork.2 main 26.03-fork.1)"
+git tag 26.04-fork.1
+
+echo "-- after a merge of a newer upstream"
+check "the merge commit has two parents" "2" "$(git rev-list --parents -n 1 HEAD~1 | wc -w | xargs expr -1 +)"
+check "the previous release is still an ancestor" "yes" "$(git merge-base --is-ancestor 26.03-fork.1 26.04-fork.1 && echo yes)"
+check "only the fork commit that is new, not the upstream one, not the merge" "- fork d" "$("$script" 26.04-fork.1 main 26.03-fork.1)"
+check "first release on 26.04 without a previous: every fork commit, once" \
+  "$(printf -- '- fork d\n- fork c\n- fork b\n- fork a')" "$("$script" 26.04-fork.1 main)"
 
 echo "$failed failed"
 exit $((failed > 0))
