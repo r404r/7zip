@@ -124,7 +124,7 @@ jobs:
               '/a', "`"$msi`"", '/qn', "TARGETDIR=`"$out`"")
           if ($p.ExitCode -ne 0) { throw "msiexec /a returned $($p.ExitCode)" }
 
-          $expected = @('7z.exe', '7zz.exe', '7z.dll', '7zG.exe', '7zFM.exe',
+          $expected = @('7z.exe', '7zz.exe', '7z.dll', '7zG.exe', '7zFM.exe', '7-zip.dll',
                         '7z.sfx', '7zCon.sfx', 'License.txt', 'readme.txt')
           foreach ($e in $expected) {
             if (-not (Get-ChildItem -Path $out -Recurse -Filter $e -ErrorAction SilentlyContinue)) {
@@ -157,6 +157,23 @@ jobs:
           if ($gotUpgrade -notmatch '123DA846-FD92-4158-B7D8-1C522FE5EB09') {
             throw "UpgradeCode is '$gotUpgrade', it must be the one of this fork"
           }
+
+          # the shell extension must be registered as the fork's own, and never
+          # as 7-Zip's: that CLSID and that handler name belong to the official
+          # installation on the same machine
+          if ($x -notmatch 'CLSID\\\{1281FA63-F95D-48AC-9342-EE333A3F71F8\}\\InprocServer32') {
+            throw "the fork's CLSID is not registered as an InprocServer32"
+          }
+          if ($x -notmatch 'shellex\\ContextMenuHandlers\\7-Zip-fork') {
+            throw "no context menu handler is registered under 7-Zip-fork"
+          }
+          if ($x -match '23170F69-40C1-278A-1000-000100020000') {
+            throw "the package registers the CLSID of the official 7-Zip"
+          }
+          if ($x -match 'ContextMenuHandlers\\7-Zip"') {
+            throw "the package registers a handler under the official name 7-Zip"
+          }
+          Write-Host "the shell extension is registered as 7-Zip-fork only"
 
       - name: Stage the artifact
         shell: pwsh
