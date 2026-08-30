@@ -7,7 +7,7 @@ and what it turns into.
 import os
 import sys
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "scripts"))
 import release_version as rv  # noqa: E402
 
 failed = 0
@@ -50,6 +50,12 @@ rejects("26.2-fork.1")          # upstream writes two digits
 rejects("26.02-fork.1-beta.1")  # only rc is defined
 rejects("26.02-fork.1 ")
 
+print("-- the limits of an MSI ProductVersion: 255.255.65535")
+parses("255.99-fork.65535", "255.99", 65535, None)
+check(rv.msi_version("255.99-fork.65535") == "255.99.65535", "255.99-fork.65535 -> 255.99.65535")
+rejects("256.00-fork.1")
+rejects("26.02-fork.65536")
+
 print("-- the upstream version in readme.txt")
 check(rv.readme_version("7-Zip 26.02 Sources\n-------------------\n") == "26.02",
       "the first line of readme.txt gives 26.02")
@@ -84,6 +90,15 @@ tags = ["26.02-fork.10", "26.02-fork.2", "26.02-fork.10-rc.1", "27.00-fork.1", "
 check(sorted(tags, key=rv.sort_key) ==
       ["26.02-fork.2-rc.3", "26.02-fork.2", "26.02-fork.10-rc.1", "26.02-fork.10", "27.00-fork.1"],
       "fork numbers sort numerically, an rc comes before its release, a newer upstream comes last")
+
+print("-- the previous release, for the notes")
+tags = ["26.02-fork.1", "26.02-fork.2-rc.1", "26.02-fork.2", "26.02-fork.3-rc.1", "26.02-fork.10-rc.1", "junk", "26.02"]
+check(rv.previous_release("26.02-fork.3", tags) == "26.02-fork.2", "of 26.02-fork.3: 26.02-fork.2, not one of the rc tags")
+check(rv.previous_release("26.02-fork.3-rc.1", tags) == "26.02-fork.2", "of an rc: the last release before it")
+check(rv.previous_release("26.02-fork.2", tags) == "26.02-fork.1", "of 26.02-fork.2: 26.02-fork.1")
+check(rv.previous_release("26.02-fork.1", tags) is None, "the first release has none")
+check(rv.previous_release("27.00-fork.1", tags) == "26.02-fork.2", "across an upstream bump: the last release on the old one")
+check(rv.previous_release("26.02-fork.2", ["26.02-fork.2", "26.02-fork.10"]) is None, "a later release is not a previous one")
 
 print("%d failed" % failed)
 sys.exit(1 if failed else 0)
