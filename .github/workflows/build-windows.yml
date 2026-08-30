@@ -259,10 +259,12 @@ jobs:
           fi
           echo "alias: '$alias'"
           python3 .github/tests/release_version.py "$tag" DOC/readme.txt "$alias" | tee -a "$GITHUB_OUTPUT"
-          # a release must point into dev-main, the integration branch. A release
-          # candidate may be cut from any branch: that is what it is for.
+          # main mirrors the upstream tag the fork is built on (the tags themselves
+          # are not on origin), dev-main is the integration branch
+          git fetch --no-tags origin main:refs/remotes/origin/main dev-main:refs/remotes/origin/dev-main
+          # a release must point into dev-main. A release candidate may be cut
+          # from any branch: that is what it is for.
           if ! grep -qx 'PRERELEASE=true' "$GITHUB_OUTPUT"; then
-            git fetch --no-tags origin dev-main:refs/remotes/origin/dev-main
             if ! git merge-base --is-ancestor "$GITHUB_SHA" origin/dev-main; then
               echo "::error::$tag does not point into dev-main"; exit 1
             fi
@@ -298,10 +300,10 @@ jobs:
             echo
             if [ -n "$prev" ]; then
               echo "## Changes since $prev"
-              git log --no-merges --format='- %s' "$prev..$tag" -- . ':!DOC/readme.txt' | grep -v '^- Merge ' || true
+              git log --no-merges --format='- %s' "$prev..$tag"
             else
               echo "## Changes on top of 7-Zip $upstream"
-              git log --no-merges --format='- %s' "$upstream..$tag" || true
+              git log --no-merges --format='- %s' "origin/main..$tag"
             fi
             echo
             echo "## SHA256"
