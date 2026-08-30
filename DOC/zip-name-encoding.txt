@@ -89,6 +89,13 @@ as a file name. Quote it there, or put --% before the arguments:
   7z l "-mzip.cp=936" archive.zip
   7z --% l -mzip.cp=936 archive.zip
 
+The console output has its own encoding, the OEM code page by default. A
+terminal in UTF-8 mode (Windows Terminal, PowerShell 7) then shows the
+decoded names garbled although they are right: add -sccUTF-8, or chcp to the
+OEM code page.
+
+  7z l "-mzip.cp=936" -sccUTF-8 archive.zip
+
 
 In the graphical interface
 --------------------------
