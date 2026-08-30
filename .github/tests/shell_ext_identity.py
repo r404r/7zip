@@ -51,6 +51,38 @@ def guid_from_define(text):
     return "{%08X-%04X-%04X-%02X%02X-%02X%02X%02X%02X%02X%02X}" % tuple(nums)
 
 
+def registry_values(wxs):
+    """Every RegistryValue of the .wxs as (Root, Key, Name, Value), with the
+    <?define?> variables substituted."""
+    defines = dict(re.findall(r'<\?define\s+(\w+)\s*=\s*"([^"]*)"\s*\?>', wxs))
+
+    def subst(v):
+        return None if v is None else re.sub(r"\$\(var\.(\w+)\)", lambda m: defines.get(m.group(1), m.group(0)), v)
+
+    out = set()
+    for m in re.finditer(r"<RegistryValue\b([^>]*?)/?>", wxs):
+        a = dict(re.findall(r'(\w+)="([^"]*)"', m.group(1)))
+        out.add((a.get("Root"), subst(a.get("Key")), subst(a.get("Name")), subst(a.get("Value"))))
+    return out
+
+
+def expected_registry(clsid):
+    """The complete registration of the shell extension: the class, the
+    approval, and every handler key the official 7-Zip also uses."""
+    approved = "Software\\Microsoft\\Windows\\CurrentVersion\\Shell Extensions\\Approved"
+    inproc = "CLSID\\%s\\InprocServer32" % clsid
+    exp = [
+        ("HKCR", inproc, None, "[INSTALLFOLDER]7-zip.dll"),
+        ("HKCR", inproc, "ThreadingModel", "Apartment"),
+        ("HKLM", approved, clsid, "%s Shell Extension" % MENU_NAME),
+    ]
+    for cls in ("*", "Directory", "Folder"):
+        exp.append(("HKCR", "%s\\shellex\\ContextMenuHandlers\\%s" % (cls, MENU_NAME), None, clsid))
+    for cls in ("Directory", "Drive"):
+        exp.append(("HKCR", "%s\\shellex\\DragDropHandlers\\%s" % (cls, MENU_NAME), None, clsid))
+    return exp
+
+
 def main(root):
     src = {}
     for key, rel in FILES.items():
@@ -88,13 +120,13 @@ def main(root):
 
     print("-- MSI")
     check("7-zip.dll" in src["wxs"], "wxs: 7-zip.dll is installed")
-    check(FORK_CLSID in src["wxs"], "wxs: the fork CLSID is registered")
-    check("InprocServer32" in src["wxs"], "wxs: the class has an InprocServer32 entry")
-    for kind in ("ContextMenuHandlers", "DragDropHandlers"):
-        check(("shellex\\%s\\%s" % (kind, MENU_NAME)) in src["wxs"],
-              "wxs: %s registered under %s" % (kind, MENU_NAME))
-    check("shellex\\ContextMenuHandlers\\7-Zip\"" not in src["wxs"],
-          "wxs: no handler registered under the official name 7-Zip")
+    values = registry_values(src["wxs"])
+    for root, key, name, value in expected_registry(FORK_CLSID):
+        check((root, key, name, value) in values,
+              "wxs registers %s\\%s%s = %s" % (root, key, "" if name is None else " [" + name + "]", value))
+    stray = [v for v in values if OFFICIAL_CLSID in (v[3] or "") or OFFICIAL_CLSID in v[1]
+             or v[1].endswith("\\7-Zip") or (v[2] or "") == OFFICIAL_CLSID]
+    check(not stray, "wxs: no registry value carries the CLSID or the handler name of 7-Zip (%d found)" % len(stray))
 
     print("%d failed" % failed)
     return 1 if failed else 0
