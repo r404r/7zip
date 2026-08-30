@@ -250,14 +250,17 @@ jobs:
         id: tag
         run: |
           tag="${GITHUB_REF_NAME}"
-          # the tag must point into dev-main: releases come from the integration branch only
-          git fetch --no-tags origin dev-main:refs/remotes/origin/dev-main
-          if ! git merge-base --is-ancestor "$GITHUB_SHA" origin/dev-main; then
-            echo "::error::$tag does not point into dev-main"; exit 1
-          fi
           # an annotated tag carries the alias in its subject; a lightweight one has none
           alias="$(git tag -l --format='%(contents:subject)' "$tag")"
           python3 .github/tests/release_version.py "$tag" DOC/readme.txt "$alias" | tee -a "$GITHUB_OUTPUT"
+          # a release must point into dev-main, the integration branch. A release
+          # candidate may be cut from any branch: that is what it is for.
+          if ! grep -qx 'PRERELEASE=true' "$GITHUB_OUTPUT"; then
+            git fetch --no-tags origin dev-main:refs/remotes/origin/dev-main
+            if ! git merge-base --is-ancestor "$GITHUB_SHA" origin/dev-main; then
+              echo "::error::$tag does not point into dev-main"; exit 1
+            fi
+          fi
           prev="$(git tag -l '*-fork.*' --sort=-v:refname | grep -vx "$tag" | head -1 || true)"
           echo "PREV=$prev" >> "$GITHUB_OUTPUT"
 
