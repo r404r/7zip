@@ -37,7 +37,10 @@
         Description="$(var.ProductName) $(var.Version)"
         Manufacturer="$(var.Manufacturer)" />
 
-    <MajorUpgrade DowngradeErrorMessage=
+    <!-- a release candidate carries the version of the release it precedes,
+         and a build of dev-main always 26.2.0: the same version must replace
+         itself, or two of them end up installed side by side -->
+    <MajorUpgrade AllowSameVersionUpgrades="yes" DowngradeErrorMessage=
         "A newer version of $(var.ProductName) is already installed." />
 
     <MediaTemplate EmbedCab="yes" />

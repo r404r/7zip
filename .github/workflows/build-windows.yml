@@ -65,6 +65,10 @@ jobs:
         shell: cmd
         run: python .github\tests\release_version_test.py
 
+      - name: Check the release notes
+        shell: bash
+        run: bash .github/tests/release_notes_test.sh
+
       - name: Package the MSI
         shell: pwsh
         run: |
@@ -111,7 +115,7 @@ jobs:
           $version = "$($Matches[1]).$([int]$Matches[2]).0"
           if ($env:GITHUB_REF -like 'refs/tags/*') {
             $tag = $env:GITHUB_REF_NAME
-            $info = & python (Join-Path $ws ".github\tests\release_version.py") $tag (Join-Path $ws "DOC\readme.txt")
+            $info = & python (Join-Path $ws ".github\scripts\release_version.py") $tag (Join-Path $ws "DOC\readme.txt")
             if ($LASTEXITCODE -ne 0) { throw "$tag is not a release tag of this fork" }
             $version = ($info | Where-Object { $_ -like 'MSI_VERSION=*' }) -replace '^MSI_VERSION=', ''
             Write-Host "release tag ${tag}: MSI version $version"
@@ -232,7 +236,7 @@ jobs:
 
   # A tag such as 26.02-fork.3 turns the artifact of that commit into a GitHub
   # Release: the MSI, the portable set as a zip, their checksums, and notes.
-  # See .github/tests/release_version.py for what a tag may look like.
+  # See .github/scripts/release_version.py for what a tag may look like.
   release:
     name: release
     needs: build
@@ -258,7 +262,7 @@ jobs:
             alias="$(git tag -l --format='%(contents:subject)' "$tag")"
           fi
           echo "alias: '$alias'"
-          python3 .github/tests/release_version.py "$tag" DOC/readme.txt "$alias" | tee -a "$GITHUB_OUTPUT"
+          python3 .github/scripts/release_version.py "$tag" DOC/readme.txt "$alias" | tee -a "$GITHUB_OUTPUT"
           # main mirrors the upstream tag the fork is built on (the tags themselves
           # are not on origin), dev-main is the integration branch
           git fetch --no-tags origin main:refs/remotes/origin/main dev-main:refs/remotes/origin/dev-main
@@ -269,8 +273,11 @@ jobs:
               echo "::error::$tag does not point into dev-main"; exit 1
             fi
           fi
-          prev="$(git tag -l '*-fork.*' --sort=-v:refname | grep -vx "$tag" | head -1 || true)"
+          # the release before this one (never an rc), for the notes
+          git fetch --tags origin
+          prev="$(python3 .github/scripts/release_version.py previous "$tag" $(git tag -l '*-fork.*'))"
           echo "PREV=$prev" >> "$GITHUB_OUTPUT"
+          echo "previous release: '$prev'"
 
       - uses: actions/download-artifact@v4
         with:
@@ -300,11 +307,10 @@ jobs:
             echo
             if [ -n "$prev" ]; then
               echo "## Changes since $prev"
-              git log --no-merges --format='- %s' "$prev..$tag"
             else
               echo "## Changes on top of 7-Zip $upstream"
-              git log --no-merges --format='- %s' "origin/main..$tag"
             fi
+            bash .github/scripts/release_notes.sh "$tag" origin/main "$prev"
             echo
             echo "## SHA256"
             echo '```'
