@@ -3470,6 +3470,12 @@ HRESULT CArc::ReOpen(const COpenOptions &op, IArchiveOpenCallback *openCallback_
   IArchiveOpenCallback *openCallback = openCallback_Additional;
   if (!openCallback)
     openCallback = op.callback;
+  #ifndef Z7_SFX
+  if (op.props && FormatIndex >= 0)
+  {
+    RINOK(SetProperties(Archive, *op.props, op.codecs->Formats[(unsigned)FormatIndex].Name))
+  }
+  #endif
   HRESULT res = Archive->Open(stream2, &maxStartPosition, openCallback);
   
   if (res == S_OK)
