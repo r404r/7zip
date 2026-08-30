@@ -43,7 +43,6 @@
 static LPCTSTR const k_ShellExtName = TEXT("7-Zip-fork Shell Extension");
 static LPCTSTR const k_Approved = TEXT("Software\\Microsoft\\Windows\\CurrentVersion\\Shell Extensions\\Approved");
 
-// the fork has its own CLSID, so that it can be installed next to 7-Zip
 // {1281FA63-F95D-48AC-9342-EE333A3F71F8}
 static LPCTSTR const k_Clsid = TEXT("{1281FA63-F95D-48AC-9342-EE333A3F71F8}");
 

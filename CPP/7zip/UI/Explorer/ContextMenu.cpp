@@ -1645,7 +1645,7 @@ Z7_COMWF_B CZipExplorerCommand::GetTitle(IShellItemArray *psiItemArray, LPWSTR *
     name = "7-Zip-fork"; //  "New"
   }
   else
-    name = "7-Zip-fork item";
+    name = "7-Zip item";
   
   if (!_commandMap_Cur.IsEmpty())
   {
