@@ -83,6 +83,12 @@ dot. Such a property is sent only to the handler of that type:
 
 A property without a prefix is sent to any handler, as before.
 
+PowerShell splits an unquoted "-mzip.cp=936" at the dot and passes ".cp=936"
+as a file name. Quote it there, or put --% before the arguments:
+
+  7z l "-mzip.cp=936" archive.zip
+  7z --% l -mzip.cp=936 archive.zip
+
 
 In the graphical interface
 --------------------------
