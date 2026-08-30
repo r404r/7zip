@@ -8,6 +8,7 @@ name: build-windows-x64
 on:
   push:
     branches: ['**']
+    tags: ['*-fork.*']
   pull_request:
   workflow_dispatch:
 
@@ -60,6 +61,14 @@ jobs:
         shell: cmd
         run: python .github\tests\shell_ext_identity.py "%GITHUB_WORKSPACE%"
 
+      - name: Check the reading of release tags
+        shell: cmd
+        run: python .github\tests\release_version_test.py
+
+      - name: Check the release notes
+        shell: bash
+        run: bash .github/tests/release_notes_test.sh
+
       - name: Package the MSI
         shell: pwsh
         run: |
@@ -98,10 +107,19 @@ jobs:
             Write-Host "zip-name-encoding.txt is not in this branch, left out of the package"
           }
 
-          # the version follows the upstream tag, so a rebase can't leave it behind
+          # the version follows the upstream tag, so a rebase can't leave it behind.
+          # A release tag adds its fork number as the third component (26.02-fork.3
+          # gives 26.2.3), and must name the upstream version of this tree.
           $line = Get-Content (Join-Path $ws "DOC\readme.txt") -First 1
           if ($line -notmatch '(\d+)\.(\d+)') { throw "no version in readme.txt: $line" }
           $version = "$($Matches[1]).$([int]$Matches[2]).0"
+          if ($env:GITHUB_REF -like 'refs/tags/*') {
+            $tag = $env:GITHUB_REF_NAME
+            $info = & python (Join-Path $ws ".github\scripts\release_version.py") $tag (Join-Path $ws "DOC\readme.txt")
+            if ($LASTEXITCODE -ne 0) { throw "$tag is not a release tag of this fork" }
+            $version = ($info | Where-Object { $_ -like 'MSI_VERSION=*' }) -replace '^MSI_VERSION=', ''
+            Write-Host "release tag ${tag}: MSI version $version"
+          }
           Write-Host "version from readme.txt: $version"
 
           Set-Content -Path "$ws\msi-version.txt" -Value $version
@@ -215,3 +233,102 @@ jobs:
           name: 7zip-win-x64
           if-no-files-found: error
           path: artifact
+
+  # A tag such as 26.02-fork.3 turns the artifact of that commit into a GitHub
+  # Release: the MSI, the portable set as a zip, their checksums, and notes.
+  # See .github/scripts/release_version.py for what a tag may look like.
+  release:
+    name: release
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Read the tag
+        id: tag
+        run: |
+          tag="${GITHUB_REF_NAME}"
+          # checkout leaves a lightweight ref for the tag: fetch the tag object
+          # itself, an annotated tag carries the alias in its subject
+          git fetch --force --no-tags origin "refs/tags/$tag:refs/tags/$tag"
+          alias=""
+          if [ "$(git cat-file -t "$tag")" = "tag" ]; then
+            alias="$(git tag -l --format='%(contents:subject)' "$tag")"
+          fi
+          echo "alias: '$alias'"
+          python3 .github/scripts/release_version.py "$tag" DOC/readme.txt "$alias" | tee -a "$GITHUB_OUTPUT"
+          # main mirrors the upstream tag the fork is built on (the tags themselves
+          # are not on origin), dev-main is the integration branch
+          git fetch --no-tags origin main:refs/remotes/origin/main dev-main:refs/remotes/origin/dev-main
+          # a release must point into dev-main. A release candidate may be cut
+          # from any branch: that is what it is for.
+          if ! grep -qx 'PRERELEASE=true' "$GITHUB_OUTPUT"; then
+            if ! git merge-base --is-ancestor "$GITHUB_SHA" origin/dev-main; then
+              echo "::error::$tag does not point into dev-main"; exit 1
+            fi
+          fi
+          # the release before this one (never an rc), for the notes
+          git fetch --tags origin
+          prev="$(python3 .github/scripts/release_version.py previous "$tag" $(git tag -l '*-fork.*'))"
+          echo "PREV=$prev" >> "$GITHUB_OUTPUT"
+          echo "previous release: '$prev'"
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: 7zip-win-x64
+          path: artifact
+
+      - name: Name the assets
+        env:
+          stem: ${{ steps.tag.outputs.ASSET_STEM }}
+        run: |
+          mkdir -p out
+          cp artifact/7zip-fork.msi "out/$stem-x64.msi"
+          (cd artifact/portable && zip -q -r "../../out/$stem-portable-x64.zip" .)
+          (cd out && sha256sum * > SHA256SUMS.txt && cat SHA256SUMS.txt)
+
+      - name: Write the notes
+        env:
+          prev: ${{ steps.tag.outputs.PREV }}
+          upstream: ${{ steps.tag.outputs.UPSTREAM }}
+          fork: ${{ steps.tag.outputs.FORK }}
+          msi_version: ${{ steps.tag.outputs.MSI_VERSION }}
+        run: |
+          tag="${GITHUB_REF_NAME}"
+          {
+            echo "Built from 7-Zip **$upstream** (upstream tag), fork release **$fork**."
+            echo "MSI version $msi_version. The portable zip runs without installing."
+            echo
+            if [ -n "$prev" ]; then
+              echo "## Changes since $prev"
+            else
+              echo "## Changes on top of 7-Zip $upstream"
+            fi
+            bash .github/scripts/release_notes.sh "$tag" origin/main "$prev"
+            echo
+            echo "## SHA256"
+            echo '```'
+            cat out/SHA256SUMS.txt
+            echo '```'
+          } > notes.md
+          cat notes.md
+
+      - name: Create the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          # through the environment: a title with an alias holds quotes
+          title: ${{ steps.tag.outputs.TITLE }}
+          prerelease: ${{ steps.tag.outputs.PRERELEASE }}
+        run: |
+          pre=""
+          [ "$prerelease" = "true" ] && pre="--prerelease"
+          gh release create "${GITHUB_REF_NAME}" $pre \
+            --title "$title" \
+            --notes-file notes.md \
+            out/*
