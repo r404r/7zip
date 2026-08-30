@@ -3471,7 +3471,6 @@ HRESULT CArc::ReOpen(const COpenOptions &op, IArchiveOpenCallback *openCallback_
   if (!openCallback)
     openCallback = op.callback;
   #ifndef Z7_SFX
-  // the same as in OpenStream2(): the handler must get the properties before Open()
   if (op.props && FormatIndex >= 0)
   {
     RINOK(SetProperties(Archive, *op.props, op.codecs->Formats[(unsigned)FormatIndex].Name))
