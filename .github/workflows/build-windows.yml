@@ -155,19 +155,22 @@ jobs:
       - name: Stage the artifact
         shell: pwsh
         run: |
-          # One flat directory: 7zFM.exe, 7zG.exe and 7zz.exe need 7z.dll next
-          # to them, so hand them over side by side. Listing the build paths in
-          # upload-artifact keeps their directory tree instead.
+          # The MSI installs on its own, so it sits at the top. Everything else
+          # runs without installing as long as it stays together: 7zFM.exe,
+          # 7zG.exe and 7z.exe load 7z.dll from their own directory, and the
+          # .sfx modules are looked up there too. That set goes to portable\.
           $ws = $env:GITHUB_WORKSPACE
           $out = Join-Path $ws "artifact"
-          New-Item -ItemType Directory -Force -Path $out | Out-Null
-          Copy-Item (Join-Path $ws "msi-stage\*") $out
+          $portable = Join-Path $out "portable"
+          New-Item -ItemType Directory -Force -Path $portable | Out-Null
           Copy-Item (Join-Path $ws "7zip-fork.msi") $out
-          foreach ($e in @('7zFM.exe', '7zG.exe', '7z.dll', '7zz.exe', '7z.exe',
-                           '7z.sfx', '7zCon.sfx', '7zip-fork.msi')) {
-            if (-not (Test-Path (Join-Path $out $e))) { throw "$e is not in the artifact directory" }
+          Copy-Item (Join-Path $ws "msi-stage\*") $portable
+          if (-not (Test-Path (Join-Path $out "7zip-fork.msi"))) { throw "7zip-fork.msi is not in the artifact directory" }
+          foreach ($e in @('7zFM.exe', '7zG.exe', '7z.exe', '7zz.exe', '7z.dll',
+                           '7z.sfx', '7zCon.sfx', 'License.txt', 'readme.txt')) {
+            if (-not (Test-Path (Join-Path $portable $e))) { throw "$e is not in portable\" }
           }
-          Get-ChildItem $out | Format-Table Name, Length
+          Get-ChildItem $out -Recurse -File | Format-Table FullName, Length
 
       - uses: actions/upload-artifact@v4
         with:
