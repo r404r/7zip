@@ -10,6 +10,9 @@
 #include "../../../Windows/FileName.h"
 #include "../../../Windows/PropVariant.h"
 
+#include "../Agent/Agent.h"
+#include "../Common/NameCodePageProps.h"
+
 #include "ComboDialog.h"
 
 #include "FSFolder.h"
@@ -422,6 +425,73 @@ void CPanel::CreateFolder()
   RefreshTitleAlways();
   RefreshListCtrl(state);
 }
+
+/* Show the archive again with another code page for its names, so that the
+   right one can be found by looking at the result.
+   This is a prototype: the strings are not in the language files yet, and the
+   choice is not remembered. */
+void CPanel::NameCodePage()
+{
+  if (!IsArcFolder())
+    return;
+
+  CMyComPtr<IArchiveFolderInternal> archiveFolderInternal;
+  if (_folder.QueryInterface(IID_IArchiveFolderInternal, &archiveFolderInternal) != S_OK
+      || !archiveFolderInternal)
+    return;
+  CAgentFolder *agentFolder = NULL;
+  if (archiveFolderInternal->GetAgentFolder(&agentFolder) != S_OK
+      || !agentFolder || !agentFolder->_agentSpec)
+    return;
+
+  CComboDialog dlg;
+  dlg.Title = "Name Code Page";
+  dlg.Static = "Read the names of this archive as:";
+  {
+    UString s;
+    NameCodePage_ToString(s, kNameCodePage_Auto);
+    dlg.Strings.Add(s);
+    for (unsigned i = 0; i < Z7_ARRAY_SIZE(k_CodePages); i++)
+    {
+      NameCodePage_ToString(s, k_CodePages[i].CodePage);
+      dlg.Strings.Add(s);
+    }
+    // start at the one that is in use, so that it is visible which one it is
+    NameCodePage_ToString(dlg.Value, agentFolder->_agentSpec->_nameCodePage);
+  }
+
+  if (dlg.Create(GetParent()) != IDOK)
+    return;
+
+  UInt32 codePage;
+  if (!ParseNameCodePage(dlg.Value, codePage))
+  {
+    MessageBox_Error_HRESULT(E_INVALIDARG);
+    return;
+  }
+
+  CDisableTimerProcessing disableTimerProcessing(*this);
+  CSelectedState state;
+  SaveSelectedState(state);
+  HRESULT res;
+  bool folderIsUsable = true;
+  {
+    CDisableNotify disableNotify(*this);
+    res = agentFolder->SetNameCodePage_ReOpen(codePage, NULL, folderIsUsable);
+  }
+  if (res != S_OK)
+    MessageBox_Error_HRESULT(res);
+  if (!folderIsUsable)
+  {
+    // the archive is not open any more, so there is nothing to show
+    CloseOpenFolders();
+    return;
+  }
+  res = RefreshListCtrl(state);
+  if (res != S_OK)
+    MessageBox_Error_HRESULT(res);
+}
+
 
 void CPanel::CreateFile()
 {

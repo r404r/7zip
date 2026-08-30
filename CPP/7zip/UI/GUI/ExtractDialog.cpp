@@ -48,36 +48,6 @@ static const UInt32 kOverwriteMode_IDs[] =
   IDS_EXTRACT_OVERWRITE_RENAME_EXISTING
 };
 
-struct CCodePagePair
-{
-  UInt32 CodePage;
-  const char *Name;
-};
-
-/* the list holds the common code pages; another one can be typed in */
-static const CCodePagePair kCodePages[] =
-{
-  { 65001, "UTF-8" },
-  {   932, "Japanese" },
-  {   936, "Chinese Simplified" },
-  {   949, "Korean" },
-  {   950, "Chinese Traditional" },
-  {   874, "Thai" },
-  {  1250, "Central European" },
-  {  1251, "Cyrillic" },
-  {  1252, "Western European" },
-  {  1253, "Greek" },
-  {  1254, "Turkish" },
-  {  1255, "Hebrew" },
-  {  1256, "Arabic" },
-  {  1257, "Baltic" },
-  {  1258, "Vietnamese" },
-  {   437, "OEM United States" },
-  {   850, "OEM Latin 1" },
-  {   852, "OEM Latin 2" },
-  {   866, "OEM Cyrillic" }
-};
-
 static const
   // NExtract::NPathMode::EEnum
   int
@@ -272,9 +242,9 @@ bool CExtractDialog::OnInit()
     if (s.IsEmpty())
       s = "Auto";
     _codePage.AddString_SetItemData(s, (LPARAM)(Int32)-1);
-    for (unsigned i = 0; i < Z7_ARRAY_SIZE(kCodePages); i++)
+    for (unsigned i = 0; i < Z7_ARRAY_SIZE(k_CodePages); i++)
     {
-      const CCodePagePair &pair = kCodePages[i];
+      const CCodePagePair &pair = k_CodePages[i];
       UString s2;
       s2.Add_UInt32(pair.CodePage);
       s2 += " (";

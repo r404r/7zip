@@ -503,6 +503,7 @@ public:
   void DeleteItems(bool toRecycleBin);
   void CreateFolder();
   void CreateFile();
+  void NameCodePage();
   bool CorrectFsPath(const UString &path, UString &result);
   // bool IsPathForPlugin(const UString &path);
 

@@ -13,6 +13,8 @@
 
 #include "../Common/WorkDir.h"
 
+#include "../Common/NameCodePageProps.h"
+
 #include "Agent.h"
 
 using namespace NWindows;
@@ -25,6 +27,118 @@ void CAgentFolder::GetPathParts(UStringVector &pathParts, bool &isAltStreamFolde
     _proxy2->GetDirPathParts(_proxyDirIndex, pathParts, isAltStreamFolder);
   else
     _proxy->GetDirPathParts(_proxyDirIndex, pathParts);
+}
+
+
+HRESULT CAgentFolder::SetNameCodePage_ReOpen(UInt32 codePage,
+    IArchiveOpenCallback *openCallback, bool &folderIsUsable)
+{
+  folderIsUsable = true;
+  if (!_agentSpec)
+    return E_NOTIMPL;
+  const UInt32 oldCodePage = _agentSpec->_nameCodePage;
+  if (codePage == oldCodePage)
+    return S_OK;
+
+  UStringVector pathParts;
+  bool isAltStreamFolder = false;
+  GetPathParts(pathParts, isAltStreamFolder);
+
+  _agentSpec->_nameCodePage = codePage;
+  _proxyDirIndex = k_Proxy_RootDirIndex;
+  HRESULT res = _agent->ReOpen(openCallback);
+  if (res == S_OK)
+    res = RestoreFolder_AfterReOpen(pathParts, isAltStreamFolder);
+
+  if (res != S_OK)
+  {
+    /* ReOpen() deletes the proxies before it opens, so after a failure the
+       ones here point to freed memory. Clear them before anything else. */
+    _proxy = NULL;
+    _proxy2 = NULL;
+    // go back to the code page that worked
+    _agentSpec->_nameCodePage = oldCodePage;
+    _proxyDirIndex = k_Proxy_RootDirIndex;
+    HRESULT res2 = _agent->ReOpen(openCallback);
+    if (res2 == S_OK)
+      res2 = RestoreFolder_AfterReOpen(pathParts, isAltStreamFolder);
+    if (res2 != S_OK)
+    {
+      /* the folder shows an archive that is no longer open. The caller must
+         close it: reading from it now would use proxies that are gone. */
+      _proxy = NULL;
+      _proxy2 = NULL;
+      folderIsUsable = false;
+    }
+  }
+  return res;
+}
+
+
+/* After CAgent::ReOpen() the old proxies are gone, so the folder has to be
+   bound again and the path walked down once more to get back to the directory
+   the user was in. It is used by the update operation and by anything else
+   that reopens the archive under the same folder object. */
+HRESULT CAgentFolder::RestoreFolder_AfterReOpen(const UStringVector &pathParts,
+    bool isAltStreamFolder)
+{
+  // CAgent::ReOpen() deletes _proxy and _proxy2
+  // _items.Clear();
+  _proxy = NULL;
+  _proxy2 = NULL;
+  // _proxyDirIndex = k_Proxy_RootDirIndex;
+  _isAltStreamFolder = false;
+  
+  
+  // ---------- Restore FolderItem ----------
+
+  CMyComPtr<IFolderFolder> archiveFolder;
+  RINOK(_agent->BindToRootFolder(&archiveFolder))
+
+  // CAgent::BindToRootFolder() changes _proxy and _proxy2
+  _proxy = _agentSpec->_proxy;
+  _proxy2 = _agentSpec->_proxy2;
+
+  if (_proxy)
+  {
+    FOR_VECTOR (i, pathParts)
+    {
+      const int next = _proxy->FindSubDir(_proxyDirIndex, pathParts[i]);
+      if (next == -1)
+        break;
+      _proxyDirIndex = (unsigned)next;
+    }
+  }
+  
+  if (_proxy2)
+  {
+    if (pathParts.IsEmpty() && isAltStreamFolder)
+    {
+      _proxyDirIndex = k_Proxy2_AltRootDirIndex;
+    }
+    else FOR_VECTOR (i, pathParts)
+    {
+      const bool dirOnly = (i + 1 < pathParts.Size() || !isAltStreamFolder);
+      const int index = _proxy2->FindItem(_proxyDirIndex, pathParts[i], dirOnly);
+      if (index == -1)
+        break;
+      
+      const CProxyFile2 &file = _proxy2->Files[_proxy2->Dirs[_proxyDirIndex].Items[index]];
+  
+      if (dirOnly)
+        _proxyDirIndex = (unsigned)file.DirIndex;
+      else
+      {
+        if (file.AltDirIndex != -1)
+          _proxyDirIndex = (unsigned)file.AltDirIndex;
+        break;
+      }
+    }
+  }
+
+  if (_proxy2)
+    _isAltStreamFolder = _proxy2->IsAltDir(_proxyDirIndex);
+  return S_OK;
 }
 
 static bool Delete_EmptyFolder_And_EmptySubFolders(const FString &path)
@@ -258,59 +372,7 @@ HRESULT CAgentFolder::CommonUpdateOperation(
     RINOK(_agent->ReOpen(openCallback))
   }
    
-  // CAgent::ReOpen() deletes _proxy and _proxy2
-  // _items.Clear();
-  _proxy = NULL;
-  _proxy2 = NULL;
-  // _proxyDirIndex = k_Proxy_RootDirIndex;
-  _isAltStreamFolder = false;
-  
-  
-  // ---------- Restore FolderItem ----------
-
-  CMyComPtr<IFolderFolder> archiveFolder;
-  RINOK(_agent->BindToRootFolder(&archiveFolder))
-
-  // CAgent::BindToRootFolder() changes _proxy and _proxy2
-  _proxy = _agentSpec->_proxy;
-  _proxy2 = _agentSpec->_proxy2;
-
-  if (_proxy)
-  {
-    FOR_VECTOR (i, pathParts)
-    {
-      const int next = _proxy->FindSubDir(_proxyDirIndex, pathParts[i]);
-      if (next == -1)
-        break;
-      _proxyDirIndex = (unsigned)next;
-    }
-  }
-  
-  if (_proxy2)
-  {
-    if (pathParts.IsEmpty() && isAltStreamFolder)
-    {
-      _proxyDirIndex = k_Proxy2_AltRootDirIndex;
-    }
-    else FOR_VECTOR (i, pathParts)
-    {
-      const bool dirOnly = (i + 1 < pathParts.Size() || !isAltStreamFolder);
-      const int index = _proxy2->FindItem(_proxyDirIndex, pathParts[i], dirOnly);
-      if (index == -1)
-        break;
-      
-      const CProxyFile2 &file = _proxy2->Files[_proxy2->Dirs[_proxyDirIndex].Items[index]];
-  
-      if (dirOnly)
-        _proxyDirIndex = (unsigned)file.DirIndex;
-      else
-      {
-        if (file.AltDirIndex != -1)
-          _proxyDirIndex = (unsigned)file.AltDirIndex;
-        break;
-      }
-    }
-  }
+  RINOK(RestoreFolder_AfterReOpen(pathParts, isAltStreamFolder))
 
   /*
   if (pathParts.IsEmpty() && isAltStreamFolder)
@@ -353,8 +415,6 @@ HRESULT CAgentFolder::CommonUpdateOperation(
   // _parentFolder = agentFolder->_parentFolder;
   */
   
-  if (_proxy2)
-    _isAltStreamFolder = _proxy2->IsAltDir(_proxyDirIndex);
 
   return res;
 
