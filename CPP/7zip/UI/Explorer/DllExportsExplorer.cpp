@@ -40,17 +40,18 @@
 
 #include "ContextMenu.h"
 
-static LPCTSTR const k_ShellExtName = TEXT("7-Zip Shell Extension");
+static LPCTSTR const k_ShellExtName = TEXT("7-Zip-fork Shell Extension");
 static LPCTSTR const k_Approved = TEXT("Software\\Microsoft\\Windows\\CurrentVersion\\Shell Extensions\\Approved");
 
-// {23170F69-40C1-278A-1000-000100020000}
-static LPCTSTR const k_Clsid = TEXT("{23170F69-40C1-278A-1000-000100020000}");
+// the fork has its own CLSID, so that it can be installed next to 7-Zip
+// {1281FA63-F95D-48AC-9342-EE333A3F71F8}
+static LPCTSTR const k_Clsid = TEXT("{1281FA63-F95D-48AC-9342-EE333A3F71F8}");
 
 Z7_DEFINE_GUID(CLSID_CZipContextMenu,
-    k_7zip_GUID_Data1,
-    k_7zip_GUID_Data2,
-    k_7zip_GUID_Data3_Common,
-    0x10, 0x00, 0x00, 0x01, 0x00, 0x02, 0x00, 0x00);
+    0x1281FA63,
+    0xF95D,
+    0x48AC,
+    0x93, 0x42, 0xEE, 0x33, 0x3A, 0x3F, 0x71, 0xF8);
 
 using namespace NWindows;
 
