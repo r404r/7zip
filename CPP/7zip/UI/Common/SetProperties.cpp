@@ -42,6 +42,8 @@ struct CPropPropetiesVector
 };
 
 
+static HRESULT SetProperties_Always(IUnknown *unknown, const CObjectVector<CProperty> &properties);
+
 HRESULT SetProperties(IUnknown *unknown, const CObjectVector<CProperty> &properties,
     const UString &arcType)
 {
@@ -59,7 +61,9 @@ HRESULT SetProperties(IUnknown *unknown, const CObjectVector<CProperty> &propert
       prop2.Value = property.Value;
     }
   }
-  return SetProperties(unknown, props);
+  /* even if nothing is left for this type: a handler that is opened again
+     still keeps the properties of the previous call */
+  return SetProperties_Always(unknown, props);
 }
 
 
@@ -67,6 +71,11 @@ HRESULT SetProperties(IUnknown *unknown, const CObjectVector<CProperty> &propert
 {
   if (properties.IsEmpty())
     return S_OK;
+  return SetProperties_Always(unknown, properties);
+}
+
+static HRESULT SetProperties_Always(IUnknown *unknown, const CObjectVector<CProperty> &properties)
+{
   Z7_DECL_CMyComPtr_QI_FROM(
       ISetProperties,
       setProperties, unknown)
