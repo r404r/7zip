@@ -36,6 +36,7 @@ jobs:
             "CPP\7zip\UI\GUI"
             "CPP\7zip\UI\FileManager"
             "CPP\7zip\UI\Console"
+            "CPP\7zip\UI\Explorer"
             "CPP\7zip\Bundles\SFXWin"
             "CPP\7zip\Bundles\SFXCon"
           ) do (
@@ -55,6 +56,10 @@ jobs:
         shell: cmd
         run: python .github\tests\zip_name_encoding.py "%GITHUB_WORKSPACE%\CPP\7zip\Bundles\Alone2\x64\7zz.exe"
 
+      - name: Check the identity of the shell extension
+        shell: cmd
+        run: python .github\tests\shell_ext_identity.py "%GITHUB_WORKSPACE%"
+
       - name: Package the MSI
         shell: pwsh
         run: |
@@ -69,6 +74,7 @@ jobs:
             "$src\Bundles\Format7zF\x64\7z.dll",
             "$src\UI\GUI\x64\7zG.exe",
             "$src\UI\FileManager\x64\7zFM.exe",
+            "$src\UI\Explorer\x64\7-zip.dll",
             "$src\Bundles\SFXWin\x64\7z.sfx",
             "$src\Bundles\SFXCon\x64\7zCon.sfx",
             "$ws\DOC\License.txt",
@@ -118,7 +124,7 @@ jobs:
               '/a', "`"$msi`"", '/qn', "TARGETDIR=`"$out`"")
           if ($p.ExitCode -ne 0) { throw "msiexec /a returned $($p.ExitCode)" }
 
-          $expected = @('7z.exe', '7zz.exe', '7z.dll', '7zG.exe', '7zFM.exe',
+          $expected = @('7z.exe', '7zz.exe', '7z.dll', '7zG.exe', '7zFM.exe', '7-zip.dll',
                         '7z.sfx', '7zCon.sfx', 'License.txt', 'readme.txt')
           foreach ($e in $expected) {
             if (-not (Get-ChildItem -Path $out -Recurse -Filter $e -ErrorAction SilentlyContinue)) {
@@ -152,6 +158,38 @@ jobs:
             throw "UpgradeCode is '$gotUpgrade', it must be the one of this fork"
           }
 
+          # the shell extension must be registered as the fork's own, and never
+          # as 7-Zip's: that CLSID and that handler name belong to the official
+          # installation on the same machine
+          # every registry value the package writes, as Root|Key|Name|Value
+          $values = @{}
+          foreach ($m in [regex]::Matches($x, '<Registry(Value)?\b([^>]*?)/?>')) {
+            $a = @{}
+            foreach ($p in [regex]::Matches($m.Groups[2].Value, '(\w+)="([^"]*)"')) { $a[$p.Groups[1].Value] = $p.Groups[2].Value }
+            $values["$($a.Root)|$($a.Key)|$($a.Name)|$($a.Value)"] = $true
+          }
+          $clsid = '{1281FA63-F95D-48AC-9342-EE333A3F71F8}'
+          $inproc = "CLSID\$clsid\InprocServer32"
+          $expectedReg = @(
+            "HKCR|$inproc||[INSTALLFOLDER]7-zip.dll",
+            "HKCR|$inproc|ThreadingModel|Apartment",
+            "HKLM|Software\Microsoft\Windows\CurrentVersion\Shell Extensions\Approved|$clsid|7-Zip-fork Shell Extension",
+            "HKCR|*\shellex\ContextMenuHandlers\7-Zip-fork||$clsid",
+            "HKCR|Directory\shellex\ContextMenuHandlers\7-Zip-fork||$clsid",
+            "HKCR|Folder\shellex\ContextMenuHandlers\7-Zip-fork||$clsid",
+            "HKCR|Directory\shellex\DragDropHandlers\7-Zip-fork||$clsid",
+            "HKCR|Drive\shellex\DragDropHandlers\7-Zip-fork||$clsid"
+          )
+          foreach ($e in $expectedReg) {
+            if (-not $values.ContainsKey($e)) { throw "the package does not register $e" }
+          }
+          foreach ($k in $values.Keys) {
+            if ($k -match '23170F69-40C1-278A-1000-000100020000' -or $k -match '\\7-Zip\|') {
+              throw "the package registers something of the official 7-Zip: $k"
+            }
+          }
+          Write-Host "the shell extension is registered as 7-Zip-fork only, all $($expectedReg.Count) values present"
+
       - name: Stage the artifact
         shell: pwsh
         run: |
@@ -166,7 +204,7 @@ jobs:
           Copy-Item (Join-Path $ws "7zip-fork.msi") $out
           Copy-Item (Join-Path $ws "msi-stage\*") $portable
           if (-not (Test-Path (Join-Path $out "7zip-fork.msi"))) { throw "7zip-fork.msi is not in the artifact directory" }
-          foreach ($e in @('7zFM.exe', '7zG.exe', '7z.exe', '7zz.exe', '7z.dll',
+          foreach ($e in @('7zFM.exe', '7zG.exe', '7z.exe', '7zz.exe', '7z.dll', '7-zip.dll',
                            '7z.sfx', '7zCon.sfx', 'License.txt', 'readme.txt')) {
             if (-not (Test-Path (Join-Path $portable $e))) { throw "$e is not in portable\" }
           }

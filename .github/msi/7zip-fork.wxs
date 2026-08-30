@@ -4,9 +4,9 @@
   A small installer for the binaries built from this fork.
 
   It is NOT the 7-Zip installer. It has its own name, its own UpgradeCode and
-  its own folder, and it registers no shell extension and no file association,
-  so that it can be installed next to an official 7-Zip without the two
-  replacing each other on every update.
+  its own folder, and its shell extension has its own CLSID and its own
+  handler name, so that it can be installed next to an official 7-Zip without
+  the two replacing each other on every update. It takes no file association.
 
   The source tree has no Lang directory and no help file, so the interface is
   in English and the Help button does nothing.
@@ -20,6 +20,10 @@
 
   <?define ProductName = "7-Zip (fork build)" ?>
   <?define Manufacturer = "r404r" ?>
+  <!-- must match CPP/7zip/UI/Explorer/{RegistryContextMenu,DllExportsExplorer}.cpp;
+       .github/tests/shell_ext_identity.py checks that -->
+  <?define ShellExtId = "{1281FA63-F95D-48AC-9342-EE333A3F71F8}" ?>
+  <?define ShellExtName = "7-Zip-fork" ?>
 
   <Product Id="*"
       Name="$(var.ProductName) $(var.Version)"
@@ -56,6 +60,26 @@
           </Component>
           <Component Id="C_7zFM_exe" Guid="*" Win64="yes">
             <File Id="F_7zFM_exe" Source="$(var.BinDir)\7zFM.exe" KeyPath="yes" />
+          </Component>
+          <Component Id="C_ShellExt" Guid="*" Win64="yes">
+            <File Id="F_7zip_dll" Source="$(var.BinDir)\7-zip.dll" KeyPath="yes" />
+            <RegistryValue Root="HKCR" Key="CLSID\$(var.ShellExtId)\InprocServer32"
+                Type="string" Value="[INSTALLFOLDER]7-zip.dll" />
+            <RegistryValue Root="HKCR" Key="CLSID\$(var.ShellExtId)\InprocServer32"
+                Name="ThreadingModel" Type="string" Value="Apartment" />
+            <RegistryValue Root="HKLM"
+                Key="Software\Microsoft\Windows\CurrentVersion\Shell Extensions\Approved"
+                Name="$(var.ShellExtId)" Type="string" Value="$(var.ShellExtName) Shell Extension" />
+            <RegistryValue Root="HKCR" Key="*\shellex\ContextMenuHandlers\$(var.ShellExtName)"
+                Type="string" Value="$(var.ShellExtId)" />
+            <RegistryValue Root="HKCR" Key="Directory\shellex\ContextMenuHandlers\$(var.ShellExtName)"
+                Type="string" Value="$(var.ShellExtId)" />
+            <RegistryValue Root="HKCR" Key="Folder\shellex\ContextMenuHandlers\$(var.ShellExtName)"
+                Type="string" Value="$(var.ShellExtId)" />
+            <RegistryValue Root="HKCR" Key="Directory\shellex\DragDropHandlers\$(var.ShellExtName)"
+                Type="string" Value="$(var.ShellExtId)" />
+            <RegistryValue Root="HKCR" Key="Drive\shellex\DragDropHandlers\$(var.ShellExtName)"
+                Type="string" Value="$(var.ShellExtId)" />
           </Component>
           <Component Id="C_7z_sfx" Guid="*" Win64="yes">
             <File Id="F_7z_sfx" Source="$(var.BinDir)\7z.sfx" KeyPath="yes" />
@@ -104,6 +128,7 @@
       <ComponentRef Id="C_7z_dll" />
       <ComponentRef Id="C_7zG_exe" />
       <ComponentRef Id="C_7zFM_exe" />
+      <ComponentRef Id="C_ShellExt" />
       <ComponentRef Id="C_7z_sfx" />
       <ComponentRef Id="C_7zCon_sfx" />
       <ComponentRef Id="C_License" />
