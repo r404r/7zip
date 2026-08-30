@@ -9,10 +9,14 @@ tag cannot claim an upstream version it is not built from. The MSI gets the
 fork number as its third component: 26.2.3, which Windows Installer orders
 correctly across fork releases and across upstream versions.
 
-    python3 .github/tests/release_version.py <tag> <path to DOC/readme.txt> [<alias>]
+    python3 .github/scripts/release_version.py <tag> <path to DOC/readme.txt> [<alias>]
 
-prints one KEY=VALUE per line for the workflow: UPSTREAM, FORK, RC, MSI_VERSION,
+prints one KEY=VALUE per line for the workflow: UPSTREAM, FORK, MSI_VERSION,
 PRERELEASE, TITLE, ASSET_STEM.
+
+    python3 .github/scripts/release_version.py previous <tag> <tag>...
+
+prints the release before <tag> among the tags given (never an rc), or nothing.
 """
 import re
 import sys
@@ -26,7 +30,12 @@ def parse_tag(tag):
     m = TAG_RE.match(tag)
     if not m:
         raise ValueError("not a release tag of this fork: %r" % tag)
-    return m.group(1), int(m.group(2)), (int(m.group(3)) if m.group(3) else None)
+    upstream, fork = m.group(1), int(m.group(2))
+    major, minor = (int(x) for x in upstream.split("."))
+    # the limits of an MSI ProductVersion, a.b.c: a, b < 256 and c < 65536
+    if major > 255 or minor > 255 or fork > 65535:
+        raise ValueError("%s does not fit an MSI version (255.255.65535 at most)" % tag)
+    return upstream, fork, (int(m.group(3)) if m.group(3) else None)
 
 
 def readme_version(text):
@@ -74,7 +83,28 @@ def sort_key(tag):
     return (major, minor, fork, 0 if rc is not None else 1, rc or 0)
 
 
+def previous_release(tag, tags):
+    """The latest release (never an rc) before tag among tags, or None."""
+    me = sort_key(tag)
+    best = None
+    for t in tags:
+        try:
+            if parse_tag(t)[2] is not None:
+                continue
+        except ValueError:
+            continue
+        k = sort_key(t)
+        if k < me and (best is None or k > sort_key(best)):
+            best = t
+    return best
+
+
 def main(argv):
+    if len(argv) >= 3 and argv[1] == "previous":
+        prev = previous_release(argv[2], argv[3:])
+        if prev:
+            print(prev)
+        return 0
     if len(argv) < 3:
         print(__doc__)
         return 2
@@ -86,7 +116,6 @@ def main(argv):
     upstream, fork, rc = parse_tag(tag)
     print("UPSTREAM=%s" % upstream)
     print("FORK=%d" % fork)
-    print("RC=%s" % ("" if rc is None else rc))
     print("MSI_VERSION=%s" % msi_version(tag))
     print("PRERELEASE=%s" % ("true" if is_prerelease(tag) else "false"))
     print("TITLE=%s" % release_title(tag, alias))
