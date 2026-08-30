@@ -56,6 +56,10 @@ jobs:
         shell: cmd
         run: python .github\tests\zip_name_encoding.py "%GITHUB_WORKSPACE%\CPP\7zip\Bundles\Alone2\x64\7zz.exe"
 
+      - name: Check the identity of the shell extension
+        shell: cmd
+        run: python .github\tests\shell_ext_identity.py "%GITHUB_WORKSPACE%"
+
       - name: Package the MSI
         shell: pwsh
         run: |
