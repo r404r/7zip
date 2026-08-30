@@ -152,16 +152,25 @@ jobs:
             throw "UpgradeCode is '$gotUpgrade', it must be the one of this fork"
           }
 
+      - name: Stage the artifact
+        shell: pwsh
+        run: |
+          # One flat directory: 7zFM.exe, 7zG.exe and 7zz.exe need 7z.dll next
+          # to them, so hand them over side by side. Listing the build paths in
+          # upload-artifact keeps their directory tree instead.
+          $ws = $env:GITHUB_WORKSPACE
+          $out = Join-Path $ws "artifact"
+          New-Item -ItemType Directory -Force -Path $out | Out-Null
+          Copy-Item (Join-Path $ws "msi-stage\*") $out
+          Copy-Item (Join-Path $ws "7zip-fork.msi") $out
+          foreach ($e in @('7zFM.exe', '7zG.exe', '7z.dll', '7zz.exe', '7z.exe',
+                           '7z.sfx', '7zCon.sfx', '7zip-fork.msi')) {
+            if (-not (Test-Path (Join-Path $out $e))) { throw "$e is not in the artifact directory" }
+          }
+          Get-ChildItem $out | Format-Table Name, Length
+
       - uses: actions/upload-artifact@v4
         with:
           name: 7zip-win-x64
           if-no-files-found: error
-          path: |
-            CPP/7zip/Bundles/Alone2/x64/7zz.exe
-            CPP/7zip/Bundles/Format7zF/x64/7z.dll
-            CPP/7zip/UI/GUI/x64/7zG.exe
-            CPP/7zip/UI/FileManager/x64/7zFM.exe
-            CPP/7zip/UI/Console/x64/7z.exe
-            CPP/7zip/Bundles/SFXWin/x64/7z.sfx
-            CPP/7zip/Bundles/SFXCon/x64/7zCon.sfx
-            7zip-fork.msi
+          path: artifact
