@@ -36,6 +36,7 @@ jobs:
             "CPP\7zip\UI\GUI"
             "CPP\7zip\UI\FileManager"
             "CPP\7zip\UI\Console"
+            "CPP\7zip\UI\Explorer"
             "CPP\7zip\Bundles\SFXWin"
             "CPP\7zip\Bundles\SFXCon"
           ) do (
@@ -69,6 +70,7 @@ jobs:
             "$src\Bundles\Format7zF\x64\7z.dll",
             "$src\UI\GUI\x64\7zG.exe",
             "$src\UI\FileManager\x64\7zFM.exe",
+            "$src\UI\Explorer\x64\7-zip.dll",
             "$src\Bundles\SFXWin\x64\7z.sfx",
             "$src\Bundles\SFXCon\x64\7zCon.sfx",
             "$ws\DOC\License.txt",
@@ -166,7 +168,7 @@ jobs:
           Copy-Item (Join-Path $ws "7zip-fork.msi") $out
           Copy-Item (Join-Path $ws "msi-stage\*") $portable
           if (-not (Test-Path (Join-Path $out "7zip-fork.msi"))) { throw "7zip-fork.msi is not in the artifact directory" }
-          foreach ($e in @('7zFM.exe', '7zG.exe', '7z.exe', '7zz.exe', '7z.dll',
+          foreach ($e in @('7zFM.exe', '7zG.exe', '7z.exe', '7zz.exe', '7z.dll', '7-zip.dll',
                            '7z.sfx', '7zCon.sfx', 'License.txt', 'readme.txt')) {
             if (-not (Test-Path (Join-Path $portable $e))) { throw "$e is not in portable\" }
           }
