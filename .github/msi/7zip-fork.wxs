@@ -23,7 +23,6 @@
   <!-- must match CPP/7zip/UI/Explorer/{RegistryContextMenu,DllExportsExplorer}.cpp;
        .github/tests/shell_ext_identity.py checks that -->
   <?define ShellExtId = "{1281FA63-F95D-48AC-9342-EE333A3F71F8}" ?>
-  <?define ShellExtName = "7-Zip-fork" ?>
 
   <Product Id="*"
       Name="$(var.ProductName) $(var.Version)"
@@ -69,16 +68,16 @@
                 Name="ThreadingModel" Type="string" Value="Apartment" />
             <RegistryValue Root="HKLM"
                 Key="Software\Microsoft\Windows\CurrentVersion\Shell Extensions\Approved"
-                Name="$(var.ShellExtId)" Type="string" Value="$(var.ShellExtName) Shell Extension" />
-            <RegistryValue Root="HKCR" Key="*\shellex\ContextMenuHandlers\$(var.ShellExtName)"
+                Name="$(var.ShellExtId)" Type="string" Value="7-Zip-fork Shell Extension" />
+            <RegistryValue Root="HKCR" Key="*\shellex\ContextMenuHandlers\7-Zip-fork"
                 Type="string" Value="$(var.ShellExtId)" />
-            <RegistryValue Root="HKCR" Key="Directory\shellex\ContextMenuHandlers\$(var.ShellExtName)"
+            <RegistryValue Root="HKCR" Key="Directory\shellex\ContextMenuHandlers\7-Zip-fork"
                 Type="string" Value="$(var.ShellExtId)" />
-            <RegistryValue Root="HKCR" Key="Folder\shellex\ContextMenuHandlers\$(var.ShellExtName)"
+            <RegistryValue Root="HKCR" Key="Folder\shellex\ContextMenuHandlers\7-Zip-fork"
                 Type="string" Value="$(var.ShellExtId)" />
-            <RegistryValue Root="HKCR" Key="Directory\shellex\DragDropHandlers\$(var.ShellExtName)"
+            <RegistryValue Root="HKCR" Key="Directory\shellex\DragDropHandlers\7-Zip-fork"
                 Type="string" Value="$(var.ShellExtId)" />
-            <RegistryValue Root="HKCR" Key="Drive\shellex\DragDropHandlers\$(var.ShellExtName)"
+            <RegistryValue Root="HKCR" Key="Drive\shellex\DragDropHandlers\7-Zip-fork"
                 Type="string" Value="$(var.ShellExtId)" />
           </Component>
           <Component Id="C_7z_sfx" Guid="*" Win64="yes">
