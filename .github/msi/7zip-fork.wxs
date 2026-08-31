@@ -93,6 +93,9 @@
           <Component Id="C_License" Guid="*" Win64="yes">
             <File Id="F_License" Source="$(var.BinDir)\License.txt" KeyPath="yes" />
           </Component>
+          <Component Id="C_Copying" Guid="*" Win64="yes">
+            <File Id="F_Copying" Source="$(var.BinDir)\copying.txt" KeyPath="yes" />
+          </Component>
           <Component Id="C_Readme" Guid="*" Win64="yes">
             <File Id="F_Readme" Source="$(var.BinDir)\readme.txt" KeyPath="yes" />
           </Component>
@@ -135,6 +138,7 @@
       <ComponentRef Id="C_7z_sfx" />
       <ComponentRef Id="C_7zCon_sfx" />
       <ComponentRef Id="C_License" />
+      <ComponentRef Id="C_Copying" />
       <ComponentRef Id="C_Readme" />
       <?ifdef ZipNamesDoc ?>
       <ComponentRef Id="C_ZipNames" />

@@ -87,6 +87,7 @@ jobs:
             "$src\Bundles\SFXWin\x64\7z.sfx",
             "$src\Bundles\SFXCon\x64\7zCon.sfx",
             "$ws\DOC\License.txt",
+            "$ws\DOC\copying.txt",
             "$ws\DOC\readme.txt"
           )
           foreach ($f in $files) {
@@ -143,7 +144,7 @@ jobs:
           if ($p.ExitCode -ne 0) { throw "msiexec /a returned $($p.ExitCode)" }
 
           $expected = @('7z.exe', '7zz.exe', '7z.dll', '7zG.exe', '7zFM.exe', '7-zip.dll',
-                        '7z.sfx', '7zCon.sfx', 'License.txt', 'readme.txt')
+                        '7z.sfx', '7zCon.sfx', 'License.txt', 'copying.txt', 'readme.txt')
           foreach ($e in $expected) {
             if (-not (Get-ChildItem -Path $out -Recurse -Filter $e -ErrorAction SilentlyContinue)) {
               throw "the package does not contain $e"
@@ -223,7 +224,7 @@ jobs:
           Copy-Item (Join-Path $ws "msi-stage\*") $portable
           if (-not (Test-Path (Join-Path $out "7zip-fork.msi"))) { throw "7zip-fork.msi is not in the artifact directory" }
           foreach ($e in @('7zFM.exe', '7zG.exe', '7z.exe', '7zz.exe', '7z.dll', '7-zip.dll',
-                           '7z.sfx', '7zCon.sfx', 'License.txt', 'readme.txt')) {
+                           '7z.sfx', '7zCon.sfx', 'License.txt', 'copying.txt', 'readme.txt')) {
             if (-not (Test-Path (Join-Path $portable $e))) { throw "$e is not in portable\" }
           }
           Get-ChildItem $out -Recurse -File | Format-Table FullName, Length
