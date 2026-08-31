@@ -1,4 +1,5 @@
 // SetProperties.h
+// Modified in 7-Zip-fork, 2026: https://github.com/r404r/7zip
 
 #ifndef ZIP7_INC_SETPROPERTIES_H
 #define ZIP7_INC_SETPROPERTIES_H

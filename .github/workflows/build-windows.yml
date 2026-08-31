@@ -69,6 +69,10 @@ jobs:
         shell: bash
         run: bash .github/tests/release_notes_test.sh
 
+      - name: Check the change notices of modified upstream files
+        shell: cmd
+        run: python .github\tests\change_notice_test.py "%GITHUB_WORKSPACE%"
+
       - name: Package the MSI
         shell: pwsh
         run: |
