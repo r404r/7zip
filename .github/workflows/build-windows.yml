@@ -305,6 +305,10 @@ jobs:
             echo "Built from 7-Zip **$upstream** (upstream tag), fork release **$fork**."
             echo "MSI version $msi_version. The portable zip runs without installing."
             echo
+            echo "This is a modified build of 7-Zip, not the official one. Full source and"
+            echo "change history: https://github.com/r404r/7zip. License: LGPL 2.1 or later,"
+            echo "with the unRAR restriction — see License.txt inside the packages."
+            echo
             if [ -n "$prev" ]; then
               echo "## Changes since $prev"
             else
