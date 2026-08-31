@@ -1,3 +1,4 @@
+// Modified in 7-Zip-fork, 2026: https://github.com/r404r/7zip
 #include "ExtractRes.h"
 
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US

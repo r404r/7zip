@@ -1,3 +1,4 @@
+// Modified in 7-Zip-fork, 2026: https://github.com/r404r/7zip
 #define IDS_MEM_ERROR                   3000
 
 #define IDS_CANNOT_CREATE_FOLDER        3003

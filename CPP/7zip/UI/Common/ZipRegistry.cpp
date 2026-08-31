@@ -1,4 +1,5 @@
 // ZipRegistry.cpp
+// Modified in 7-Zip-fork, 2026: https://github.com/r404r/7zip
 
 #include "StdAfx.h"
 

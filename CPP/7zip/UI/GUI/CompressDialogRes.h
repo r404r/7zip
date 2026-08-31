@@ -1,3 +1,4 @@
+// Modified in 7-Zip-fork, 2026: https://github.com/r404r/7zip
 #define IDD_COMPRESS     4000
 #define IDD_COMPRESS_2  14000
 #define IDD_COMPRESS_OPTIONS 14001

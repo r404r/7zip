@@ -1,3 +1,4 @@
+// Modified in 7-Zip-fork, 2026: https://github.com/r404r/7zip
 #define IDD_EXTRACT     3400
 #define IDD_EXTRACT_2  13400
 

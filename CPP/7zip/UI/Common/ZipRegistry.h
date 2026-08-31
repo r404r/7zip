@@ -1,4 +1,5 @@
 // ZipRegistry.h
+// Modified in 7-Zip-fork, 2026: https://github.com/r404r/7zip
 
 #ifndef ZIP7_INC_ZIP_REGISTRY_H
 #define ZIP7_INC_ZIP_REGISTRY_H
