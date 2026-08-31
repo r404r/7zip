@@ -3,9 +3,12 @@
 A personal fork of [7-Zip](https://7-zip.org) by Igor Pavlov, focused on one everyday
 problem: **file names inside zip archives that travel between systems with different
 languages** — a zip made on a Chinese Windows shows garbled names on a Japanese or
-English one, and vice versa. The upstream project accepts changes through its own
-channels, so this fork does not send pull requests; it carries its patches on top of
-each upstream release instead.
+English one, and vice versa.
+
+Why a fork: the upstream GitHub repository does not appear to take pull requests —
+at the time of writing none of the PRs opened there had been merged (the maintainer
+is active in the issue tracker instead). So instead of sending patches upstream,
+this fork carries them on top of each upstream release.
 
 Upstream: [ip7z/7zip](https://github.com/ip7z/7zip) · current base: **7-Zip 26.02**
 
