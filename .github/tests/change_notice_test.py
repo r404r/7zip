@@ -3,20 +3,25 @@
 
 The LGPL (2.1, section 2b) wants the modified files to carry prominent
 notices of the change and its date. The git history does not travel with
-the source archives of a release, so the notice has to be in the file:
+the source archives of a release, so the notice has to be in the file,
+at the top, in exactly this shape:
 
     // Modified in 7-Zip-fork, <year>: https://github.com/r404r/7zip
 
-Checked here for every file that exists in main (the upstream mirror) and
-differs from it. Files the fork adds are its own work and need no notice.
+Checked for every file that exists in main (the upstream mirror) and
+differs from it, renames included. Files the fork adds are its own work
+and need no notice; a deleted file has nowhere to carry one.
 
     python3 .github/tests/change_notice_test.py [repo root]
 """
 import os
+import re
 import subprocess
 import sys
 
-MARKER = "Modified in 7-Zip-fork"
+# anchored: the marker alone, somewhere in a string, is not a notice
+NOTICE_RE = re.compile(r"^// Modified in 7-Zip-fork, \d{4}: https://github\.com/r404r/7zip$")
+NOTICE_TOP_LINES = 5
 
 # rewritten as the fork's own statement; its first paragraph says what it is
 SKIP = {"README.md"}
@@ -27,33 +32,70 @@ def git(root, *args):
                           capture_output=True, text=True)
 
 
+def die(msg):
+    print("ERROR: " + msg)
+    sys.exit(2)
+
+
+def has_notice(root, path):
+    try:
+        with open(os.path.join(root, path), encoding="utf-8", errors="replace") as fh:
+            for i, line in enumerate(fh):
+                if i >= NOTICE_TOP_LINES:
+                    break
+                if NOTICE_RE.match(line.rstrip("\r\n")):
+                    return True
+    except FileNotFoundError:
+        pass
+    return False
+
+
 def main(root):
     if git(root, "rev-parse", "--verify", "origin/main").returncode != 0:
-        # a shallow checkout on CI has no main: fetch it
         r = git(root, "fetch", "--no-tags", "origin", "main:refs/remotes/origin/main")
         if r.returncode != 0:
-            print("cannot get origin/main:\n" + r.stderr)
-            return 2
+            die("cannot get origin/main:\n" + r.stderr)
     base = "origin/main"
 
-    changed = git(root, "diff", "--name-only", base + "...HEAD").stdout.split()
-    failed = 0
-    checked = 0
-    for f in changed:
-        if f in SKIP:
-            print("  SKIP %s (the fork's own statement)" % f)
+    # a shallow checkout (the default on CI) has no merge base with main:
+    # the diff below would fail. Deepen until there is one.
+    if git(root, "merge-base", base, "HEAD").returncode != 0:
+        print("  (shallow history, fetching the rest)")
+        r = git(root, "fetch", "--unshallow", "--no-tags", "origin")
+        if git(root, "merge-base", base, "HEAD").returncode != 0:
+            die("no merge base with %s even after fetch --unshallow:\n%s" % (base, r.stderr))
+
+    r = git(root, "diff", "--name-status", "-z", "-M", base + "...HEAD")
+    if r.returncode != 0:
+        die("git diff failed:\n" + r.stderr)
+    fields = r.stdout.split("\0")
+
+    failed = checked = 0
+    i = 0
+    while i < len(fields) and fields[i]:
+        status, path = fields[i], fields[i + 1]
+        i += 2
+        if status.startswith(("R", "C")):  # old path, then the one to check
+            path = fields[i]
+            i += 1
+        if path in SKIP:
+            print("  SKIP %s (the fork's own statement)" % path)
             continue
-        if git(root, "cat-file", "-e", "%s:%s" % (base, f)).returncode != 0:
-            continue  # added by the fork, not a modified upstream file
+        if status.startswith("D"):
+            continue  # nowhere to carry a notice
+        if status.startswith("A"):
+            continue  # the fork's own file
+        # M, T, or the new side of R/C: an upstream file carrying our changes
         checked += 1
-        try:
-            with open(os.path.join(root, f), encoding="utf-8", errors="replace") as fh:
-                ok = MARKER in fh.read()
-        except FileNotFoundError:
-            ok = False  # deleted upstream file: nowhere to carry a notice
+        ok = has_notice(root, path)
         if not ok:
             failed += 1
-        print("  %-4s %s" % ("PASS" if ok else "FAIL", f))
+        print("  %-4s %s" % ("PASS" if ok else "FAIL", path))
+
+    if checked == 0:
+        # dev-main and pr/* always differ from main in upstream files;
+        # zero means the comparison itself broke
+        die("nothing was checked - that cannot be right on this branch")
     print("%d modified upstream files, %d without a notice" % (checked, failed))
     return 1 if failed else 0
 
