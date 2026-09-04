@@ -792,7 +792,6 @@ bool ExecuteFileCommand(unsigned id)
     case IDM_COMMENT: g_App.Comment(); break;
     case IDM_CREATE_FOLDER: g_App.CreateFolder(); break;
     case IDM_CREATE_FILE: g_App.CreateFile(); break;
-    case IDM_VIEW_NAME_CODE_PAGE: g_App.NameCodePage(); break;
     #ifndef UNDER_CE
     case IDM_LINK: g_App.Link(); break;
     case IDM_ALT_STREAMS: g_App.OpenAltStreams(); break;
@@ -895,6 +894,7 @@ bool OnMenuCommand(HWND hWnd, unsigned id)
     case IDM_VIEW_FLAT_VIEW:      g_App.ChangeFlatMode(); break;
     case IDM_VIEW_REFRESH:        g_App.RefreshView(); break;
     case IDM_VIEW_AUTO_REFRESH:   g_App.Change_AutoRefresh_Mode(); break;
+    case IDM_VIEW_NAME_CODE_PAGE: g_App.NameCodePage(); break;
 
     // case IDM_VIEW_SHOW_STREAMS:     g_App.Change_ShowNtfsStrems_Mode(); break;
     /*

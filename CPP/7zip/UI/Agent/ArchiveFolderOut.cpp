@@ -41,6 +41,8 @@ HRESULT CAgentFolder::SetNameCodePage_ReOpen(UInt32 codePage,
   const UInt32 oldCodePage = _agentSpec->_nameCodePage;
   if (codePage == oldCodePage)
     return S_OK;
+  if (!_agentSpec->CanReOpen())
+    return E_NOTIMPL;
   if (_agentSpec->_proxy && _agentSpec->_proxy->Are_Changed_LongPaths)
     return E_NOTIMPL;
 

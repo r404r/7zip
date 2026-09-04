@@ -427,19 +427,25 @@ void CPanel::CreateFolder()
   RefreshListCtrl(state);
 }
 
-bool CPanel::CanChangeNameCodePage()
+static CAgentFolder *GetNameCodePageAgent(CMyComPtr<IFolderFolder> &folder)
 {
-  if (!IsArcFolder())
-    return false;
   CMyComPtr<IArchiveFolderInternal> archiveFolderInternal;
-  if (_folder.QueryInterface(IID_IArchiveFolderInternal, &archiveFolderInternal) != S_OK
+  if (folder.QueryInterface(IID_IArchiveFolderInternal, &archiveFolderInternal) != S_OK
       || !archiveFolderInternal)
-    return false;
+    return NULL;
   CAgentFolder *agentFolder = NULL;
   if (archiveFolderInternal->GetAgentFolder(&agentFolder) != S_OK
       || !agentFolder || !agentFolder->_agentSpec)
-    return false;
-  return IsNameCodePageArcType(agentFolder->_agentSpec->ArchiveType);
+    return NULL;
+  if (!IsNameCodePageArcType(agentFolder->_agentSpec->ArchiveType)
+      || !agentFolder->_agentSpec->CanReOpen())
+    return NULL;
+  return agentFolder;
+}
+
+bool CPanel::CanChangeNameCodePage()
+{
+  return IsArcFolder() && GetNameCodePageAgent(_folder) != NULL;
 }
 
 /* Show the archive again with another code page for its names, so that the
@@ -447,16 +453,8 @@ bool CPanel::CanChangeNameCodePage()
    The choice is not remembered. */
 void CPanel::NameCodePage()
 {
-  if (!CanChangeNameCodePage())
-    return;
-
-  CMyComPtr<IArchiveFolderInternal> archiveFolderInternal;
-  if (_folder.QueryInterface(IID_IArchiveFolderInternal, &archiveFolderInternal) != S_OK
-      || !archiveFolderInternal)
-    return;
-  CAgentFolder *agentFolder = NULL;
-  if (archiveFolderInternal->GetAgentFolder(&agentFolder) != S_OK
-      || !agentFolder || !agentFolder->_agentSpec)
+  CAgentFolder *agentFolder = GetNameCodePageAgent(_folder);
+  if (!agentFolder)
     return;
 
   CComboDialog dlg;

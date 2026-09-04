@@ -1613,6 +1613,12 @@ CAgent::~CAgent()
     delete _proxy2;
 }
 
+bool CAgent::CanReOpen() const
+{
+  return _archiveLink.Arcs.Size() == 1
+      && NFile::NFind::DoesFileExist_FollowLink(us2fs(_archiveFilePath));
+}
+
 bool CAgent::CanUpdate() const
 {
   if (_proxy && _proxy->Are_Changed_LongPaths)

@@ -269,6 +269,7 @@ public:
 
   const CArc &GetArc() const { return _archiveLink.Arcs.Back(); }
   IInArchive *GetArchive() const { if ( _archiveLink.Arcs.IsEmpty()) return NULL; return GetArc().Archive; }
+  bool CanReOpen() const;
   bool CanUpdate() const;
 
   bool Is_Attrib_ReadOnly() const
