@@ -34,10 +34,15 @@ FORK_MARKER = "; --- 7-Zip-fork additions: https://github.com/r404r/7zip ---"
 FORK_ID_MIN = 30000
 FORK_ID_MAX = 39999
 
-# where the ids above are #defined, so that a translation and the code that
-# reads it cannot drift apart
+# where the ids above are #defined, used and given their English fallback, so
+# that a translation and the code that reads it cannot drift apart
 SOURCE_DIR = os.path.join("CPP", "7zip", "UI")
 DEFINE_RE = re.compile(r"^\s*#define\s+(\w+)\s+(\d+)\s*$")
+
+# LangString() falls back to the .rc string table when a language file has no
+# such id, so these four need an entry there as well; the rest fall back to
+# the text of their own control or menu item
+NEEDS_STRING_TABLE = (30000, 30001, 30005, 30006)
 
 # the languages this fork promises to ship; en.ttt is the English reference
 # LangPage.cpp counts its entries against, not a language of its own
@@ -60,25 +65,59 @@ class ParseError(Exception):
     pass
 
 
+DIGITS_RE = re.compile(r"^[0-9]+$")
+
+
+def unescape(line, n):
+    """The escapes Lang.cpp understands, and the one it rejects."""
+    out = []
+    i = 0
+    while i < len(line):
+        c = line[i]
+        i += 1
+        if c != "\\":
+            out.append(c)
+            continue
+        if i == len(line):
+            # in Lang.cpp the next character is the newline, and that case
+            # makes OpenFromString give up on the whole file
+            raise ParseError("line %d ends with a backslash" % n)
+        d = line[i]
+        i += 1
+        if d == "n":
+            out.append("\n")
+        elif d == "t":
+            out.append("\t")
+        elif d == "\\":
+            out.append("\\")
+        else:
+            out.append("\\")
+            out.append(d)
+    return "".join(out)
+
+
 def parse(text):
     """id -> string, following CPP/Common/Lang.cpp::OpenFromString.
 
     CR is expected to be gone already (Lang.cpp strips it before parsing).
     """
+    if text.startswith("﻿"):
+        text = text[1:]
     lines = text.split("\n")
     if not lines or lines[0] != SIGNATURE:
         raise ParseError("first line is not %r but %r" % (SIGNATURE, lines[0][:40]))
     # the signature line ends with \n, so the body starts at the next line
     ids = {}
     cur = -1024
-    for n, line in enumerate(lines[1:], start=2):
+    for n, raw in enumerate(lines[1:], start=2):
+        line = unescape(raw, n)
         if line.strip(" \t") == "":
             cur += 1
             continue
         if line.startswith(";"):
             cur += 1
             continue
-        if line.isdigit():
+        if DIGITS_RE.match(line):
             v = int(line)
             if v > (1 << 30):
                 raise ParseError("line %d: id %d is out of range" % (n, v))
@@ -110,11 +149,10 @@ def sha256_of(text):
 
 
 def read(path):
+    """The file with CR removed - and nothing else, byte order mark included,
+    so that the hash below covers every byte the official file has."""
     with open(path, "rb") as fh:
-        raw = fh.read()
-    if raw.startswith(b"\xef\xbb\xbf"):
-        raw = raw[3:]
-    return raw.replace(b"\r", b"").decode("utf-8")
+        return fh.read().replace(b"\r", b"").decode("utf-8")
 
 
 def load_manifest(root):
@@ -136,21 +174,30 @@ def load_manifest(root):
     return entries, None
 
 
+def walk_sources(root, suffix):
+    for dirpath, _dirs, names in os.walk(os.path.join(root, SOURCE_DIR)):
+        for name in sorted(names):
+            if name.endswith(suffix):
+                path = os.path.join(dirpath, name)
+                with open(path, encoding="utf-8", errors="replace") as fh:
+                    yield os.path.relpath(path, root), fh.read()
+
+
 def scan_defines(root):
     """id -> [(symbol, path)] for every #define under CPP/7zip/UI."""
     found = {}
-    for dirpath, _dirs, names in os.walk(os.path.join(root, SOURCE_DIR)):
-        for name in names:
-            if not name.endswith(".h"):
-                continue
-            path = os.path.join(dirpath, name)
-            with open(path, encoding="utf-8", errors="replace") as fh:
-                for line in fh:
-                    m = DEFINE_RE.match(line)
-                    if m:
-                        found.setdefault(int(m.group(2)), []).append(
-                            (m.group(1), os.path.relpath(path, root)))
+    for rel, text in walk_sources(root, ".h"):
+        for line in text.split("\n"):
+            m = DEFINE_RE.match(line)
+            if m:
+                found.setdefault(int(m.group(2)), []).append((m.group(1), rel))
     return found
+
+
+def users_of(root, symbol, suffix):
+    """The files of that kind that mention the symbol (not as part of a longer one)."""
+    pattern = re.compile(r"(?<![0-9A-Za-z_])%s(?![0-9A-Za-z_])" % re.escape(symbol))
+    return [rel for rel, text in walk_sources(root, suffix) if pattern.search(text)]
 
 
 def main(root):
@@ -239,16 +286,30 @@ def main(root):
         print("ERROR: nothing was checked")
         return 1
 
-    # A string in the language files that no control reads is dead weight; an
-    # id in the code that no language file translates shows up as English in
-    # an otherwise translated dialog. Neither is visible from either side
-    # alone, so tie the two together here.
+    # A string in the language files that nothing reads is dead weight; an id
+    # in the code that no language file translates shows up as English in an
+    # otherwise translated dialog. Neither is visible from either side alone,
+    # so tie the two together: every fork id must have a name, that name must
+    # be used by the code, and the ones read through LangString() must have
+    # their English in the string table as well.
     defines = scan_defines(root)
     for i, en in FORK_STRINGS:
         if i not in defines:
             fail("no #define under %s gives %d (%r) a name" % (SOURCE_DIR, i, en))
-        else:
-            print("  %d %-22s %s" % (i, defines[i][0][0], defines[i][0][1]))
+            continue
+        symbols = {sym for sym, _rel in defines[i]}
+        if len(symbols) > 1:
+            fail("%d is #defined as %s" % (i, " and ".join(sorted(symbols))))
+            continue
+        symbol = defines[i][0][0]
+        code = users_of(root, symbol, ".cpp")
+        if not code:
+            fail("nothing under %s uses %s (%d, %r)" % (SOURCE_DIR, symbol, i, en))
+        rc = users_of(root, symbol, ".rc") if i in NEEDS_STRING_TABLE else []
+        if i in NEEDS_STRING_TABLE and not rc:
+            fail("%s (%d) is read with LangString but has no .rc string: a"
+                 " language without a translation would show nothing" % (symbol, i))
+        print("  %d %-30s %s" % (i, symbol, ", ".join(code + rc) or "-"))
     for i in sorted(defines):
         if FORK_ID_MIN <= i <= FORK_ID_MAX and i not in fork_ids:
             fail("%s is %d, in the fork's range, but no language file translates it"

@@ -35,16 +35,20 @@ builds). CI never runs it; CI only checks the result.
 ## What the check enforces
 
 `.github/tests/lang_files_test.py` (CI step *Check the vendored language
-files*) holds two things:
+files*) holds three things:
 
 1. **Every file still parses** the way `Lang.cpp` parses it. A file that does
    not parse is dropped silently — that language simply disappears from the
    Options list.
 2. **Below its fork block every file is byte for byte the official one**,
-   against `MANIFEST.sha256`. The hash is taken with CR removed, because
-   `ja.txt` is CRLF, the rest are LF, and a checkout with
-   `core.autocrlf=true` would otherwise rewrite them. `Lang.cpp` strips CR
-   before parsing too, so this is the same view of the file the program has.
+   against `MANIFEST.sha256`. The hash covers every byte, byte order mark
+   included, with one exception: CR is removed first, because `ja.txt` is
+   CRLF, the rest are LF, and a checkout with `core.autocrlf=true` would
+   otherwise rewrite them. `Lang.cpp` strips CR before parsing too, so this
+   is the same view of the file the program has.
+3. **Each of the seven fork ids is defined, used, and can fall back to
+   English.** A translation nothing reads, and an id no language file
+   translates, are both invisible from either side alone.
 
 ## The fork's own strings
 

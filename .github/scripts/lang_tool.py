@@ -91,9 +91,8 @@ def split_fork_block(text):
 
 
 def decode(raw):
-    """The bytes as Lang.cpp sees them: no BOM, no CR."""
-    if raw.startswith(b"\xef\xbb\xbf"):
-        raw = raw[3:]
+    """The bytes with CR removed - and nothing else. The byte order mark most
+    of these files start with stays: the manifest is meant to cover it."""
     return raw.replace(b"\r", b"").decode("utf-8")
 
 
@@ -179,7 +178,6 @@ def cmd_apply(_args):
         path = os.path.join(LANG_DIR, name)
         raw = read(path)
         crlf = b"\r\n" in raw
-        bom = raw.startswith(b"\xef\xbb\xbf")
         official, _ = split_fork_block(decode(raw))
         if not official.endswith("\n"):
             official += "\n"
@@ -193,11 +191,9 @@ def cmd_apply(_args):
             block.append(row[col])
         text = official + "\n".join(block) + "\n"
 
-        data = text.encode("utf-8")
+        data = text.encode("utf-8")  # the byte order mark, if any, came along
         if crlf:
             data = data.replace(b"\n", b"\r\n")
-        if bom:
-            data = b"\xef\xbb\xbf" + data
         with open(path, "wb") as fh:
             fh.write(data)
         print("  %-10s + %d fork strings" % (name, len(STRINGS)))
@@ -207,8 +203,9 @@ def cmd_apply(_args):
 def cmd_manifest(_args):
     lines = [
         "# sha256 of every Lang/ file as it comes from the official release:",
-        "# the bytes above its fork block, with CR removed (Lang.cpp strips CR",
-        "# too, so a checkout that rewrites line endings cannot break this).",
+        "# the bytes above its fork block, byte order mark included, with CR",
+        "# removed (Lang.cpp strips CR too, so a checkout that rewrites line",
+        "# endings cannot break this).",
         "# Written by .github/scripts/lang_tool.py, checked by",
         "# .github/tests/lang_files_test.py.",
     ]
@@ -220,7 +217,7 @@ def cmd_manifest(_args):
     with open(MANIFEST, "w", encoding="utf-8", newline="\n") as fh:
         fh.write("\n".join(lines) + "\n")
     print("wrote %s (%d files)" % (os.path.relpath(MANIFEST, ROOT),
-                                   len(lines) - 5))
+                                   len(lines) - 6))
     return 0
 
 
