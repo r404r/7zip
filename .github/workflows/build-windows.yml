@@ -103,6 +103,15 @@ jobs:
             Copy-Item $f $stage
           }
 
+          # the language files: 7-Zip reads them from Lang\ beside the exe, and
+          # without them the interface is English whatever the system language is
+          $langSrc = Join-Path $ws "Lang"
+          $langCount = (Get-ChildItem $langSrc -File).Count
+          if ($langCount -lt 2) { throw "Lang\ holds $langCount files" }
+          Copy-Item $langSrc $stage -Recurse
+          & python (Join-Path $ws ".github\scripts\gen_lang_wxs.py") (Join-Path $stage "Lang") (Join-Path $ws "lang.wxs")
+          if ($LASTEXITCODE -ne 0) { throw "gen_lang_wxs.py failed" }
+
           # a document that only some branches carry: install it if it is here,
           # and leave the component out of the package if it is not. A stand-in
           # file under the real name would only mislead whoever installs it.
@@ -132,10 +141,12 @@ jobs:
           Write-Host "version from readme.txt: $version"
 
           Set-Content -Path "$ws\msi-version.txt" -Value $version
+          $obj = Join-Path $ws "wixobj"
+          New-Item -ItemType Directory -Force -Path $obj | Out-Null
           & candle.exe -nologo -arch x64 -dBinDir="$stage" -dVersion="$version" @defines `
-              -out "$ws\7zip-fork.wixobj" "$ws\.github\msi\7zip-fork.wxs"
+              -out "$obj\" "$ws\.github\msi\7zip-fork.wxs" "$ws\lang.wxs"
           if ($LASTEXITCODE -ne 0) { throw "candle failed" }
-          & light.exe -nologo -out "$ws\7zip-fork.msi" "$ws\7zip-fork.wixobj"
+          & light.exe -nologo -out "$ws\7zip-fork.msi" "$obj\7zip-fork.wixobj" "$obj\lang.wixobj"
           if ($LASTEXITCODE -ne 0) { throw "light failed" }
 
       - name: Check the MSI
@@ -159,6 +170,19 @@ jobs:
             }
           }
           Write-Host "the package contains all $($expected.Count) expected files"
+
+          # the language files have to land in Lang\, not loose beside the exe:
+          # LangUtils.cpp looks for them there and nowhere else
+          $lang = Get-ChildItem -Path $out -Recurse -Directory -Filter "Lang" |
+                  Select-Object -First 1
+          if (-not $lang) { throw "the package has no Lang directory" }
+          $got = (Get-ChildItem $lang.FullName -File).Count
+          $want = (Get-ChildItem (Join-Path $ws "Lang") -File).Count
+          if ($got -ne $want) { throw "Lang\ has $got files in the package, $want in the tree" }
+          foreach ($e in @('en.ttt', 'ja.txt', 'zh-cn.txt', 'zh-tw.txt')) {
+            if (-not (Test-Path (Join-Path $lang.FullName $e))) { throw "Lang\$e is not in the package" }
+          }
+          Write-Host "the package installs $got language files into Lang\"
 
           # and that it is marked as a fork build, so that it cannot take over
           # an official 7-Zip installation
@@ -229,12 +253,17 @@ jobs:
           $portable = Join-Path $out "portable"
           New-Item -ItemType Directory -Force -Path $portable | Out-Null
           Copy-Item (Join-Path $ws "7zip-fork.msi") $out
-          Copy-Item (Join-Path $ws "msi-stage\*") $portable
+          # -Recurse, or Lang\ arrives as an empty directory
+          Copy-Item (Join-Path $ws "msi-stage\*") $portable -Recurse
           if (-not (Test-Path (Join-Path $out "7zip-fork.msi"))) { throw "7zip-fork.msi is not in the artifact directory" }
           foreach ($e in @('7zFM.exe', '7zG.exe', '7z.exe', '7zz.exe', '7z.dll', '7-zip.dll',
-                           '7z.sfx', '7zCon.sfx', 'License.txt', 'copying.txt', 'readme.txt')) {
+                           '7z.sfx', '7zCon.sfx', 'License.txt', 'copying.txt', 'readme.txt',
+                           'Lang\en.ttt', 'Lang\ja.txt', 'Lang\zh-cn.txt', 'Lang\zh-tw.txt')) {
             if (-not (Test-Path (Join-Path $portable $e))) { throw "$e is not in portable\" }
           }
+          $got = (Get-ChildItem (Join-Path $portable "Lang") -File).Count
+          $want = (Get-ChildItem (Join-Path $ws "Lang") -File).Count
+          if ($got -ne $want) { throw "portable\Lang has $got files, the tree has $want" }
           Get-ChildItem $out -Recurse -File | Format-Table FullName, Length
 
       - uses: actions/upload-artifact@v4
@@ -300,6 +329,12 @@ jobs:
           mkdir -p out
           cp artifact/7zip-fork.msi "out/$stem-x64.msi"
           (cd artifact/portable && zip -q -r "../../out/$stem-portable-x64.zip" .)
+          # the language files travel in a subdirectory: make sure they made it
+          # through the artifact and into the zip, and not as an empty Lang/
+          unzip -Z1 "out/$stem-portable-x64.zip" > ziplist.txt
+          n="$(grep -c '^Lang/.*[^/]$' ziplist.txt)" || n=0  # grep exits 1 on none
+          echo "the portable zip carries $n language files"
+          if [ "$n" -lt 2 ]; then echo "::error::the portable zip has no Lang/"; exit 1; fi
           (cd out && sha256sum * > SHA256SUMS.txt && cat SHA256SUMS.txt)
 
       - name: Write the notes
