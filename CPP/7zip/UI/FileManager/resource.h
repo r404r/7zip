@@ -204,5 +204,5 @@
 #define IDS_NAME_CODE_PAGE_TITLE        30005
 #define IDS_NAME_CODE_PAGE_PROMPT       30006
 
-// 31000+ : the fork's own commands
-#define IDM_VIEW_NAME_CODE_PAGE         31000
+// 40000+ : the fork's own commands
+#define IDM_VIEW_NAME_CODE_PAGE         40000
