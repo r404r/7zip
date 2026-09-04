@@ -1,3 +1,4 @@
+# Modified in 7-Zip-fork, 2026: https://github.com/r404r/7zip
 # The language files are vendored verbatim from the official 7-Zip release
 # and are held to a sha256 manifest. ja.txt is CRLF, the rest are LF: keep
 # every one of them exactly as it came, on every platform.
