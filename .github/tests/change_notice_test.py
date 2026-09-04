@@ -46,7 +46,8 @@ def die(msg):
 def notice_re_for_path(path):
     name = os.path.basename(path)
     suffix = os.path.splitext(name)[1].lower()
-    if name == ".gitattributes" or suffix in (".mak", ".py", ".sh", ".yaml", ".yml"):
+    if (name == ".gitattributes" or name.startswith("makefile")
+        or suffix in (".asm", ".mak", ".py", ".sh", ".yaml", ".yml")):
         return HASH_NOTICE_RE
     if suffix in (".props", ".vcxproj", ".wxs", ".xml"):
         return XML_NOTICE_RE

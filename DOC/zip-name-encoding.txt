@@ -118,4 +118,5 @@ In the graphical interface
       View > Name Code Page reopens the current archive with another code
       page. The choice applies only to that open archive and is not remembered.
       If the archive contains a path too long for the File Manager to preserve,
-      the code page cannot be switched and the existing view is left unchanged.
+      the operation reports an error; the code page and existing view are left
+      unchanged.

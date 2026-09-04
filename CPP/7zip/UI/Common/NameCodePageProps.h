@@ -101,6 +101,11 @@ inline bool ParseNameCodePage(const UString &s, UInt32 &codePage)
   return true;
 }
 
+inline bool IsNameCodePageArcType(const UString &s)
+{
+  return s.IsEqualTo_Ascii_NoCase("zip") || s.IsEqualTo_Ascii_NoCase("tar");
+}
+
 /* only Zip and Tar know "cp", and a handler that gets a property it doesn't
    know fails to open the archive, so the type is named in the prefix */
 inline void AddNameCodePageProps(CObjectVector<CProperty> &props, UInt32 codePage)

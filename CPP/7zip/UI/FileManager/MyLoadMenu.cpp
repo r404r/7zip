@@ -439,7 +439,7 @@ void OnMenuActivating(HWND /* hWnd */, HMENU hMenu, int position)
 
     // the code page is a property of an archive, not of a file system folder
     menu.EnableItem(IDM_VIEW_NAME_CODE_PAGE,
-        g_App.GetFocusedPanel().IsArcFolder() ? MF_ENABLED : MF_GRAYED);
+        g_App.GetFocusedPanel().CanChangeNameCodePage() ? MF_ENABLED : MF_GRAYED);
     // menu.CheckItemByID(IDM_VIEW_SHOW_STREAMS, g_App.Get_ShowNtfsStrems_Mode());
     // menu.CheckItemByID(IDM_VIEW_SHOW_DELETED, g_App.ShowDeletedFiles);
 

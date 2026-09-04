@@ -427,12 +427,27 @@ void CPanel::CreateFolder()
   RefreshListCtrl(state);
 }
 
+bool CPanel::CanChangeNameCodePage()
+{
+  if (!IsArcFolder())
+    return false;
+  CMyComPtr<IArchiveFolderInternal> archiveFolderInternal;
+  if (_folder.QueryInterface(IID_IArchiveFolderInternal, &archiveFolderInternal) != S_OK
+      || !archiveFolderInternal)
+    return false;
+  CAgentFolder *agentFolder = NULL;
+  if (archiveFolderInternal->GetAgentFolder(&agentFolder) != S_OK
+      || !agentFolder || !agentFolder->_agentSpec)
+    return false;
+  return IsNameCodePageArcType(agentFolder->_agentSpec->ArchiveType);
+}
+
 /* Show the archive again with another code page for its names, so that the
    right one can be found by looking at the result.
    The choice is not remembered. */
 void CPanel::NameCodePage()
 {
-  if (!IsArcFolder())
+  if (!CanChangeNameCodePage())
     return;
 
   CMyComPtr<IArchiveFolderInternal> archiveFolderInternal;
@@ -473,6 +488,14 @@ void CPanel::NameCodePage()
   CDisableTimerProcessing disableTimerProcessing(*this);
   CSelectedState state;
   SaveSelectedState(state);
+  UString parentFolderPath;
+  UString archiveName;
+  if (!_parentFolders.IsEmpty())
+  {
+    const CFolderLink &link = _parentFolders.Front();
+    parentFolderPath = link.ParentFolderPath;
+    archiveName = link.RelPath;
+  }
   HRESULT res;
   bool folderIsUsable = true;
   {
@@ -483,8 +506,17 @@ void CPanel::NameCodePage()
     MessageBox_Error_HRESULT(res);
   if (!folderIsUsable)
   {
-    // the archive is not open any more, so there is nothing to show
     CloseOpenFolders();
+    COpenResult openRes;
+    if (BindToPath(parentFolderPath, UString(), openRes) == S_OK)
+    {
+      CSelectedState parentState;
+      parentState.FocusedName = archiveName;
+      parentState.FocusedName_Defined = !archiveName.IsEmpty();
+      RefreshListCtrl(parentState);
+    }
+    else
+      OpenRootFolder();
     return;
   }
   res = RefreshListCtrl(state);
