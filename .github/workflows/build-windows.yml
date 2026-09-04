@@ -73,6 +73,10 @@ jobs:
         shell: cmd
         run: python .github\tests\change_notice_test.py "%GITHUB_WORKSPACE%"
 
+      - name: Check the vendored language files
+        shell: cmd
+        run: python .github\tests\lang_files_test.py "%GITHUB_WORKSPACE%"
+
       - name: Package the MSI
         shell: pwsh
         run: |
