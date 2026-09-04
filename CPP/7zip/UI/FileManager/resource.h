@@ -107,8 +107,6 @@
 #define IDM_VIEW_TIME_POPUP      760
 #define IDM_VIEW_TIME            761
 #define IDM_VIEW_NAME_CODE_PAGE  762
-// its text in the language files; 30000+ is the fork's range
-#define IDS_VIEW_NAME_CODE_PAGE  30004
 #define IDM_VIEW_TIME_UTC        799
 
 #define IDM_ADD_TO_FAVORITES     800
@@ -201,3 +199,10 @@
 #define IDS_COMBINE_SELECT_ONE_FILE     7403
 #define IDS_COMBINE_CANT_DETECT_SPLIT_FILE 7404
 #define IDS_COMBINE_CANT_FIND_MORE_THAN_ONE_PART 7405
+
+/* 30000+ is the fork's own range, kept out of the blocks above: its strings
+   are appended to the language files, never inserted, so they cannot shift
+   an upstream id. See .github/lang/README.md */
+#define IDS_VIEW_NAME_CODE_PAGE          30004
+#define IDS_NAME_CODE_PAGE_TITLE         30005
+#define IDS_NAME_CODE_PAGE_PROMPT        30006
