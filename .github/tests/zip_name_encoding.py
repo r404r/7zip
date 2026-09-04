@@ -192,7 +192,7 @@ def main(argv):
     if on_windows:
         print("  ok")
     else:
-        print("  SKIPPED (non-Windows reporting only)")
+        print("  REPORT ONLY (Windows encoding assertions skipped)")
     return 0
 
 

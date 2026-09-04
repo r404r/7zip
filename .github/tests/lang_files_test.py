@@ -187,13 +187,21 @@ def load_versions(root):
     except FileNotFoundError as e:
         return None, None, "%s is missing" % os.path.relpath(e.filename, root)
     source_match = re.search(r"^version:\s*(\S+)\s*$", source_text, re.M)
+    url_match = re.search(r"^url:\s*(\S+)\s*$", source_text, re.M)
     readme_match = re.match(r"^7-Zip\s+(\d+\.\d+)\s+Sources$", readme_first)
     if not source_match:
         return None, None, "%s has no version field" % SOURCE_META
+    if not url_match:
+        return None, None, "%s has no url field" % SOURCE_META
     if not readme_match:
         return None, None, "%s has an unexpected first line: %r" % (
             UPSTREAM_README, readme_first)
-    return source_match.group(1), readme_match.group(1), None
+    source_version = source_match.group(1)
+    expected_url = "https://www.7-zip.org/a/7z%s-x64.exe" % source_version.replace(".", "")
+    if url_match.group(1) != expected_url:
+        return None, None, "%s url %s does not match version %s (expected %s)" % (
+            SOURCE_META, url_match.group(1), source_version, expected_url)
+    return source_version, readme_match.group(1), None
 
 
 def walk_sources(root, suffix):

@@ -1600,6 +1600,7 @@ CAgent::CAgent():
     _updatePathPrefix_is_AltFolder(false),
     _isDeviceFile(false),
     _isHashHandler(false),
+    _progress_ArchiveOpenCallback_for_Open(NULL),
     _progress_for_Open(NULL)
 {
 }

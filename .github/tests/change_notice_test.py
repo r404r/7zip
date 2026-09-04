@@ -24,11 +24,9 @@ import sys
 
 # anchored: the marker alone, somewhere in a string, is not a notice
 NOTICE_TEXT = r"Modified in 7-Zip-fork, \d{4}: https://github\.com/r404r/7zip"
-NOTICE_RES = (
-    re.compile(r"^// " + NOTICE_TEXT + r"$"),
-    re.compile(r"^# " + NOTICE_TEXT + r"$"),
-    re.compile(r"^<!-- " + NOTICE_TEXT + r" -->$"),
-)
+SLASH_NOTICE_RE = re.compile(r"^// " + NOTICE_TEXT + r"$")
+HASH_NOTICE_RE = re.compile(r"^# " + NOTICE_TEXT + r"$")
+XML_NOTICE_RE = re.compile(r"^<!-- " + NOTICE_TEXT + r" -->$")
 NOTICE_TOP_LINES = 5
 
 # rewritten as the fork's own statement; its first paragraph says what it is
@@ -45,14 +43,25 @@ def die(msg):
     sys.exit(2)
 
 
+def notice_re_for_path(path):
+    name = os.path.basename(path)
+    suffix = os.path.splitext(name)[1].lower()
+    if name == ".gitattributes" or suffix in (".mak", ".py", ".sh", ".yaml", ".yml"):
+        return HASH_NOTICE_RE
+    if suffix in (".props", ".vcxproj", ".wxs", ".xml"):
+        return XML_NOTICE_RE
+    return SLASH_NOTICE_RE
+
+
 def has_notice(root, path):
+    notice_re = notice_re_for_path(path)
     try:
         with open(os.path.join(root, path), encoding="utf-8", errors="replace") as fh:
             for i, line in enumerate(fh):
                 if i >= NOTICE_TOP_LINES:
                     break
                 text = line.rstrip("\r\n")
-                if any(notice_re.match(text) for notice_re in NOTICE_RES):
+                if notice_re.match(text):
                     return True
     except FileNotFoundError:
         pass
