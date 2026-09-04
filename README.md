@@ -19,7 +19,10 @@ Upstream: [ip7z/7zip](https://github.com/ip7z/7zip) · current base: **7-Zip 26.
   and the names of a legacy zip decode correctly. It always starts at *Auto* (today's
   behavior) and is not remembered — a code page fixes one archive.
 - The **File Manager** can switch the code page *while browsing* an archive:
-  View → *Name Code Page…* reopens the archive in place and keeps your position.
+  View → *Name Code Page…* reopens a zip or tar in place and keeps your position.
+  It applies only to a single archive backed by a real file; nested/split archives
+  and paths shortened by the File Manager are deliberately disabled. Reopening is
+  currently synchronous, without progress or cancellation; see the detailed DOC.
 - On the command line: `7z l "-mzip.cp=936" archive.zip` — the `zip.` prefix sends the
   property only to the zip handler, so `.7z`, `.gz` and everything else stay untouched.
   `tar.cp` works the same way. See `DOC/zip-name-encoding.txt` for the details and
@@ -71,8 +74,8 @@ There is no help file, so the Help buttons do nothing.
 
 ## Roadmap
 
-- Finish the in-manager code page switching: pass the open callback through so
-  encrypted archives can prompt for a password.
+- Finish the in-manager code page switching: add progress and cancellation while
+  a large zip or tar is reopened.
 - Measure reopen times on large and solid archives (drives whether the switch stays).
 - Possibly show the fork release number in the About box.
 
