@@ -19,8 +19,7 @@ Upstream: [ip7z/7zip](https://github.com/ip7z/7zip) · current base: **7-Zip 26.
   and the names of a legacy zip decode correctly. It always starts at *Auto* (today's
   behavior) and is not remembered — a code page fixes one archive.
 - The **File Manager** can switch the code page *while browsing* an archive:
-  View → *Name Code Page…* reopens the archive in place and keeps your position
-  (prototype: works, not yet in the language files).
+  View → *Name Code Page…* reopens the archive in place and keeps your position.
 - On the command line: `7z l "-mzip.cp=936" archive.zip` — the `zip.` prefix sends the
   property only to the zip handler, so `.7z`, `.gz` and everything else stay untouched.
   `tar.cp` works the same way. See `DOC/zip-name-encoding.txt` for the details and
@@ -37,6 +36,12 @@ Upstream: [ip7z/7zip](https://github.com/ip7z/7zip) · current base: **7-Zip 26.
   **7-Zip-fork** with its own CLSID — installing or removing it never touches the
   official 7-Zip.
 - A **portable** set: unzip and run, nothing to install.
+- The **language files** are included, which a build from the upstream sources
+  alone cannot be: they ship only with the official binary release. The
+  interface follows the system language on first run, and Options → Language
+  lists all 90-odd of them. The fork's own strings are translated into
+  Japanese, Simplified and Traditional Chinese; the other languages show them
+  in English.
 
 ## Install
 
@@ -45,12 +50,12 @@ Take either from the latest [Release](https://github.com/r404r/7zip/releases):
 | Asset | What it is |
 | --- | --- |
 | `7zip-fork-<version>-x64.msi` | Installer, coexists with official 7-Zip |
-| `7zip-fork-<version>-portable-x64.zip` | `7zFM.exe`, `7zG.exe`, `7z.exe`, `7zz.exe`, `7z.dll`, `7-zip.dll`, SFX modules, docs — run from anywhere |
+| `7zip-fork-<version>-portable-x64.zip` | `7zFM.exe`, `7zG.exe`, `7z.exe`, `7zz.exe`, `7z.dll`, `7-zip.dll`, SFX modules, `Lang\`, docs — run from anywhere |
 | `SHA256SUMS.txt` | Checksums of both |
 
 Version scheme: `26.02-fork.3` is the third fork release on top of 7-Zip 26.02; the MSI
-carries it as `26.2.3`. Release candidates end in `-rc.N`. Windows x64 only; the
-interface is English only (the source tree has no language files or help file).
+carries it as `26.2.3`. Release candidates end in `-rc.N`. Windows x64 only.
+There is no help file, so the Help buttons do nothing.
 
 ## How this fork is maintained
 
@@ -60,11 +65,14 @@ interface is English only (the source tree has no language files or help file).
   release tag stays in the history.
 - Every push builds all targets on CI, runs behavior tests for the encoding features,
   and checks the MSI down to its registry entries. Releases are cut by tagging.
+- `Lang/` is vendored from the official binary release and pinned to a sha256
+  manifest, so it can be shown to be the official files plus this fork's own
+  strings. See [`.github/lang/README.md`](.github/lang/README.md).
 
 ## Roadmap
 
-- Finish the in-manager code page switching: move the strings into the language files,
-  pass the open callback through so encrypted archives can prompt for a password.
+- Finish the in-manager code page switching: pass the open callback through so
+  encrypted archives can prompt for a password.
 - Measure reopen times on large and solid archives (drives whether the switch stays).
 - Possibly show the fork release number in the About box.
 
