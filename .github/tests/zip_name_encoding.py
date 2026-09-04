@@ -189,7 +189,10 @@ def main(argv):
         for f in failures:
             print("  FAIL: %s" % f)
         return 1
-    print("  ok")
+    if on_windows:
+        print("  ok")
+    else:
+        print("  SKIPPED (non-Windows reporting only)")
     return 0
 
 

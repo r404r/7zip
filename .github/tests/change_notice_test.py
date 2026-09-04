@@ -9,7 +9,7 @@ at the top, in exactly this shape for C/C++-style files:
     // Modified in 7-Zip-fork, <year>: https://github.com/r404r/7zip
 
 Files whose syntax does not support // comments use their native comment
-prefix.  In particular, .gitattributes uses #.
+form, such as # or an XML comment.
 
 Checked for every file that exists in main (the upstream mirror) and
 differs from it, renames included. Files the fork adds are its own work
@@ -23,11 +23,12 @@ import subprocess
 import sys
 
 # anchored: the marker alone, somewhere in a string, is not a notice
-NOTICE_RE = re.compile(r"^// Modified in 7-Zip-fork, \d{4}: https://github\.com/r404r/7zip$")
-NATIVE_NOTICE_RE = {
-    ".gitattributes": re.compile(
-        r"^# Modified in 7-Zip-fork, \d{4}: https://github\.com/r404r/7zip$"),
-}
+NOTICE_TEXT = r"Modified in 7-Zip-fork, \d{4}: https://github\.com/r404r/7zip"
+NOTICE_RES = (
+    re.compile(r"^// " + NOTICE_TEXT + r"$"),
+    re.compile(r"^# " + NOTICE_TEXT + r"$"),
+    re.compile(r"^<!-- " + NOTICE_TEXT + r" -->$"),
+)
 NOTICE_TOP_LINES = 5
 
 # rewritten as the fork's own statement; its first paragraph says what it is
@@ -45,13 +46,13 @@ def die(msg):
 
 
 def has_notice(root, path):
-    notice_re = NATIVE_NOTICE_RE.get(path, NOTICE_RE)
     try:
         with open(os.path.join(root, path), encoding="utf-8", errors="replace") as fh:
             for i, line in enumerate(fh):
                 if i >= NOTICE_TOP_LINES:
                     break
-                if notice_re.match(line.rstrip("\r\n")):
+                text = line.rstrip("\r\n")
+                if any(notice_re.match(text) for notice_re in NOTICE_RES):
                     return True
     except FileNotFoundError:
         pass
