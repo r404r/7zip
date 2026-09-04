@@ -427,10 +427,13 @@ void CPanel::CreateFolder()
   RefreshListCtrl(state);
 }
 
-static CAgentFolder *GetNameCodePageAgent(CMyComPtr<IFolderFolder> &folder)
+static CAgentFolder *GetNameCodePageAgent(const CPanel &panel)
 {
+  if (!panel.IsArcFolder()
+      || (!panel._parentFolders.IsEmpty() && panel._parentFolders.Back().IsVirtual))
+    return NULL;
   CMyComPtr<IArchiveFolderInternal> archiveFolderInternal;
-  if (folder.QueryInterface(IID_IArchiveFolderInternal, &archiveFolderInternal) != S_OK
+  if (panel._folder.QueryInterface(IID_IArchiveFolderInternal, &archiveFolderInternal) != S_OK
       || !archiveFolderInternal)
     return NULL;
   CAgentFolder *agentFolder = NULL;
@@ -443,9 +446,9 @@ static CAgentFolder *GetNameCodePageAgent(CMyComPtr<IFolderFolder> &folder)
   return agentFolder;
 }
 
-bool CPanel::CanChangeNameCodePage()
+bool CPanel::CanChangeNameCodePage() const
 {
-  return IsArcFolder() && GetNameCodePageAgent(_folder) != NULL;
+  return GetNameCodePageAgent(*this) != NULL;
 }
 
 /* Show the archive again with another code page for its names, so that the
@@ -453,7 +456,7 @@ bool CPanel::CanChangeNameCodePage()
    The choice is not remembered. */
 void CPanel::NameCodePage()
 {
-  CAgentFolder *agentFolder = GetNameCodePageAgent(_folder);
+  CAgentFolder *agentFolder = GetNameCodePageAgent(*this);
   if (!agentFolder)
     return;
 
@@ -486,14 +489,6 @@ void CPanel::NameCodePage()
   CDisableTimerProcessing disableTimerProcessing(*this);
   CSelectedState state;
   SaveSelectedState(state);
-  UString parentFolderPath;
-  UString archiveName;
-  if (!_parentFolders.IsEmpty())
-  {
-    const CFolderLink &link = _parentFolders.Front();
-    parentFolderPath = link.ParentFolderPath;
-    archiveName = link.RelPath;
-  }
   HRESULT res;
   bool folderIsUsable = true;
   {
@@ -504,6 +499,14 @@ void CPanel::NameCodePage()
     MessageBox_Error_HRESULT(res);
   if (!folderIsUsable)
   {
+    UString parentFolderPath;
+    UString archiveName;
+    if (!_parentFolders.IsEmpty())
+    {
+      const CFolderLink &link = _parentFolders.Front();
+      parentFolderPath = link.ParentFolderPath;
+      archiveName = link.RelPath;
+    }
     CloseOpenFolders();
     COpenResult openRes;
     if (BindToPath(parentFolderPath, UString(), openRes) == S_OK)

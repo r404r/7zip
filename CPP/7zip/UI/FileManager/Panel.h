@@ -504,7 +504,7 @@ public:
   void DeleteItems(bool toRecycleBin);
   void CreateFolder();
   void CreateFile();
-  bool CanChangeNameCodePage();
+  bool CanChangeNameCodePage() const;
   void NameCodePage();
   bool CorrectFsPath(const UString &path, UString &result);
   // bool IsPathForPlugin(const UString &path);

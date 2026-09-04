@@ -1616,7 +1616,7 @@ CAgent::~CAgent()
 bool CAgent::CanReOpen() const
 {
   return _archiveLink.Arcs.Size() == 1
-      && NFile::NFind::DoesFileExist_FollowLink(us2fs(_archiveFilePath));
+      && !(_proxy && _proxy->Are_Changed_LongPaths);
 }
 
 bool CAgent::CanUpdate() const

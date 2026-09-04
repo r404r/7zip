@@ -41,9 +41,8 @@ HRESULT CAgentFolder::SetNameCodePage_ReOpen(UInt32 codePage,
   const UInt32 oldCodePage = _agentSpec->_nameCodePage;
   if (codePage == oldCodePage)
     return S_OK;
-  if (!_agentSpec->CanReOpen())
-    return E_NOTIMPL;
-  if (_agentSpec->_proxy && _agentSpec->_proxy->Are_Changed_LongPaths)
+  if (!_agentSpec->CanReOpen()
+      || !NFind::DoesFileExist_FollowLink(us2fs(_agentSpec->_archiveFilePath)))
     return E_NOTIMPL;
 
   UStringVector pathParts;

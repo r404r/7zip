@@ -148,8 +148,6 @@ def main(argv):
     exe = os.path.abspath(argv[1])
     on_windows = sys.platform == "win32"
     cases = CASES_WIN if on_windows else CASES_OTHER
-    if not on_windows:
-        print("not Windows: reporting only, nothing is checked\n")
 
     d = tempfile.mkdtemp(prefix="zipenc-")
     with open(os.path.join(d, NAME), "w") as f:
