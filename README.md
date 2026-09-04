@@ -20,9 +20,9 @@ Upstream: [ip7z/7zip](https://github.com/ip7z/7zip) · current base: **7-Zip 26.
   behavior) and is not remembered — a code page fixes one archive.
 - The **File Manager** can switch the code page *while browsing* an archive:
   View → *Name Code Page…* reopens a zip or tar in place and keeps your position.
-  It applies only to a single archive backed by a real file; archives opened directly
-  from a parent archive's memory stream, split archive chains, and paths shortened by
-  the File Manager are deliberately disabled. Reopening is
+  It applies only to a plain zip or uncompressed tar backed by one real file;
+  `.tar.gz` and other multi-handler chains, archives opened directly from a parent
+  archive's memory stream, and paths shortened by the File Manager are disabled. Reopening is
   currently synchronous, without progress or cancellation; see the detailed DOC.
 - On the command line: `7z l "-mzip.cp=936" archive.zip` — the `zip.` prefix sends the
   property only to the zip handler, so `.7z`, `.gz` and everything else stay untouched.
