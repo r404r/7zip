@@ -270,6 +270,9 @@ BEGIN
   IDS_COMBINE_CANT_DETECT_SPLIT_FILE  "Cannot detect file as split file"
   IDS_COMBINE_CANT_FIND_MORE_THAN_ONE_PART  "Cannot find more than one part of split file"
 
+  IDS_NAME_CODE_PAGE_TITLE   "Name Code Page"
+  IDS_NAME_CODE_PAGE_PROMPT  "Read the names of this archive as:"
+
 END
 
 #include "AboutDialog.rc"

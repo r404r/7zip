@@ -1,0 +1,10 @@
+The files in Lang/ come from the official 7-Zip release.
+
+version:   26.02
+url:       https://www.7-zip.org/a/7z2602-x64.exe
+sha256:    6745fa76dc2ea031596d8678f6f6b99c3c1b435b4164a63485adbbc7b8d82ef0
+size:      1657896 bytes
+extracted: 93 files
+
+Re-create with:
+    python3 .github/scripts/lang_tool.py refresh --version 26.02

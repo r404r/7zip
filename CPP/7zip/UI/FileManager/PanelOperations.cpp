@@ -429,8 +429,7 @@ void CPanel::CreateFolder()
 
 /* Show the archive again with another code page for its names, so that the
    right one can be found by looking at the result.
-   This is a prototype: the strings are not in the language files yet, and the
-   choice is not remembered. */
+   The choice is not remembered. */
 void CPanel::NameCodePage()
 {
   if (!IsArcFolder())
@@ -446,8 +445,8 @@ void CPanel::NameCodePage()
     return;
 
   CComboDialog dlg;
-  dlg.Title = "Name Code Page";
-  dlg.Static = "Read the names of this archive as:";
+  dlg.Title = LangString(IDS_NAME_CODE_PAGE_TITLE);
+  dlg.Static = LangString(IDS_NAME_CODE_PAGE_PROMPT);
   {
     UString s;
     NameCodePage_ToString(s, kNameCodePage_Auto);

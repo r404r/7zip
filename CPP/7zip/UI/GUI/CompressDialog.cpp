@@ -62,7 +62,6 @@ static const UInt32 kLangIDs[] =
   IDX_COMPRESS_SFX,
   IDX_COMPRESS_SHARED,
   IDX_COMPRESS_DEL,
-  IDX_COMPRESS_UTF8_NAMES,
 
   IDT_COMPRESS_MEMORY,
   IDT_COMPRESS_MEMORY_DE,
@@ -436,6 +435,7 @@ bool CCompressDialog::OnInit()
   LangSetWindowText(*this, IDD_COMPRESS);
   LangSetDlgItems(*this, kLangIDs, Z7_ARRAY_SIZE(kLangIDs));
   // LangSetDlgItemText(*this, IDB_COMPRESS_OPTIONS, IDS_OPTIONS); // IDG_COMPRESS_OPTIONS
+  LangSetDlgItemText(*this, IDX_COMPRESS_UTF8_NAMES, IDS_COMPRESS_UTF8_NAMES);
   #endif
 
   {

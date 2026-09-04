@@ -80,7 +80,6 @@ static const UInt32 kLangIDs[] =
   IDT_EXTRACT_EXTRACT_TO,
   IDT_EXTRACT_PATH_MODE,
   IDT_EXTRACT_OVERWRITE_MODE,
-  IDT_EXTRACT_CODEPAGE,
   // IDX_EXTRACT_ALT_STREAMS,
   IDX_EXTRACT_NT_SECUR,
   IDX_EXTRACT_ELIM_DUP,
@@ -154,6 +153,9 @@ bool CExtractDialog::OnInit()
     SetText(s);
     // LangSetWindowText(*this, IDD_EXTRACT);
     LangSetDlgItems(*this, kLangIDs, Z7_ARRAY_SIZE(kLangIDs));
+    #ifdef Z7_EXTRACT_DIALOG_CODE_PAGE
+    LangSetDlgItemText(*this, IDT_EXTRACT_CODEPAGE, IDS_EXTRACT_CODEPAGE);
+    #endif
   }
   #endif
   
