@@ -107,6 +107,8 @@
 #define IDM_VIEW_TIME_POPUP      760
 #define IDM_VIEW_TIME            761
 #define IDM_VIEW_NAME_CODE_PAGE  762
+// its text in the language files; 30000+ is the fork's range
+#define IDS_VIEW_NAME_CODE_PAGE  30004
 #define IDM_VIEW_TIME_UTC        799
 
 #define IDM_ADD_TO_FAVORITES     800

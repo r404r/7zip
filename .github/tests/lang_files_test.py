@@ -23,6 +23,7 @@ core.autocrlf=true cannot break the check - Lang.cpp strips CR too) is in
 """
 import hashlib
 import os
+import re
 import sys
 
 LANG_DIR = "Lang"
@@ -31,6 +32,12 @@ MANIFEST = os.path.join(".github", "lang", "MANIFEST.sha256")
 SIGNATURE = ";!@Lang2@!UTF-8!"
 FORK_MARKER = "; --- 7-Zip-fork additions: https://github.com/r404r/7zip ---"
 FORK_ID_MIN = 30000
+FORK_ID_MAX = 39999
+
+# where the ids above are #defined, so that a translation and the code that
+# reads it cannot drift apart
+SOURCE_DIR = os.path.join("CPP", "7zip", "UI")
+DEFINE_RE = re.compile(r"^\s*#define\s+(\w+)\s+(\d+)\s*$")
 
 # the languages this fork promises to ship; en.ttt is the English reference
 # LangPage.cpp counts its entries against, not a language of its own
@@ -129,6 +136,23 @@ def load_manifest(root):
     return entries, None
 
 
+def scan_defines(root):
+    """id -> [(symbol, path)] for every #define under CPP/7zip/UI."""
+    found = {}
+    for dirpath, _dirs, names in os.walk(os.path.join(root, SOURCE_DIR)):
+        for name in names:
+            if not name.endswith(".h"):
+                continue
+            path = os.path.join(dirpath, name)
+            with open(path, encoding="utf-8", errors="replace") as fh:
+                for line in fh:
+                    m = DEFINE_RE.match(line)
+                    if m:
+                        found.setdefault(int(m.group(2)), []).append(
+                            (m.group(1), os.path.relpath(path, root)))
+    return found
+
+
 def main(root):
     fails = []
 
@@ -214,6 +238,21 @@ def main(root):
     if checked == 0:
         print("ERROR: nothing was checked")
         return 1
+
+    # A string in the language files that no control reads is dead weight; an
+    # id in the code that no language file translates shows up as English in
+    # an otherwise translated dialog. Neither is visible from either side
+    # alone, so tie the two together here.
+    defines = scan_defines(root)
+    for i, en in FORK_STRINGS:
+        if i not in defines:
+            fail("no #define under %s gives %d (%r) a name" % (SOURCE_DIR, i, en))
+        else:
+            print("  %d %-22s %s" % (i, defines[i][0][0], defines[i][0][1]))
+    for i in sorted(defines):
+        if FORK_ID_MIN <= i <= FORK_ID_MAX and i not in fork_ids:
+            fail("%s is %d, in the fork's range, but no language file translates it"
+                 % (defines[i][0][0], i))
 
     print("%d language files checked, %d problem(s)" % (checked, len(fails)))
     return 1 if fails else 0
