@@ -41,9 +41,10 @@ HRESULT CAgentFolder::SetNameCodePage_ReOpen(UInt32 codePage,
   const UInt32 oldCodePage = _agentSpec->_nameCodePage;
   if (codePage == oldCodePage)
     return S_OK;
-  if (!_agentSpec->CanReOpen()
-      || !NFind::DoesFileExist_FollowLink(us2fs(_agentSpec->_archiveFilePath)))
+  if (!_agentSpec->CanReOpen())
     return E_NOTIMPL;
+  if (!NFind::DoesFileExist_FollowLink(us2fs(_agentSpec->_archiveFilePath)))
+    return GetLastError_noZero_HRESULT();
 
   UStringVector pathParts;
   bool isAltStreamFolder = false;

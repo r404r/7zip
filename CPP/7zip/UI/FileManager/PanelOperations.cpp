@@ -495,8 +495,6 @@ void CPanel::NameCodePage()
     CDisableNotify disableNotify(*this);
     res = agentFolder->SetNameCodePage_ReOpen(codePage, NULL, folderIsUsable);
   }
-  if (res != S_OK)
-    MessageBox_Error_HRESULT(res);
   if (!folderIsUsable)
   {
     UString parentFolderPath;
@@ -518,8 +516,11 @@ void CPanel::NameCodePage()
     }
     else
       OpenRootFolder();
-    return;
   }
+  if (res != S_OK)
+    MessageBox_Error_HRESULT(res);
+  if (!folderIsUsable)
+    return;
   res = RefreshListCtrl(state);
   if (res != S_OK)
     MessageBox_Error_HRESULT(res);
