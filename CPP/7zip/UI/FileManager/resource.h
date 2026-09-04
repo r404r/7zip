@@ -106,7 +106,6 @@
 
 #define IDM_VIEW_TIME_POPUP      760
 #define IDM_VIEW_TIME            761
-#define IDM_VIEW_NAME_CODE_PAGE  762
 #define IDM_VIEW_TIME_UTC        799
 
 #define IDM_ADD_TO_FAVORITES     800
@@ -204,3 +203,6 @@
 #define IDS_VIEW_NAME_CODE_PAGE         30004
 #define IDS_NAME_CODE_PAGE_TITLE        30005
 #define IDS_NAME_CODE_PAGE_PROMPT       30006
+
+// 741-749 : the fork's own commands
+#define IDM_VIEW_NAME_CODE_PAGE           749

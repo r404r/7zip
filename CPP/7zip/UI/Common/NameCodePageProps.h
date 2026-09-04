@@ -14,6 +14,8 @@ struct CCodePagePair
   const char *Name;
 };
 
+static const char * const k_NameCodePage_Types[] = { "zip", "tar" };
+
 /* the common ones; another code page can be typed in */
 static const CCodePagePair k_CodePages[] =
 {
@@ -101,6 +103,14 @@ inline bool ParseNameCodePage(const UString &s, UInt32 &codePage)
   return true;
 }
 
+inline bool IsNameCodePageArcType(const UString &s)
+{
+  for (unsigned i = 0; i < Z7_ARRAY_SIZE(k_NameCodePage_Types); i++)
+    if (s.IsEqualTo_Ascii_NoCase(k_NameCodePage_Types[i]))
+      return true;
+  return false;
+}
+
 /* only Zip and Tar know "cp", and a handler that gets a property it doesn't
    know fails to open the archive, so the type is named in the prefix */
 inline void AddNameCodePageProps(CObjectVector<CProperty> &props, UInt32 codePage)
@@ -109,11 +119,10 @@ inline void AddNameCodePageProps(CObjectVector<CProperty> &props, UInt32 codePag
     return;
   UString value;
   value.Add_UInt32(codePage);
-  const char * const kTypes[] = { "zip", "tar" };
-  for (unsigned i = 0; i < Z7_ARRAY_SIZE(kTypes); i++)
+  for (unsigned i = 0; i < Z7_ARRAY_SIZE(k_NameCodePage_Types); i++)
   {
     CProperty &prop = props.AddNew();
-    prop.Name = kTypes[i];
+    prop.Name = k_NameCodePage_Types[i];
     prop.Name += ".cp";
     prop.Value = value;
   }

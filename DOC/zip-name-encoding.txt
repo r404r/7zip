@@ -1,8 +1,8 @@
 Encoding of file names in zip archives
 --------------------------------------
 
-Version: 26.02 (fork)
-Date: 2026-08-29
+Version: 26.03 (fork)
+Date: 2026-09-05
 
 
 The problem
@@ -113,3 +113,14 @@ In the graphical interface
 
       The list holds the common code pages. Another one can be used from the
       command line with -mzip.cp={N}.
+
+  File Manager:
+      View > Name Code Page reopens the current archive with another code
+      page. The choice applies only to that open archive and is not remembered.
+      Only a plain zip or uncompressed tar backed by one real file can be
+      reopened this way. The menu item is disabled for .tar.gz and other
+      multi-handler chains, other formats, archives opened directly from a
+      parent archive's memory stream, and archives whose paths were shortened
+      by the File Manager.
+      Reopening is synchronous and currently has no progress or cancel dialog,
+      so it can pause the File Manager while a large archive is read again.

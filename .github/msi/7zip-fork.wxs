@@ -39,8 +39,8 @@
         Manufacturer="$(var.Manufacturer)" />
 
     <!-- a release candidate carries the version of the release it precedes,
-         and a build of dev-main always 26.2.0: the same version must replace
-         itself, or two of them end up installed side by side -->
+         and an untagged dev-main build uses revision zero: the same version
+         must replace itself, or two of them end up installed side by side -->
     <MajorUpgrade AllowSameVersionUpgrades="yes" DowngradeErrorMessage=
         "A newer version of $(var.ProductName) is already installed." />
 

@@ -439,7 +439,7 @@ void OnMenuActivating(HWND /* hWnd */, HMENU hMenu, int position)
 
     // the code page is a property of an archive, not of a file system folder
     menu.EnableItem(IDM_VIEW_NAME_CODE_PAGE,
-        g_App.GetFocusedPanel().IsArcFolder() ? MF_ENABLED : MF_GRAYED);
+        g_App.GetFocusedPanel().CanChangeNameCodePage() ? MF_ENABLED : MF_GRAYED);
     // menu.CheckItemByID(IDM_VIEW_SHOW_STREAMS, g_App.Get_ShowNtfsStrems_Mode());
     // menu.CheckItemByID(IDM_VIEW_SHOW_DELETED, g_App.ShowDeletedFiles);
 
@@ -792,7 +792,6 @@ bool ExecuteFileCommand(unsigned id)
     case IDM_COMMENT: g_App.Comment(); break;
     case IDM_CREATE_FOLDER: g_App.CreateFolder(); break;
     case IDM_CREATE_FILE: g_App.CreateFile(); break;
-    case IDM_VIEW_NAME_CODE_PAGE: g_App.NameCodePage(); break;
     #ifndef UNDER_CE
     case IDM_LINK: g_App.Link(); break;
     case IDM_ALT_STREAMS: g_App.OpenAltStreams(); break;
@@ -895,6 +894,7 @@ bool OnMenuCommand(HWND hWnd, unsigned id)
     case IDM_VIEW_FLAT_VIEW:      g_App.ChangeFlatMode(); break;
     case IDM_VIEW_REFRESH:        g_App.RefreshView(); break;
     case IDM_VIEW_AUTO_REFRESH:   g_App.Change_AutoRefresh_Mode(); break;
+    case IDM_VIEW_NAME_CODE_PAGE: g_App.NameCodePage(); break;
 
     // case IDM_VIEW_SHOW_STREAMS:     g_App.Change_ShowNtfsStrems_Mode(); break;
     /*

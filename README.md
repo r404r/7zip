@@ -10,7 +10,7 @@ at the time of writing none of the PRs opened there had been merged (the maintai
 is active in the issue tracker instead). So instead of sending patches upstream,
 this fork carries them on top of each upstream release.
 
-Upstream: [ip7z/7zip](https://github.com/ip7z/7zip) · current base: **7-Zip 26.02**
+Upstream: [ip7z/7zip](https://github.com/ip7z/7zip) · current base: **7-Zip 26.03**
 
 ## What is different from 7-Zip
 
@@ -19,7 +19,11 @@ Upstream: [ip7z/7zip](https://github.com/ip7z/7zip) · current base: **7-Zip 26.
   and the names of a legacy zip decode correctly. It always starts at *Auto* (today's
   behavior) and is not remembered — a code page fixes one archive.
 - The **File Manager** can switch the code page *while browsing* an archive:
-  View → *Name Code Page…* reopens the archive in place and keeps your position.
+  View → *Name Code Page…* reopens a zip or tar in place and keeps your position.
+  It applies only to a plain zip or uncompressed tar backed by one real file;
+  `.tar.gz` and other multi-handler chains, archives opened directly from a parent
+  archive's memory stream, and paths shortened by the File Manager are disabled. Reopening is
+  currently synchronous, without progress or cancellation; see the detailed DOC.
 - On the command line: `7z l "-mzip.cp=936" archive.zip` — the `zip.` prefix sends the
   property only to the zip handler, so `.7z`, `.gz` and everything else stay untouched.
   `tar.cp` works the same way. See `DOC/zip-name-encoding.txt` for the details and
@@ -53,8 +57,8 @@ Take either from the latest [Release](https://github.com/r404r/7zip/releases):
 | `7zip-fork-<version>-portable-x64.zip` | `7zFM.exe`, `7zG.exe`, `7z.exe`, `7zz.exe`, `7z.dll`, `7-zip.dll`, SFX modules, `Lang\`, docs — run from anywhere |
 | `SHA256SUMS.txt` | Checksums of both |
 
-Version scheme: `26.02-fork.3` is the third fork release on top of 7-Zip 26.02; the MSI
-carries it as `26.2.3`. Release candidates end in `-rc.N`. Windows x64 only.
+Version scheme: `26.03-fork.3` is the third fork release on top of 7-Zip 26.03; the MSI
+carries it as `26.3.3`. Release candidates end in `-rc.N`. Windows x64 only.
 There is no help file, so the Help buttons do nothing.
 
 ## How this fork is maintained
@@ -71,8 +75,8 @@ There is no help file, so the Help buttons do nothing.
 
 ## Roadmap
 
-- Finish the in-manager code page switching: pass the open callback through so
-  encrypted archives can prompt for a password.
+- Finish the in-manager code page switching: add progress and cancellation while
+  a large zip or tar is reopened.
 - Measure reopen times on large and solid archives (drives whether the switch stays).
 - Possibly show the fork release number in the About box.
 

@@ -28,6 +28,8 @@ import sys
 
 LANG_DIR = "Lang"
 MANIFEST = os.path.join(".github", "lang", "MANIFEST.sha256")
+SOURCE_META = os.path.join(".github", "lang", "SOURCE.txt")
+UPSTREAM_README = os.path.join("DOC", "readme.txt")
 
 SIGNATURE = ";!@Lang2@!UTF-8!"
 FORK_MARKER = "; --- 7-Zip-fork additions: https://github.com/r404r/7zip ---"
@@ -174,6 +176,34 @@ def load_manifest(root):
     return entries, None
 
 
+def load_versions(root):
+    source_path = os.path.join(root, SOURCE_META)
+    readme_path = os.path.join(root, UPSTREAM_README)
+    try:
+        with open(source_path, encoding="utf-8") as fh:
+            source_text = fh.read()
+        with open(readme_path, encoding="utf-8") as fh:
+            readme_first = fh.readline().strip()
+    except FileNotFoundError as e:
+        return None, None, "%s is missing" % os.path.relpath(e.filename, root)
+    source_match = re.search(r"^version:\s*(\S+)\s*$", source_text, re.M)
+    url_match = re.search(r"^url:\s*(\S+)\s*$", source_text, re.M)
+    readme_match = re.match(r"^7-Zip\s+(\d+\.\d+)\s+Sources$", readme_first)
+    if not source_match:
+        return None, None, "%s has no version field" % SOURCE_META
+    if not url_match:
+        return None, None, "%s has no url field" % SOURCE_META
+    if not readme_match:
+        return None, None, "%s has an unexpected first line: %r" % (
+            UPSTREAM_README, readme_first)
+    source_version = source_match.group(1)
+    expected_url = "https://www.7-zip.org/a/7z%s-x64.exe" % source_version.replace(".", "")
+    if url_match.group(1) != expected_url:
+        return None, None, "%s url %s does not match version %s (expected %s)" % (
+            SOURCE_META, url_match.group(1), source_version, expected_url)
+    return source_version, readme_match.group(1), None
+
+
 def walk_sources(root, suffix):
     for dirpath, _dirs, names in os.walk(os.path.join(root, SOURCE_DIR)):
         for name in sorted(names):
@@ -206,6 +236,13 @@ def main(root):
     def fail(msg):
         fails.append(msg)
         print("  FAIL %s" % msg)
+
+    source_version, upstream_version, version_error = load_versions(root)
+    if version_error:
+        fail(version_error)
+    elif source_version != upstream_version:
+        fail("%s version %s does not match %s version %s" % (
+            SOURCE_META, source_version, UPSTREAM_README, upstream_version))
 
     lang_dir = os.path.join(root, LANG_DIR)
     if not os.path.isdir(lang_dir):

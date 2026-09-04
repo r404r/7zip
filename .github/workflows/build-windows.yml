@@ -333,8 +333,10 @@ jobs:
           # through the artifact and into the zip, and not as an empty Lang/
           unzip -Z1 "out/$stem-portable-x64.zip" > ziplist.txt
           n="$(grep -c '^Lang/.*[^/]$' ziplist.txt)" || n=0  # grep exits 1 on none
-          echo "the portable zip carries $n language files"
-          if [ "$n" -lt 2 ]; then echo "::error::the portable zip has no Lang/"; exit 1; fi
+          want="$(find Lang -maxdepth 1 -type f | wc -l)"
+          echo "the portable zip carries $n language files; the tree has $want"
+          if [ "$want" -le 0 ]; then echo "::error::the tree has no Lang/ files"; exit 1; fi
+          if [ "$n" -ne "$want" ]; then echo "::error::portable Lang/ count differs from the tree"; exit 1; fi
           (cd out && sha256sum * > SHA256SUMS.txt && cat SHA256SUMS.txt)
 
       - name: Write the notes

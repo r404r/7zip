@@ -10,7 +10,7 @@ reproducible and so that a new upstream release shows up as a readable diff.
     manifest  record the sha256 of every file below its fork block
     refresh   fetch + apply + manifest, what to run after an upstream merge
 
-    python3 .github/scripts/lang_tool.py refresh --version 26.02
+    python3 .github/scripts/lang_tool.py refresh --version <upstream-version>
 
 fetch needs a 7-Zip binary to unpack the installer (--seven, $SEVENZIP, 7zz
 or 7z on PATH, or the one this tree builds). Nothing else here needs one, and
@@ -230,8 +230,8 @@ def main(argv):
     sub = p.add_subparsers(dest="cmd", required=True)
 
     def with_fetch_args(sp):
-        sp.add_argument("--version", default="26.02",
-                        help="upstream version, as in DOC/readme.txt (default 26.02)")
+        sp.add_argument("--version", required=True,
+                        help="upstream version, as in DOC/readme.txt")
         sp.add_argument("--url", help="override the installer URL")
         sp.add_argument("--sha256", help="expected sha256 of the installer")
         sp.add_argument("--seven", help="path to a 7-Zip binary")

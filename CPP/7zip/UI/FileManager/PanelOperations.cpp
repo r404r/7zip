@@ -427,21 +427,37 @@ void CPanel::CreateFolder()
   RefreshListCtrl(state);
 }
 
+static CAgentFolder *GetNameCodePageAgent(const CPanel &panel)
+{
+  if (!panel.IsArcFolder()
+      || (!panel._parentFolders.IsEmpty() && panel._parentFolders.Back().IsVirtual))
+    return NULL;
+  CMyComPtr<IArchiveFolderInternal> archiveFolderInternal;
+  if (panel._folder.QueryInterface(IID_IArchiveFolderInternal, &archiveFolderInternal) != S_OK
+      || !archiveFolderInternal)
+    return NULL;
+  CAgentFolder *agentFolder = NULL;
+  if (archiveFolderInternal->GetAgentFolder(&agentFolder) != S_OK
+      || !agentFolder || !agentFolder->_agentSpec)
+    return NULL;
+  if (!IsNameCodePageArcType(agentFolder->_agentSpec->ArchiveType)
+      || !agentFolder->_agentSpec->CanReOpen())
+    return NULL;
+  return agentFolder;
+}
+
+bool CPanel::CanChangeNameCodePage() const
+{
+  return GetNameCodePageAgent(*this) != NULL;
+}
+
 /* Show the archive again with another code page for its names, so that the
    right one can be found by looking at the result.
    The choice is not remembered. */
 void CPanel::NameCodePage()
 {
-  if (!IsArcFolder())
-    return;
-
-  CMyComPtr<IArchiveFolderInternal> archiveFolderInternal;
-  if (_folder.QueryInterface(IID_IArchiveFolderInternal, &archiveFolderInternal) != S_OK
-      || !archiveFolderInternal)
-    return;
-  CAgentFolder *agentFolder = NULL;
-  if (archiveFolderInternal->GetAgentFolder(&agentFolder) != S_OK
-      || !agentFolder || !agentFolder->_agentSpec)
+  CAgentFolder *agentFolder = GetNameCodePageAgent(*this);
+  if (!agentFolder)
     return;
 
   CComboDialog dlg;
@@ -479,14 +495,32 @@ void CPanel::NameCodePage()
     CDisableNotify disableNotify(*this);
     res = agentFolder->SetNameCodePage_ReOpen(codePage, NULL, folderIsUsable);
   }
+  if (!folderIsUsable)
+  {
+    UString parentFolderPath;
+    UString archiveName;
+    if (!_parentFolders.IsEmpty())
+    {
+      const CFolderLink &link = _parentFolders.Front();
+      parentFolderPath = link.ParentFolderPath;
+      archiveName = link.RelPath;
+    }
+    CloseOpenFolders();
+    COpenResult openRes;
+    if (BindToPath(parentFolderPath, UString(), openRes) == S_OK)
+    {
+      CSelectedState parentState;
+      parentState.FocusedName = archiveName;
+      parentState.FocusedName_Defined = !archiveName.IsEmpty();
+      RefreshListCtrl(parentState);
+    }
+    else
+      OpenRootFolder();
+  }
   if (res != S_OK)
     MessageBox_Error_HRESULT(res);
   if (!folderIsUsable)
-  {
-    // the archive is not open any more, so there is nothing to show
-    CloseOpenFolders();
     return;
-  }
   res = RefreshListCtrl(state);
   if (res != S_OK)
     MessageBox_Error_HRESULT(res);
