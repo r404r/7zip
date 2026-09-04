@@ -28,11 +28,8 @@
 #define IDS_EXTRACT_OVERWRITE_RENAME          3424
 #define IDS_EXTRACT_OVERWRITE_RENAME_EXISTING 3425
 
-/* 30000+ is the fork's own range: its strings are appended to the language
-   files, never inserted, so they cannot shift an upstream id. See
-   .github/lang/README.md */
-#define IDS_EXTRACT_CODEPAGE_AUTO            30000
-#define IDS_EXTRACT_CODEPAGE_INCORRECT       30001
+#define IDS_EXTRACT_CODEPAGE_AUTO             30000
+#define IDS_EXTRACT_CODEPAGE_INCORRECT        30001
 
 #define IDS_EXTRACT_MESSAGE_UNSUPPORTED_METHOD    3700
 #define IDS_EXTRACT_MESSAGE_DATA_ERROR            3701

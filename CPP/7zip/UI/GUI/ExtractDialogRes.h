@@ -18,8 +18,7 @@
 #define IDT_EXTRACT_PATH_MODE       3410
 #define IDT_EXTRACT_OVERWRITE_MODE  3420
 #define IDT_EXTRACT_CODEPAGE        3433
-// the label's text in the language files; 30000+ is the fork's range
-#define IDS_EXTRACT_CODEPAGE       30002
+#define IDS_EXTRACT_CODEPAGE        30002
 
 #define IDX_EXTRACT_ELIM_DUP        3430
 #define IDX_EXTRACT_NT_SECUR        3431

@@ -154,7 +154,6 @@ bool CExtractDialog::OnInit()
     // LangSetWindowText(*this, IDD_EXTRACT);
     LangSetDlgItems(*this, kLangIDs, Z7_ARRAY_SIZE(kLangIDs));
     #ifdef Z7_EXTRACT_DIALOG_CODE_PAGE
-    // the control id is not the language id here: the fork's strings are at 30000+
     LangSetDlgItemText(*this, IDT_EXTRACT_CODEPAGE, IDS_EXTRACT_CODEPAGE);
     #endif
   }

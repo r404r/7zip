@@ -429,8 +429,7 @@ void CPanel::CreateFolder()
 
 /* Show the archive again with another code page for its names, so that the
    right one can be found by looking at the result.
-   The code page names in the list are not translated: ParseNameCodePage()
-   reads those same literals back. The choice is not remembered. */
+   The choice is not remembered. */
 void CPanel::NameCodePage()
 {
   if (!IsArcFolder())

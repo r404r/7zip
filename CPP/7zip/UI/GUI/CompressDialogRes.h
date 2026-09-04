@@ -69,8 +69,7 @@
 
 #define IDX_COMPRESS_DEL                4019
 #define IDX_COMPRESS_UTF8_NAMES         4020
-// its text in the language files; 30000+ is the fork's range
-#define IDS_COMPRESS_UTF8_NAMES        30003
+#define IDS_COMPRESS_UTF8_NAMES         30003
 
 #define IDX_COMPRESS_NT_SYM_LINKS       4040
 #define IDX_COMPRESS_NT_HARD_LINKS      4041

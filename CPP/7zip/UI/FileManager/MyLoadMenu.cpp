@@ -69,7 +69,6 @@ static const CIDLangPair kIDLangPairs[] =
   { IDM_VIEW_ARANGE_BY_TYPE, IDS_PROP_FILE_TYPE },
   { IDM_VIEW_ARANGE_BY_DATE, IDS_PROP_MTIME },
   { IDM_VIEW_ARANGE_BY_SIZE, IDS_PROP_SIZE },
-  // the fork's strings are at 30000+, so this one needs a pair too
   { IDM_VIEW_NAME_CODE_PAGE, IDS_VIEW_NAME_CODE_PAGE }
 };
 

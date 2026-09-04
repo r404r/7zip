@@ -435,7 +435,6 @@ bool CCompressDialog::OnInit()
   LangSetWindowText(*this, IDD_COMPRESS);
   LangSetDlgItems(*this, kLangIDs, Z7_ARRAY_SIZE(kLangIDs));
   // LangSetDlgItemText(*this, IDB_COMPRESS_OPTIONS, IDS_OPTIONS); // IDG_COMPRESS_OPTIONS
-  // the control id is not the language id here: the fork's strings are at 30000+
   LangSetDlgItemText(*this, IDX_COMPRESS_UTF8_NAMES, IDS_COMPRESS_UTF8_NAMES);
   #endif
 
