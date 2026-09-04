@@ -118,9 +118,8 @@ In the graphical interface
       View > Name Code Page reopens the current archive with another code
       page. The choice applies only to that open archive and is not remembered.
       Only a zip or tar backed by one real file can be reopened this way; the
-      menu item is disabled for other formats, nested archives and split archives.
+      menu item is disabled for other formats, archives opened directly from a
+      parent archive's memory stream, split archive chains, and archives whose
+      paths were shortened by the File Manager.
       Reopening is synchronous and currently has no progress or cancel dialog,
       so it can pause the File Manager while a large archive is read again.
-      If the archive contains a path too long for the File Manager to preserve,
-      the operation reports an error; the code page and existing view are left
-      unchanged.
