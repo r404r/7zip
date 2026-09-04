@@ -2,3 +2,6 @@
 # and are held to a sha256 manifest. ja.txt is CRLF, the rest are LF: keep
 # every one of them exactly as it came, on every platform.
 Lang/** -text
+
+*.dsp text eol=crlf
+*.dsw text eol=crlf

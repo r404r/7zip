@@ -108,11 +108,13 @@ public:
 
   int CompareItems3(UInt32 index1, UInt32 index2, PROPID propID);
   int CompareItems2(UInt32 index1, UInt32 index2, PROPID propID, Int32 propIsRaw);
+  int ComparePrefixes(UInt32 index1, UInt32 index2);
 
   CAgentFolder():
       _isAltStreamFolder(false),
       _flatMode(false),
       _loadAltStreams(false), // _loadAltStreams alt streams works in flat mode, but we don't use it now
+      // _loadAltStreams(true), // for debug
       _proxyDirIndex(0),
       _zoneMode(NExtract::NZoneIdMode::kNone)
       /* , _replaceAltStreamCharsMode(0) */
@@ -173,6 +175,8 @@ public:
   CMyComPtr<IInFolderArchive> _agent;
   CAgent *_agentSpec;
   CRecordVector<CProxyItem> _items;
+
+  UString _temp1, _temp2;
 };
 
 
@@ -256,6 +260,9 @@ public:
   CObjectVector<UString> m_PropNames;
   CObjectVector<NWindows::NCOM::CPropVariant> m_PropValues;
  #endif
+
+  IArchiveOpenCallback *_progress_ArchiveOpenCallback_for_Open; // it's for parsing after archive openning
+  IProgress *_progress_for_Open; // it's for parsing after archive openning
 
   CAgent();
   ~CAgent();

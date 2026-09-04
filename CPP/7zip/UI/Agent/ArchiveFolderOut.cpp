@@ -24,10 +24,11 @@ using namespace NDir;
 
 void CAgentFolder::GetPathParts(UStringVector &pathParts, bool &isAltStreamFolder)
 {
+  bool isChangedPath = false;
   if (_proxy2)
     _proxy2->GetDirPathParts(_proxyDirIndex, pathParts, isAltStreamFolder);
   else
-    _proxy->GetDirPathParts(_proxyDirIndex, pathParts);
+    _proxy->GetDirPathParts_isChanged(_proxyDirIndex, pathParts, isChangedPath);
 }
 
 
