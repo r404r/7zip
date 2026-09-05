@@ -18,12 +18,20 @@ Upstream: [ip7z/7zip](https://github.com/ip7z/7zip) · current base: **7-Zip 26.
 - The **Extract dialog** has a *Name code page* drop-down: pick `936 (Chinese Simplified)`
   and the names of a legacy zip decode correctly. It always starts at *Auto* (today's
   behavior) and is not remembered — a code page fixes one archive.
+
+  ![The Extract dialog, with the added Name code page drop-down open on its list: Auto, 65001 (UTF-8), 932 (Japanese), 936 (Chinese Simplified), and more](.github/images/extract-name-code-page.png)
+
 - The **File Manager** can switch the code page *while browsing* an archive:
   View → *Name Code Page…* reopens a zip or tar in place and keeps your position.
   It applies only to a plain zip or uncompressed tar backed by one real file;
   `.tar.gz` and other multi-handler chains, archives opened directly from a parent
   archive's memory stream, and paths shortened by the File Manager are disabled. Reopening is
   currently synchronous, without progress or cancellation; see the detailed DOC.
+
+  ![The File Manager's View menu while a zip is open, with the added Name Code Page item](.github/images/filemanager-view-menu.png)
+
+  ![The Name Code Page dialog, asking how to read the names of this archive, with its code page list open](.github/images/filemanager-name-code-page.png)
+
 - On the command line: `7z l "-mzip.cp=936" archive.zip` — the `zip.` prefix sends the
   property only to the zip handler, so `.7z`, `.gz` and everything else stay untouched.
   `tar.cp` works the same way. See `DOC/zip-name-encoding.txt` for the details and
@@ -33,6 +41,8 @@ Upstream: [ip7z/7zip](https://github.com/ip7z/7zip) · current base: **7-Zip 26.
 - The **Add to Archive dialog** has *Use UTF-8 for file names* for zip (on by default):
   names are written as UTF-8 with the UTF-8 flag (bit 11), so any compliant tool
   decodes them, no guessing involved.
+
+  ![The Add to Archive dialog with the zip format selected, showing the added Use UTF-8 for file names checkbox, checked](.github/images/add-utf8-names.png)
 
 **Packaging and coexistence**
 - A small **MSI installer** that lives next to an official 7-Zip installation: its own
