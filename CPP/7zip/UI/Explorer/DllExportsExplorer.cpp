@@ -38,6 +38,7 @@
 #include "../../../Windows/Registry.h"
 
 #include "../FileManager/IFolder.h"
+#include "../FileManager/LangUtils.h"
 
 #include "ContextMenu.h"
 
@@ -151,6 +152,10 @@ BOOL WINAPI DllMain(
     g_hInstance = (HINSTANCE)hInstance;
     ODS("In DLLMain, DLL_PROCESS_ATTACH\r\n");
     NT_CHECK
+    #ifdef Z7_LANG
+    // explorer keeps this DLL loaded across changes of the language setting
+    g_LangFollowsRegistry = true;
+    #endif
   }
   else if (dwReason == DLL_PROCESS_DETACH)
   {

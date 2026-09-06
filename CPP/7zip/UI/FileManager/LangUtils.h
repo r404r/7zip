@@ -23,7 +23,11 @@ struct CIDLangPair
 void ReloadLang();
 void LoadLangOneTime();
 // for a host that keeps this code loaded across a change of the setting
-// (explorer.exe); the caller reads the table under the same lock
+// (explorer.exe); the caller reads the table under the same lock.
+// Without g_LangFollowsRegistry (the shell extension sets it) this is
+// LoadLangOneTime: the File Manager reloads on its own and refreshes its
+// windows when it does.
+extern bool g_LangFollowsRegistry;
 NWindows::NSynchronization::CCriticalSection &Lang_CriticalSection();
 void ReloadLangIfRegChanged();
 
