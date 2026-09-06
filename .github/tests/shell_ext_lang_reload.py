@@ -49,6 +49,9 @@ LOCK_RE = re.compile(r"CCriticalSectionLock\s+\w+\s*\(\s*Lang_CriticalSection\(\
 READ_RE = re.compile(r"\b(LangString|LangString_OnlyFromLangFile|AddLangString|g_Lang"
                      r"|MyFormatNew|GetNameOfProperty)\b")
 FUNC_RE = re.compile(r"^[A-Za-z_][^;{}]*\b(\w+)\s*\([^;]*$")
+# the wrappers in ContextMenu.cpp that read on the caller's behalf: a call to
+# one of them is a read too, as far as the lock is concerned
+INDIRECT_RE = re.compile(r"\b(FillCommand|LangStringAlt|AddCommand|MyFormatNew_ReducedName)\s*\(")
 
 # files linked into the DLL that read the table; anything else reading it is new
 READER_FILES = {"ContextMenu.cpp", "MyMessages.cpp", "FormatUtils.cpp", "PropertyName.cpp",
@@ -92,8 +95,9 @@ def body(lines, funcs, name):
     return None, []
 
 
-def reads_at(lines):
-    return [i for i, l in enumerate(lines) if READ_RE.search(code(l))]
+def reads_at(lines, indirect=False):
+    return [i for i, l in enumerate(lines)
+            if READ_RE.search(code(l)) or (indirect and INDIRECT_RE.search(code(l)))]
 
 
 def lock_covers(lines, lock, target):
@@ -131,7 +135,7 @@ def main(root):
     else:
         lock = next((i for i, l in enumerate(qcm) if LOCK_RE.search(l)), None)
         reload = next((i for i, l in enumerate(qcm) if "ReloadLangIfRegChanged()" in code(l)), None)
-        reads = reads_at(qcm)
+        reads = reads_at(qcm, indirect=True)
         if lock is None:
             fail("QueryContextMenu does not take Lang_CriticalSection()")
         else:
