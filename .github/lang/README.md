@@ -19,6 +19,22 @@ With `Lang/` in place, 7-Zip picks the system language by itself the first
 time it runs (`OpenDefaultLang()`), and the user can change it in
 Options → Language.
 
+Two places do not simply follow that setting:
+
+- **The context menu.** `7-zip.dll` reads `Lang\` from its own directory and
+  the setting from `HKCU\Software\7-Zip\Lang` — the key it shares with an
+  official 7-Zip. Upstream reads it once per process, and explorer.exe keeps
+  the DLL for its whole life, so a language changed in the File Manager did
+  not reach the menu until the next sign-out. This fork re-reads the setting
+  on every right-click (`ReloadLangIfRegChanged()`, PR-015); the change shows
+  on the next menu. An official 7-Zip installed alongside still behaves the
+  upstream way.
+- **The four buttons at the bottom of Options** (OK / Cancel / Apply / Help).
+  They belong to the Windows property sheet, not to 7-Zip: comctl32 creates
+  them and labels them in the *Windows* display language, whatever 7-Zip is
+  set to. 7-Zip never sets them, and the language files do not even carry an
+  "Apply". Upstream behaves the same; this fork leaves it as it is.
+
 ## Refreshing after an upstream release
 
 ```sh
