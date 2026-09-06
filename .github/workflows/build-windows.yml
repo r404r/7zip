@@ -77,6 +77,10 @@ jobs:
         shell: cmd
         run: python .github\tests\lang_files_test.py "%GITHUB_WORKSPACE%"
 
+      - name: Check that the shell extension re-reads the language under its lock
+        shell: cmd
+        run: python .github\tests\shell_ext_lang_reload.py "%GITHUB_WORKSPACE%"
+
       - name: Package the MSI
         shell: pwsh
         run: |

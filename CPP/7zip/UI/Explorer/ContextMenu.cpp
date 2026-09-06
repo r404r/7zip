@@ -623,7 +623,9 @@ Z7_COMWF_B CZipContextMenu::QueryContextMenu(HMENU hMenu, UINT indexMenu,
   // why it was so before?
 
 #ifdef Z7_LANG
-  LoadLangOneTime();
+  // explorer keeps this DLL for its whole life: the setting can change under it
+  NSynchronization::CCriticalSectionLock langLock(Lang_CriticalSection());
+  ReloadLangIfRegChanged();
 #endif
 
   CMenu popupMenu;

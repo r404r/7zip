@@ -1,4 +1,5 @@
 // MyMessages.cpp
+// Modified in 7-Zip-fork, 2026: https://github.com/r404r/7zip
 
 #include "StdAfx.h"
 
@@ -21,7 +22,14 @@ void ShowErrorMessage(HWND window, LPCWSTR message)
 
 void ShowErrorMessageHwndRes(HWND window, UInt32 resID)
 {
-  UString s = LangString(resID);
+  UString s;
+  {
+    #ifdef Z7_LANG
+    // the table can be reloaded by another thread of the shell extension
+    NSynchronization::CCriticalSectionLock lock(Lang_CriticalSection());
+    #endif
+    s = LangString(resID);
+  }
   if (s.IsEmpty())
     s.Add_UInt32(resID);
   ShowErrorMessage(window, s);

@@ -69,7 +69,11 @@ Take either from the latest [Release](https://github.com/r404r/7zip/releases):
 
 Version scheme: `26.03-fork.3` is the third fork release on top of 7-Zip 26.03; the MSI
 carries it as `26.3.3`. Release candidates end in `-rc.N`. Windows x64 only.
-There is no help file, so the Help buttons do nothing.
+There is no help file, so the Help buttons do nothing. The OK / Cancel / Apply /
+Help buttons at the bottom of Options are drawn by Windows and follow the Windows
+display language, not the language chosen in 7-Zip — upstream is the same. The
+context menu, on the other hand, picks up a language change on the next
+right-click (upstream needs a sign-out for that).
 
 ## How this fork is maintained
 

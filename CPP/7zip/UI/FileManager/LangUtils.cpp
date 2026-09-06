@@ -1,4 +1,5 @@
 // LangUtils.cpp
+// Modified in 7-Zip-fork, 2026: https://github.com/r404r/7zip
 
 #include "StdAfx.h"
 
@@ -44,6 +45,33 @@ void LoadLangOneTime()
     return;
   g_Loaded = true;
   ReloadLang();
+}
+
+NSynchronization::CCriticalSection &Lang_CriticalSection()
+{
+  return g_CriticalSection;
+}
+
+bool g_LangFollowsRegistry = false;
+
+// the setting as it was read from the registry, not g_LangID:
+// OpenDefaultLang() rewrites that one when the setting is empty
+static UString g_RegLangLoaded;
+
+static void ReloadLang_From(const UString &regValue);
+
+void ReloadLangIfRegChanged()
+{
+  NSynchronization::CCriticalSectionLock lock(g_CriticalSection);
+  if (g_Loaded && !g_LangFollowsRegistry)
+    return;
+  UString s;
+  ReadRegLang(s);
+  if (g_Loaded && s == g_RegLangLoaded)
+    return;
+  g_Loaded = true;
+  g_RegLangLoaded = s;
+  ReloadLang_From(s); // the value compared is the value loaded
 }
 
 void LangSetDlgItemText(HWND dialog, UInt32 controlID, UInt32 langID)
@@ -307,8 +335,15 @@ static void OpenDefaultLang()
 
 void ReloadLang()
 {
+  UString s;
+  ReadRegLang(s);
+  ReloadLang_From(s);
+}
+
+static void ReloadLang_From(const UString &regValue)
+{
   g_Lang.Clear();
-  ReadRegLang(g_LangID);
+  g_LangID = regValue;
   if (g_LangID.IsEmpty())
   {
 #ifndef _UNICODE
