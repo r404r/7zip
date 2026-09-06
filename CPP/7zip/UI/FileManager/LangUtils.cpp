@@ -1,4 +1,5 @@
 // LangUtils.cpp
+// Modified in 7-Zip-fork, 2026: https://github.com/r404r/7zip
 
 #include "StdAfx.h"
 
@@ -43,6 +44,27 @@ void LoadLangOneTime()
   if (g_Loaded)
     return;
   g_Loaded = true;
+  ReloadLang();
+}
+
+NSynchronization::CCriticalSection &Lang_CriticalSection()
+{
+  return g_CriticalSection;
+}
+
+// the setting as it was read from the registry, not g_LangID:
+// OpenDefaultLang() rewrites that one when the setting is empty
+static UString g_RegLangLoaded;
+
+void ReloadLangIfRegChanged()
+{
+  NSynchronization::CCriticalSectionLock lock(g_CriticalSection);
+  UString s;
+  ReadRegLang(s);
+  if (g_Loaded && s == g_RegLangLoaded)
+    return;
+  g_Loaded = true;
+  g_RegLangLoaded = s;
   ReloadLang();
 }
 

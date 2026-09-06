@@ -1,4 +1,5 @@
 // LangUtils.h
+// Modified in 7-Zip-fork, 2026: https://github.com/r404r/7zip
 
 #ifndef ZIP7_INC_LANG_UTILS_H
 #define ZIP7_INC_LANG_UTILS_H
@@ -6,6 +7,7 @@
 #include "../../../Common/Lang.h"
 
 #include "../../../Windows/ResourceString.h"
+#include "../../../Windows/Synchronization.h"
 
 extern UString g_LangID;
 extern CLang g_Lang;
@@ -20,6 +22,10 @@ struct CIDLangPair
 
 void ReloadLang();
 void LoadLangOneTime();
+// for a host that keeps this code loaded across a change of the setting
+// (explorer.exe); the caller reads the table under the same lock
+NWindows::NSynchronization::CCriticalSection &Lang_CriticalSection();
+void ReloadLangIfRegChanged();
 
 void LangSetDlgItemText(HWND dialog, UInt32 controlID, UInt32 langID);
 void LangSetDlgItems(HWND dialog, const UInt32 *ids, unsigned numItems);
