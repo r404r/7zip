@@ -52,6 +52,7 @@ kanban:
   auto_decompose: false
   orchestrator_profile: orchestrator
   default_assignee: coder
+  done_sub_retention_days: 0
 ```
 
 Board: `archive-rust-migration`; default workspace:
@@ -87,8 +88,8 @@ stay on the automation base; there is no fixed base-ref option configured here.
 user unit; `gateway start` started it. `hermes-gateway.service` is enabled,
 active/running, and uses `Restart=always`. Linger is enabled, without sudo.
 Gateway logs confirm a singleton embedded dispatcher with a 60-second interval.
-Gateway can run without messaging adapters, so independent setup is operational
-while Telegram credentials are missing. No Telegram success is claimed yet.
+The gateway now has a verified Telegram polling adapter. getMe and the private
+getChat succeeded; polling health and direct message delivery were observed.
 
 `display.tool_progress: off` suppresses normal tool chatter. The installed durable
 notifier handles completed, blocked, gave_up, crashed, timed_out, review_requested,
@@ -96,12 +97,20 @@ changes_requested and related state events. `notify+wake` is supported. Subscrib
 inherit through parent links and creator_task_id, but subscriptions added after
 children already exist must be installed on those children explicitly.
 
-Telegram remains unconfigured pending bot token and numeric user ID. On receipt,
-the operator will merge the private `.env`, enforce `TELEGRAM_ALLOWED_USERS`, keep
-`GATEWAY_ALLOW_ALL_USERS=false`, set the private home conversation, restart the
-gateway, verify API connectivity plus inbound authorization, and install durable
-subscriptions. A harmless block/reply/unblock test must pass before G0 releases M0.
-Automatic notification wakes are never human decisions.
+Telegram credentials supplied by the operator were merged into private `.env`.
+`TELEGRAM_ALLOWED_USERS` contains only the operator; both
+`TELEGRAM_ALLOW_ALL_USERS` and `GATEWAY_ALLOW_ALL_USERS` are false. Telegram policy
+is allowlist-only for DMs, groups disabled, unauthorized DMs ignored, and the
+allowed chat is restricted to the private operator conversation. All seven
+existing cards have durable `notify+wake` subscriptions owned by default.
+The actual configured adapter accepted the owner and rejected an unlisted sender;
+unauthorized DMs cannot enter pairing. A blocked event was delivered and its
+persistent subscription cursor advanced. The same notification woke the default
+coordinator, which correctly refused to invent an incoming human reply.
+The real authorized reply and unblock were recorded. B2 completed after tester
+and independent reviewer executed the committed harmless script. Completion event
+60 belongs to reviewer run 9 and both durable cursors advanced through it. The
+actual incoming message record 19 preceded that review. Automatic notification wakes are never human decisions.
 
 ## Backups and validation
 
@@ -117,5 +126,13 @@ all unrelated parsed values. Installed `validate_config_structure` passed.
 A second private role-prompt backup was created before audit safeguards:
 `~/.hermes/backups/archive-migration-role-audit-20260911T010610Z/`.
 Final validation passed for all six configuration structures and runtime secret
-permissions. B1 t_181faa42 completed after independent reviewer PASS. G0 and B2
-have sticky needs_input events; all four milestones remain unstarted.
+permissions. B1 t_181faa42 completed after independent reviewer PASS. A Telegram
+activation backup is at `~/.hermes/backups/archive-migration-telegram-20260911T014012Z/`.
+B2 is DONE after end-to-end confirmation. G0 is ready for operator completion;
+M0 has a prepared isolated worktree containing the committed governance.
+
+Independent Telegram audit verified private permissions, worker credential
+isolation, all seven durable subscriptions, healthy polling, and no fatal errors.
+The supported done_sub_retention_days=0 disables automatic 30-day expiry of inactive
+blocked subscriptions; explicit archive cleanup is retained. Possible duplicate
+send warnings were observed, so delivery is not claimed to be exactly once.

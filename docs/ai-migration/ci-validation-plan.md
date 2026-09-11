@@ -104,3 +104,9 @@ migrating application behavior. Qt/QML builds and desktop integration need nativ
 GUI/platform checks later; the CLI workflow proves none of those today. Release
 validation remains a separate human-authorized milestone, including licensing
 review and packaging/signing requirements.
+
+The follow-up bootstrap governance/documentation commit a9a25a9 also passed native
+[Linux/macOS CI](https://github.com/r404r/7zip/actions/runs/34549555370) and
+[Windows CI](https://github.com/r404r/7zip/actions/runs/34549555271).
+The later Telegram probe script is checked by real Hermes tester/reviewer runs;
+it makes no production archive change.

@@ -1,11 +1,9 @@
-# Bootstrap report — Telegram credentials required
+# Bootstrap report — Telegram verified, migration release prepared
 
-Status as of 2026-09-11: **bootstrap is not complete**. All independently feasible
-repository, provider, profile, service, board and native CI setup has been executed
-and checked. The remaining external blocker is the Telegram Bot token and the
-operator's numeric Telegram user ID. No value for either was found securely
-configured. Actual Telegram notification/inbound tests and M0 dispatch remain
-gated until those values are supplied and the path is verified.
+Status as of 2026-09-11: Telegram verification has passed. The real authorized
+reply, independent tester/reviewer execution, and durable completion delivery
+are verified. M0 is prepared behind G0; the bootstrap operator is releasing that
+gate next. No further credential, configuration editing, or human reply is needed.
 
 ## Discovered and changed
 
@@ -39,7 +37,7 @@ gated until those values are supplied and the path is verified.
 | Concurrency | Two total across boards; one per profile on migration board; other board empty |
 | Kanban database | SQLite integrity_check=ok; foreign_key_check empty; no active diagnostics |
 | Worktree/review | B1 `t_181faa42` DONE after actual coder execution and separate reviewer PASS |
-| Telegram | Not configured; zero durable subscriptions; no outbound or inbound success claimed |
+| Telegram | Bot/chat/polling/outbound and durable blocked-event delivery verified; seven notify+wake subscriptions; real incoming reply, B2 independent PASS and completion delivery verified |
 | Production migration | Not started; no codec or encryption rewrite |
 
 B1 actually created an isolated worktree based on committed governance, read
@@ -63,7 +61,7 @@ worktree creation. These safeguards are now explicit in AGENTS.md and role promp
 | M2 target architecture | `t_db8ffe0b` | architect | TODO, depends on reviewed M0 |
 | M3 detailed migration DAG | `t_82c76197` | orchestrator | TODO, depends on BOTH reviewed M1 and M2 |
 | B1 worktree/review probe | `t_181faa42` | reviewer | DONE, independent PASS |
-| B2 Telegram lifecycle probe | `t_d905f0a0` | tester | BLOCKED, needs credentials and real authorized reply |
+| B2 Telegram lifecycle probe | `t_d905f0a0` | reviewer | DONE, independent PASS and completion delivered |
 
 First migration task: **M0 `t_48d08249`**, fully specified and awaiting the Telegram
 bootstrap gate. M0–M3 have not run. G0 was initially promoted because a bare
@@ -102,6 +100,10 @@ the new CI/smoke infrastructure; legacy source and existing CI have zero diff.
   env and persona; existing profile configs; initial new-profile configs/env/personas.
 - `~/.hermes/backups/archive-migration-role-audit-20260911T010610Z/`: role prompts
   before audit safeguards were added.
+- `~/.hermes/backups/archive-migration-telegram-20260911T014012Z/`: private env,
+  config and coordinator persona before Telegram activation.
+- `~/.hermes/backups/archive-migration-notify-retention-20260911T014535Z/`: config
+  before disabling age-based expiry of blocked-task subscriptions.
 
 Backup directories are 0700 and files 0600. Secret-containing runtime files are
 0600. The default had no auth.json before import; existing Codex and preexisting
@@ -109,17 +111,14 @@ profile credentials were not overwritten. Backups and credentials are outside Gi
 
 ## Remaining work requiring external input
 
-Supply only the **Telegram Bot token** and **numeric Telegram user ID**. The
-bootstrap operator will back up and merge private configuration, verify bot/chat
-connectivity and authorization, subscribe all existing cards with notify+wake,
-and run B2's real blocked-notification/reply/unblock/completion cycle. Telegram
-may require the operator to start the bot before it can send a DM; request that
-only if the API demonstrates it is necessary. Never fabricate an inbound reply.
+Credentials are configured. The bot sent a one-time `bootstrap-confirm` prompt to
+the already reachable private conversation. No manual configuration editing or
+additional setup permission is required. The actual reply was received and independently source-checked by the gateway.
+No further human interaction is needed for this bootstrap verification.
 
-After actual verification, the existing user authorization permits completing G0
-without another abstract permission question. The dispatcher then starts M0 and
-progresses through eligible dependencies with independent review. Update this
-report with the observed Telegram and M0 statuses at that point.
+B2's real authorized reply, execution, independent PASS and completion delivery
+are verified. The bootstrap operator will now complete G0 and release M0.
+The persistent dispatcher will continue eligible work with independent review.
 
 Qt 6, CMake, Ninja and Clang are not installed locally; they are later build/GUI
 prerequisites and do not block current archaeology or the GCC legacy CLI. Major
@@ -130,3 +129,26 @@ creation relies on the source checkout staying on the automation base branch.
 Recovery/reference: [HERMES-RUNBOOK.md](HERMES-RUNBOOK.md).
 Environment details: [environment-inventory.md](environment-inventory.md).
 Runtime details: [hermes-runtime.md](hermes-runtime.md).
+
+## Telegram verification details
+
+The real standalone bootstrap-confirm reached the default Telegram session and
+was checked against the configured single-user allowlist. Synthetic notification
+wakes were explicitly rejected as user evidence. The probe exposed two installed
+behaviors: replaying a second same-kind block enters triage; inline Python requires
+approval unavailable in single-query workers. The bootstrap operator preserved the
+same card/history and prepared the committed, side-effect-free
+`scripts/ai-migration/telegram-probe.py` for ordinary file execution. No security
+setting was weakened. Tester and reviewer both executed it successfully before PASS.
+
+All seven existing cards have durable default-owned notify+wake subscriptions.
+Both public-access flags are false; DMs are restricted to the operator/private
+chat, groups disabled, and unknown DMs ignored. Owner acceptance and stranger
+rejection were tested against the actual configured adapter. Notification expiry
+is disabled via supported done_sub_retention_days=0. Possible duplicate-send
+warnings occurred; delivery is not claimed to be exactly once.
+
+Final verification correlated real incoming message record 19 with later reviewer
+run 9 and completion event 60. Both last_event_id and last_ping_event_id covered
+event 60. The gateway state matched the live systemd PID and reported connected
+Telegram polling. These identifiers contain no credentials or private user IDs.

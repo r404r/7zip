@@ -112,9 +112,11 @@ inspect `hermes pause --help` before using it because it may affect other work.
 
 ## Telegram activation and end-to-end test
 
-Current blocker: no bot token and no numeric authorized user ID were found.
-The bootstrap operator must obtain those values, create another timestamped backup,
-and merge them into the private default `.env` using dotenv-aware editing:
+Telegram credentials have now been supplied and configured privately. The bot and
+private chat are reachable, polling is healthy, and durable block delivery passed.
+B2 passed the one-time inbound/review/completion probe. For future credential recovery,
+the bootstrap operator obtains replacement values, creates a timestamped backup,
+and merges them into the private default `.env` using dotenv-aware editing:
 `TELEGRAM_BOT_TOKEN`, `TELEGRAM_ALLOWED_USERS` (one numeric ID),
 `TELEGRAM_HOME_CHANNEL` (the verified private conversation), and
 `GATEWAY_ALLOW_ALL_USERS=false`. Do not clone these into worker profiles. Inspect
@@ -167,3 +169,22 @@ Do not delete worktrees containing uncommitted changes or unique commits. Inspec
 Do not reset --hard, clean -fd, force-push, auto-merge shared branches, or publish
 releases. Branch pushes can run the existing Windows package build; the existing
 release job remains tag-only, and bootstrap pushes no release tags.
+
+## Notification retention and delivery caveats
+
+`kanban.done_sub_retention_days: 0` disables the installed default 30-day expiry
+of inactive done/blocked subscriptions, so a long human pause does not silently
+remove the remote notification route. Explicitly archiving a task still removes
+its subscription; never archive an unresolved prerequisite. Transport retries can
+produce a duplicate notification (observed during bootstrap); task/event IDs and
+durable cursors identify the underlying event. Do not treat duplicate delivery as
+a second human decision or retry a migration task because a ping repeated.
+
+## Noninteractive probe execution
+
+The initial inline Python command was rejected by the installed single-query
+approval policy. The same B2 card now runs the inspectable, committed file
+`python3 -B /home/ding/work/github/r404r/7zip/scripts/ai-migration/telegram-probe.py`.
+The file has no network/filesystem writes or credentials. Tester and reviewer
+execute it independently. No approval setting is weakened and no second Telegram
+confirmation is needed after the actual source-verified reply is recorded.
