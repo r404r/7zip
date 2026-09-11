@@ -1,0 +1,674 @@
+{
+  "version": 1,
+  "sources": [
+    {
+      "id": 1,
+      "url": "https://raw.githubusercontent.com/qemu/qemu/v10.0.0/docs/system/security.rst",
+      "title": "qemu-security",
+      "accessed": "2026-09-12",
+      "quotes": [
+        {
+          "text": "The non-virtualization use case covers emulation using the Tiny Code Generator\n(TCG).  In principle the TCG and device emulation code used in conjunction with\nthe non-virtualization use case should meet the same security requirements as\nthe virtualization use case.  However, for historical reasons much of the\nnon-virtualization use case code was not written with these security\nrequirements in mind.\n\nBugs affecting the non-virtualization use case are not considered security\nbugs at this time.  Users with non-virtualization use cases must not rely on\nQEMU to provide guest isolation or any security guarantees.",
+          "added": "2026-09-12"
+        },
+        {
+          "text": "QEMU presents an attack surface to the guest in the form of emulated devices.\nThe guest must not be able to gain control of QEMU.  Bugs in emulated devices\ncould allow malicious guests to gain code execution in QEMU.  At this point the\nguest has escaped the virtual machine and is able to act in the context of the\nQEMU process on the host.",
+          "added": "2026-09-12"
+        },
+        {
+          "text": "The fundamental isolation mechanism is that QEMU processes must run as\nunprivileged users.  Sometimes it seems more convenient to launch QEMU as\nroot to give it access to host devices (e.g. ``/dev/net/tun``) but this poses a\nhuge security risk.  File descriptor passing can be used to give an otherwise\nunprivileged QEMU process access to host devices without running QEMU as root.\nIt is also possible to launch QEMU as a non-root user and configure UNIX groups\nfor access to ``/dev/kvm``, ``/dev/net/tun``, and other device nodes.\nSome Linux distros already ship with UNIX groups for these devices by default.\n\n- SELinux and AppArmor make it possible to confine processes beyond the\n  traditional UNIX process and file permissions model.  They restrict the QEMU\n  process from accessing processes and files on the host system that are not\n  needed by QEMU.\n\n- Resource limits and cgroup controllers provide throughput and utilization\n  limits on key resources such as CPU time, memory, and I/O bandwidth.\n\n- Linux namespaces can be used to make process, file system, and other system\n  resources unavailable to QEMU.  A namespaced QEMU process is restricted to only\n  those resources that were granted to it.\n\n- Linux seccomp is available via the QEMU ``--sandbox`` option.  It disables\n  system calls that are not needed by QEMU, thereby reducing the host kernel\n  attack surface.",
+          "added": "2026-09-12"
+        },
+        {
+          "text": "The monitor console (whether used with QMP or HMP) provides an interface\nto dynamically control many aspects of QEMU's runtime operation. Many of the\ncommands exposed will instruct QEMU to access content on the host file system\nand/or trigger spawning of external processes.\n\nFor example, the ``migrate`` command allows for the spawning of arbitrary\nprocesses for the purpose of tunnelling the migration data stream. The\n``blockdev-add`` command instructs QEMU to open arbitrary files, exposing\ntheir content to the guest as a virtual disk.\n\nUnless QEMU is otherwise confined using technologies such as SELinux, AppArmor,\nor Linux namespaces, the monitor console should be considered to have privileges\nequivalent to those of the user account QEMU is running under.",
+          "added": "2026-09-12"
+        }
+      ],
+      "retrieval": {
+        "requested_url": "https://raw.githubusercontent.com/qemu/qemu/v10.0.0/docs/system/security.rst",
+        "final_url": "https://raw.githubusercontent.com/qemu/qemu/v10.0.0/docs/system/security.rst",
+        "retrieved_at": "2026-09-11T17:03:06.600788+00:00",
+        "sha256": "b7c06e933761584b797f2f8f640843e787b5e481649c7fc0624e0cac6a519cbc",
+        "bytes": 7924
+      },
+      "evidence_line_ranges": [
+        [
+          41,
+          50
+        ],
+        [
+          67,
+          71
+        ],
+        [
+          112,
+          135
+        ],
+        [
+          146,
+          158
+        ]
+      ],
+      "evidence_representation": "UTF-8 raw source",
+      "version_scope": "QEMU v10.0.0"
+    },
+    {
+      "id": 2,
+      "url": "https://raw.githubusercontent.com/qemu/qemu/v10.0.0/docs/system/introduction.rst",
+      "title": "qemu-intro",
+      "accessed": "2026-09-12",
+      "quotes": [
+        {
+          "text": "QEMU's system emulation provides a virtual model of a machine (CPU,\nmemory and emulated devices) to run a guest OS. It supports a number\nof hypervisors (known as accelerators) as well as a JIT known as the\nTiny Code Generator (TCG) capable of emulating many CPUs.",
+          "added": "2026-09-12"
+        },
+        {
+          "text": "* - KVM\n    - Linux\n    - Arm (64 bit only), MIPS, PPC, RISC-V, s390x, x86",
+          "added": "2026-09-12"
+        },
+        {
+          "text": "* - Tiny Code Generator (tcg)\n    - Linux, other POSIX, Windows, MacOS\n    - Arm, x86, Loongarch64, MIPS, PPC, s390x, Sparc64",
+          "added": "2026-09-12"
+        }
+      ],
+      "retrieval": {
+        "requested_url": "https://raw.githubusercontent.com/qemu/qemu/v10.0.0/docs/system/introduction.rst",
+        "final_url": "https://raw.githubusercontent.com/qemu/qemu/v10.0.0/docs/system/introduction.rst",
+        "retrieved_at": "2026-09-11T17:03:06.853398+00:00",
+        "sha256": "9d58bddc921ba0567a1a77f42710888ec145773c01e888157daa81beb451d9a5",
+        "bytes": 7670
+      },
+      "evidence_line_ranges": [
+        [
+          9,
+          12
+        ],
+        [
+          20,
+          22
+        ],
+        [
+          35,
+          37
+        ]
+      ],
+      "evidence_representation": "UTF-8 raw source",
+      "version_scope": "QEMU v10.0.0"
+    },
+    {
+      "id": 3,
+      "url": "https://raw.githubusercontent.com/qemu/qemu/v10.0.0/qemu-options.hx",
+      "title": "qemu-options",
+      "accessed": "2026-09-12",
+      "quotes": [
+        {
+          "text": "``read-only``\n            Open the node read-only. Guest write attempts will fail.\n\n            Note that some block drivers support only read-only access,\n            either generally or in certain configurations. In this case,\n            the default value ``read-only=off`` does not work and the\n            option must be specified explicitly.",
+          "added": "2026-09-12"
+        },
+        {
+          "text": "``-nic none``\n    Indicate that no network devices should be configured. It is used to\n    override the default configuration (default NIC with \"user\" host\n    network backend) which is activated if no other networking options",
+          "added": "2026-09-12"
+        },
+        {
+          "text": "DEF(\"sandbox\", HAS_ARG, QEMU_OPTION_sandbox, \\\n    \"-sandbox on[,obsolete=allow|deny][,elevateprivileges=allow|deny|children]\\n\" \\\n    \"          [,spawn=allow|deny][,resourcecontrol=allow|deny]\\n\" \\\n    \"                Enable seccomp mode 2 system call filter (default 'off').\\n\" \\\n    \"                use 'obsolete' to allow obsolete system calls that are provided\\n\" \\\n    \"                    by the kernel, but typically no longer used by modern\\n\" \\\n    \"                    C library implementations.\\n\" \\\n    \"                use 'elevateprivileges' to allow or deny the QEMU process ability\\n\" \\\n    \"                    to elevate privileges using set*uid|gid system calls.\\n\" \\\n    \"                    The value 'children' will deny set*uid|gid system calls for\\n\" \\\n    \"                    main QEMU process but will allow forks and execves to run unprivileged\\n\" \\\n    \"                use 'spawn' to avoid QEMU to spawn new threads or processes by\\n\" \\\n    \"                     blocking *fork and execve\\n\" \\\n    \"                use 'resourcecontrol' to disable process affinity and schedular priority\\n\",",
+          "added": "2026-09-12"
+        },
+        {
+          "text": "DEF(\"no-user-config\", 0, QEMU_OPTION_nouserconfig,\n    \"-no-user-config\\n\"\n    \"                do not load default user-provided config files at startup\\n\",\n    QEMU_ARCH_ALL)\nSRST\n``-no-user-config``\n    The ``-no-user-config`` option makes QEMU not load any of the\n    user-provided config files on sysconfdir.\nERST\n\nDEF(\"trace\", HAS_ARG, QEMU_OPTION_trace,\n    \"-trace [[enable=]<pattern>][,events=<file>][,file=<file>]\\n\"\n    \"                specify tracing options\\n\",\n    QEMU_ARCH_ALL)\nSRST",
+          "added": "2026-09-12"
+        }
+      ],
+      "retrieval": {
+        "requested_url": "https://raw.githubusercontent.com/qemu/qemu/v10.0.0/qemu-options.hx",
+        "final_url": "https://raw.githubusercontent.com/qemu/qemu/v10.0.0/qemu-options.hx",
+        "retrieved_at": "2026-09-11T17:03:07.107805+00:00",
+        "sha256": "68edbf15e0de08dedc22e75020aeb72cf1be883effa2c1ec7cfe80db1f56a728",
+        "bytes": 271219
+      },
+      "evidence_line_ranges": [
+        [
+          1365,
+          1371
+        ],
+        [
+          3024,
+          3027
+        ],
+        [
+          5171,
+          5184
+        ],
+        [
+          5214,
+          5228
+        ]
+      ],
+      "evidence_representation": "UTF-8 raw source",
+      "version_scope": "QEMU v10.0.0"
+    },
+    {
+      "id": 4,
+      "url": "https://raw.githubusercontent.com/qemu/qemu/v10.0.0/LICENSE",
+      "title": "qemu-license",
+      "accessed": "2026-09-12",
+      "quotes": [
+        {
+          "text": "The QEMU distribution includes both the QEMU emulator and\nvarious firmware files.  These are separate programs that are\ndistributed together for our users' convenience, and they have\nseparate licenses.\n\nThe following points clarify the license of the QEMU emulator:\n\n1) The QEMU emulator as a whole is released under the GNU General\nPublic License, version 2.\n\n2) Parts of the QEMU emulator have specific licenses which are compatible\nwith the GNU General Public License, version 2. Hence each source file\ncontains its own licensing information.  Source files with no licensing\ninformation are released under the GNU General Public License, version\n2 or (at your option) any later version.",
+          "added": "2026-09-12"
+        },
+        {
+          "text": "3) The Tiny Code Generator (TCG) is mostly under the BSD or MIT licenses;\n   but some parts may be GPLv2 or other licenses. Again, see the\n   specific licensing information in each source file.",
+          "added": "2026-09-12"
+        }
+      ],
+      "retrieval": {
+        "requested_url": "https://raw.githubusercontent.com/qemu/qemu/v10.0.0/LICENSE",
+        "final_url": "https://raw.githubusercontent.com/qemu/qemu/v10.0.0/LICENSE",
+        "retrieved_at": "2026-09-11T17:03:07.349787+00:00",
+        "sha256": "139c64b7a9ae62858ff969aae622ecfcf4f1519655bd92d2e70a1a2fb615690e",
+        "bytes": 1177
+      },
+      "evidence_line_ranges": [
+        [
+          1,
+          15
+        ],
+        [
+          21,
+          23
+        ]
+      ],
+      "evidence_representation": "UTF-8 raw source",
+      "version_scope": "QEMU v10.0.0"
+    },
+    {
+      "id": 5,
+      "url": "https://raw.githubusercontent.com/google/nsjail/3.4/README.md",
+      "title": "nsjail-readme",
+      "accessed": "2026-09-12",
+      "quotes": [
+        {
+          "text": "Features:\n  - [x]  Offers three __distinct operational modes__. See [this section](#which-use-cases-are-supported) for more info.",
+          "added": "2026-09-12"
+        },
+        {
+          "text": "</pre>\n\n+ Client:\n<pre>\n $ nc 127.0.0.1 9000\n / $ ifconfig\n / $ ifconfig -a\n lo    Link encap:Local Loopback\n       LOOPBACK  MTU:65536  Metric:1",
+          "added": "2026-09-12"
+        },
+        {
+          "text": "This is NOT an official Google product.\n\n***\n\n### Overview\nNsJail is a process isolation tool for Linux. It utilizes Linux namespace subsystem, resource limits, and the seccomp-bpf syscall filters of the Linux kernel.",
+          "added": "2026-09-12"
+        },
+        {
+          "text": "Features:\n  - [x]  Offers three __distinct operational modes__. See [this section](#which-use-cases-are-supported) for more info.\n  - [x]  Utilizes [kafel seccomp-bpf configuration language](https://github.com/google/kafel/) for __flexible syscall policy definitions__.\n  - [x]  Uses expressive, ProtoBuf-based [configuration file](#configuration-file)\n  - [x]  It's __rock-solid__.\n\n***\n### What forms of isolation does it provide\n1. Linux __namespaces__: UTS (hostname), MOUNT (chroot), PID (separate PID tree), IPC, NET (separate networking context), USER, CGROUPS\n2. __FS constraints__: chroot(), pivot_root(), RO-remounting, custom ```/proc``` and ```tmpfs``` mount points\n3. __Resource limits__ (wall-time/CPU time limits, VM/mem address space limits, etc.)\n4. Programmable seccomp-bpf __syscall filters__ (through the [kafel language](https://github.com/google/kafel/))\n5. Cloned and isolated __Ethernet interfaces__\n6. __Cgroups__ for memory and PID utilization control",
+          "added": "2026-09-12"
+        }
+      ],
+      "retrieval": {
+        "requested_url": "https://raw.githubusercontent.com/google/nsjail/3.4/README.md",
+        "final_url": "https://raw.githubusercontent.com/google/nsjail/3.4/README.md",
+        "retrieved_at": "2026-09-11T17:03:07.610362+00:00",
+        "sha256": "3455eaedcb93dc14ab469e542d81ac56e9f9a28aee14d62c0074d65b53865840",
+        "bytes": 29162
+      },
+      "evidence_line_ranges": [
+        [
+          19,
+          24
+        ],
+        [
+          31,
+          44
+        ]
+      ],
+      "evidence_representation": "UTF-8 raw source",
+      "version_scope": "nsjail 3.4"
+    },
+    {
+      "id": 6,
+      "url": "https://raw.githubusercontent.com/google/nsjail/3.4/config.proto",
+      "title": "nsjail-config",
+      "accessed": "2026-09-12",
+      "quotes": [
+        {
+          "text": "enum Mode {\n\tLISTEN = 0; /* Listening on a TCP port */\n\tONCE = 1;   /* Running the command once only */\n\tRERUN = 2;  /* Re-executing the command (forever) */\n\tEXECVE = 3; /* Executing command w/o the supervisor */\n}",
+          "added": "2026-09-12"
+        },
+        {
+          "text": "/* Wall-time time limit for commands */\n\toptional uint32 time_limit = 11 [default = 600];\n\t/* Should nsjail go into background? */\n\toptional bool daemon = 12 [default = false];\n\t/* Maximum number of CPUs to use: 0 - no limit */\n\toptional uint32 max_cpus = 13 [default = 0];",
+          "added": "2026-09-12"
+        },
+        {
+          "text": "/* Should the current environment variables be kept\n\t   when executing the binary */\n\toptional bool keep_env = 17 [default = false];\n\t/* EnvVars to be set before executing binaries. If the envar doesn't contain '='\n\t   (e.g. just the 'DISPLAY' string), the current envar value will be used */\n\trepeated string envar = 18;\n\n\t/* Should capabilities be preserved or dropped */\n\toptional bool keep_caps = 19 [default = false];\n\t/* Which capabilities should be preserved if keep_caps == false.\n\t   Format: \"CAP_SYS_PTRACE\" */\n\trepeated string cap = 20;\n\t/* Should nsjail close FD=0,1,2 before executing the process */\n\toptional bool silent = 21 [default = false];\n\t/* Should the child process have control over terminal?\n\t   Can be useful to allow /bin/sh to provide\n\t   job control / signals. Dangerous, can be used to put\n\t   characters into the controlling terminal back */\n\toptional bool skip_setsid = 22 [default = false];\n\t/* Redirect sdterr of the process to /dev/null instead of the socket or original TTY */\n\toptional bool stderr_to_null = 23 [default = false];\n\t/* Which FDs should be passed to the newly executed process\n\t   By default only FD=0,1,2 are passed */\n\trepeated int32 pass_fd = 24;\n\t/* Setting it to true will allow to have set-uid binaries\n\t   inside the jail */\n\toptional bool disable_no_new_privs = 25 [default = false];",
+          "added": "2026-09-12"
+        },
+        {
+          "text": "/* Various rlimits, the rlimit_as/rlimit_core/... are used only if\n\t   rlimit_as_type/rlimit_core_type/... are set to RLimit::VALUE */\n\toptional uint64 rlimit_as = 26 [default = 4096]; /* In MiB */\n\toptional RLimit rlimit_as_type = 27 [default = VALUE];\n\toptional uint64 rlimit_core = 28 [default = 0]; /* In MiB */\n\toptional RLimit rlimit_core_type = 29 [default = VALUE];\n\toptional uint64 rlimit_cpu = 30 [default = 600]; /* In seconds */\n\toptional RLimit rlimit_cpu_type = 31 [default = VALUE];\n\toptional uint64 rlimit_fsize = 32 [default = 1]; /* In MiB */\n\toptional RLimit rlimit_fsize_type = 33 [default = VALUE];\n\toptional uint64 rlimit_nofile = 34 [default = 32];\n\toptional RLimit rlimit_nofile_type = 35 [default = VALUE];\n\t/* RLIMIT_NPROC is system-wide - tricky to use; use the soft limit value by\n\t * default here */\n\toptional uint64 rlimit_nproc = 36 [default = 1024];\n\toptional RLimit rlimit_nproc_type = 37 [default = SOFT];",
+          "added": "2026-09-12"
+        },
+        {
+          "text": "/* Which name-spaces should be used? */\n\toptional bool clone_newnet = 52 [default = true];\n\toptional bool clone_newuser = 53 [default = true];\n\toptional bool clone_newns = 54 [default = true];\n\toptional bool clone_newpid = 55 [default = true];\n\toptional bool clone_newipc = 56 [default = true];\n\toptional bool clone_newuts = 57 [default = true];\n\t/* Disable for kernel versions < 4.6 as it's not supported there */\n\toptional bool clone_newcgroup = 58 [default = true];\n\t/* Supported with kernel versions >= 5.3 */\n\toptional bool clone_newtime = 59 [default = false];",
+          "added": "2026-09-12"
+        },
+        {
+          "text": "/* If > 0, maximum cumulative size of RAM used inside any jail */\n\toptional uint64 cgroup_mem_max = 67 [default = 0]; /* In bytes */\n\t/* If > 0, maximum cumulative size of RAM + swap used inside any jail */\n\toptional uint64 cgroup_mem_memsw_max = 91 [default = 0]; /* In bytes */\n\t/* If >= 0, maximum cumulative size of swap used inside any jail */\n\toptional int64 cgroup_mem_swap_max = 92 [default = -1]; /* In bytes */\n\t/* Mount point for cgroups-memory in your system */\n\toptional string cgroup_mem_mount = 68 [default = \"/sys/fs/cgroup/memory\"];\n\t/* Writeable directory (for the nsjail user) under cgroup_mem_mount */\n\toptional string cgroup_mem_parent = 69 [default = \"NSJAIL\"];\n\n\t/* If > 0, maximum number of PIDs (threads/processes) inside jail */\n\toptional uint64 cgroup_pids_max = 70 [default = 0];",
+          "added": "2026-09-12"
+        },
+        {
+          "text": "/* Mount point for cgroup v2 in your system */\n\toptional string cgroupv2_mount = 79 [default = \"/sys/fs/cgroup\"];\n\t/* Use cgroup v2 */\n\toptional bool use_cgroupv2 = 80 [default = false];\n\n\t/* Should the 'lo' interface be brought up (active) inside this jail? */\n\toptional bool iface_no_lo = 81 [default = false];",
+          "added": "2026-09-12"
+        }
+      ],
+      "retrieval": {
+        "requested_url": "https://raw.githubusercontent.com/google/nsjail/3.4/config.proto",
+        "final_url": "https://raw.githubusercontent.com/google/nsjail/3.4/config.proto",
+        "retrieved_at": "2026-09-11T17:03:07.845664+00:00",
+        "sha256": "36aa984d3403e9ecb8c87a23a1347d23ee1b11f55a608f6bf8ff64d83ec7dfb2",
+        "bytes": 12484
+      },
+      "evidence_line_ranges": [
+        [
+          5,
+          10
+        ],
+        [
+          101,
+          106
+        ],
+        [
+          116,
+          142
+        ],
+        [
+          144,
+          159
+        ],
+        [
+          181,
+          191
+        ],
+        [
+          212,
+          224
+        ],
+        [
+          244,
+          250
+        ]
+      ],
+      "evidence_representation": "UTF-8 raw source",
+      "version_scope": "nsjail 3.4"
+    },
+    {
+      "id": 7,
+      "url": "https://raw.githubusercontent.com/google/nsjail/3.4/cgroup2.cc",
+      "title": "nsjail-cgroup",
+      "accessed": "2026-09-12",
+      "quotes": [
+        {
+          "text": "if (util::writeBufToFile((cgroup_path + \"/cgroup.subtree_control\").c_str(), val.c_str(),\n\t\tval.length(), O_WRONLY, false)) {\n\t\treturn true;\n\t}\n\tif (errno == EBUSY) {\n\t\tRETURN_ON_FAILURE(moveSelfIntoChildCgroup(nsjconf));\n\t\tif (util::writeBufToFile((cgroup_path + \"/cgroup.subtree_control\").c_str(),\n\t\t\tval.c_str(), val.length(), O_WRONLY)) {\n\t\t\treturn true;\n\t\t}\n\t}\n\tLOG_E(\n\t    \"Could not apply '%s' to cgroup.subtree_control in '%s'. nsjail MUST be run from root \"\n\t    \"and the cgroup mount path must refer to the root/host cgroup to use cgroupv2. If you \"\n\t    \"use Docker, you may need to run the container with --cgroupns=host so that nsjail can\"\n\t    \" access the host/root cgroupv2 hierarchy. An alternative is mounting (or remounting) \"\n\t    \"the cgroupv2 filesystem but using the flag is just simpler.\",\n\t    val.c_str(), cgroup_path.c_str());\n\treturn false;",
+          "added": "2026-09-12"
+        },
+        {
+          "text": "static bool initNsFromParentMem(nsjconf_t *nsjconf, pid_t pid) {\n\tssize_t swap_max = nsjconf->cgroup_mem_swap_max;\n\tif (nsjconf->cgroup_mem_memsw_max > (size_t)0) {\n\t\tswap_max = nsjconf->cgroup_mem_memsw_max - nsjconf->cgroup_mem_max;\n\t}\n\n\tif (nsjconf->cgroup_mem_max == (size_t)0 && swap_max < (ssize_t)0) {\n\t\treturn true;\n\t}\n\n\tstd::string cgroup_path = getCgroupPath(nsjconf, pid);\n\tRETURN_ON_FAILURE(createCgroup(cgroup_path, pid));\n\tRETURN_ON_FAILURE(addPidToProcList(cgroup_path, pid));\n\n\tif (nsjconf->cgroup_mem_max > (size_t)0) {\n\t\tRETURN_ON_FAILURE(writeToCgroup(\n\t\t    cgroup_path, \"memory.max\", std::to_string(nsjconf->cgroup_mem_max)));\n\t}\n\n\tif (swap_max >= (ssize_t)0) {\n\t\tRETURN_ON_FAILURE(\n\t\t    writeToCgroup(cgroup_path, \"memory.swap.max\", std::to_string(swap_max)));\n\t}\n\n\treturn true;",
+          "added": "2026-09-12"
+        },
+        {
+          "text": "static bool initNsFromParentPids(nsjconf_t *nsjconf, pid_t pid) {\n\tif (nsjconf->cgroup_pids_max == 0U) {\n\t\treturn true;\n\t}\n\tstd::string cgroup_path = getCgroupPath(nsjconf, pid);\n\tRETURN_ON_FAILURE(createCgroup(cgroup_path, pid));\n\tRETURN_ON_FAILURE(addPidToProcList(cgroup_path, pid));\n\treturn writeToCgroup(cgroup_path, \"pids.max\", std::to_string(nsjconf->cgroup_pids_max));\n}\n\nstatic bool initNsFromParentCpu(nsjconf_t *nsjconf, pid_t pid) {\n\tif (nsjconf->cgroup_cpu_ms_per_sec == 0U) {\n\t\treturn true;\n\t}\n\n\tstd::string cgroup_path = getCgroupPath(nsjconf, pid);\n\tRETURN_ON_FAILURE(createCgroup(cgroup_path, pid));\n\tRETURN_ON_FAILURE(addPidToProcList(cgroup_path, pid));\n\n\t/*\n\t * The maximum bandwidth limit in the format: `$MAX $PERIOD`.\n\t * This indicates that the group may consume up to $MAX in each $PERIOD\n\t * duration.\n\t */\n\tstd::string cpu_ms_per_sec_str = std::to_string(nsjconf->cgroup_cpu_ms_per_sec * 1000U);\n\tcpu_ms_per_sec_str += \" 1000000\";\n\treturn writeToCgroup(cgroup_path, \"cpu.max\", cpu_ms_per_sec_str);\n}\n\nbool initNsFromParent(nsjconf_t *nsjconf, pid_t pid) {\n\tRETURN_ON_FAILURE(initNsFromParentMem(nsjconf, pid));\n\tRETURN_ON_FAILURE(initNsFromParentPids(nsjconf, pid));\n\treturn initNsFromParentCpu(nsjconf, pid);",
+          "added": "2026-09-12"
+        }
+      ],
+      "retrieval": {
+        "requested_url": "https://raw.githubusercontent.com/google/nsjail/3.4/cgroup2.cc",
+        "final_url": "https://raw.githubusercontent.com/google/nsjail/3.4/cgroup2.cc",
+        "retrieved_at": "2026-09-11T17:03:08.757736+00:00",
+        "sha256": "5431146f525a98da0f2994508213a640c8082623db8c5925800e24e7407af321",
+        "bytes": 8980
+      },
+      "evidence_line_ranges": [
+        [
+          94,
+          112
+        ],
+        [
+          212,
+          236
+        ],
+        [
+          239,
+          271
+        ]
+      ],
+      "evidence_representation": "UTF-8 raw source",
+      "version_scope": "nsjail 3.4"
+    },
+    {
+      "id": 8,
+      "url": "https://raw.githubusercontent.com/google/nsjail/3.4/subproc.cc",
+      "title": "nsjail-subproc",
+      "accessed": "2026-09-12",
+      "quotes": [
+        {
+          "text": "} else {\n\t\tchar doneChar;\n\t\tif (util::readFromFd(pipefd, &doneChar, sizeof(doneChar)) != sizeof(doneChar)) {\n\t\t\treturn;\n\t\t}\n\t\tif (doneChar != kSubprocDoneChar) {\n\t\t\treturn;\n\t\t}\n\t}\n\tif (!contain::containProc(nsjconf)) {\n\t\treturn;\n\t}\n\tif (!nsjconf->keep_env) {\n\t\tclearenv();\n\t}",
+          "added": "2026-09-12"
+        },
+        {
+          "text": "/* Should be the last one in the sequence */\n\tif (!sandbox::applyPolicy(nsjconf)) {\n\t\treturn;\n\t}\n\n\tif (nsjconf->use_execveat) {\n#if defined(__NR_execveat)\n\t\tutil::syscall(__NR_execveat, nsjconf->exec_fd, (uintptr_t) \"\",\n\t\t    (uintptr_t)argv.data(), (uintptr_t)environ, AT_EMPTY_PATH);\n#else  /* defined(__NR_execveat) */\n\t\tLOG_E(\"Your system doesn't support execveat() syscall\");\n\t\treturn;\n#endif /* defined(__NR_execveat) */\n\t} else {\n\t\texecv(nsjconf->exec_file.c_str(), (char* const*)argv.data());\n\t}\n\n\tPLOG_E(\"execve('%s') failed\", nsjconf->exec_file.c_str());",
+          "added": "2026-09-12"
+        },
+        {
+          "text": "time_t now = time(NULL);\n\tfor (const auto& p : nsjconf->pids) {\n\t\tif (nsjconf->tlimit == 0) {\n\t\t\tcontinue;\n\t\t}\n\t\tpid_t pid = p.first;\n\t\ttime_t diff = now - p.second.start;\n\t\tif ((uint64_t)diff >= nsjconf->tlimit) {\n\t\t\tLOG_I(\"pid=%d run time >= time limit (%ld >= %\" PRIu64 \") (%s). Killing it\",\n\t\t\t    pid, (long)diff, nsjconf->tlimit, p.second.remote_txt.c_str());\n\t\t\t/*\n\t\t\t * Probably a kernel bug - some processes cannot be killed with KILL if\n\t\t\t * they're namespaced, and in a stopped state\n\t\t\t */\n\t\t\tkill(pid, SIGCONT);\n\t\t\tLOG_D(\"Sent SIGCONT to pid=%d\", pid);\n\t\t\tkill(pid, SIGKILL);\n\t\t\tLOG_D(\"Sent SIGKILL to pid=%d\", pid);\n\t\t}\n\t}\n\treturn rv;\n}\n\nvoid killAndReapAll(nsjconf_t* nsjconf, int signal) {\n\twhile (!nsjconf->pids.empty()) {\n\t\tpid_t pid = nsjconf->pids.begin()->first;\n\t\tif (kill(pid, signal) == 0) {\n\t\t\treapProc(nsjconf, pid, true);\n\t\t} else {\n\t\t\tremoveProc(nsjconf, pid);\n\t\t}\n\t}",
+          "added": "2026-09-12"
+        },
+        {
+          "text": "static bool initParent(nsjconf_t* nsjconf, pid_t pid, int pipefd) {\n\tif (!net::initNsFromParent(nsjconf, pid)) {\n\t\tLOG_E(\"Couldn't initialize net namespace for pid=%d\", pid);\n\t\treturn false;\n\t}\n\n\tif (nsjconf->use_cgroupv2) {\n\t\tif (!cgroup2::initNsFromParent(nsjconf, pid)) {\n\t\t\tLOG_E(\"Couldn't initialize cgroup 2 user namespace for pid=%d\", pid);\n\t\t\texit(0xff);\n\t\t}\n\t} else if (!cgroup::initNsFromParent(nsjconf, pid)) {\n\t\tLOG_E(\"Couldn't initialize cgroup user namespace for pid=%d\", pid);\n\t\texit(0xff);\n\t}\n\n\tif (!user::initNsFromParent(nsjconf, pid)) {\n\t\tLOG_E(\"Couldn't initialize user namespace for pid=%d\", pid);\n\t\treturn false;\n\t}\n\tif (!util::writeToFd(pipefd, &kSubprocDoneChar, sizeof(kSubprocDoneChar))) {\n\t\tLOG_E(\"Couldn't signal the new process via a socketpair\");\n\t\treturn false;\n\t}\n\treturn true;",
+          "added": "2026-09-12"
+        }
+      ],
+      "retrieval": {
+        "requested_url": "https://raw.githubusercontent.com/google/nsjail/3.4/subproc.cc",
+        "final_url": "https://raw.githubusercontent.com/google/nsjail/3.4/subproc.cc",
+        "retrieved_at": "2026-09-11T17:03:09.018986+00:00",
+        "sha256": "4b315938e8dde57b0b6f28f0f80aaa160be8df15d8f6c13e05f82a0d2ede60bd",
+        "bytes": 18724
+      },
+      "evidence_line_ranges": [
+        [
+          185,
+          199
+        ],
+        [
+          216,
+          233
+        ],
+        [
+          386,
+          417
+        ],
+        [
+          420,
+          444
+        ]
+      ],
+      "evidence_representation": "UTF-8 raw source",
+      "version_scope": "nsjail 3.4"
+    },
+    {
+      "id": 9,
+      "url": "https://raw.githubusercontent.com/google/nsjail/3.4/LICENSE",
+      "title": "nsjail-license",
+      "accessed": "2026-09-12",
+      "quotes": [
+        {
+          "text": "2. Grant of Copyright License. Subject to the terms and conditions of\n      this License, each Contributor hereby grants to You a perpetual,\n      worldwide, non-exclusive, no-charge, royalty-free, irrevocable\n      copyright license to reproduce, prepare Derivative Works of,\n      publicly display, publicly perform, sublicense, and distribute the\n      Work and such Derivative Works in Source or Object form.",
+          "added": "2026-09-12"
+        },
+        {
+          "text": "4. Redistribution. You may reproduce and distribute copies of the\n      Work or Derivative Works thereof in any medium, with or without\n      modifications, and in Source or Object form, provided that You\n      meet the following conditions:\n\n      (a) You must give any other recipients of the Work or\n          Derivative Works a copy of this License; and\n\n      (b) You must cause any modified files to carry prominent notices\n          stating that You changed the files; and\n\n      (c) You must retain, in the Source form of any Derivative Works\n          that You distribute, all copyright, patent, trademark, and\n          attribution notices from the Source form of the Work,\n          excluding those notices that do not pertain to any part of\n          the Derivative Works; and\n\n      (d) If the Work includes a \"NOTICE\" text file as part of its\n          distribution, then any Derivative Works that You distribute must\n          include a readable copy of the attribution notices contained\n          within such NOTICE file, excluding those notices that do not\n          pertain to any part of the Derivative Works, in at least one\n          of the following places: within a NOTICE text file distributed\n          as part of the Derivative Works; within the Source form or\n          documentation, if provided along with the Derivative Works; or,\n          within a display generated by the Derivative Works, if and\n          wherever such third-party notices normally appear. The contents\n          of the NOTICE file are for informational purposes only and\n          do not modify the License. You may add Your own attribution\n          notices within Derivative Works that You distribute, alongside\n          or as an addendum to the NOTICE text from the Work, provided\n          that such additional attribution notices cannot be construed",
+          "added": "2026-09-12"
+        }
+      ],
+      "retrieval": {
+        "requested_url": "https://raw.githubusercontent.com/google/nsjail/3.4/LICENSE",
+        "final_url": "https://raw.githubusercontent.com/google/nsjail/3.4/LICENSE",
+        "retrieved_at": "2026-09-11T17:03:09.848115+00:00",
+        "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+        "bytes": 11358
+      },
+      "evidence_line_ranges": [
+        [
+          67,
+          72
+        ],
+        [
+          89,
+          121
+        ]
+      ],
+      "evidence_representation": "UTF-8 raw source",
+      "version_scope": "nsjail 3.4"
+    },
+    {
+      "id": 10,
+      "url": "https://raw.githubusercontent.com/torvalds/linux/v6.12/Documentation/admin-guide/cgroup-v2.rst",
+      "title": "linux-cgroup",
+      "accessed": "2026-09-12",
+      "quotes": [
+        {
+          "text": "cgroup.kill\n\tA write-only single value file which exists in non-root cgroups.\n\tThe only allowed value is \"1\".\n\n\tWriting \"1\" to the file causes the cgroup and all descendant cgroups to\n\tbe killed. This means that all processes located in the affected cgroup\n\ttree will be killed via SIGKILL.\n\n\tKilling a cgroup tree will deal with concurrent forks appropriately and\n\tis protected against migrations.\n\n\tIn a threaded cgroup, writing this file fails with EOPNOTSUPP as\n\tkilling cgroups is a process directed operation, i.e. it affects\n\tthe whole thread-group.",
+          "added": "2026-09-12"
+        },
+        {
+          "text": "cpu.max\n\tA read-write two value file which exists on non-root cgroups.\n\tThe default is \"max 100000\".\n\n\tThe maximum bandwidth limit.  It's in the following format::\n\n\t  $MAX $PERIOD\n\n\twhich indicates that the group may consume up to $MAX in each\n\t$PERIOD duration.  \"max\" for $MAX indicates no limit.  If only\n\tone number is written, $MAX is updated.",
+          "added": "2026-09-12"
+        },
+        {
+          "text": "memory.max\n\tA read-write single value file which exists on non-root\n\tcgroups.  The default is \"max\".\n\n\tMemory usage hard limit.  This is the main mechanism to limit\n\tmemory usage of a cgroup.  If a cgroup's memory usage reaches\n\tthis limit and can't be reduced, the OOM killer is invoked in\n\tthe cgroup. Under certain circumstances, the usage may go\n\tover the limit temporarily.",
+          "added": "2026-09-12"
+        },
+        {
+          "text": "The process number controller is used to allow a cgroup to stop any\nnew tasks from being fork()'d or clone()'d after a specified limit is\nreached.\n\nThe number of tasks in a cgroup can be exhausted in ways which other\ncontrollers cannot prevent, thus warranting its own controller.  For\nexample, a fork bomb is likely to exhaust the number of tasks before\nhitting memory restrictions.\n\nNote that PIDs used in this controller refer to TIDs, process IDs as\nused by the kernel.",
+          "added": "2026-09-12"
+        },
+        {
+          "text": "Organisational operations are not blocked by cgroup policies, so it is\npossible to have pids.current > pids.max.  This can be done by either\nsetting the limit to be smaller than pids.current, or attaching enough\nprocesses to the cgroup such that pids.current is larger than\npids.max.  However, it is not possible to violate a cgroup PID policy\nthrough fork() or clone(). These will return -EAGAIN if the creation\nof a new process would cause a cgroup policy to be violated.",
+          "added": "2026-09-12"
+        },
+        {
+          "text": "Each non-root cgroup has a \"cgroup.events\" file which contains\n\"populated\" field indicating whether the cgroup's sub-hierarchy has\nlive processes in it.  Its value is 0 if there is no live process in\nthe cgroup and its descendants; otherwise, 1.  poll and [id]notify\nevents are triggered when the value changes.  This can be used, for\nexample, to start a clean-up operation after all processes of a given\nsub-hierarchy have exited.  The populated state updates and\nnotifications are recursive.  Consider the following sub-hierarchy\nwhere the numbers in the parentheses represent the numbers of processes\nin each cgroup::",
+          "added": "2026-09-12"
+        },
+        {
+          "text": "No controller is enabled by default.  Controllers can be enabled and\ndisabled by writing to the \"cgroup.subtree_control\" file::\n\n  # echo \"+cpu +memory -io\" > cgroup.subtree_control\n\nOnly controllers which are listed in \"cgroup.controllers\" can be\nenabled.  When multiple operations are specified as above, either they",
+          "added": "2026-09-12"
+        }
+      ],
+      "retrieval": {
+        "requested_url": "https://raw.githubusercontent.com/torvalds/linux/v6.12/Documentation/admin-guide/cgroup-v2.rst",
+        "final_url": "https://raw.githubusercontent.com/torvalds/linux/v6.12/Documentation/admin-guide/cgroup-v2.rst",
+        "retrieved_at": "2026-09-11T17:03:10.419152+00:00",
+        "sha256": "ad3bd37498a57cc249326fd5c2d609669b32611fe69d126df3c3abec1539f572",
+        "bytes": 122258
+      },
+      "evidence_line_ranges": [
+        [
+          1020,
+          1033
+        ],
+        [
+          1134,
+          1144
+        ],
+        [
+          1296,
+          1304
+        ],
+        [
+          2231,
+          2241
+        ],
+        [
+          2279,
+          2285
+        ],
+        [
+          414,
+          423
+        ],
+        [
+          446,
+          452
+        ]
+      ],
+      "evidence_representation": "UTF-8 raw source",
+      "version_scope": "Linux v6.12"
+    },
+    {
+      "id": 11,
+      "url": "https://raw.githubusercontent.com/torvalds/linux/v6.12/COPYING",
+      "title": "linux-license",
+      "accessed": "2026-09-12",
+      "quotes": [
+        {
+          "text": "The Linux Kernel is provided under:\n\n\tSPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note\n\nBeing under the terms of the GNU General Public License version 2 only,\naccording with:\n\n\tLICENSES/preferred/GPL-2.0\n\nWith an explicit syscall exception, as stated at:\n\n\tLICENSES/exceptions/Linux-syscall-note",
+          "added": "2026-09-12"
+        }
+      ],
+      "retrieval": {
+        "requested_url": "https://raw.githubusercontent.com/torvalds/linux/v6.12/COPYING",
+        "final_url": "https://raw.githubusercontent.com/torvalds/linux/v6.12/COPYING",
+        "retrieved_at": "2026-09-11T17:03:10.755651+00:00",
+        "sha256": "fb5a425bd3b3cd6071a3a9aff9909a859e7c1158d54d32e07658398cd67eb6a0",
+        "bytes": 496
+      },
+      "evidence_line_ranges": [
+        [
+          1,
+          13
+        ]
+      ],
+      "evidence_representation": "UTF-8 raw source",
+      "version_scope": "Linux v6.12"
+    },
+    {
+      "id": 12,
+      "url": "https://raw.githubusercontent.com/buildroot/buildroot/2025.02/docs/manual/legal-notice.adoc",
+      "title": "buildroot-legal",
+      "accessed": "2026-09-12",
+      "quotes": [
+        {
+          "text": "All of the end products of Buildroot (toolchain, root filesystem, kernel,\nbootloaders) contain open source software, released under various licenses.\n\nUsing open source software gives you the freedom to build rich embedded\nsystems, choosing from a wide range of packages, but also imposes some\nobligations that you must know and honour.\nSome licenses require you to publish the license text in the documentation of\nyour product. Others require you to redistribute the source code of the\nsoftware to those that receive your product.\n\nThe exact requirements of each license are documented in each package, and\nit is your responsibility (or that of your legal office) to comply with those\nrequirements.",
+          "added": "2026-09-12"
+        },
+        {
+          "text": "* A manifest file (one for host and one for target packages) listing the\n  configured packages, their version, license and related information.\n  Some of this information might not be defined in Buildroot; such items are\n  marked as \"unknown\".\n* The license texts of all packages, in the +licenses/+ and +host-licenses/+\n  subdirectories for target and host packages respectively.\n  If the license file(s) are not defined in Buildroot, the file is not produced\n  and a warning in the +README+ indicates this.",
+          "added": "2026-09-12"
+        },
+        {
+          "text": "Moreover, due to technical limitations, Buildroot does not produce some\nmaterial that you will or may need, such as the toolchain source code for\nsome of the external toolchains and the Buildroot source code itself.\nWhen you run +make legal-info+, Buildroot produces warnings in the +README+\nfile to inform you of relevant material that could not be saved.\n\nFinally, keep in mind that the output of +make legal-info+ is based on\ndeclarative statements in each of the packages recipes. The Buildroot\ndevelopers try to do their best to keep those declarative statements as\naccurate as possible, to the best of their knowledge. However, it is very\nwell possible that those declarative statements are not all fully accurate\nnor exhaustive. You (or your legal department) _have_ to check the output\nof +make legal-info+ before using it as your own compliance delivery. See\nthe _NO WARRANTY_ clauses (clauses 11 and 12) in the +COPYING+ file at the\nroot of the Buildroot distribution.",
+          "added": "2026-09-12"
+        },
+        {
+          "text": "Buildroot itself is an open source software, released under the\nhttp://www.gnu.org/licenses/old-licenses/gpl-2.0.html[GNU General\nPublic License, version 2] or (at your option) any later version, with\nthe exception of the package patches detailed below.\nHowever, being a build system, it is not normally part of the end product:\nif you develop the root filesystem, kernel, bootloader or toolchain for a\ndevice, the code of Buildroot is only present on the development machine, not\nin the device storage.\n\nNevertheless, the general view of the Buildroot developers is that you should\nrelease the Buildroot source code along with the source code of other packages\nwhen releasing a product that contains GPL-licensed software.\nThis is because the\nhttp://www.gnu.org/licenses/old-licenses/gpl-2.0.html[GNU GPL]\ndefines the \"'complete source code'\" for an executable work as \"'all the\nsource code for all modules it contains, plus any associated interface\ndefinition files, plus the scripts used to control compilation and installation\nof the executable'\".\nBuildroot is part of the 'scripts used to control compilation and\ninstallation of the executable', and as such it is considered part of the\nmaterial that must be redistributed.",
+          "added": "2026-09-12"
+        }
+      ],
+      "retrieval": {
+        "requested_url": "https://raw.githubusercontent.com/buildroot/buildroot/2025.02/docs/manual/legal-notice.adoc",
+        "final_url": "https://raw.githubusercontent.com/buildroot/buildroot/2025.02/docs/manual/legal-notice.adoc",
+        "retrieved_at": "2026-09-11T17:03:11.015960+00:00",
+        "sha256": "2826635a8aa673958336b5e277bacc86495cc9550a02667e7c49ccce5a449a68",
+        "bytes": 6122
+      },
+      "evidence_line_ranges": [
+        [
+          10,
+          22
+        ],
+        [
+          52,
+          59
+        ],
+        [
+          69,
+          83
+        ],
+        [
+          88,
+          108
+        ]
+      ],
+      "evidence_representation": "UTF-8 raw source",
+      "version_scope": "Buildroot 2025.02"
+    },
+    {
+      "id": 13,
+      "url": "https://raw.githubusercontent.com/buildroot/buildroot/2025.02/COPYING",
+      "title": "buildroot-license",
+      "accessed": "2026-09-12",
+      "quotes": [
+        {
+          "text": "Activities other than copying, distribution and modification are not\ncovered by this License; they are outside its scope.  The act of\nrunning the Program is not restricted, and the output from the Program\nis covered only if its contents constitute a work based on the\nProgram (independent of having been made by running the Program).\nWhether that is true depends on what the Program does.\n\n  1. You may copy and distribute verbatim copies of the Program's\nsource code as you receive it, in any medium, provided that you\nconspicuously and appropriately publish on each copy an appropriate\ncopyright notice and disclaimer of warranty; keep intact all the\nnotices that refer to this License and to the absence of any warranty;\nand give any other recipients of the Program a copy of this License\nalong with the Program.\n\nYou may charge a fee for the physical act of transferring a copy, and\nyou may at your option offer warranty protection in exchange for a fee.",
+          "added": "2026-09-12"
+        }
+      ],
+      "retrieval": {
+        "requested_url": "https://raw.githubusercontent.com/buildroot/buildroot/2025.02/COPYING",
+        "final_url": "https://raw.githubusercontent.com/buildroot/buildroot/2025.02/COPYING",
+        "retrieved_at": "2026-09-11T17:03:11.291408+00:00",
+        "sha256": "9755181e27175cb3510b4da8629caa406fb355a19aa8e7d55f06bf8ab33323c4",
+        "bytes": 18767
+      },
+      "evidence_line_ranges": [
+        [
+          88,
+          104
+        ]
+      ],
+      "evidence_representation": "UTF-8 raw source",
+      "version_scope": "Buildroot 2025.02"
+    },
+    {
+      "id": 14,
+      "url": "https://docs.github.com/en/billing/concepts/product-billing/github-actions",
+      "title": "github-cost",
+      "accessed": "2026-09-12",
+      "quotes": [
+        {
+          "text": "GitHub Actions usage is \nfree\n for \nself-hosted runners\n and for \npublic repositories\n that use standard GitHub-hosted runners. See \nChoosing the runner for a job\n.\n\n\nFor \nprivate repositories\n, each GitHub account receives a quota of free minutes, artifact storage, and cache storage for use with GitHub-hosted runners, depending on the account's plan. Any usage beyond the included amounts is billed to your account.",
+          "added": "2026-09-12"
+        }
+      ],
+      "retrieval": {
+        "requested_url": "https://docs.github.com/en/billing/concepts/product-billing/github-actions",
+        "final_url": "https://docs.github.com/en/billing/concepts/product-billing/github-actions",
+        "retrieved_at": "2026-09-11T17:03:11.537993+00:00",
+        "sha256": "2c866023e3e1d2b998376c39891ea78fdbc2920f5730ae9a32d933fe59f81791",
+        "bytes": 231635
+      },
+      "evidence_line_ranges": [
+        [
+          126,
+          139
+        ]
+      ],
+      "evidence_representation": "HTMLParser text (script/style excluded)",
+      "version_scope": "live service docs, retrieval-time only"
+    },
+    {
+      "id": 15,
+      "url": "https://docs.github.com/en/actions/reference/runners/github-hosted-runners",
+      "title": "github-runners",
+      "accessed": "2026-09-12",
+      "quotes": [
+        {
+          "text": "Virtual machine / container\nProcessor (CPU)\nMemory (RAM)\nStorage (SSD)\nArchitecture\nWorkflow label\nLinux\n1\n5 GB\n14 GB\n x64 \n\n            \nubuntu-slim\n\n          \nLinux\n4\n16 GB\n14 GB\n x64 \n\n        \nubuntu-latest\n,\n        \nubuntu-24.04\n,\n        \nubuntu-22.04\n,",
+          "added": "2026-09-12"
+        },
+        {
+          "text": "Administrative privileges\n\n\nThe Linux and macOS virtual machines both run using passwordless \nsudo\n. When you need to execute commands or install tools that require more privileges than the current user, you can use \nsudo\n without needing to provide a password. For more information, see the \nSudo Manual\n.\n\n\nWindows virtual machines are configured to run as administrators with User Account Control (UAC) disabled. For more information, see \nHow User Account Control works",
+          "added": "2026-09-12"
+        }
+      ],
+      "retrieval": {
+        "requested_url": "https://docs.github.com/en/actions/reference/runners/github-hosted-runners",
+        "final_url": "https://docs.github.com/en/actions/reference/runners/github-hosted-runners",
+        "retrieved_at": "2026-09-11T17:03:11.964638+00:00",
+        "sha256": "0e6542c17010c15aa29ad99e52d81fefcb5edb4b1485e79b7586a244386f35cb",
+        "bytes": 435736
+      },
+      "evidence_line_ranges": [
+        [
+          330,
+          363
+        ],
+        [
+          691,
+          704
+        ]
+      ],
+      "evidence_representation": "HTMLParser text (script/style excluded)",
+      "version_scope": "live service docs, retrieval-time only"
+    }
+  ]
+}
