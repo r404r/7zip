@@ -1,0 +1,64 @@
+name: b03-native
+
+# Authorized isolated B03 native qualification; no shared workflow changes.
+on:
+  push:
+    branches: ['wt/t_bf92ce13']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  b03:
+    name: B03 / ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 35
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUTF8: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Build unchanged and test-only CLI on Unix
+        if: runner.os != 'Windows'
+        shell: bash
+        run: python .github/tests/migration/b03/build.py "$RUNNER_TEMP/b03"
+      - name: Build unchanged and test-only CLI on Windows
+        if: runner.os == 'Windows'
+        shell: cmd
+        run: |
+          for /f "usebackq tokens=*" %%i in (`"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath`) do set "VSPATH=%%i"
+          if not defined VSPATH (echo Visual Studio with the C++ toolset was not found & exit /b 1)
+          call "%VSPATH%\VC\Auxiliary\Build\vcvars64.bat" || exit /b 1
+          python .github/tests/migration/b03/build.py "%RUNNER_TEMP%\b03"
+      - name: Capture native observations
+        shell: bash
+        run: python .github/tests/migration/b03/run.py "$RUNNER_TEMP/b03" --report "$RUNNER_TEMP/b03/capture.json"
+      - name: Repeat and reject damaged reports
+        shell: bash
+        run: python .github/tests/migration/b03/run.py "$RUNNER_TEMP/b03" --report "$RUNNER_TEMP/b03/repeat.json" --expect "$RUNNER_TEMP/b03/capture.json"
+      - name: Validate completeness and negative controls
+        shell: bash
+        run: python .github/tests/migration/b03/validate.py "$RUNNER_TEMP/b03/capture.json"
+      - name: Freeze exact reports and archive bytes
+        shell: bash
+        run: python .github/tests/migration/b03/freeze.py "$RUNNER_TEMP/b03/frozen" --work "$RUNNER_TEMP/b03" --capture "$RUNNER_TEMP/b03/capture.json" --repeat "$RUNNER_TEMP/b03/repeat.json"
+      - name: Upload raw native evidence even on failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: b03-${{ matrix.os }}-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/b03/*.json
+            ${{ runner.temp }}/b03/*.log
+            ${{ runner.temp }}/b03/frozen/
+          if-no-files-found: error
