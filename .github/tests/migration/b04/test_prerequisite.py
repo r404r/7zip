@@ -9,6 +9,27 @@ import json
 
 
 class GateTest(unittest.TestCase):
+    def test_captured_native_failures_are_rejected_not_skipped(self):
+        import prerequisite as p
+        evidence = Path(__file__).with_name('evidence')
+        reports = list((evidence / '34569823142').glob('*/report.json'))
+        self.assertEqual(len(reports), 3)
+        for path in reports:
+            report = json.loads(path.read_bytes())
+            self.assertFalse(p.controls_pass(report), path)
+            self.assertFalse(report['hostile_execution_authorized'])
+            self.assertFalse(report['b04_complete'])
+            self.assertTrue(report['sentinels_unchanged'])
+            self.assertNotEqual(report['sandbox_returncode'], 0)
+            self.assertEqual(report['baseline_returncode'], 0)
+            suffix = '.probe.log' if report['system'] == 'Windows' else '.stdout'
+            for phase in ('baseline', 'sandbox'):
+                self.assertEqual(p.parse((path.parent / (phase + suffix)).read_bytes()),
+                                 report[phase])
+        local = json.loads((evidence / 'local-linux' / 'report.json').read_bytes())
+        self.assertTrue(p.controls_pass(local))
+        self.assertFalse(local['hostile_execution_authorized'])
+
     def test_native_candidate_emits_fail_closed_report(self):
         with tempfile.TemporaryDirectory() as tmp:
             destination = Path(tmp) / 'evidence'

@@ -1,0 +1,13 @@
+[
+  "cl",
+  "/nologo",
+  "/W4",
+  "/WX",
+  "/std:c11",
+  "/MT",
+  "D:\\a\\7zip\\7zip\\.github\\tests\\migration\\b04\\winlaunch.c",
+  "/Fe:winlaunch.exe",
+  "/link",
+  "userenv.lib",
+  "advapi32.lib"
+]

@@ -1,0 +1,9 @@
+create 1 errno=0
+rename 1 errno=0
+hardlink 1 errno=0
+symlink 1 errno=0
+readonly_denied 1 errno=13
+absolute 0 errno=30
+traversal 0 errno=30
+symlink_escape 0 errno=30
+hardlink_alias 0 errno=18

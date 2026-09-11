@@ -1,0 +1,10 @@
+[
+  "cc",
+  "-std=c11",
+  "-Wall",
+  "-Wextra",
+  "-Werror",
+  "/home/ding/work/github/r404r/7zip/.worktrees/t_2a64c953/.github/tests/migration/b04/probe.c",
+  "-o",
+  "probe"
+]
