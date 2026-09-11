@@ -94,8 +94,38 @@ needed; native capture and layout scripts otherwise use Python standard library
 only. Validation checks JSON schema, all selected source/notice hashes, three OS
 coverage, numeric ranges, absent RAR writers/encoders, relative document links,
 artifact digests, frozen layout and native pins. Four invalid-schema controls and
-two pin/layout-drift controls use in-memory data or isolated temporary copies;
-no committed expected regression data is modified.
+two pin/layout-drift controls plus [test-pins.py](test-pins.py) use in-memory data
+or isolated temporary copies; no committed expected regression data is modified.
+Run `python3 docs/ai-migration/qualification/test-pins.py <capture> [<capture> ...]`
+to replay the controls independently. CI runs these controls on each native capture.
+
+### Pin enforcement audit (R1)
+
+The allowed native identity mapping is explicit: Linux/x86_64 maps to
+x86_64-unknown-linux-gnu, Windows/AMD64 to x86_64-pc-windows-msvc, and Darwin/arm64
+to aarch64-apple-darwin. `check-pins.py` requires the exact observed machine and
+Rust host equal to the mapped native target, which must also be in Rust's target
+allowlist. Equal 64-bit struct layouts are not evidence of target identity.
+These are native builds using the collector's fixed commands, not authorization
+for arbitrary cross-compilation or compiler target overrides.
+
+Enforced observed identities: C/C++ compiler banners, build-driver banner, Linux
+binutils/glibc/libgcc/libstdc++/make package versions, Windows VCTools/SDK/UCRT,
+macOS SDK/Xcode and linked runtime versions, Rust release/host, and exact captured
+Cargo/clippy/rustfmt versions. R1 adds the previously omitted libgcc-s1 pin without
+changing its captured version. Independent mutation controls reject every such
+version category, machine, unknown system and layout drift with field diagnostics;
+unchanged real captures must pass first. The original captured evidence stays intact.
+
+Other toolchains.json fields are not independent observed version pins:
+compiler_family/compiler_version summarize the checked banner; runner_selector
+is workflow placement, observed_os is historical context, and make_fragments,
+build_command, mode and runtime_policy describe the fixed collector/build-log
+contract and ownership policy. Selected flags/inputs remain audited in
+engine-build.json, not inferred from a successful pin check. Edition=2024 and
+panic=unwind are explicit check-layout.py compiler arguments, and rust-std is
+exercised by the compiled native Rust probe. MSRV equals the checked release.
+Cargo.lock fields are S1 obligations, not a claim that Q1 built a Rust workspace.
 
 The existing preservation checks remain applicable:
 

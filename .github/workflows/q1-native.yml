@@ -44,6 +44,8 @@ jobs:
           python docs/ai-migration/qualification/collect-native.py --output q1-evidence || exit /b 1
           python docs/ai-migration/qualification/check-layout.py --output q1-evidence/layout || exit /b 1
           python docs/ai-migration/qualification/check-pins.py q1-evidence
+      - name: Verify pin regression controls on captured evidence
+        run: python docs/ai-migration/qualification/test-pins.py q1-evidence
       - name: Preserve evidence even on failure
         if: always()
         uses: actions/upload-artifact@v4

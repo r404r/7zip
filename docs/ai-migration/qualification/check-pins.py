@@ -12,6 +12,8 @@ pins = json.loads((HERE / 'toolchains.json').read_text())
 evidence = args.evidence
 report = json.loads((evidence / 'engine-observation.json').read_text())
 system = report['system']
+if system not in pins['native']:
+    raise SystemExit('FAIL: pin/layout drift: unsupported system')
 pin = pins['native'][system]
 failures = []
 
@@ -21,6 +23,12 @@ def check(condition, label):
         failures.append(label)
 
 
+check(report.get('machine') == pin['machine'], 'machine (native target ' + pin['target'] + ')')
+check(pin['target'] in pins['rust']['targets'], 'native target')
+rust = dict(line.split(': ', 1) for line in (evidence / 'layout/rustc.txt').read_text().splitlines() if ': ' in line)
+check(rust.get('host') == pin['target'], 'Rust host/native target')
+for component, version in pins['rust']['component_versions'].items():
+    check((evidence / 'layout' / (component + '.txt')).read_text().strip() == version, component)
 check((evidence / 'compiler.txt').read_text().splitlines()[0] == pin['compiler_first_line'], 'compiler')
 check((evidence / 'driver.txt').read_text().strip().splitlines()[0] == pin['driver'], 'build driver')
 if system == 'Linux':
@@ -43,8 +51,7 @@ elif system == 'Darwin':
                   for line in runtime.splitlines()), 'runtime ' + name)
 else:
     failures.append('unsupported system')
-check('release: ' + pins['rust']['toolchain'] + '\n' in
-      (evidence / 'layout/rustc.txt').read_text(), 'Rust release')
+check(rust.get('release') == pins['rust']['toolchain'], 'Rust release')
 check((evidence / 'layout/c-layout.txt').read_text() == (HERE / 'abi-layout.txt').read_text(), 'frozen ABI layout')
 if failures:
     raise SystemExit('FAIL: pin/layout drift: ' + ', '.join(failures))

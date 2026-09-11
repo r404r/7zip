@@ -105,7 +105,8 @@ if args.evidence:
     with tempfile.TemporaryDirectory(prefix='q1-negative-', dir=HERE) as directory:
         target = Path(directory)
         for name in ('engine-observation.json', 'compiler.txt', 'cxx-compiler.txt',
-                     'driver.txt', 'runtime-packages.txt', 'layout/rustc.txt', 'layout/c-layout.txt'):
+                     'driver.txt', 'runtime-packages.txt', 'layout/rustc.txt', 'layout/c-layout.txt',
+                     'layout/cargo.txt', 'layout/clippy.txt', 'layout/rustfmt.txt'):
             dest = target / name
             dest.parent.mkdir(parents=True, exist_ok=True)
             dest.write_bytes((source / name).read_bytes())
@@ -119,5 +120,7 @@ if args.evidence:
                               capture_output=True, text=True, check=False)
         assert proc.returncode != 0 and 'frozen ABI layout' in proc.stderr
     print('PASS: artifact digests, three native pin/layout comparisons and two pin negative controls')
+    subprocess.run([sys.executable, str(HERE / 'test-pins.py'),
+                    *(str(folder) for folder in folders.values())], check=True)
 print('Selected input license categories:', dict(Counter(row['license'] for row in inputs.values())))
 print('PASS: schema, selected input/notice hashes, capability boundaries, links and four schema negative controls')

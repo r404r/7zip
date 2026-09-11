@@ -8,6 +8,11 @@
     "edition": "2024",
     "panic": "unwind",
     "components": ["rustc", "cargo", "rust-std", "rustfmt", "clippy"],
+    "component_versions": {
+      "cargo": "cargo 1.97.1 (c980f4866 2026-06-30)",
+      "clippy": "clippy 0.1.97 (8bab26f4f6 2026-07-14)",
+      "rustfmt": "rustfmt 1.9.0-stable (8bab26f4f6 2026-07-14)"
+    },
     "targets": ["x86_64-unknown-linux-gnu", "x86_64-pc-windows-msvc", "aarch64-apple-darwin"],
     "cargo_lock": {
       "path": "rust/Cargo.lock",
@@ -19,6 +24,7 @@
   },
   "native": {
     "Linux": {
+      "machine": "x86_64",
       "target": "x86_64-unknown-linux-gnu",
       "runner_selector": "ubuntu-24.04",
       "compiler_first_line": "gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
@@ -28,6 +34,7 @@
       "runtime_packages": {
         "binutils": "2.42-4ubuntu2.10",
         "libc6:amd64": "2.39-0ubuntu8.8",
+        "libgcc-s1:amd64": "14.2.0-4ubuntu2~24.04.1",
         "libstdc++6:amd64": "14.2.0-4ubuntu2~24.04.1",
         "make": "4.3-4.1build2"
       },
@@ -36,6 +43,7 @@
       "runtime_policy": "Matched libstdc++/libgcc/glibc; no Rust deallocation of native allocations"
     },
     "Windows": {
+      "machine": "AMD64",
       "target": "x86_64-pc-windows-msvc",
       "runner_selector": "windows-2022",
       "compiler_first_line": "Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35228 for x64",
@@ -50,6 +58,7 @@
       "runtime_policy": "Retained static MSVC runtime inside the native module; every allocation is released by its allocating module. No CRT FILE*, STL, exceptions or native memory ownership crosses to Rust. This is not static-link distribution approval."
     },
     "Darwin": {
+      "machine": "arm64",
       "target": "aarch64-apple-darwin",
       "runner_selector": "macos-14",
       "compiler_first_line": "Apple clang version 15.0.0 (clang-1500.3.9.4)",
