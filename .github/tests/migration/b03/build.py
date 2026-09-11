@@ -64,7 +64,7 @@ def main():
             streams.write_text(text)
             shutil.copyfile(HERE / 'fault.inc', streams.parent / 'B03Fault.inc')
             for f in (main_cpp, streams):
-                modified[str(f.relative_to(source))] = sha(f)
+                modified[f.relative_to(source).as_posix()] = sha(f)
             report['instrumentation'] = dict(modified=modified, probe_sha256=sha(HERE / 'probe.inc'), fault_sha256=sha(HERE / 'fault.inc'))
         out = work / variant
         if os.name == 'nt':

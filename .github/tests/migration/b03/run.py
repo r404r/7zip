@@ -57,6 +57,14 @@ def inventory(root):
             if os.name == 'nt':
                 ads = Path(str(p) + ':b03')
                 item['ads_b03_sha256'] = digest(ads) if ads.exists() else None
+            elif platform.system() == 'Darwin':
+                names = command(['xattr', str(p)], root)
+                assert names['exit'] == 0, names
+                item['xattrs'] = {}
+                for name in base64.b64decode(names['stdout_b64']).decode().splitlines():
+                    value = command(['xattr', '-px', name, str(p)], root)
+                    assert value['exit'] == 0, value
+                    item['xattrs'][name] = bytes.fromhex(base64.b64decode(value['stdout_b64']).decode()).hex()
             elif hasattr(os, 'listxattr'):
                 try:
                     item['xattrs'] = {n: os.getxattr(p, n).hex() for n in sorted(os.listxattr(p))}
@@ -159,11 +167,14 @@ def capture(work, report):
             capability['security'] = command(['icacls', str(inputs)], sandbox)
         else:
             key = 'user.b03' if platform.system() == 'Linux' else 'org.b03'
-            try:
-                os.setxattr(inputs / 'fractional.txt', key, b'native xattr payload')
-                capability['xattr'] = dict(name=key, status='created')
-            except OSError as exc:
-                capability['xattr'] = dict(errno=exc.errno)
+            if platform.system() == 'Darwin':
+                capability['xattr'] = command(['xattr', '-w', key, 'native xattr payload', str(inputs / 'fractional.txt')], sandbox)
+            else:
+                try:
+                    os.setxattr(inputs / 'fractional.txt', key, b'native xattr payload')
+                    capability['xattr'] = dict(name=key, status='created')
+                except OSError as exc:
+                    capability['xattr'] = dict(errno=exc.errno)
             if platform.system() == 'Darwin':
                 capability['acl'] = command(['chmod', '+a', 'everyone deny delete', str(inputs / 'fractional.txt')], sandbox)
             elif shutil.which('setfacl'):
