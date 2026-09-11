@@ -68,10 +68,11 @@ def main():
     else:
         compiler = 'gcc' if system == 'Linux' else 'clang'
         run([compiler, '--version'], 'compiler.txt')
+        run(['g++' if system == 'Linux' else 'clang++', '--version'], 'cxx-compiler.txt')
         run(['make', '--version'], 'driver.txt')
         if system == 'Linux':
             run(['getconf', 'GNU_LIBC_VERSION'], 'libc-version.txt')
-            run(['dpkg-query', '-W', 'gcc', 'g++', 'libstdc++6', 'libc6', 'binutils', 'make'], 'runtime-packages.txt')
+            run(['dpkg-query', '-W', 'gcc', 'g++', 'libgcc-s1', 'libstdc++6', 'libc6', 'binutils', 'make'], 'runtime-packages.txt')
             fragments = ['../../cmpl_gcc.mak']
         elif system == 'Darwin' and machine == 'arm64':
             run(['sw_vers'], 'os-version.txt')
@@ -119,6 +120,11 @@ def main():
              '-o', str(observer)], 'format-observer-build.log')
     run([str(observer)] + ([str(product_dir / '7z.dll')] if system == 'Windows' else []),
         'format-registry.tsv', product_dir)
+    shutil.copy2(binary, product_dir / binary.name)
+    (out / 'native-artifacts.json').write_text(json.dumps({
+        path.name: digest(path) for path in sorted(product_dir.iterdir())
+        if path.is_file() and (path.name.startswith('7z') or path == observer)
+    }, indent=2) + '\n')
     run([str(binary), 'i'], 'capabilities.txt')
     run(['python3' if system != 'Windows' else 'python',
          '.github/tests/archive_characterization.py', str(binary),
@@ -158,6 +164,7 @@ def main():
                           'header': header})
     manifest = {'schema_version': 1, 'status': 'observed-not-ABI-qualified',
                 'oracle_commit': commit, 'system': system, 'machine': machine,
+                'host': platform.platform(),
                 'binary_sha256': digest(binary), 'binary': str(binary),
                 'selected_translation_units': inventory,
                 'license_review': 'requires independent selected-input review',

@@ -87,6 +87,8 @@ for language in ('c', 'cpp'):
     run([str(binary)], language + '-layout.txt')
 run(['rustc', '+1.97.1', '--version', '--verbose'], 'rustc.txt')
 run(['cargo', '+1.97.1', '--version'], 'cargo.txt')
+run(['rustfmt', '+1.97.1', '--version'], 'rustfmt.txt')
+run(['cargo', '+1.97.1', 'clippy', '--version'], 'clippy.txt')
 rust_binary = out / ('rust.exe' if windows else 'rust')
 run(['rustc', '+1.97.1', '--edition=2024', '-Dwarnings', '-C', 'panic=unwind',
      str(out / 'layout.rs'), '-o', str(rust_binary)], 'rust-build.log')

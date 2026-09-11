@@ -123,8 +123,18 @@ for observation in sorted(args.evidence.glob('*/engine-observation.json')):
     for item in numeric:
         for key in ('index', 'registration_id', 'flags', 'time_flags', 'writer'):
             item[key] = int(item[key])
-    if {r['name'] for r in numeric} != {r['name'] for r in loaded['formats']}:
-        raise ValueError('Numerical observer/loaded CLI format registry mismatch')
+    numerical_names = {r['name'] for r in numeric}
+    cli_names = {r['name'] for r in loaded['formats']}
+    coordinator = [r for r in loaded['formats'] if r['name'] == 'Hash']
+    hash_source = 'CPP/7zip/UI/Common/HashCalc.cpp'
+    if len(coordinator) != 1 or 'Hash' in numerical_names or not all(
+            hash_source in {r['path'] for r in selected_products[p]['units_and_resources']}
+            for p in ('Alone2', 'Console')):
+        raise ValueError('Missing/changed separately retained Hash coordinator evidence')
+    if numerical_names | {'Hash'} != cli_names:
+        raise ValueError('Numerical observer/loaded CLI format registry mismatch: '
+                         + repr({'system': system, 'observer_only': sorted(numerical_names - cli_names),
+                                 'cli_only': sorted(cli_names - numerical_names)}))
     if {r['name'] for r in standalone['formats']} != {r['name'] for r in loaded['formats']}:
         raise ValueError('Standalone/loaded registry lost formats')
     time_differences = []
@@ -136,6 +146,9 @@ for observation in sorted(args.evidence.glob('*/engine-observation.json')):
     builds.append({'system': system, 'machine': native['machine'],
                    'oracle_commit': native['oracle_commit'], 'products': selected_products,
                    'standalone': standalone, 'loaded': loaded, 'format_registry': numeric,
+                   'coordinator_formats': [{'name': 'Hash', 'registration_id': None,
+                       'source': hash_source, 'source_symbol': 'Codecs_AddHashArcHandler',
+                       'observed': coordinator[0]}],
                    'standalone_loaded_differences': time_differences,
                    'binary_sha256': native['binary_sha256'],
                    'evidence': {path.relative_to(folder).as_posix(): sha(path)
@@ -148,7 +161,8 @@ result = {'schema_version': 1, 'status': 'retained-native-reference',
 (HERE / 'license-inventory.json').write_text(json.dumps({
     'schema_version': 1, 'status': 'engineering-inventory-not-distribution-approval',
     'inputs': sorted(licenses.values(), key=lambda item: item['path']),
-    'notices': [record(ROOT / 'DOC' / name) for name in ('License.txt', 'copying.txt', 'unRarLicense.txt')]
+    'notices': [{'path': 'DOC/' + name, 'sha256': sha(ROOT / 'DOC' / name)}
+                for name in ('License.txt', 'copying.txt', 'unRarLicense.txt')]
 }, indent=2) + '\n')
 for build in builds:
     print(build['system'], {name: len(p['units_and_resources']) for name, p in build['products'].items()},

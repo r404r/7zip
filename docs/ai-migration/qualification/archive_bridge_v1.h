@@ -158,7 +158,7 @@ typedef struct archive_bridge_v1_context_options {
 
 typedef struct archive_bridge_v1_format {
   uint32_t index;
-  uint32_t registration_id;
+  uint32_t registration_id; /* 0..255 native CArcInfo ID; 256 means absent */
   uint32_t flags;
   uint32_t time_flags;
   uint32_t has_reader;

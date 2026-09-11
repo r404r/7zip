@@ -234,12 +234,25 @@ runtime. No bounded cancellation/shutdown guarantee is introduced by the ABI.
 ## Capabilities and qualification boundary
 
 Capability formats preserve runtime index, CArcInfo's registration byte widened
-to uint32_t, flags/time flags, actual reader/writer factory presence, names and
+to uint32_t (256 explicitly means absent, not a fabricated native ID), effective
+CCodecs flags/time flags, actual reader/writer factory presence, names and
 extensions. Writer presence is not proof of every create/update property. Methods
 and hashers retain uint64_t IDs and factory availability, filter status and digest
 size. These are built capabilities, distinct from qualified_operations: initial
 Q1 is 0; bit 0 capabilities, 1 open/list, 2 extraction, 3 testing, 4 creation may
 only be enabled by the later reviewed application gates. Unknown bits are rejected.
+
+The Hash archive handler is added by Codecs_AddHashArcHandler in HashCalc.cpp,
+not exported as a CArcInfo slot by Format7zF. Preserve it; the matched reference
+manifest distinguishes the raw library registry from coordinator-added formats.
+Indices are local to the matched CCodecs table, not stable across products, sort
+orders or builds. Match comparison records by name/actual registration identity,
+not coincidentally equal row indices. Raw registered TimeFlags from the library
+observer and effective CCodecs TimeFlags are separately recorded: the built-in
+LoadCodecs path leaves TimeFlags at its constructor default, while the dynamic
+path obtains the exported property. Do not repair that retained behavior or use
+the raw metadata to change timestamp policy in Q1/S2a; future write/GUI policy
+remains subject to native characterization and the relevant behavior gates.
 
 S2a must produce the actual matched facade build manifest, verify exported symbols,
 explicit library loading/handshake failure, registration retention after linkage,
