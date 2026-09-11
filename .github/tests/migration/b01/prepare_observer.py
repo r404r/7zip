@@ -15,7 +15,7 @@ def prepare(dest):
     if dest.exists():
         raise ValueError('observer destination must not exist')
     dest.mkdir(parents=True)
-    for name in ('C', 'CPP'):
+    for name in ('C', 'CPP', 'Asm'):
         shutil.copytree(REPO / name, dest / name,
                         ignore=shutil.ignore_patterns('*.o', '*.obj', 'x64', '_o'))
     path = dest / 'CPP/7zip/UI/Console/ExtractCallbackConsole.cpp'

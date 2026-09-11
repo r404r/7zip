@@ -126,6 +126,7 @@ jobs:
           cp "$RUNNER_TEMP/b01-observer-source/observer-provenance.json" evidence/
           python .github/tests/migration/b01/numeric_capture.py "$ORACLE_EXE" "$NUMERIC_EXE" --report evidence/numeric.json
           python .github/tests/migration/b01/numeric_capture.py "$ORACLE_EXE" "$NUMERIC_EXE" --report evidence/numeric-repeat.json --expect evidence/numeric.json
+          python .github/tests/migration/b01/observer_test.py evidence/numeric.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:
