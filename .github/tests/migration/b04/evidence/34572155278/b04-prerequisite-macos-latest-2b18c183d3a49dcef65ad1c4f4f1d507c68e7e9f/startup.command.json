@@ -1,0 +1,6 @@
+[
+  "/usr/bin/sandbox-exec",
+  "-f",
+  "/Users/runner/work/_temp/b04/sandbox/candidate.sb",
+  "/usr/bin/true"
+]

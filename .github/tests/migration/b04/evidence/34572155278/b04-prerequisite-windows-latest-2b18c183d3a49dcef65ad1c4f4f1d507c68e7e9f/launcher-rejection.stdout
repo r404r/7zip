@@ -1,0 +1,3 @@
+B04-launch stage=setup api=GetNamedSecurityInfoW error=2
+grant error=2
+AppContainer candidate result=2

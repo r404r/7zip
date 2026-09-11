@@ -1,0 +1,2 @@
+B04-launch stage=launch api=CreateProcessW error=2
+AppContainer candidate result=2

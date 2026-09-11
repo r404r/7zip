@@ -9,6 +9,31 @@ import json
 
 
 class GateTest(unittest.TestCase):
+    def test_diagnostic_native_run_remains_unqualified(self):
+        import prerequisite as p
+        evidence = Path(__file__).with_name('evidence') / '34572155278'
+        reports = list(evidence.glob('*/report.json'))
+        self.assertEqual(len(reports), 3)
+        for path in reports:
+            report = json.loads(path.read_bytes())
+            self.assertFalse(p.controls_pass(report))
+            self.assertFalse(report['hostile_execution_authorized'])
+            self.assertFalse(report['b04_complete'])
+            self.assertEqual(report['sandbox'], {})
+            self.assertTrue(report['sentinels_unchanged'])
+            self.assertEqual(report['source_commit'], '2b18c183d3a49dcef65ad1c4f4f1d507c68e7e9f')
+            if report['system'] == 'Windows':
+                self.assertTrue(report['launcher_rejection_pass'])
+                self.assertIn(b'stage=launch api=CreateProcessW error=2',
+                              (path.parent / 'sandbox.stdout').read_bytes())
+                self.assertIn(b'stage=setup api=GetNamedSecurityInfoW error=2',
+                              (path.parent / 'launcher-rejection.stdout').read_bytes())
+            else:
+                self.assertNotEqual(report['startup_returncode'], 0)
+                sandbox = json.loads((path.parent / 'sandbox.command.json').read_bytes())
+                startup = json.loads((path.parent / 'startup.command.json').read_bytes())
+                self.assertEqual(startup, sandbox[:-3] + ['/usr/bin/true'])
+
     def test_captured_native_failures_are_rejected_not_skipped(self):
         import prerequisite as p
         evidence = Path(__file__).with_name('evidence')

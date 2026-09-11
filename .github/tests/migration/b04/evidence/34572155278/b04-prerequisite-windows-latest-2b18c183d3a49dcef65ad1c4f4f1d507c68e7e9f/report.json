@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "stage": "file-write-prerequisite-candidate",
+  "system": "Windows",
+  "platform": "Windows-10-10.0.26100-SP0",
+  "hostile_execution_authorized": false,
+  "b04_complete": false,
+  "controls_pass": false,
+  "source_commit": "2b18c183d3a49dcef65ad1c4f4f1d507c68e7e9f",
+  "source_sha256": {
+    "prerequisite.py": "fdd4f0ffd14615f3ab2f7c8008a725eb27626e69ec1dd58a95f135daf5ebcbcb",
+    "probe.c": "70dabfa78843c1779d9594c322e8dc79f107fab8d90ed7742eed38587ebee6ff",
+    "winlaunch.c": "36dff313882ec0e8b9676d2d36114f227a1faf19f2b211099986453b50559114"
+  },
+  "executable_sha256": "bec5298a9828e564a7fcb0fbe33f5cb548574f3185041207ffdff6f0791cacfa",
+  "launcher_rejection_pass": true,
+  "baseline_returncode": 0,
+  "baseline": {
+    "create": true,
+    "rename": true,
+    "hardlink": true,
+    "symlink": true,
+    "readonly_denied": true,
+    "absolute": true,
+    "traversal": true,
+    "symlink_escape": true,
+    "hardlink_alias": true
+  },
+  "baseline_sentinel_sha256": {
+    "absolute": "4b68ab3847feda7d6c62c1fbcbeebfa35eab7351ed5e78f4ddadea5df64b8015",
+    "traversal": "4b68ab3847feda7d6c62c1fbcbeebfa35eab7351ed5e78f4ddadea5df64b8015",
+    "symlink_escape": "4b68ab3847feda7d6c62c1fbcbeebfa35eab7351ed5e78f4ddadea5df64b8015",
+    "hardlink_alias": "4b68ab3847feda7d6c62c1fbcbeebfa35eab7351ed5e78f4ddadea5df64b8015"
+  },
+  "sandbox_returncode": 1,
+  "sandbox": {},
+  "sandbox_sentinel_sha256": {
+    "absolute": "0afb8b0361515fdeadb6ed7db21d2cd3ffb3213fa1e23eec2e9fe508477fa08a",
+    "traversal": "0afb8b0361515fdeadb6ed7db21d2cd3ffb3213fa1e23eec2e9fe508477fa08a",
+    "symlink_escape": "0afb8b0361515fdeadb6ed7db21d2cd3ffb3213fa1e23eec2e9fe508477fa08a",
+    "hardlink_alias": "0afb8b0361515fdeadb6ed7db21d2cd3ffb3213fa1e23eec2e9fe508477fa08a"
+  },
+  "sentinels_unchanged": true
+}

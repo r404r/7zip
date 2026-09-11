@@ -1,0 +1,8 @@
+[
+  "/usr/bin/sandbox-exec",
+  "-f",
+  "/Users/runner/work/_temp/b04/sandbox/candidate.sb",
+  "/Users/runner/work/_temp/b04/sandbox/probe",
+  "/Users/runner/work/_temp/b04/sandbox/work",
+  "/Users/runner/work/_temp/b04/sandbox/outside"
+]

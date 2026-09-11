@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "stage": "file-write-prerequisite-candidate",
+  "system": "Linux",
+  "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+  "hostile_execution_authorized": false,
+  "b04_complete": false,
+  "controls_pass": false,
+  "source_commit": "2b18c183d3a49dcef65ad1c4f4f1d507c68e7e9f",
+  "source_sha256": {
+    "prerequisite.py": "3ecb1af89bd41231aa4ffb4a99c5484b2b3b4d690b021fb4d54590556e50c162",
+    "probe.c": "f4f013d7c0db19cda65176a5f4640b57ffb56b3188ead94260ec234ccf52400a",
+    "winlaunch.c": "47bdcbb4e40d1cb0144a4d2e4221249f2f5d54b2ac71edf86acac84c78e1236c"
+  },
+  "executable_sha256": "da302de98068f796657b26dbeff4d3dbcb879ab26797fac709e11b304c256665",
+  "baseline_returncode": 0,
+  "baseline": {
+    "create": true,
+    "rename": true,
+    "hardlink": true,
+    "symlink": true,
+    "readonly_denied": true,
+    "absolute": true,
+    "traversal": true,
+    "symlink_escape": true,
+    "hardlink_alias": true
+  },
+  "baseline_sentinel_sha256": {
+    "absolute": "4b68ab3847feda7d6c62c1fbcbeebfa35eab7351ed5e78f4ddadea5df64b8015",
+    "traversal": "4b68ab3847feda7d6c62c1fbcbeebfa35eab7351ed5e78f4ddadea5df64b8015",
+    "symlink_escape": "4b68ab3847feda7d6c62c1fbcbeebfa35eab7351ed5e78f4ddadea5df64b8015",
+    "hardlink_alias": "4b68ab3847feda7d6c62c1fbcbeebfa35eab7351ed5e78f4ddadea5df64b8015"
+  },
+  "startup_returncode": 1,
+  "sandbox_returncode": 1,
+  "sandbox": {},
+  "sandbox_sentinel_sha256": {
+    "absolute": "0afb8b0361515fdeadb6ed7db21d2cd3ffb3213fa1e23eec2e9fe508477fa08a",
+    "traversal": "0afb8b0361515fdeadb6ed7db21d2cd3ffb3213fa1e23eec2e9fe508477fa08a",
+    "symlink_escape": "0afb8b0361515fdeadb6ed7db21d2cd3ffb3213fa1e23eec2e9fe508477fa08a",
+    "hardlink_alias": "0afb8b0361515fdeadb6ed7db21d2cd3ffb3213fa1e23eec2e9fe508477fa08a"
+  },
+  "sentinels_unchanged": true
+}
