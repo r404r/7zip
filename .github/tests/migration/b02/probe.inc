@@ -9,6 +9,17 @@
 #include "../Common/SetProperties.h"
 #include "../../../Windows/PropVariant.h"
 
+static const char *B02Format()
+{
+#ifdef _WIN32
+  static char format[16];
+  const DWORD size = GetEnvironmentVariableA("B02_FORMAT", format, sizeof(format));
+  return size != 0 && size < sizeof(format) ? format : NULL;
+#else
+  return getenv("B02_FORMAT");
+#endif
+}
+
 static HRESULT B02Names(IInArchive *arc)
 {
   UInt32 count = 0;
@@ -31,7 +42,12 @@ static HRESULT B02Names(IInArchive *arc)
 
 static int B02Probe()
 {
-  FILE *file = fopen("input.arc", "rb");
+  FILE *file = NULL;
+#ifdef _WIN32
+  if (fopen_s(&file, "input.arc", "rb") != 0) return 91;
+#else
+  file = fopen("input.arc", "rb");
+#endif
   if (!file) return 91;
   std::vector<Byte> data;
   int c;
@@ -39,7 +55,7 @@ static int B02Probe()
   const bool readError = ferror(file) != 0;
   fclose(file);
   if (readError || data.empty()) return 92;
-  const bool zip = strcmp(getenv("B02_FORMAT"), "zip") == 0;
+  const bool zip = strcmp(B02Format(), "zip") == 0;
   CMyComPtr<IInArchive> arc;
   if (zip) arc = new NArchive::NZip::CHandler;
   else arc = new NArchive::NTar::CHandler;
@@ -49,7 +65,11 @@ static int B02Probe()
   CMyComPtr<IInStream> stream = streamSpec;
   streamSpec->Init(&data[0], data.size());
   HRESULT openHr = arc->Open(stream, NULL, NULL);
-  printf("{\"wchar_bytes\":%u,\"open_hr\":%u,\"phases\":[", (unsigned)sizeof(wchar_t), (unsigned)openHr);
+  printf("{\"wchar_bytes\":%u,\"open_hr\":%u,", (unsigned)sizeof(wchar_t), (unsigned)openHr);
+#ifdef _WIN32
+  printf("\"acp\":%u,\"oemcp\":%u,", (unsigned)GetACP(), (unsigned)GetOEMCP());
+#endif
+  printf("\"phases\":[");
   const char *labels[] = {"fresh", "cp932", "cp936", "cp65001", "unscoped_empty", "scoped_empty", "cp936_again", "filtered_empty", "cp936_direct", "direct_empty"};
   for (unsigned phase = 0; phase < 10; ++phase)
   {

@@ -8,6 +8,7 @@ from pathlib import Path
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('report', type=Path)
+    parser.add_argument('--case', action='append')
     args = parser.parse_args()
     r = json.loads(args.report.read_text())
     print('bytes:', args.report.stat().st_size)
@@ -16,6 +17,8 @@ def main():
     print('run_id:', r['provenance']['run_id'])
     print('filesystem:', json.dumps(r['observations']['filesystem'], ensure_ascii=True))
     for name, case in r['observations']['cases'].items():
+        if args.case and name not in args.case:
+            continue
         print(name, 'sha256:', case['fixture_sha256'])
         phases = case['handler']['phases']
         for phase in phases:

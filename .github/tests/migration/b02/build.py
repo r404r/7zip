@@ -54,7 +54,7 @@ def main():
             text = text.replace(marker, '#include "B02Probe.inc"\n\n' + marker, 1)
             marker = ')\n{\n  #if defined(MY_CPU_SIZEOF_POINTER)'
             assert text.count(marker) == 1
-            text = text.replace(marker, ')\n{\n  if (getenv("B02_FORMAT")) {\n#ifdef ENV_HAVE_LOCALE\n    MY_SetLocale();\n#endif\n    return B02Probe();\n  }\n  #if defined(MY_CPU_SIZEOF_POINTER)', 1)
+            text = text.replace(marker, ')\n{\n  if (B02Format()) {\n#ifdef ENV_HAVE_LOCALE\n    MY_SetLocale();\n#endif\n    return B02Probe();\n  }\n  #if defined(MY_CPU_SIZEOF_POINTER)', 1)
             main_cpp.write_text(text)
             shutil.copyfile(HERE / 'probe.inc', main_cpp.parent / 'B02Probe.inc')
             provenance['instrumentation'] = {'Main.cpp_sha256': sha(main_cpp), 'probe.inc_sha256': sha(HERE / 'probe.inc')}

@@ -65,4 +65,5 @@ def corpus():
         ('duplicate-name', ['same.txt', 'same.txt']),
     ):
         result[label] = ('zip', zip_bytes([(name.encode(), 0x800, b'') for name in names]), True)
+    result['byte-escape-collision'] = ('zip', zip_bytes([(b'x-\xff.txt', 0, b''), ('x-\uefff.txt'.encode(), 0x800, b'')]), True)
     return result

@@ -75,6 +75,14 @@ def capture(work):
     with tempfile.TemporaryDirectory(prefix='b02-', dir=work) as temp:
         root = Path(temp)
         result['filesystem'] = filesystem(root / 'filesystem')
+        for file in (root / 'filesystem').iterdir():
+            os.utime(file, (946684800, 946684800))
+        native: dict = {}
+        native['create'] = invoke(exes['plain'], ['a', '-tzip', '-mtc=off', '-mta=off', '-bd', '-sccUTF-8', '../native.zip', '.'], root / 'filesystem')
+        native['list'] = invoke(exes['plain'], ['l', '-slt', '-bd', '-sccUTF-8', 'native.zip'], root)
+        native['extract'] = invoke(exes['plain'], ['x', '-aos', '-y', '-bd', '-sccUTF-8', '-onative-out', 'native.zip'], root)
+        native['tree'] = tree(root / 'native-out')
+        result['native_roundtrip'] = native
         for label, (fmt, data, extract) in corpus().items():
             cwd = root / label
             cwd.mkdir()
