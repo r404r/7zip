@@ -24,10 +24,15 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+      - name: Install exact Rust qualification toolchain
+        shell: bash
+        run: rustup toolchain install 1.97.1 --profile minimal
       - name: Capture native Unix build
         if: runner.os != 'Windows'
         shell: bash
-        run: python3 docs/ai-migration/qualification/collect-native.py --output q1-evidence
+        run: |
+          python3 docs/ai-migration/qualification/collect-native.py --output q1-evidence
+          python3 docs/ai-migration/qualification/check-layout.py --output q1-evidence/layout
       - name: Capture native Windows build
         if: runner.os == 'Windows'
         shell: cmd
@@ -35,7 +40,8 @@ jobs:
           for /f "usebackq tokens=*" %%i in (`"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath`) do set "VSPATH=%%i"
           if not defined VSPATH exit /b 1
           call "%VSPATH%\VC\Auxiliary\Build\vcvars64.bat" || exit /b 1
-          python docs/ai-migration/qualification/collect-native.py --output q1-evidence
+          python docs/ai-migration/qualification/collect-native.py --output q1-evidence || exit /b 1
+          python docs/ai-migration/qualification/check-layout.py --output q1-evidence/layout
       - name: Preserve evidence even on failure
         if: always()
         uses: actions/upload-artifact@v4
@@ -45,4 +51,9 @@ jobs:
             q1-evidence/*.txt
             q1-evidence/*.log
             q1-evidence/*.json
+            q1-evidence/layout/*.txt
+            q1-evidence/layout/*.json
+            q1-evidence/layout/*.log
+            q1-evidence/layout/*.c
+            q1-evidence/layout/*.rs
           if-no-files-found: error

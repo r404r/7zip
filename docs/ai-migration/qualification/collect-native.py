@@ -12,6 +12,7 @@ from pathlib import Path
 import platform
 import re
 import shlex
+import shutil
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -48,18 +49,34 @@ def main():
         run(['cl'], 'compiler.txt', accepted=(0, 2))
         run(['nmake', '/?'], 'driver.txt')
         # The legacy makefile owns the platform output directory.
-        build = ['nmake', '/NOLOGO', 'PLATFORM=x64']
+        build = ['nmake', '/G', '/NOLOGO', 'PLATFORM=x64']
         binary = BUNDLE / 'x64/7zz.exe'
         run(build, 'build.log', BUNDLE)
         run(['dumpbin', '/DEPENDENTS', str(binary)], 'runtime.txt')
         run(['dumpbin', '/HEADERS', str(binary)], 'binary-headers.txt')
+        (out / 'sdk-runtime.json').write_text(json.dumps({key: os.environ.get(key)
+            for key in ('VCToolsVersion', 'WindowsSDKVersion', 'UCRTVersion')}, indent=2) + '\n')
+        for product, directory in [('Format7zF', ROOT / 'CPP/7zip/Bundles/Format7zF'),
+                                   ('Console', ROOT / 'CPP/7zip/UI/Console')]:
+            run(build, product + '-build.log', directory)
+        product_dir = out / 'native-product'
+        product_dir.mkdir()
+        shutil.copy2(ROOT / 'CPP/7zip/UI/Console/x64/7z.exe', product_dir / '7z.exe')
+        shutil.copy2(ROOT / 'CPP/7zip/Bundles/Format7zF/x64/7z.dll', product_dir / '7z.dll')
+        run([str(product_dir / '7z.exe'), 'i'], 'native-product-capabilities.txt', product_dir)
+        run(['dumpbin', '/DEPENDENTS', str(product_dir / '7z.dll')], 'native-product-runtime.txt')
     else:
         compiler = 'gcc' if system == 'Linux' else 'clang'
         run([compiler, '--version'], 'compiler.txt')
         run(['make', '--version'], 'driver.txt')
         if system == 'Linux':
+            run(['getconf', 'GNU_LIBC_VERSION'], 'libc-version.txt')
+            run(['dpkg-query', '-W', 'gcc', 'g++', 'libstdc++6', 'libc6', 'binutils', 'make'], 'runtime-packages.txt')
             fragments = ['../../cmpl_gcc.mak']
         elif system == 'Darwin' and machine == 'arm64':
+            run(['sw_vers'], 'os-version.txt')
+            run(['xcrun', '--show-sdk-version'], 'sdk-version.txt')
+            run(['xcodebuild', '-version'], 'xcode-version.txt')
             fragments = ['../../cmpl_mac_arm64.mak']
         elif system == 'Darwin' and machine == 'x86_64':
             fragments = ['../../var_mac_x64.mak', '../../warn_clang_mac.mak', 'makefile.gcc']
@@ -72,7 +89,9 @@ def main():
         if (out / 'build').exists():
             raise RuntimeError('Fresh output required: do not claim cached objects as new compilation')
         run(build, 'build.log', BUNDLE)
-        run(build + ['-pn'], 'make-database.txt', BUNDLE)
+
+        run(build + ['-f', str(Path(__file__).with_name('native-inputs.mak')),
+                     'q1-inputs'], 'selected-make-inputs.txt', BUNDLE)
         binary = out / 'build/7zz'
         run((['ldd'] if system == 'Linux' else ['otool', '-L']) + [str(binary)], 'runtime.txt')
     run([str(binary), 'i'], 'capabilities.txt')
