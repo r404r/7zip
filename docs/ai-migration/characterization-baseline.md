@@ -30,6 +30,23 @@ or synthesized expected data):
 * [Linux extended oracle](../../.github/tests/oracles/linux-x86_64-extended.json):
   46 observed operations; another full invocation matched observations.
 
+Additional reports were downloaded from native CI run
+[34554685505](https://github.com/r404r/7zip/actions/runs/34554685505), exact head
+`adcf6ed719c07b89cc1d4f93af65b81e84582a4a` (no engine diff from the local oracle).
+Git normalizes JSON container CRLF to LF via the oracle directory's attributes;
+all captured JSON values are unchanged:
+
+* [Windows AMD64 core](../../.github/tests/oracles/windows-amd64-core.json):
+  Windows `10.0.26100`, MSVC `19.51.36256`, Python `3.11.9`.
+* [macOS arm64 core](../../.github/tests/oracles/macos-arm64-core.json):
+  Darwin `25.6.0`, Apple clang `21.0.0`, Python `3.11.9`.
+
+Both native jobs passed 41-operation capture/repeat and all three negative
+controls; Windows also passed existing filename code-page assertions. Ubuntu's
+job passed the checked-in Linux comparison. These are CLI-only results, not GUI
+or desktop evidence. Each platform now has its own frozen core comparison in CI;
+runner architecture drift fails closed rather than borrowing another oracle.
+
 These captures become approved baselines only after independent reviewer PASS.
 `commands` retain raw execution context apart from temporary-root substitution
 with `<TEMP>` and CRLF-to-LF conversion. Stable comparison uses `observations`,
@@ -126,11 +143,12 @@ All existing files and expectations are preserved:
 New [characterization-native.yml](../../.github/workflows/characterization-native.yml)
 builds native CLI on Ubuntu, macOS and Windows (MSVC x64, not Wine/cross-compile),
 runs capture and independent repeat, harness negative controls, Linux frozen
-baseline comparison, and native Windows encoding assertions. Artifacts retain
+and native Windows/macOS frozen baseline comparisons, and native Windows encoding
+assertions. Artifacts retain
 reports and build/toolchain logs even on failure. Extended Linux comparison is
-available via `workflow_dispatch` with `extended=true`. macOS/Windows capture and
-repeat alone are not frozen regression approval; reviewer must inspect native
-reports before establishing their baselines. Native run URLs and exact heads are
+available via `workflow_dispatch` with `extended=true`. Capture and repeat alone
+are not frozen regression approval; reviewer must inspect the committed native
+reports before approving their baselines. Native run URLs and exact heads are
 recorded in the task review handoff when available. Do not infer CI success merely
 from the existence of workflow YAML.
 
@@ -182,7 +200,7 @@ overwrite the expected file. These are test inputs, never golden evidence.
 
 Local build/report directory:
 `/home/ding/work/github/r404r/7zip/.worktrees/t_f4afeee1/.m1-artifacts/` (ignored).
-Durable evidence is the checked-in JSON pair, workflow artifacts and this document;
+Durable evidence is the four checked-in JSON reports, workflow artifacts and this document;
 review handoff records final commits and CI handles. Exact source checks/diff,
 negative-control results and remaining native risks belong in that handoff.
 No shared branch integration or release publication is performed by the author.

@@ -86,6 +86,16 @@ jobs:
         shell: bash
         run: python .github/tests/archive_characterization.py "$ORACLE_EXE" --report evidence/regression.json --expect .github/tests/oracles/linux-x86_64-core.json
 
+      - name: Compare native Windows baseline
+        if: runner.os == 'Windows'
+        shell: bash
+        run: python .github/tests/archive_characterization.py "$ORACLE_EXE" --report evidence/regression.json --expect .github/tests/oracles/windows-amd64-core.json
+
+      - name: Compare native macOS arm64 baseline
+        if: runner.os == 'macOS'
+        shell: bash
+        run: python .github/tests/archive_characterization.py "$ORACLE_EXE" --report evidence/regression.json --expect .github/tests/oracles/macos-arm64-core.json
+
       - name: Verify harness negative controls
         shell: bash
         run: python .github/tests/archive_characterization_test.py "$ORACLE_EXE" evidence/core.json
