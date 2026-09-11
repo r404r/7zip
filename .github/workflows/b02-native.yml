@@ -1,0 +1,63 @@
+name: b02-native
+
+on:
+  push:
+    branches: ['wt/t_7019eca0']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  b02:
+    name: B02 / ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 35
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUTF8: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Build unchanged and test-only entry point on Unix
+        if: runner.os != 'Windows'
+        shell: bash
+        run: python .github/tests/migration/b02/build.py "$RUNNER_TEMP/b02"
+      - name: Build unchanged and test-only entry point on Windows
+        if: runner.os == 'Windows'
+        shell: cmd
+        run: |
+          for /f "usebackq tokens=*" %%i in (`"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath`) do set "VSPATH=%%i"
+          if not defined VSPATH (echo Visual Studio with the C++ toolset was not found & exit /b 1)
+          call "%VSPATH%\VC\Auxiliary\Build\vcvars64.bat" || exit /b 1
+          python .github/tests/migration/b02/build.py "%RUNNER_TEMP%\b02"
+      - name: Capture real observations
+        shell: bash
+        run: python .github/tests/migration/b02/run.py "$RUNNER_TEMP/b02" --report "$RUNNER_TEMP/b02/capture.json"
+      - name: Repeat and reject negative controls
+        shell: bash
+        run: python .github/tests/migration/b02/run.py "$RUNNER_TEMP/b02" --report "$RUNNER_TEMP/b02/repeat.json" --expect "$RUNNER_TEMP/b02/capture.json"
+      - name: Validate source-backed relations and completeness
+        shell: bash
+        run: python .github/tests/migration/b02/validate.py "$RUNNER_TEMP/b02/capture.json"
+      - name: Verify immutable captured baseline bytes
+        shell: bash
+        run: python .github/tests/migration/b02/verify_frozen.py .github/tests/migration/b02/evidence/34559743445
+      - name: Upload native evidence even on failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: b02-${{ matrix.os }}-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/b02/*.json
+            ${{ runner.temp }}/b02/*.log
+            ${{ runner.temp }}/b02/fixtures/
+          if-no-files-found: error
