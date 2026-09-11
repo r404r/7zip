@@ -6,6 +6,7 @@ import json
 import os
 from pathlib import Path
 import platform
+import re
 import shutil
 import subprocess
 import sys
@@ -45,10 +46,10 @@ def run(command, directory, label, env=None):
 def parse(raw):
     result = {}
     for line in raw.decode('ascii').splitlines():
-        fields = line.split()
-        if len(fields) < 3 or fields[0] in result or fields[1] not in ('0', '1'):
+        match = re.fullmatch(r'([a-z_]+) ([01]) errno=(-?[0-9]+)(?: winerror=([0-9]+))?', line)
+        if match is None or match[1] not in INSIDE + OUTSIDE or match[1] in result:
             raise ValueError('invalid or duplicate probe record')
-        result[fields[0]] = fields[1] == '1'
+        result[match[1]] = match[2] == '1'
     return result
 
 
@@ -87,7 +88,8 @@ def sandbox_command(system, envelope, executable, source):
     raise RuntimeError('unsupported native platform: ' + system)
 
 
-def capture(destination):
+def capture(destination, run_command=None, observe=None, emit=True):
+    execute = run if run_command is None else run_command
     destination = destination.resolve()
     destination.mkdir(parents=True, exist_ok=False)
     source = Path(__file__).resolve().parent
@@ -115,13 +117,15 @@ def capture(destination):
                          str(source / 'probe.c'), '-o', 'probe']]
             executable = destination / 'probe'
         for index, command in enumerate(commands):
-            build = run(command, destination, 'build-' + str(index))
+            build = execute(command, destination, 'build-' + str(index))
             if build.returncode:
                 raise RuntimeError('native probe build failed: ' + str(build.returncode))
         report['executable_sha256'] = hashlib.sha256(executable.read_bytes()).hexdigest()
+        if observe is not None:
+            observe(destination, executable, report)
         if system == 'Windows':
             # A nonexistent envelope must fail at the ACL read, never launch.
-            rejection = run([destination / 'winlaunch.exe', destination / 'missing'],
+            rejection = execute([destination / 'winlaunch.exe', destination / 'missing'],
                             destination, 'launcher-rejection',
                             {'SystemRoot': os.environ['SystemRoot']})
             report['launcher_rejection_pass'] = (
@@ -155,15 +159,20 @@ def capture(destination):
                 # Same restrictions and mounts; only replace the probe argv with
                 # a fixed no-op to distinguish sandbox startup from probe work.
                 # Success here never changes the control gate.
-                startup = run(command[:-3] + ['/usr/bin/true'], destination, 'startup', env)
+                startup = execute(command[:-3] + ['/usr/bin/true'], destination, 'startup', env)
                 report['startup_returncode'] = startup.returncode
-            result = run(command, destination, label, env)
+                if startup.returncode:
+                    raise RuntimeError('startup failed; sandbox probe NOT launched')
+            result = execute(command, destination, label, env)
             report[label + '_returncode'] = result.returncode
             raw = result.stdout
             if system == 'Windows':
                 raw = (work / 'probe.log').read_bytes() if (work / 'probe.log').exists() else b''
                 (destination / (label + '.probe.log')).write_bytes(raw)
             report[label] = parse(raw)
+            if label == 'baseline' and (result.returncode != 0 or report[label] !=
+                    {name: True for name in INSIDE + OUTSIDE}):
+                raise RuntimeError('baseline failed; no sandbox launch')
             report[label + '_sentinel_sha256'] = {
                 name: hashlib.sha256((outside / name).read_bytes()).hexdigest() for name in OUTSIDE}
             if label == 'sandbox':
@@ -173,7 +182,8 @@ def capture(destination):
     except (OSError, RuntimeError, ValueError, subprocess.SubprocessError) as exc:
         report['failure'] = str(exc)
     (destination / 'report.json').write_text(json.dumps(report, indent=2) + '\n')
-    print(json.dumps(report, indent=2))
+    if emit:
+        print(json.dumps(report, indent=2))
     return 0 if report['controls_pass'] else 2
 
 

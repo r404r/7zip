@@ -6,9 +6,60 @@ import subprocess
 import sys
 import tempfile
 import json
+from unittest import mock
 
 
 class GateTest(unittest.TestCase):
+    def test_parser_rejects_malformed_or_duplicate_records(self):
+        import prerequisite as p
+        for raw in (b'create 1 garbage\n', b'unknown 1 errno=0\n',
+                    b'create 1 errno=0 trailing\n',
+                    b'create 1 errno=0\ncreate 0 errno=5\n'):
+            with self.subTest(raw=raw), self.assertRaises(ValueError):
+                p.parse(raw)
+
+    def test_failed_baseline_stops_before_any_sandbox(self):
+        import prerequisite as p
+        with tempfile.TemporaryDirectory() as tmp:
+            labels = []
+
+            def fixed_run(command, directory, label, env=None):
+                labels.append(label)
+                if label == 'build-0':
+                    (directory / 'probe').write_bytes(b'unit placeholder; never executed')
+                return subprocess.CompletedProcess(command, 1 if label == 'baseline' else 0, b'', b'')
+
+            with mock.patch.object(p.platform, 'system', return_value='Linux'), \
+                    mock.patch.object(p.subprocess, 'check_output', return_value='offline-test'):
+                self.assertEqual(p.capture(Path(tmp) / 'evidence', fixed_run, emit=False), 2)
+            self.assertEqual(labels, ['build-0', 'baseline'])
+
+    def test_startup_failure_stops_before_sandbox_probe(self):
+        import prerequisite as p
+        with tempfile.TemporaryDirectory() as tmp:
+            destination = Path(tmp) / 'evidence'
+            labels = []
+
+            def fixed_run(command, directory, label, env=None):
+                labels.append(label)
+                if label == 'build-0':
+                    (directory / 'probe').write_bytes(b'unit-test placeholder, never executed')
+                raw = b''
+                if label == 'baseline':
+                    raw = b''.join((name + ' 1 errno=0\n').encode() for name in p.INSIDE + p.OUTSIDE)
+                return subprocess.CompletedProcess(command, 1 if label == 'startup' else 0, raw, b'')
+
+            with mock.patch.object(p.platform, 'system', return_value='Linux'), \
+                    mock.patch.object(p, 'run', side_effect=fixed_run), \
+                    mock.patch.object(p.subprocess, 'check_output', return_value='offline-test'), \
+                    mock.patch('builtins.print'):
+                self.assertEqual(p.capture(destination), 2)
+            self.assertIn('startup', labels)
+            self.assertNotIn('sandbox', labels)
+            report = json.loads((destination / 'report.json').read_bytes())
+            self.assertEqual(report['startup_returncode'], 1)
+            self.assertFalse(report['controls_pass'])
+
     def test_diagnostic_native_run_remains_unqualified(self):
         import prerequisite as p
         evidence = Path(__file__).with_name('evidence') / '34572155278'
@@ -55,6 +106,7 @@ class GateTest(unittest.TestCase):
         self.assertTrue(p.controls_pass(local))
         self.assertFalse(local['hostile_execution_authorized'])
 
+    @unittest.skipUnless('--native' in sys.argv, 'explicit --native required; consumes native budget')
     def test_native_candidate_emits_fail_closed_report(self):
         with tempfile.TemporaryDirectory() as tmp:
             destination = Path(tmp) / 'evidence'
@@ -103,4 +155,6 @@ class GateTest(unittest.TestCase):
 
 
 if __name__ == '__main__':
+    if '--native' in sys.argv:
+        sys.argv.remove('--native')
     unittest.main()

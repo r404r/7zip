@@ -1,43 +1,58 @@
 name: b04-native
 
 on:
-  push:
-    branches: ['wt/t_2a64c953']
   workflow_dispatch:
+    inputs:
+      approved_sha:
+        description: Exact full commit that passed B04 pre-execution static review
+        required: true
+        type: string
 
 permissions:
   contents: read
 
+concurrency:
+  group: b04-approved-startup-diagnostic
+  cancel-in-progress: false
+
 jobs:
   prerequisite:
-    if: github.ref == 'refs/heads/wt/t_2a64c953'
-    name: B04 prerequisite candidate / ${{ matrix.os }}
+    if: >-
+      github.event_name == 'workflow_dispatch' &&
+      github.ref == 'refs/heads/wt/t_2a64c953' &&
+      github.run_attempt == 1 && github.sha == inputs.approved_sha &&
+      github.event.repository.private == false
+    name: B04 bounded startup diagnostic / ${{ matrix.os }}
     strategy:
       fail-fast: false
+      max-parallel: 1
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-24.04, windows-2025-vs2026, macos-26]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 10
     env:
       PYTHONDONTWRITEBYTECODE: '1'
       PYTHONUTF8: '1'
+      B04_APPROVED_SHA: ${{ inputs.approved_sha }}
+      B04_IMAGE: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           persist-credentials: false
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: '3.11'
       - name: Install Linux candidate without changing host security policy
         if: runner.os == 'Linux'
-        run: command -v bwrap || (sudo apt-get update && sudo apt-get install -y bubblewrap)
-      - name: Test candidate and capture controls on Unix (never archives)
+        run: command -v bwrap || timeout 60s bash -c 'sudo apt-get update && sudo apt-get install -y bubblewrap'
+      - name: Offline tests then one diagnostic on Unix (never archives)
         if: runner.os != 'Windows'
         shell: bash
         run: |
           python .github/tests/migration/b04/test_prerequisite.py
-          python .github/tests/migration/b04/prerequisite.py "$RUNNER_TEMP/b04"
-      - name: Test candidate and capture controls on Windows (never archives)
+          python .github/tests/migration/b04/test_diagnostic.py
+          python .github/tests/migration/b04/diagnostic.py
+      - name: Offline tests then one diagnostic on Windows (never archives)
         if: runner.os == 'Windows'
         shell: cmd
         run: |
@@ -45,16 +60,7 @@ jobs:
           if not defined VSPATH (echo Visual Studio with the C++ toolset was not found & exit /b 1)
           call "%VSPATH%\VC\Auxiliary\Build\vcvars64.bat" || exit /b 1
           python .github/tests/migration/b04/test_prerequisite.py || exit /b 1
-          python .github/tests/migration/b04/prerequisite.py "%RUNNER_TEMP%\b04"
-      - name: Retain raw prerequisite evidence even when candidate is rejected
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: b04-prerequisite-${{ matrix.os }}-${{ github.sha }}
-          path: |
-            ${{ runner.temp }}/b04/*.json
-            ${{ runner.temp }}/b04/*.stdout
-            ${{ runner.temp }}/b04/*.stderr
-            ${{ runner.temp }}/b04/*.log
-            ${{ runner.temp }}/b04/sandbox/candidate.sb
-          if-no-files-found: error
+          python .github/tests/migration/b04/test_diagnostic.py || exit /b 1
+          python .github/tests/migration/b04/diagnostic.py
+      # Logs only: no artifact upload, cache save or publication. The operator
+      # enforces one dispatch; run_attempt rejects reruns, not new dispatches.
