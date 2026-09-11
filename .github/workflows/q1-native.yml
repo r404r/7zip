@@ -26,13 +26,14 @@ jobs:
           python-version: '3.11'
       - name: Install exact Rust qualification toolchain
         shell: bash
-        run: rustup toolchain install 1.97.1 --profile minimal
+        run: rustup toolchain install 1.97.1 --profile minimal --component rustfmt --component clippy
       - name: Capture native Unix build
         if: runner.os != 'Windows'
         shell: bash
         run: |
           python3 docs/ai-migration/qualification/collect-native.py --output q1-evidence
           python3 docs/ai-migration/qualification/check-layout.py --output q1-evidence/layout
+          python3 docs/ai-migration/qualification/check-pins.py q1-evidence
       - name: Capture native Windows build
         if: runner.os == 'Windows'
         shell: cmd
@@ -41,7 +42,8 @@ jobs:
           if not defined VSPATH exit /b 1
           call "%VSPATH%\VC\Auxiliary\Build\vcvars64.bat" || exit /b 1
           python docs/ai-migration/qualification/collect-native.py --output q1-evidence || exit /b 1
-          python docs/ai-migration/qualification/check-layout.py --output q1-evidence/layout
+          python docs/ai-migration/qualification/check-layout.py --output q1-evidence/layout || exit /b 1
+          python docs/ai-migration/qualification/check-pins.py q1-evidence
       - name: Preserve evidence even on failure
         if: always()
         uses: actions/upload-artifact@v4
@@ -51,6 +53,7 @@ jobs:
             q1-evidence/*.txt
             q1-evidence/*.log
             q1-evidence/*.json
+            q1-evidence/*.tsv
             q1-evidence/layout/*.txt
             q1-evidence/layout/*.json
             q1-evidence/layout/*.log

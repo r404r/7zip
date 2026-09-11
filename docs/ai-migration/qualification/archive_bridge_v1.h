@@ -87,7 +87,7 @@ typedef struct archive_bridge_v1_value {
 } archive_bridge_v1_value;
 typedef struct archive_bridge_v1_property {
   uint32_t property_id;
-  uint32_t reserved;
+  uint32_t source_kind; /* 0 PROPVARIANT, 1 copied IArchiveGetRawProps */
   archive_bridge_v1_value value;
 } archive_bridge_v1_property;
 typedef struct archive_bridge_v1_scoped_property {

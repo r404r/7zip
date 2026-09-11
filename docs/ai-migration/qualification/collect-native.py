@@ -94,6 +94,31 @@ def main():
                      'q1-inputs'], 'selected-make-inputs.txt', BUNDLE)
         binary = out / 'build/7zz'
         run((['ldd'] if system == 'Linux' else ['otool', '-L']) + [str(binary)], 'runtime.txt')
+        for product, directory in [('Format7zF', ROOT / 'CPP/7zip/Bundles/Format7zF'),
+                                   ('Console', ROOT / 'CPP/7zip/UI/Console')]:
+            product_build = build[:-1] + ['O=' + str(out / product)]
+            run(product_build, product + '-build.log', directory)
+            run(product_build + ['-f', str(Path(__file__).with_name('native-inputs.mak')),
+                                 'q1-inputs'], product + '-make-inputs.txt', directory)
+        product_dir = out / 'native-product'
+        product_dir.mkdir()
+        shutil.copy2(out / 'Console/7z', product_dir / '7z')
+        shutil.copy2(out / 'Format7zF/7z.so', product_dir / '7z.so')
+        run([str(product_dir / '7z'), 'i'], 'native-product-capabilities.txt', product_dir)
+        run((['ldd'] if system == 'Linux' else ['otool', '-L']) +
+            [str(product_dir / '7z.so')], 'native-product-runtime.txt')
+    observer = product_dir / ('observe-formats.exe' if system == 'Windows' else 'observe-formats')
+    observer_source = str(Path(__file__).with_name('observe-formats.cpp'))
+    if system == 'Windows':
+        run(['cl', '/nologo', '/EHsc', '/W4', '/WX', '/std:c++17', '/I' + str(ROOT),
+             '/Fo' + str(product_dir / 'observe-formats.obj'), '/Fe' + str(observer),
+             observer_source, str(ROOT / 'CPP/7zip/Bundles/Format7zF/x64/7z.lib'),
+             'oleaut32.lib'], 'format-observer-build.log')
+    else:
+        run(['g++' if system == 'Linux' else 'clang++', '-std=c++17', '-Wall', '-Wextra',
+             '-Werror', '-I', str(ROOT), observer_source, str(product_dir / '7z.so'),
+             '-o', str(observer)], 'format-observer-build.log')
+    run([str(observer)], 'format-registry.tsv', product_dir)
     run([str(binary), 'i'], 'capabilities.txt')
     run(['python3' if system != 'Windows' else 'python',
          '.github/tests/archive_characterization.py', str(binary),
