@@ -1,0 +1,109 @@
+name: characterization-native
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      extended:
+        description: 'Also run >4 GiB and POSIX SIGINT probes on Linux'
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  characterization:
+    name: Characterization / ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUTF8: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Build native Unix CLI
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p evidence
+          uname -a > evidence/toolchain.txt
+          python --version >> evidence/toolchain.txt
+          cd CPP/7zip/Bundles/Alone2
+          case "$(uname -s)/$(uname -m)" in
+            Linux/*)
+              gcc --version >> "$GITHUB_WORKSPACE/evidence/toolchain.txt"
+              make -j2 -f ../../cmpl_gcc.mak O="$RUNNER_TEMP/characterization-cli" 2>&1 | tee "$GITHUB_WORKSPACE/evidence/build.log"
+              ;;
+            Darwin/arm64)
+              clang --version >> "$GITHUB_WORKSPACE/evidence/toolchain.txt"
+              make -j2 -f ../../cmpl_mac_arm64.mak O="$RUNNER_TEMP/characterization-cli" 2>&1 | tee "$GITHUB_WORKSPACE/evidence/build.log"
+              ;;
+            Darwin/x86_64)
+              clang --version >> "$GITHUB_WORKSPACE/evidence/toolchain.txt"
+              make -j2 -f ../../var_mac_x64.mak -f ../../warn_clang_mac.mak -f makefile.gcc O="$RUNNER_TEMP/characterization-cli" 2>&1 | tee "$GITHUB_WORKSPACE/evidence/build.log"
+              ;;
+            *) exit 1 ;;
+          esac
+          echo "ORACLE_EXE=$RUNNER_TEMP/characterization-cli/7zz" >> "$GITHUB_ENV"
+
+      - name: Build native Windows CLI
+        if: runner.os == 'Windows'
+        shell: cmd
+        run: |
+          mkdir evidence
+          for /f "usebackq tokens=*" %%i in (`"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath`) do set "VSPATH=%%i"
+          if not defined VSPATH (echo Visual Studio with the C++ toolset was not found & exit /b 1)
+          call "%VSPATH%\VC\Auxiliary\Build\vcvars64.bat" || exit /b 1
+          cl > evidence\toolchain.txt 2>&1
+          python --version >> evidence\toolchain.txt
+          pushd CPP\7zip\Bundles\Alone2
+          nmake /NOLOGO PLATFORM=x64 > "%GITHUB_WORKSPACE%\evidence\build.log" 2>&1 || exit /b 1
+          popd
+          echo ORACLE_EXE=%GITHUB_WORKSPACE%\CPP\7zip\Bundles\Alone2\x64\7zz.exe>> "%GITHUB_ENV%"
+
+      - name: Capture native legacy observations
+        shell: bash
+        run: python .github/tests/archive_characterization.py "$ORACLE_EXE" --report evidence/core.json
+
+      - name: Repeat against this runner's capture (not a reviewed golden)
+        shell: bash
+        run: python .github/tests/archive_characterization.py "$ORACLE_EXE" --report evidence/repeat.json --expect evidence/core.json
+
+      - name: Compare Linux baseline
+        if: runner.os == 'Linux'
+        shell: bash
+        run: python .github/tests/archive_characterization.py "$ORACLE_EXE" --report evidence/regression.json --expect .github/tests/oracles/linux-x86_64-core.json
+
+      - name: Verify harness negative controls
+        shell: bash
+        run: python .github/tests/archive_characterization_test.py "$ORACLE_EXE" evidence/core.json
+
+      - name: Preserve native Windows filename code-page assertions
+        if: runner.os == 'Windows'
+        shell: bash
+        run: python .github/tests/zip_name_encoding.py "$ORACLE_EXE"
+
+      - name: Extended Linux probes
+        if: runner.os == 'Linux' && inputs.extended == true
+        shell: bash
+        run: python .github/tests/archive_characterization.py "$ORACLE_EXE" --large --cancel --report evidence/extended.json --expect .github/tests/oracles/linux-x86_64-extended.json
+
+      - name: Upload actual reports and build provenance even on failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: characterization-${{ matrix.os }}-${{ github.sha }}
+          path: evidence/
+          if-no-files-found: error

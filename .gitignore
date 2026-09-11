@@ -6,3 +6,4 @@
 /.env.*
 /auth.json
 __pycache__/
+/.m1-artifacts/
