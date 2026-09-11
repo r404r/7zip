@@ -4,12 +4,6 @@ name: b03-native
 on:
   push:
     branches: ['wt/t_bf92ce13']
-  workflow_dispatch:
-    inputs:
-      reviewed_sha:
-        description: 'Exact commit with independently recorded preflight-plan PASS'
-        required: true
-        type: string
 
 permissions:
   contents: read
@@ -24,7 +18,10 @@ jobs:
           python-version: '3.11'
       - run: python .github/tests/migration/b03/test_preflight.py -v
   b03:
-    if: github.event_name == 'workflow_dispatch' && github.run_attempt == 1 && inputs.reviewed_sha == github.sha
+    # Immutable service run counter, not a reusable opt-in marker. Never advance
+    # this slot on failure. Review the exact HEAD on Kanban BEFORE the sole push.
+    needs: offline
+    if: github.repository == 'r404r/7zip' && github.event_name == 'push' && github.ref == 'refs/heads/wt/t_bf92ce13' && github.run_number == 4 && github.run_attempt == 1 && github.event.before == '500eecdb435d03580ca8f640f72becfb617bff02'
     name: B03 preflight / ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -35,7 +32,10 @@ jobs:
     env:
       PYTHONDONTWRITEBYTECODE: '1'
       PYTHONUTF8: '1'
-      B03_REVIEWED_SHA: ${{ inputs.reviewed_sha }}
+      # Review attestation is external (exact Kanban PASS + pre-push comparison),
+      # not established by this assignment. Keep checkout/build/probe bound.
+      B03_REVIEWED_SHA: ${{ github.sha }}
+      B03_PUSH_BEFORE: ${{ github.event.before }}
     steps:
       - uses: actions/checkout@v4
         with:

@@ -19,7 +19,11 @@ from run import HERE, STAMP, command, digest, fs_info, inventory, sparse
 
 def check_gate(env, system):
     assert system in ('Windows', 'Darwin'), 'Windows/macOS preflight only'
-    assert env.get('GITHUB_EVENT_NAME') == 'workflow_dispatch', 'Explicit dispatch required'
+    assert env.get('GITHUB_EVENT_NAME') == 'push', 'Controlled task-branch push required'
+    assert env.get('GITHUB_REPOSITORY') == 'r404r/7zip', 'Original repository required'
+    assert env.get('GITHUB_REF') == 'refs/heads/wt/t_bf92ce13', 'Original task branch required'
+    assert env.get('GITHUB_RUN_NUMBER') == '4', 'Only the fixed first preflight slot is allowed'
+    assert env.get('B03_PUSH_BEFORE') == '500eecdb435d03580ca8f640f72becfb617bff02', 'Unexpected push predecessor'
     assert env.get('GITHUB_RUN_ATTEMPT') == '1', 'Native preflight rerun forbidden'
     sha = env.get('B03_REVIEWED_SHA', '')
     assert re.fullmatch('[0-9a-f]{40}', sha), 'Exact reviewed commit required'
@@ -46,6 +50,7 @@ def main():
                   platform=platform.platform(), locale=locale.setlocale(locale.LC_ALL, None),
                   timezone=list(time.tzname), sandbox=str(sandbox),
                   run_id=os.environ.get('GITHUB_RUN_ID'), run_attempt=os.environ.get('GITHUB_RUN_ATTEMPT'),
+                  run_number=os.environ.get('GITHUB_RUN_NUMBER'), push_before=os.environ.get('B03_PUSH_BEFORE'),
                   harness_sha256={p.name: digest(p) for p in HERE.glob('*.py')})
     try:
         result['filesystem'] = fs_info(sandbox)

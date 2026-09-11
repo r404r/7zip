@@ -48,9 +48,23 @@ class TailTests(unittest.TestCase):
                 self.assertEqual(calls[-1], ['hdiutil', 'detach', str(root)])
                 self.assertEqual(record['detached'], not still_mounted)
 
-    def test_workflow_contains_no_full_capture_or_push_native_entry(self):
+    def test_workflow_contains_only_single_slot_push_native_entry(self):
         workflow = (Path(__file__).resolve().parents[3] / 'workflows/b03-native.yml').read_text()
-        self.assertIn("if: github.event_name == 'workflow_dispatch' && github.run_attempt == 1 && inputs.reviewed_sha == github.sha", workflow)
+        native = workflow.split('  b03:\n', 1)[1]
+        condition = next(line.strip()[4:] for line in native.splitlines() if line.startswith('    if: '))
+        # Validate the actual job expression, not loose substrings which could
+        # survive an added OR or a guard accidentally moved to another job.
+        self.assertEqual(condition.split(' && '), [
+            "github.repository == 'r404r/7zip'", "github.event_name == 'push'",
+            "github.ref == 'refs/heads/wt/t_bf92ce13'", 'github.run_number == 4',
+            'github.run_attempt == 1',
+            "github.event.before == '500eecdb435d03580ca8f640f72becfb617bff02'"])
+        self.assertIn('    needs: offline\n', native)
+        self.assertIn('      B03_PUSH_BEFORE: ${{ github.event.before }}\n', native)
+        self.assertIn('      B03_REVIEWED_SHA: ${{ github.sha }}\n', native)
+        self.assertIn("    branches: ['wt/t_bf92ce13']\n", workflow)
+        self.assertIn('permissions:\n  contents: read\n', workflow)
+        self.assertNotIn('workflow_dispatch:', workflow)
         self.assertNotIn('/run.py ', workflow)
         self.assertNotIn('/freeze.py ', workflow)
         self.assertIn('os: [macos-latest, windows-latest]', workflow)
@@ -74,13 +88,26 @@ class TailTests(unittest.TestCase):
 
     def test_execution_gate_rejects_unreviewed_and_rerun(self):
         import preflight
-        good = dict(GITHUB_EVENT_NAME='workflow_dispatch', GITHUB_RUN_ATTEMPT='1',
+        good = dict(GITHUB_EVENT_NAME='push', GITHUB_RUN_ATTEMPT='1',
+                    GITHUB_RUN_NUMBER='4', GITHUB_REPOSITORY='r404r/7zip',
+                    GITHUB_REF='refs/heads/wt/t_bf92ce13',
+                    B03_PUSH_BEFORE='500eecdb435d03580ca8f640f72becfb617bff02',
                     GITHUB_SHA='a' * 40, B03_REVIEWED_SHA='a' * 40)
         preflight.check_gate(good, 'Windows')
-        for key, value in [('GITHUB_EVENT_NAME', 'push'), ('GITHUB_RUN_ATTEMPT', '2'),
-                           ('B03_REVIEWED_SHA', 'b' * 40)]:
-            with self.assertRaises(AssertionError):
+        preflight.check_gate(good, 'Darwin')
+        for key, value in [('GITHUB_EVENT_NAME', 'workflow_dispatch'), ('GITHUB_RUN_ATTEMPT', '2'),
+                           ('GITHUB_RUN_NUMBER', '3'), ('GITHUB_RUN_NUMBER', '5'),
+                           ('GITHUB_REPOSITORY', 'other/7zip'),
+                           ('GITHUB_REF', 'refs/heads/dev-main'),
+                           ('B03_PUSH_BEFORE', 'a' * 40),
+                           ('B03_REVIEWED_SHA', 'b' * 40), ('GITHUB_SHA', 'bad')]:
+            with self.subTest(key=key, value=value), self.assertRaises(AssertionError):
                 preflight.check_gate(dict(good, **{key: value}), 'Windows')
+        for key in good:
+            missing = dict(good)
+            del missing[key]
+            with self.subTest(missing=key), self.assertRaises(AssertionError):
+                preflight.check_gate(missing, 'Windows')
         with self.assertRaises(AssertionError):
             preflight.check_gate(good, 'Linux')
 
