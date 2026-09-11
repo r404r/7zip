@@ -188,3 +188,37 @@ approval policy. The same B2 card now runs the inspectable, committed file
 The file has no network/filesystem writes or credentials. Tester and reviewer
 execute it independently. No approval setting is weakened and no second Telegram
 confirmation is needed after the actual source-verified reply is recorded.
+
+## Telegram presentation language
+
+Default and five worker configs set the supported `display.language: zh`.
+Their SOUL.md policies and the repository AGENTS.md require concise Simplified
+Chinese for Telegram explanations, approval questions, status/review/failure
+summaries and recommendations. Preserve identifiers and raw errors exactly; use
+`中文解释:` and `原始信息:` when presenting evidence. Keep repository artifacts
+English. Existing sanitized or shortened excerpts stay labelled as excerpts.
+
+Hermes v0.21.1 upstream 8068c094 hardcodes passive Kanban notification prose. The
+installed local formatter change is captured, including regression tests, in
+`scripts/ai-migration/hermes-telegram-zh.patch`. It applies only to Telegram with
+the Chinese locale; other channels, event payloads, cursors, notify+wake handoffs,
+review outcomes and security policies retain their existing behavior.
+
+Before an intentional Hermes update, back up and inspect this local change. Check
+whether upstream provides equivalent support; otherwise rebase the small patch
+and rerun the canonical tests before reloading the gateway. Never blindly apply
+it to another version or overwrite upstream changes. Original formatter backup:
+`~/.hermes/backups/archive-migration-language-20260911T020157Z/`; six pre-language
+config/persona backups: `~/.hermes/backups/archive-migration-language-policy-20260911T020245Z/`.
+
+Validation used a temporary test venv, leaving runtime dependencies unchanged:
+
+```sh
+HERMES_PYTHON=/tmp/hermes-language-tests-20260911/bin/python scripts/run_tests.sh -j 2 tests/gateway/test_kanban_telegram_language.py tests/gateway/test_kanban_notifier.py tests/gateway/test_kanban_changes_requested_notifier.py tests/gateway/test_kanban_wake_acceptance.py tests/gateway/test_kanban_wake_scope.py tests/gateway/test_kanban_notifier_wake_only_ordering.py
+```
+
+Run from the Hermes installation; recreate a compatible temporary test environment
+if that temporary path has expired. Result: 35 passed, zero failed. The real
+Chinese model response and Telegram send also passed. Locale is cached per process,
+so the gateway was gracefully restarted once to load it; independent worker scopes
+continued. Future reloads must first inspect active worker ownership and scope.

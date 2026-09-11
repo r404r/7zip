@@ -1,5 +1,24 @@
 # Autonomous archive migration engineering
 
+## Human-facing language
+
+Telegram-facing explanations, status notifications, BLOCKED/TRIAGE details,
+approval requests, progress/review reports, failures, recommendations and human
+decision questions default to concise, professional Simplified Chinese. Use that
+language for human-facing Kanban summaries and reasons as well.
+
+Preserve task IDs, branch/profile names, filenames/paths, Rust/C/C++ identifiers,
+API/command names, enum values, Kanban state tokens and CI job names exactly.
+Use Chinese plus the original technical term where useful. Never translate raw
+compiler/shell errors, CI output, stack traces or important log excerpts: present
+the explanation under `中文解释:` and unchanged evidence under `原始信息:`. Label
+existing redacted/truncated excerpts honestly; do not duplicate or alter evidence.
+
+Keep repository artifacts primarily English: this file, source/comments,
+architecture documents, ADRs, CI configuration and commit messages. This is only
+a presentation policy; migration semantics, acceptance criteria, Kanban behavior,
+security and execution policies are unchanged.
+
 ## Principle and direction
 
 This is an incremental **strangler migration**, never a whole-repository rewrite

@@ -1,154 +1,181 @@
-# Bootstrap report — Telegram verified, migration release prepared
+# Bootstrap report — complete
 
-Status as of 2026-09-11: Telegram verification has passed. The real authorized
-reply, independent tester/reviewer execution, and durable completion delivery
-are verified. M0 is prepared behind G0; the bootstrap operator is releasing that
-gate next. No further credential, configuration editing, or human reply is needed.
+Verified 2026-09-11: **bootstrap is complete and autonomous migration is active**.
+G0 is DONE; M0 `t_48d08249` is RUNNING under architect in an isolated worktree.
+The persistent gateway dispatches eligible descendants through independent review.
+No additional bootstrap credentials, manual configuration or approval are needed.
 
-## Discovered and changed
+## Discovered and preserved
 
-- Clean 7-Zip 26.03 fork on `dev-main`, original commit
-  `143e2c5dd24d084614ba32017a72d822cd2bea75`; source and user work preserved.
-- Created local baseline tag `legacy-win32-pre-rust-migration` without overwriting
-  any tag; created and pushed review branch `ai/migration-bootstrap-20260911`.
-  Shared `dev-main` is unchanged. No release tags or releases were pushed.
-- Installed repository AGENTS.md, ignored local worktrees/private runtime paths,
-  and committed governance before the first isolated worktree task started.
-- Configured Hermes `openai-codex` / `gpt-6-astra` using valid existing Codex login;
-  retained unrelated configuration and existing profiles. Created five specialist
-  profiles with separate role contexts and supported root credential fallback.
-- Created dedicated board, real dependency links, bounded retries, independent
-  review policy, single embedded dispatcher and a persistent user systemd service.
-- Added native Linux/macOS retained-CLI CI and temporary smoke fixtures. Preserved
-  existing Windows workflow byte-for-byte. No C/C++/Rust production file changed.
+Repository: `/home/ding/work/github/r404r/7zip`, a C/C++ 7-Zip 26.03 fork with
+Win32 desktop/shell code and existing portable CLI makefiles. Initial working
+tree was clean on `dev-main`, commit `143e2c5dd24d084614ba32017a72d822cd2bea75`.
+The shared branch and legacy source baseline are preserved. Local baseline tag
+`legacy-win32-pre-rust-migration` points to that commit; no tag was overwritten.
 
-## Verified runtime
+GCC/G++ 15.2 and Rust 1.97.1 are installed. Qt 6, CMake, Ninja and Clang are not
+locally available; they are later architecture/build prerequisites, not blockers
+for current archaeology or the retained GCC CLI. No GUI framework was changed.
 
-| Check | Evidence/status |
+## Changes and verified runtime
+
+| Item | Actual result |
 | --- | --- |
-| Hermes | v0.21.1 (2026.9.7), upstream `8068c094` |
-| Codex CLI | 0.154.0; authenticated with ChatGPT |
-| Provider | Real default request returned HERMES_CODEX_BOOTSTRAP_OK |
-| Profiles | orchestrator, architect, coder, tester, reviewer each passed its own real model request |
-| Config | Installed structure validator passed; configured keys traced to installed code |
-| Gateway | hermes-gateway.service active/running, enabled, Restart=always |
-| Logout/boot persistence | Linger=yes; enabled without sudo; no physical reboot test performed |
-| Dispatcher | Gateway logs show singleton lock, 60-second loop and actual worker/reviewer dispatch |
-| Concurrency | Two total across boards; one per profile on migration board; other board empty |
-| Kanban database | SQLite integrity_check=ok; foreign_key_check empty; no active diagnostics |
-| Worktree/review | B1 `t_181faa42` DONE after actual coder execution and separate reviewer PASS |
-| Telegram | Bot/chat/polling/outbound and durable blocked-event delivery verified; seven notify+wake subscriptions; real incoming reply, B2 independent PASS and completion delivery verified |
-| Production migration | Not started; no codec or encryption rewrite |
+| Repository governance | AGENTS.md committed in automation base before worktrees; strangler strategy, compatibility oracle, safety, review and escalation policies |
+| Git | Review branch `ai/migration-bootstrap-20260911`, [draft PR #1](https://github.com/r404r/7zip/pull/1); no shared-branch merge or release |
+| Hermes version | v0.21.1 (2026.9.7), upstream `8068c094` |
+| Codex version | codex-cli 0.154.0; existing ChatGPT login reused without changing Codex auth |
+| Provider/model | Supported `openai-codex` / `gpt-6-astra`; real default model request passed |
+| Profiles | orchestrator, architect, coder, tester, reviewer; each passed a real model request; separate roles/session contexts |
+| Authentication | Private root Hermes auth imported via installed helper; new workers use supported provider-state fallback; existing profiles preserved |
+| Gateway | Single default `hermes-gateway.service`, active/running, enabled, Restart=always |
+| Persistence | User systemd with Linger=yes, enabled without sudo; physical reboot not performed |
+| Dispatcher | Embedded singleton, 60-second loop, actual task and reviewer dispatch observed |
+| Concurrency/retries | Two total workers across boards; one per profile on migration board; two-failure bounds, two-hour milestone runtime caps |
+| Kanban | Dedicated archive-rust-migration board; integrity_check=ok, foreign keys clean, correct prerequisite DAG |
+| Telegram | getMe/getChat/direct send/polling verified; owner accepted, unlisted sender rejected; real incoming confirmation recorded |
+| Access control | Private owner/chat allowlist, public flags false, groups disabled, unknown DMs ignored; worker env files lack bot credentials |
+| Notifications | Seven existing cards subscribed through durable default-owned notify+wake; blocked, completion and G0 delivery verified |
+| Worktree proof | B1 executed by coder and independently repeated by reviewer; DONE without file changes |
+| Production scope | No production codec/encryption/GUI rewrite started; M0 is source archaeology only |
 
-B1 actually created an isolated worktree based on committed governance, read
-AGENTS.md, ran the existing release-version regression script (zero failures),
-checked clean status and diffs, and requested the reviewer. The separate reviewer
-repeated those checks and completed the card. Both runs and command/result
-metadata are durable in Kanban. No files were changed by this smoke.
+Existing Hermes model/provider settings outside the requested default change were
+preserved. Config was inspected, backed up and merged; installed validation passed.
+No global or profile execution-approval setting was weakened. Comparison against
+the pre-role tester config confirmed approval/security/terminal/agent sections
+remain unchanged. Token, allowlist and gateway were not reconfigured after the
+operator's later instruction to preserve the verified connection. A later graceful
+service restart loaded only the requested presentation-language change; Telegram
+credentials, routing and access controls remained unchanged.
 
-An independent read-only bootstrap audit checked policy keys, gate behavior, DAG,
-worktree base, service and database. It identified and prompted documentation of
-initial-block promotion, archived-prerequisite satisfaction and current-HEAD
-worktree creation. These safeguards are now explicit in AGENTS.md and role prompts.
+## B2 repair and end-to-end evidence
 
-## Initial DAG and current state
+The same B2 card `t_d905f0a0` was retained throughout. Initially the real incoming
+Telegram `bootstrap-confirm` resolved its human-message gate. Its inline Python
+and execute_code attempts were then rejected before execution by the installed
+single-query approval policy. The existing two-cycle block guard routed it to
+TRIAGE. No successful result was claimed for either rejected attempt.
 
-| Card | ID | Assignee | State / prerequisite |
+The narrow repair was the committed, inspectable 14-line
+`scripts/ai-migration/telegram-probe.py` at `d76f778`. It contains only an optimize
+flag guard, the exact harmless arithmetic assertion and its result message. It has
+no credentials, network access, archive operations or filesystem writes. The
+existing policy already permitted ordinary script-file execution; no permission
+change or extra approval transport was necessary.
+
+Tester run **8** and independent reviewer run **9** each read the script and ran:
+
+```sh
+python3 -B /home/ding/work/github/r404r/7zip/scripts/ai-migration/telegram-probe.py
+```
+
+Both exited **0**, with `PASS: 2 + 2 == 4 (assertions enabled)`. Reviewer PASS
+completed B2. The verified real incoming Telegram message is durable record **19**,
+with a platform message ID and authorized source matching the private allowlist;
+it predates the reviewer run. Synthetic notify+wake messages were explicitly
+excluded from this proof. No private user ID or token is included here.
+
+B2 completed event **60** belongs to reviewer run **9**. Both `last_event_id` and
+`last_ping_event_id` covered event 60, verifying notify/wake and passive delivery.
+G0 then completed as event **61**, also covered by both notification cursors.
+The live systemd PID matched gateway runtime state with Telegram connected.
+
+An independent read-only audit confirmed authorization, private permissions,
+worker credential isolation, subscriptions, polling and no fatal service errors.
+Possible duplicate-send warnings were observed; delivery is not claimed to be
+exactly once. `kanban.done_sub_retention_days: 0` prevents a long-paused human gate
+from silently losing its subscription after the installed default 30-day expiry.
+
+## Initial DAG and actual task state
+
+| Card | ID | Assignee | State at verification |
 | --- | --- | --- | --- |
-| G0 bootstrap/Telegram activation | `t_5f1b2423` | orchestrator | BLOCKED, durable needs_input event |
-| M0 repository archaeology | `t_48d08249` | architect | TODO, waiting only on G0 |
+| G0 bootstrap gate | `t_5f1b2423` | orchestrator | DONE, all prerequisites verified |
+| M0 archaeology | `t_48d08249` | architect | RUNNING, worker run 11 |
 | M1 characterization | `t_f4afeee1` | tester | TODO, depends on reviewed M0 |
 | M2 target architecture | `t_db8ffe0b` | architect | TODO, depends on reviewed M0 |
 | M3 detailed migration DAG | `t_82c76197` | orchestrator | TODO, depends on BOTH reviewed M1 and M2 |
-| B1 worktree/review probe | `t_181faa42` | reviewer | DONE, independent PASS |
-| B2 Telegram lifecycle probe | `t_d905f0a0` | reviewer | DONE, independent PASS and completion delivered |
+| B1 worktree/review test | `t_181faa42` | reviewer | DONE, independent PASS |
+| B2 Telegram lifecycle test | `t_d905f0a0` | reviewer | DONE, independent PASS and notification verified |
 
-First migration task: **M0 `t_48d08249`**, fully specified and awaiting the Telegram
-bootstrap gate. M0–M3 have not run. G0 was initially promoted because a bare
-initial blocked status is not sticky in this installed version; its worker
-correctly recorded a needs_input block without releasing migration. Subsequent
-dispatcher ticks and the independent audit confirmed the gate holds. Never
-archive a blocked gate or unreviewed prerequisite to bypass it.
+First migration task: **M0 t_48d08249**, branch `ai/migration-m0`, worktree
+`/home/ding/work/github/r404r/7zip/.worktrees/t_48d08249`, based on committed
+bootstrap `d1fcc44`. Its log shows actual AGENTS.md/source inspection. M0's acceptance
+criteria require four architecture/boundary/risk documents and independent review.
+No broad production implementation is authorized before reviewed archaeology,
+characterization and architecture. M3 creates actual remaining cards gated on its
+own review; subsequent production work follows the existing DAG and AGENTS.md.
 
-All milestone cards use isolated Git worktrees/branches, require review, specify
-non-scope/acceptance/evidence and have two-failure bounds and two-hour runtime caps.
-M3 will create actual remaining cards only after reviewed M1/M2, and those cards
-must depend on M3's review. Review CHANGES returns the same card to its implementer.
+## Builds, tests and Git safety
 
-## Validation and Git evidence
+The retained CLI built locally with GCC/G++ 15.2. Temporary 7z/ZIP
+create/list/test/extract smoke passed, including Unicode paths and exact bytes;
+six existing portable checks passed. Genuine native CI passed on Linux/macOS and
+Windows at `7e4ec5a`, and again at governance/docs commit `a9a25a9`:
+[Linux/macOS run 34549555370](https://github.com/r404r/7zip/actions/runs/34549555370),
+[Windows run 34549555271](https://github.com/r404r/7zip/actions/runs/34549555271).
+The existing Windows workflow is unchanged and its branch release job was skipped.
+Later Telegram/bootstrap documentation and probe commits do not change the legacy
+engine or tested build recipe; their exact CI status is available on the draft PR.
+These are legacy build/smoke results, not proof of a migrated Qt/Rust desktop.
 
-Retained CLI built locally with GCC/G++ 15.2; 7z and ZIP create/list/test/extract
-smoke passed, including nested Unicode paths and exact bytes. Six existing
-portable checks passed. At infrastructure commit
-`7e4ec5a0a13976ab7d5a89cc0cc43b7451a443dd`, genuine
-[Linux/macOS CI](https://github.com/r404r/7zip/actions/runs/34548991963) and
-[Windows MSVC/CI](https://github.com/r404r/7zip/actions/runs/34548991981) passed.
-The Windows release job was skipped. This is legacy CLI/build/regression evidence,
-not proof of migrated Qt/Rust desktop compatibility. See the
-[CI validation plan](ci-validation-plan.md) for exact commands and coverage limits.
+Known-secret scans passed on changed artifacts, including the supplied bot token.
+Credentials and runtime state remain outside Git with restrictive permissions.
+Only explicit infrastructure/docs/probe paths were committed; unrelated work was
+preserved. Branch push authentication was exercised; no force push, shared merge,
+legacy deletion or release occurred.
 
-GitHub read and branch-push authentication were exercised successfully. The
-review branch holds the committed infrastructure; the original shared branch and
-legacy implementation are preserved. Final documentation changes are additive.
-The changed-file scan against known local credential material passed without
-printing secrets. All changed paths are governance, documentation, ignores or
-the new CI/smoke infrastructure; legacy source and existing CI have zero diff.
+## Telegram presentation-language verification
+
+Default and all five migration profiles now use `display.language: zh` and an
+English role-policy instruction requiring concise Simplified Chinese for human-facing
+Telegram prose. Repository engineering artifacts remain English. Identifiers and
+raw technical evidence are preserved; existing sanitized/truncated excerpts are
+explicitly labelled. AGENTS.md carries the policy for future worktrees.
+
+This Hermes version hardcodes passive Kanban messages in English. A small local
+formatter patch adds Chinese only for Telegram with the Chinese locale, leaving
+other platforms, payloads, wake handoffs, routing, cursors and execution controls
+unchanged. The reproducible patch and its two regression tests are preserved in
+`scripts/ai-migration/hermes-telegram-zh.patch`. Revalidate this local patch after
+an intentional Hermes update; it is not an upstream-supported locale extension.
+
+The canonical Hermes runner passed **35 tests across six files**, covering language,
+unchanged evidence/disclosure bounds, notification deduplication and notify+wake
+routing/acceptance. A real default model response followed the Chinese policy.
+One harmless Chinese test message was actually sent through `hermes send` (exit 0).
+No new inbound reply was demanded: the existing genuine Telegram record 19 remains
+the inbound proof. After graceful reload, systemd and gateway PID **515959** matched,
+Telegram was connected, dispatcher logged its 60-second loop, and M0's existing
+worker continued. All six parsed configs differ from the pre-language backups only
+in display.language; model/security/execution/Telegram/Kanban settings are intact.
 
 ## Private backups
 
-- `~/.hermes/backups/archive-migration-20260911T005519Z/`: original default config,
-  env and persona; existing profile configs; initial new-profile configs/env/personas.
-- `~/.hermes/backups/archive-migration-role-audit-20260911T010610Z/`: role prompts
-  before audit safeguards were added.
-- `~/.hermes/backups/archive-migration-telegram-20260911T014012Z/`: private env,
-  config and coordinator persona before Telegram activation.
-- `~/.hermes/backups/archive-migration-notify-retention-20260911T014535Z/`: config
-  before disabling age-based expiry of blocked-task subscriptions.
+All are under `~/.hermes/backups/`, outside Git, with 0700 directories and 0600 files:
 
-Backup directories are 0700 and files 0600. Secret-containing runtime files are
-0600. The default had no auth.json before import; existing Codex and preexisting
-profile credentials were not overwritten. Backups and credentials are outside Git.
+- `archive-migration-20260911T005519Z`: original default config/env/persona,
+  existing profile configs and initial new-profile config/env/persona.
+- `archive-migration-role-audit-20260911T010610Z`: role prompts before audit fixes.
+- `archive-migration-telegram-20260911T014012Z`: config/env/coordinator before activation.
+- `archive-migration-notify-retention-20260911T014535Z`: config before retention change.
+- `archive-migration-active-20260911T015656Z`: coordinator before active-operation handoff.
+- `archive-migration-language-policy-20260911T020245Z`: default and five profile
+  config/persona files before the Chinese presentation policy.
+- `archive-migration-language-20260911T020157Z`: installed notifier before localization.
 
-## Remaining work requiring external input
+## Remaining limitations and human action
 
-Credentials are configured. The bot sent a one-time `bootstrap-confirm` prompt to
-the already reachable private conversation. No manual configuration editing or
-additional setup permission is required. The actual reply was received and independently source-checked by the gateway.
-No further human interaction is needed for this bootstrap verification.
-
-B2's real authorized reply, execution, independent PASS and completion delivery
-are verified. The bootstrap operator will now complete G0 and release M0.
-The persistent dispatcher will continue eligible work with independent review.
-
-Qt 6, CMake, Ninja and Clang are not installed locally; they are later build/GUI
-prerequisites and do not block current archaeology or the GCC legacy CLI. Major
-architecture or compatibility decisions remain human gates. The per-profile cap
-is board-local, semantic review retry counting is role-enforced, and worktree
-creation relies on the source checkout staying on the automation base branch.
+No bootstrap action remains for the operator. Semantic ambiguity, encryption,
+compatibility/data-loss risk, unclear licensing, major architecture changes and
+release/publication still require the explicit human escalation policy. The
+per-profile running cap is board-local; semantic review retry counting is
+role-enforced. Keep the source checkout on the automation base because Hermes
+creates worktrees from its current HEAD. Never archive an unresolved prerequisite:
+Hermes treats archived parents as satisfied. An initial blocked status alone is
+not a durable gate; record a real typed block event.
 
 Recovery/reference: [HERMES-RUNBOOK.md](HERMES-RUNBOOK.md).
-Environment details: [environment-inventory.md](environment-inventory.md).
-Runtime details: [hermes-runtime.md](hermes-runtime.md).
-
-## Telegram verification details
-
-The real standalone bootstrap-confirm reached the default Telegram session and
-was checked against the configured single-user allowlist. Synthetic notification
-wakes were explicitly rejected as user evidence. The probe exposed two installed
-behaviors: replaying a second same-kind block enters triage; inline Python requires
-approval unavailable in single-query workers. The bootstrap operator preserved the
-same card/history and prepared the committed, side-effect-free
-`scripts/ai-migration/telegram-probe.py` for ordinary file execution. No security
-setting was weakened. Tester and reviewer both executed it successfully before PASS.
-
-All seven existing cards have durable default-owned notify+wake subscriptions.
-Both public-access flags are false; DMs are restricted to the operator/private
-chat, groups disabled, and unknown DMs ignored. Owner acceptance and stranger
-rejection were tested against the actual configured adapter. Notification expiry
-is disabled via supported done_sub_retention_days=0. Possible duplicate-send
-warnings occurred; delivery is not claimed to be exactly once.
-
-Final verification correlated real incoming message record 19 with later reviewer
-run 9 and completion event 60. Both last_event_id and last_ping_event_id covered
-event 60. The gateway state matched the live systemd PID and reported connected
-Telegram polling. These identifiers contain no credentials or private user IDs.
+Environment: [environment-inventory.md](environment-inventory.md).
+Runtime: [hermes-runtime.md](hermes-runtime.md).
+CI coverage: [ci-validation-plan.md](ci-validation-plan.md).

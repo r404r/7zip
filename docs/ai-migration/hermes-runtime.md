@@ -128,11 +128,28 @@ A second private role-prompt backup was created before audit safeguards:
 Final validation passed for all six configuration structures and runtime secret
 permissions. B1 t_181faa42 completed after independent reviewer PASS. A Telegram
 activation backup is at `~/.hermes/backups/archive-migration-telegram-20260911T014012Z/`.
-B2 is DONE after end-to-end confirmation. G0 is ready for operator completion;
-M0 has a prepared isolated worktree containing the committed governance.
+B2 and G0 are DONE after end-to-end confirmation. M0 is RUNNING under architect
+in its isolated worktree at bootstrap base d1fcc44, with committed AGENTS.md.
+B2 completed event 60 (review run 9) and G0 completed event 61 were both delivered
+with notify+wake and confirmed through both durable cursors. Real authorized
+incoming message record 19 precedes the independent review.
 
 Independent Telegram audit verified private permissions, worker credential
 isolation, all seven durable subscriptions, healthy polling, and no fatal errors.
 The supported done_sub_retention_days=0 disables automatic 30-day expiry of inactive
 blocked subscriptions; explicit archive cleanup is retained. Possible duplicate
 send warnings were observed, so delivery is not claimed to be exactly once.
+
+## Human-facing language
+
+Default, orchestrator, architect, coder, tester and reviewer use `display.language:
+zh`, with role instructions requiring concise Simplified Chinese on Telegram.
+AGENTS.md preserves English engineering artifacts and exact technical identifiers
+and evidence. The installed passive Kanban formatter required a presentation-only
+local patch, recorded in `scripts/ai-migration/hermes-telegram-zh.patch` for Hermes
+upstream 8068c094. Its existing redaction/truncation and durable notification logic
+are preserved. The canonical runner passed 35 relevant tests; a real model response
+and one actual Chinese Telegram send passed. A graceful service reload retained
+M0's independent worker scope and restored connected Telegram plus the dispatcher.
+No token, allowlist, model, approval, execution or task-policy change accompanied
+this language update. See the runbook before updating the locally patched Hermes.

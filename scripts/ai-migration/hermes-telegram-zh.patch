@@ -1,0 +1,185 @@
+--- a/gateway/kanban_watchers_notifier.py
++++ b/gateway/kanban_watchers_notifier.py
+@@ -13,7 +13,7 @@
+ import weakref
+ from typing import Any, Callable, Optional
+ 
+-from agent.i18n import t
++from agent.i18n import get_language, t
+ 
+ from gateway.kanban_watchers_common import _list_boards, _to_thread_process_service, logger
+ 
+@@ -367,6 +367,58 @@
+ }
+ 
+ 
++def _telegram_zh_message(ev: Any, n: "_KanbanNotification") -> str:
++    """Localize presentation only; payloads and the existing wake handoff stay intact."""
++    timeout = int(_payload(ev, "limit_seconds") or 0) if ev.kind == "timed_out" else 0
++    descriptions = {
++        "completed": f"✔ {n.head} 已完成（done）— {n.title}",
++        "blocked": f"⏸ {n.head} 已阻塞（BLOCKED），请查看原因。",
++        "gave_up": f"✖ {n.head} 多次启动失败，已停止重试（gave_up）。",
++        "crashed": f"✖ {n.head} 执行进程已退出（crashed）；dispatcher 将重试。",
++        "timed_out": f"⏱ {n.head} 已超时（timed_out，max_runtime={timeout}s）；将重试。",
++        "status": f"🔄 {n.head} 状态变更 → {_payload(ev, 'status') or ''}",
++        "review_requested": f"👀 {n.head} 等待独立审查（review_requested）— {n.title}",
++        "changes_requested": f"🛑 {n.head} 审查要求修改（changes_requested/BLOCK）；请在同一任务中修复并重新审查。",
++        "block_loop_detected": f"🛑 {n.head} 已转入 TRIAGE，需要人工决策。",
++    }
++    message = "中文解释:\n" + descriptions[ev.kind]
++    payload = ev.payload or {}
++    if ev.kind == "changes_requested":
++        reviewer = _safe_review_reason(payload.get("reviewer"), 48)
++        implementer = _safe_review_reason(payload.get("implementer"), 48)
++        if reviewer:
++            message += f"\n审查者 @{reviewer}"
++        if implementer:
++            message += f" → 实施者 @{implementer}"
++        # Keep the pre-existing review disclosure boundary. Do not label the
++        # sanitized/mobile excerpt as exact compiler or shell output.
++        reason = _safe_review_reason(payload.get("reason"))
++        if reason:
++            message += "\n以下审查意见保留现有脱敏与长度限制。\n原始信息:\n" + reason
++        return message
++    if ev.kind == "block_loop_detected" and _payload(ev, "recurrences"):
++        message += f"\n同一原因已阻塞 {_payload(ev, 'recurrences')} 次。"
++    evidence_fields = {
++        "completed": ("summary", 200), "review_requested": ("summary", 200),
++        "blocked": ("reason", 160), "gave_up": ("error", 200),
++        "block_loop_detected": ("reason", 160),
++    }
++    field = evidence_fields.get(ev.kind)
++    if field:
++        key, limit = field
++        value = _payload(ev, key)
++        if not value and ev.kind == "completed" and n.task:
++            value = n.task.result
++            limit = 160
++        if value:
++            raw = str(value)
++            excerpt = _first_line(raw, limit) if ev.kind == "completed" else raw[:limit]
++            if excerpt != raw:
++                message += "\n以下为原文摘录；完整信息见任务记录。"
++            message += "\n原始信息:\n" + excerpt
++    return message
++
++
+ # --- Delivery of one claimed batch (one subscription, N events) ---
+ 
+ 
+@@ -447,6 +499,8 @@
+         if formatter is None:
+             return None
+         msg, handoff, review_detail = formatter(ev, self)
++        if self.platform_str == "telegram" and get_language() == "zh":
++            msg = _telegram_zh_message(ev, self)
+         if handoff is not None:
+             self.wake_handoff = handoff
+         if review_detail is not None:
+--- /dev/null
++++ b/tests/gateway/test_kanban_telegram_language.py
+@@ -0,0 +1,103 @@
++"""Presentation language must not mutate evidence or durable delivery semantics."""
++
++import asyncio
++from copy import deepcopy
++from types import SimpleNamespace
++
++from agent.i18n import get_language, reset_language_cache
++from gateway.config import Platform
++from gateway.kanban_watchers_notifier import _EVENT_FORMATTERS, _KanbanNotification
++from gateway.run import GatewayRunner
++from hermes_cli import kanban_db as kb, kanban_db_connect as kbc, kanban_db_notify as kbn
++
++
++def _set_language(tmp_path, monkeypatch, lang):
++    monkeypatch.setenv("HERMES_HOME", str(tmp_path))
++    monkeypatch.delenv("HERMES_LANGUAGE", raising=False)
++    (tmp_path / "config.yaml").write_text(f"display:\n  language: {lang}\n")
++    reset_language_cache()
++    assert get_language() == lang
++
++
++def test_telegram_language_keeps_evidence_identifiers_and_wake_handoff(tmp_path, monkeypatch):
++    task = SimpleNamespace(title="M0 /tmp/ArchiveEntry.rs", assignee="tester", result="legacy result")
++    payload = {
++        "reason": "error[E0425]: missing ArchiveEntry\n  --> src/lib.rs:2:1",
++        "error": "clang: error: src/lib.cpp\n  exact spacing",
++        "summary": "PASS: cli-list / ai/migration-base\n  preserved detail",
++        "reviewer": "reviewer", "implementer": "tester", "status": "TRIAGE",
++        "limit_seconds": 60, "recurrences": 2,
++    }
++    before = deepcopy(payload)
++    for kind, formatter in _EVENT_FORMATTERS.items():
++        ev = SimpleNamespace(kind=kind, payload=payload)
++        for platform, lang in (("telegram", "en"), ("discord", "zh"), ("telegram", "zh")):
++            _set_language(tmp_path, monkeypatch, lang)
++            n = _KanbanNotification(None, {
++                "sub": {"platform": platform, "task_id": "t_language", "chat_id": "test"},
++                "task": task, "board": "archive-rust-migration",
++            }, platform_cls=Platform, sub_fail_counts={})
++            english, handoff, review = formatter(ev, n)
++            message = n.format_event(ev)
++            assert n.wake_handoff == (handoff or "")
++            assert n.wake_review_detail == (review or "")
++            assert "t_language" in message and "archive-rust-migration" in message
++            if platform != "telegram" or lang != "zh":
++                assert message == english
++                continue
++            assert message.startswith("中文解释:\n")
++            if kind in {"blocked", "block_loop_detected", "gave_up", "completed", "review_requested"}:
++                field = {"gave_up": "error", "completed": "summary", "review_requested": "summary"}.get(kind, "reason")
++                expected = payload[field].splitlines()[0] if kind == "completed" else payload[field]
++                assert message.split("原始信息:\n", 1)[1] == expected
++            if kind in {"status", "block_loop_detected"}:
++                assert "TRIAGE" in message
++        assert payload == before
++    reset_language_cache()
++
++
++def test_chinese_notify_wake_retains_durable_dedup_and_exact_route(tmp_path, monkeypatch):
++    _set_language(tmp_path, monkeypatch, "zh")
++    monkeypatch.setenv("HERMES_KANBAN_DB", str(tmp_path / "language.db"))
++    conn = kbc.connect()
++    task_id = kb.create_task(conn, title="M0", assignee="architect")
++    kbn.add_notify_sub(conn, task_id=task_id, platform="telegram", chat_id="chat-language",
++                       thread_id="topic-language", chat_type="thread", delivery_mode="notify+wake")
++    kb.complete_task(conn, task_id, summary="PASS: docs/ai-migration/architecture-current.md")
++    conn.close()
++
++    class Adapter:
++        def __init__(self):
++            self.sent, self.handled = [], []
++
++        async def send(self, chat_id, text, metadata=None):
++            self.sent.append((chat_id, text, metadata))
++
++        async def handle_message(self, event):
++            self.handled.append(event)
++            event._gateway_accepted = True
++
++    adapter = Adapter()
++    runner = GatewayRunner.__new__(GatewayRunner)
++    runner.adapters = {Platform.TELEGRAM: adapter}
++    runner._kanban_sub_fail_counts = {}
++    runner._kanban_dispatcher_lock_handle = object()
++    real_sleep = asyncio.sleep
++
++    async def tick_sleep(delay):
++        if delay != 5:
++            runner._running = False
++            await real_sleep(0)
++
++    monkeypatch.setattr(asyncio, "sleep", tick_sleep)
++    for _ in range(2):
++        runner._running = True
++        asyncio.run(runner._kanban_notifier_watcher(interval=1))
++    assert len(adapter.sent) == len(adapter.handled) == 1
++    chat, message, metadata = adapter.sent[0]
++    assert chat == "chat-language" and metadata["thread_id"] == "topic-language"
++    assert message.startswith("中文解释:\n") and task_id in message
++    assert message.split("原始信息:\n", 1)[1] == "PASS: docs/ai-migration/architecture-current.md"
++    source = adapter.handled[0].source
++    assert (source.chat_id, source.thread_id, source.chat_type) == (chat, "topic-language", "thread")
++    reset_language_cache()
