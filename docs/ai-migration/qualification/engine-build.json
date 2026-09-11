@@ -7,7 +7,7 @@
     {
       "system": "Darwin",
       "machine": "arm64",
-      "oracle_commit": "b5f55d4937db8d517bea87257ff8e0545bbc9d10",
+      "oracle_commit": "66bad6556690003f83568b97e597f7c95e957d6f",
       "products": {
         "Alone2": {
           "units_and_resources": [
@@ -6065,38 +6065,42 @@
         "build.log": "f70c9c43682bf20f83d9fefcaef84eebc889e822d3f2bc26aada98d9a516a8f1",
         "capabilities.txt": "b72d6ea33ae968c0eb01d62a8dd79a560f322f7cd5bb09cc5ea48968bb3455ed",
         "characterization.log": "00f6fe5031173fded77f11505296e29e4f77b07ea82adec797038fb4c901318c",
-        "commands.json": "f1a64f1091bc0ba9543b62f8c2f0f022c13c8c60f2e3ee3fcf02543ee1c9683f",
+        "commands.json": "b886d7349de966c64371c76c430294217dfe643cff48dad4d9c5b65dfba1ac08",
         "compiler.txt": "2c3bedf24ed4d3b95969cc62be8b6762873e35cab5a72367f7dd14567188166d",
-        "core.json": "3e5f020abfa8610c643edf9f57fae7e1eea8bb5ab405529f0fb17faaeb269316",
+        "core.json": "5ad8de26fa6941a215a1a7c9bdcb129751aa774bdb93ab5b474b1e66a9d0d1a7",
+        "cxx-compiler.txt": "2c3bedf24ed4d3b95969cc62be8b6762873e35cab5a72367f7dd14567188166d",
         "driver.txt": "a016391a1d6319276db894666203e6f0a008e257a0c58616d779951ed943054d",
-        "engine-observation.json": "d8563b66050e8c6b1a31dc19a4f8b9dbffe4b90356f16cfce4a628d0aa45e3ce",
+        "engine-observation.json": "98f92cf026956e05b8b1b873c58a86fac1c41ac83f47f4a3b330c84fb82bb19e",
         "format-observer-build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
         "format-registry.tsv": "f781b13ad799bdc02a9c34767afe80233a969b94023bd86111c56db259695c01",
         "layout/c-build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
         "layout/c-layout.txt": "8a75d842eec14aa9f5316aeb1612cb8df70227054ecf86c2133d3559f0118dfd",
         "layout/cargo.txt": "1aedaa9cce116919d39b1eb303a58865771582bc24fc259aa8e26cb212e0f59e",
+        "layout/clippy.txt": "2177fec2a490ec6a4209350f975997920bceb7ad2e675217abf0c0a6fb904cad",
         "layout/cpp-build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
         "layout/cpp-layout.txt": "8a75d842eec14aa9f5316aeb1612cb8df70227054ecf86c2133d3559f0118dfd",
-        "layout/layout-commands.json": "704e13ddd354145d7de2a7882e6d16552f36b90b1a02b624c23ed6c2d27e6156",
+        "layout/layout-commands.json": "18b3713d1b7c8a0251f889289384e668329746fe6a0a6acadb049ceeea1097cb",
         "layout/layout.c": "de0c000af183d551eec7cc94af69c225ad27476091a0f3de6553c14e4ea1839b",
         "layout/layout.rs": "02a38330b85542cb2e9bc26ede6db2b1f2ef2eef19de00ad477377522ce31e04",
         "layout/rust-build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
         "layout/rust-layout.txt": "8a75d842eec14aa9f5316aeb1612cb8df70227054ecf86c2133d3559f0118dfd",
         "layout/rustc.txt": "e794146d99fad54562fdcbd4a7c8b22b0240d2b0312ff6d879d67939b3131850",
+        "layout/rustfmt.txt": "2c296b1cd25d723f6589a6b31e74ef9d790a0cb435dc3b36ed9d5c482234deec",
+        "native-artifacts.json": "fc888cad254166041c27af849184d3a765a49d413c76600f7e281c26686c1f17",
         "native-product-capabilities.txt": "fce05c26ee87aef141306c52b1b4ffeee2ad73f8c44eb6bc1606b232845b4a4d",
         "native-product-runtime.txt": "1d5d276e206c268a584c336ca053ba44fc1c9848fb20f7e3f6eaa9de257c7101",
         "os-version.txt": "11945972ddcd2286640b8236d7472ad22204504ef669fa42043fc3084405b165",
         "runtime.txt": "d5d7bd7f1e6fd4660939056299ab40c57f2407b4fa5c42638aec18d6c487bc8a",
         "sdk-version.txt": "a9424f0805f3c26067a7061d23f32325541de4b27b37be2f74e45c0ee568e1c4",
         "selected-make-inputs.txt": "4e478b20a0bbcccb6cc57fe1be9ca2db076fece873b041f6adb398dc48084d99",
-        "source-commit.txt": "d7732ce36df8934496b3cb9dfe1566386547ee782a6d5cf277c7e8070b75a219",
+        "source-commit.txt": "693c84a3e06888859ee78d9658b9ca256e0162a04570877e6a69c2eecf06fd88",
         "xcode-version.txt": "9b259e3b42e374dcfcbcfc0e2b41730e3c57e98f019df45d42174d6a3b8e6977"
       }
     },
     {
       "system": "Linux",
       "machine": "x86_64",
-      "oracle_commit": "b5f55d4937db8d517bea87257ff8e0545bbc9d10",
+      "oracle_commit": "66bad6556690003f83568b97e597f7c95e957d6f",
       "products": {
         "Alone2": {
           "units_and_resources": [
@@ -12142,37 +12146,41 @@
         "build.log": "93f82fb944fb9f7397326a656853a7512b25db0581e89132e7485a596f5d61bb",
         "capabilities.txt": "2bc34d9e1900f856f9f4f283b95e37e6f9d61cf3c9d139bf85b0b8ce57c26a61",
         "characterization.log": "ef3aaa5d61c891fe3f53d456addc6c12fd55495db4c337cd515cf23f22766475",
-        "commands.json": "b9a9ad02f7689d9adc3d879bd01492f03c0e3a4980e16a10ae2fa3d5605aa01b",
+        "commands.json": "bdd566ece4b2b27f98635b851f774b66dc581c648432614613867a1620d89660",
         "compiler.txt": "8497f84b2b8334c413d9c6166bd39d009ba55d2ff60a8f23e66dfa5819c2b048",
-        "core.json": "6d4c0a2c3be2db5f788867f030dc39345e2835327c0e37fc1ca86e34c9c879a5",
+        "core.json": "cca16833045f978e03fdb0b2f0bb2ab5dc827e71682f8ca8e0ff3a1d083283fc",
+        "cxx-compiler.txt": "59d1cbef41d4ae78d5063d525b7aa13d18dc0493ea00537efc19b2ee398cb5a8",
         "driver.txt": "8ee498ee2fc27e8dcdf99191b454077df95e3840d841ec94321748b6d7f36819",
-        "engine-observation.json": "1e9f1ea7e92932c49921e6925837cc190026198b1f82c457e9fcc886303e7574",
+        "engine-observation.json": "e766faee1798df5d0cd160118a9cefabcedc25eac976b397714e280e304ba235",
         "format-observer-build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
         "format-registry.tsv": "f781b13ad799bdc02a9c34767afe80233a969b94023bd86111c56db259695c01",
         "layout/c-build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
         "layout/c-layout.txt": "8a75d842eec14aa9f5316aeb1612cb8df70227054ecf86c2133d3559f0118dfd",
         "layout/cargo.txt": "1aedaa9cce116919d39b1eb303a58865771582bc24fc259aa8e26cb212e0f59e",
+        "layout/clippy.txt": "2177fec2a490ec6a4209350f975997920bceb7ad2e675217abf0c0a6fb904cad",
         "layout/cpp-build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
         "layout/cpp-layout.txt": "8a75d842eec14aa9f5316aeb1612cb8df70227054ecf86c2133d3559f0118dfd",
-        "layout/layout-commands.json": "668aec348619eb0c069ab9f543f0586c4ccbf8995fbb3a95588b3eb708724685",
+        "layout/layout-commands.json": "ac2d5353f700a8a3628a3e4fe40f66c9cd4e5527c16ea6f6f14d3db8f6fdf505",
         "layout/layout.c": "de0c000af183d551eec7cc94af69c225ad27476091a0f3de6553c14e4ea1839b",
         "layout/layout.rs": "02a38330b85542cb2e9bc26ede6db2b1f2ef2eef19de00ad477377522ce31e04",
         "layout/rust-build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
         "layout/rust-layout.txt": "8a75d842eec14aa9f5316aeb1612cb8df70227054ecf86c2133d3559f0118dfd",
         "layout/rustc.txt": "b2bdf493bcf6d1dc55181a0efc2774b6d9cf7bf5c8dcc5bed592c994b2ad38c4",
+        "layout/rustfmt.txt": "2c296b1cd25d723f6589a6b31e74ef9d790a0cb435dc3b36ed9d5c482234deec",
         "libc-version.txt": "e78219876cbb3a4271b8644a89d469ccdd95b82433f72784c61a9dd2f88b1192",
+        "native-artifacts.json": "e1f070509426e32b8a27d8846b7f6e12f7d6212320b5ae0b12981fda87ff7e8f",
         "native-product-capabilities.txt": "4ca5ce76ac8d33d846ef086c88f8a5327dfdd8992ac9f5a76ffac57b44acbbb0",
-        "native-product-runtime.txt": "9a96738da322785a54e844f7df071a3ee896b2497e240f563ab2ded88abdb3e4",
-        "runtime-packages.txt": "f952a6f4273dc7199fe11532309e7a10e791ae6250338f649901effb29fe7252",
-        "runtime.txt": "8712cdf630d834eb5a879e04eb712a44099cbdaf66990230092663562f431dbd",
+        "native-product-runtime.txt": "a326076c2032505dc5f8b7d60e1467c4a208f809874836fdfe27dfe752062e7e",
+        "runtime-packages.txt": "88eee9ba0c1347517fd9e1a845f60253576f4561f3406fa8f74d25c9f6b2edae",
+        "runtime.txt": "52dec35aec347a9f36794aa8f0182242c7d883e8286f24731da474bc8b4d1b1c",
         "selected-make-inputs.txt": "7f58774afa06e372538d97d1eb98ca54f21b4aa49ee04cd39a4f1fd4e7ac836e",
-        "source-commit.txt": "d7732ce36df8934496b3cb9dfe1566386547ee782a6d5cf277c7e8070b75a219"
+        "source-commit.txt": "693c84a3e06888859ee78d9658b9ca256e0162a04570877e6a69c2eecf06fd88"
       }
     },
     {
       "system": "Windows",
       "machine": "AMD64",
-      "oracle_commit": "b5f55d4937db8d517bea87257ff8e0545bbc9d10",
+      "oracle_commit": "66bad6556690003f83568b97e597f7c95e957d6f",
       "products": {
         "Alone2": {
           "units_and_resources": [
@@ -14237,7 +14245,7 @@
               "basis": "DOC/License.txt:8-30 and selected source header"
             }
           ],
-          "build_log_sha256": "623ef5e6042eae351ec6f15275bb2f4e4575a6606ca356dc33cbb955e80a99a5"
+          "build_log_sha256": "ddc3a849cd0588c89a5cc0a970289d17210c402065946d34a2b9b9c021aabe23"
         },
         "Format7zF": {
           "units_and_resources": [
@@ -16038,7 +16046,7 @@
               "basis": "DOC/License.txt:8-30 and selected source header"
             }
           ],
-          "build_log_sha256": "cd0903c9d67645096b638bf081342557718274a44e18ddf631f802b8f10cbc34"
+          "build_log_sha256": "93891259e1c5fb82940e819b4192bf84dc148c482788a87bb7158b97195b110e"
         },
         "Console": {
           "units_and_resources": [
@@ -16591,7 +16599,7 @@
               "basis": "DOC/License.txt:8-30 and selected source header"
             }
           ],
-          "build_log_sha256": "6098909d420dca140bed703e243f677d1af79ff83f7afa09d15d46ceb0920959"
+          "build_log_sha256": "7bdc076556da78df2a66243cbf8c7ba447502236c2f3355a785120e0aa336be5"
         }
       },
       "standalone": {
@@ -18335,37 +18343,40 @@
           }
         }
       ],
-      "binary_sha256": "68fd98213645dc17803c2dc8850757ddc7b4a24654a9e9fca1fe2e4fd4b9c831",
+      "binary_sha256": "db9400b01f082c963b6d9ed12dc373c1b7f0b98eb2221d12a4046433626a0d39",
       "evidence": {
-        "Console-build.log": "6098909d420dca140bed703e243f677d1af79ff83f7afa09d15d46ceb0920959",
-        "Format7zF-build.log": "cd0903c9d67645096b638bf081342557718274a44e18ddf631f802b8f10cbc34",
-        "binary-headers.txt": "40935bd324420da9d36ec4f4ab0dd91bb3b40fe61583ac394db6916e8011deae",
-        "build.log": "623ef5e6042eae351ec6f15275bb2f4e4575a6606ca356dc33cbb955e80a99a5",
+        "Console-build.log": "7bdc076556da78df2a66243cbf8c7ba447502236c2f3355a785120e0aa336be5",
+        "Format7zF-build.log": "93891259e1c5fb82940e819b4192bf84dc148c482788a87bb7158b97195b110e",
+        "binary-headers.txt": "9416a01ab0095f387ba86e2a9b45039a44d17ca6c958f38251602e404ec5d2b1",
+        "build.log": "ddc3a849cd0588c89a5cc0a970289d17210c402065946d34a2b9b9c021aabe23",
         "capabilities.txt": "43327fe8f3d5cbc1b0280a10cfa3a82002235ad64660a16f5e1bd486494118d5",
         "characterization.log": "c24d14b6938af87dc8410bf6d1c04d67c344cc210e9e36dd62710f6dc90681f4",
-        "commands.json": "d1d3ad42bc132eaecb28408f0d7756e2347331ad2f348da59103b7a4ee735c94",
+        "commands.json": "2184d96a6c991557649f74078c7c84f2f822d8c89600560cbccf45aefef10c4a",
         "compiler.txt": "7a09c20a9f22a7f6cedab720751dd7acb65ff25e2469b23fa61c2d6fbb696f6b",
-        "core.json": "66da8ed791c15f49bec8a687c0dceceff6b64e863af2ecd048aa61cce2053eb7",
+        "core.json": "9f12446a2c554632ee79450da134e200c9e6aa173a237d7070eae99d488f8a98",
         "driver.txt": "582f0819d2979dbd6b888847f3fdb8b9813fb29bc7393e2bb404f6f193e9e68a",
-        "engine-observation.json": "bde0aaf64d5369d6268a1efbb5ce556f34fb5762eef460f84ef4140334946ed6",
+        "engine-observation.json": "f917d854643a9fbef4b69228b6a5772fe65aaa7c9546f1ae619ea4d8e23cd45d",
         "format-observer-build.log": "dc97e0b42b4f4a618a70af352fd377e99b4b021c18babb29483dc2fa7b1b96d9",
         "format-registry.tsv": "075359b1f0ca971ee157cc9ed4ca28feba53f0c540a3c61a8a1be5ebbf984e8f",
         "layout/c-build.log": "fc8d4212270744715529cb7cc42c2cdc9e1bd82a435d6b249c247da01e872383",
         "layout/c-layout.txt": "800533b423faa7b8d4885347572f1236590fa95d78ff6677948abd78516d6198",
         "layout/cargo.txt": "1aedaa9cce116919d39b1eb303a58865771582bc24fc259aa8e26cb212e0f59e",
+        "layout/clippy.txt": "2177fec2a490ec6a4209350f975997920bceb7ad2e675217abf0c0a6fb904cad",
         "layout/cpp-build.log": "fc8d4212270744715529cb7cc42c2cdc9e1bd82a435d6b249c247da01e872383",
         "layout/cpp-layout.txt": "800533b423faa7b8d4885347572f1236590fa95d78ff6677948abd78516d6198",
-        "layout/layout-commands.json": "f2f69d519d43c1870d34256e1fc6c8c7853fc2b226d68a4e021aebb1d268a948",
+        "layout/layout-commands.json": "c8769c0388c69d280fe586678b2af3b646fa27e2942063b170dffaac6ba1e232",
         "layout/layout.c": "2be1f838296de2d585cd74656c935f91d4f2904a980a7d955d0e90095b106e4c",
         "layout/layout.rs": "ccdd53c0eaa99532392fb1a95fcde51315f05ad60a47017b719038d57bbb5503",
         "layout/rust-build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
         "layout/rust-layout.txt": "8a75d842eec14aa9f5316aeb1612cb8df70227054ecf86c2133d3559f0118dfd",
         "layout/rustc.txt": "7fad09dd8c16d49de37932475436003b5b1763c1015c5ce081ad7692db368ca3",
+        "layout/rustfmt.txt": "2c296b1cd25d723f6589a6b31e74ef9d790a0cb435dc3b36ed9d5c482234deec",
+        "native-artifacts.json": "007be6263e450af264653060d7a55318c8acf61157f2bd7f3e00d39a486600cd",
         "native-product-capabilities.txt": "afff9e6920b5017a818676e0c189fe7dd0a48a85eab67a76b72b1cf54b20ac53",
         "native-product-runtime.txt": "262082fccec86cd629b4f7c7a60fa68ae879e49906747768b755478d140282e6",
         "runtime.txt": "5b744c1785684754fd741d66157fc350a83ef1654d41218502b7e6b89dc3f9ab",
         "sdk-runtime.json": "46a4f2bb78af01c1b8f3f54b0a8e7bb0a6d9b9b8a2a727e0122c7c1f13d16401",
-        "source-commit.txt": "d7732ce36df8934496b3cb9dfe1566386547ee782a6d5cf277c7e8070b75a219"
+        "source-commit.txt": "693c84a3e06888859ee78d9658b9ca256e0162a04570877e6a69c2eecf06fd88"
       }
     }
   ]

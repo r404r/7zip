@@ -36,8 +36,8 @@ C11/C++17/Rust 2024 declaration-layout probes. It does not use Wine or a Linux
 cross-build as Windows evidence.
 
 The captured native reference at commit
-`b5f55d4937db8d517bea87257ff8e0545bbc9d10` passed all three native jobs in
-https://github.com/r404r/7zip/actions/runs/34559865983 . Exact-head confirmation for
+`66bad6556690003f83568b97e597f7c95e957d6f` passed all three native jobs in
+https://github.com/r404r/7zip/actions/runs/34561288314 . Exact-head confirmation for
 the final review commit and final artifact handles are recorded on the task card,
 so a document does not claim a self-referential final commit hash.
 
