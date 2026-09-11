@@ -15,6 +15,10 @@ from typing import Any
 INSIDE = ('create', 'rename', 'hardlink', 'symlink', 'readonly_denied')
 OUTSIDE = ('absolute', 'traversal', 'symlink_escape', 'hardlink_alias')
 
+class SupervisionFailure(RuntimeError):
+    """Fatal controller state: callers must not touch guest files or relaunch."""
+
+
 def controls_pass(report):
     """A bounded file-write control result, never permission to run archives."""
     expected_baseline = {name: True for name in INSIDE + OUTSIDE}
@@ -179,6 +183,9 @@ def capture(destination, run_command=None, observe=None, emit=True):
                 report['sentinels_unchanged'] = all(
                     (outside / name).read_bytes() == b'B04 control sentinel\n' for name in OUTSIDE)
         report['controls_pass'] = controls_pass(report)
+    except SupervisionFailure:
+        # Not an ordinary, quiescent startup rejection: do not serialize a report.
+        raise
     except (OSError, RuntimeError, ValueError, subprocess.SubprocessError) as exc:
         report['failure'] = str(exc)
     (destination / 'report.json').write_text(json.dumps(report, indent=2) + '\n')

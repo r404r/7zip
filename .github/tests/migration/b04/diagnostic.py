@@ -14,6 +14,7 @@ import subprocess
 import sys
 import threading
 import time
+from prerequisite import SupervisionFailure
 
 MAX_RECORD = 64 * 1024
 MAX_LOG = 1024 * 1024
@@ -80,6 +81,14 @@ class BoundedRun:
         self.last_pipe_bytes = {}
 
     def __call__(self, command, directory, label, env=None):
+        try:
+            return self._run(command, directory, label, env)
+        except (OSError, RuntimeError, ValueError, subprocess.SubprocessError) as exc:
+            # Irreversible even if termination succeeds; not an exited rejection.
+            self.failed = True
+            raise SupervisionFailure(str(exc)) from exc
+
+    def _run(self, command, directory, label, env=None):
         if self.failed or label in self.seen:
             raise RuntimeError('stopped or duplicate diagnostic stage')
         self.seen.add(label)
@@ -97,11 +106,13 @@ class BoundedRun:
         assert proc.stdout is not None and proc.stderr is not None
         readers = [threading.Thread(target=read_pipe, args=(pipe, data, stop, 16384), daemon=True)
                    for pipe, data in ((proc.stdout, output), (proc.stderr, error))]
-        for thread in readers:
-            thread.start()
         deadline = time.monotonic() + 60
         reason = None
+        started = []
         try:
+            for thread in readers:
+                thread.start()
+                started.append(thread)
             while proc.poll() is None:
                 inventory(self.root)
                 if stop.is_set() or time.monotonic() >= deadline:
@@ -123,20 +134,25 @@ class BoundedRun:
                     stderr=subprocess.DEVNULL, timeout=5, check=True)
             proc.wait(timeout=5)
         finally:
-            for thread in readers:
-                thread.join(timeout=1)
-            if any(thread.is_alive() for thread in readers):
-                self.failed = True
-                reason = 'pipe remains open; quiescence not established'
-            else:
-                proc.stdout.close()
-                proc.stderr.close()
-            if stop.is_set():
-                self.failed = True
-                reason = 'output cap/read failure; raw prefix is NOT complete evidence'
-            (directory / (label + '.stdout')).write_bytes(output)
-            (directory / (label + '.stderr')).write_bytes(error)
-            self.last_pipe_bytes = {label + '.stdout': bytes(output), label + '.stderr': bytes(error)}
+            try:
+                for thread in started:
+                    thread.join(timeout=1)
+                if any(thread.is_alive() for thread in started):
+                    reason = 'pipe remains open; quiescence not established'
+                else:
+                    proc.stdout.close()
+                    proc.stderr.close()
+                if stop.is_set():
+                    reason = 'output cap/read failure; raw prefix is NOT complete evidence'
+            finally:
+                # Memory only, including kill/wait/join failure. A live reader
+                # makes this an unqualified prefix, never complete evidence.
+                self.last_pipe_bytes = {label + '.stdout': bytes(output),
+                                        label + '.stderr': bytes(error)}
+        if reason:
+            raise RuntimeError(reason)
+        if b'quiescent=false' in output or b'stage=timeout' in output or b'stage=cleanup' in output:
+            raise RuntimeError('native launcher timeout/cleanup failure; stop guest work')
         if os.name != 'nt':
             try:
                 os.killpg(proc.pid, 0)
@@ -145,13 +161,12 @@ class BoundedRun:
             else:
                 self.failed = True
                 os.killpg(proc.pid, signal.SIGKILL)
-                reason = 'leftover process group; no further launch/collection'
+                # SIGKILL is not proof of descendant quiescence. End this guest
+                # without inventory, serialization, collection or cleanup.
+                raise RuntimeError('leftover process group; no further launch/collection')
         inventory(self.root)
-        if reason:
-            raise RuntimeError(reason)
-        if b'quiescent=false' in output or b'stage=timeout' in output or b'stage=cleanup' in output:
-            self.failed = True
-            raise RuntimeError('native launcher timeout/cleanup failure; stop guest work')
+        (directory / (label + '.stdout')).write_bytes(output)
+        (directory / (label + '.stderr')).write_bytes(error)
         return subprocess.CompletedProcess(command, proc.returncode, bytes(output), bytes(error))
 
 
@@ -288,6 +303,7 @@ def cleanup(root):
 
 def main():
     import prerequisite as p
+    runner = None
     try:
         source = Path(__file__).resolve().parent
         commit = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=source,
@@ -307,9 +323,7 @@ def main():
         result = p.capture(root, run_command=runner,
             observe=lambda root, exe, report: observe(root, exe, report, runner), emit=False)
         if runner.failed:
-            for name, raw in runner.last_pipe_bytes.items():
-                emit_record('unqualified-prefix/' + name, raw, sys.stdout)
-            raise RuntimeError('supervisor failed; no further collection/cleanup in this guest')
+            raise SupervisionFailure('supervisor failed; no further collection/cleanup in this guest')
         inventory(root)
         names = ['report.json']
         for label in sorted(runner.seen):
@@ -323,6 +337,11 @@ def main():
         cleanup(root)
         print('B04_STATUS cleanup=owned-files-removed attempt=consumed b04_complete=false')
         return result
+    except SupervisionFailure as exc:
+        for name, raw in (runner.last_pipe_bytes if runner is not None else {}).items():
+            emit_record('unqualified-prefix/' + name, raw, sys.stdout)
+        emit_record('controller-failure', str(exc).encode('utf-8')[:4096], sys.stdout)
+        return 2
     except (OSError, RuntimeError, ValueError, subprocess.SubprocessError) as exc:
         emit_record('controller-failure', str(exc).encode('utf-8')[:4096], sys.stdout)
         return 2
