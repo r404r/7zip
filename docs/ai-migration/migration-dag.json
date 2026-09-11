@@ -1,0 +1,488 @@
+{
+  "schema_version": 1,
+  "root": "t_82c76197",
+  "board": "archive-rust-migration",
+  "cards": [
+    {
+      "id": "t_22299c6f",
+      "title": "B01 — Immutable format, volume and error interoperability corpus",
+      "assignee": "tester",
+      "workspace_kind": "worktree",
+      "max_runtime_seconds": 7200,
+      "key": "b01",
+      "parents": [
+        "t_82c76197"
+      ],
+      "reviewer": "reviewer",
+      "max_retries_policy": 2,
+      "body_sha256": "4a13bf84c8334ba002a8074e9332cbbecf0a166e8e87ff3c07b795ff9c20b0ca"
+    },
+    {
+      "id": "t_2a64c953",
+      "title": "B04 — Sandboxed extraction safety, overwrite and partial effects",
+      "assignee": "tester",
+      "workspace_kind": "worktree",
+      "max_runtime_seconds": 7200,
+      "key": "b04",
+      "parents": [
+        "t_82c76197"
+      ],
+      "reviewer": "reviewer",
+      "max_retries_policy": 2,
+      "body_sha256": "832ad7dea4e98f79314f9d0c3b807c48d49e2059178847d448013c9e17953a02"
+    },
+    {
+      "id": "t_7019eca0",
+      "title": "B02 — Native filename identity and property precedence characterization",
+      "assignee": "tester",
+      "workspace_kind": "worktree",
+      "max_runtime_seconds": 7200,
+      "key": "b02",
+      "parents": [
+        "t_82c76197"
+      ],
+      "reviewer": "reviewer",
+      "max_retries_policy": 2,
+      "body_sha256": "12a0b53fc7a71d142de22a823e7c340c99357642bce4be4d3df7c0f6c9477362"
+    },
+    {
+      "id": "t_bf92ce13",
+      "title": "B03 — Native metadata, large-file and partial-I/O characterization",
+      "assignee": "tester",
+      "workspace_kind": "worktree",
+      "max_runtime_seconds": 7200,
+      "key": "b03",
+      "parents": [
+        "t_82c76197"
+      ],
+      "reviewer": "reviewer",
+      "max_retries_policy": 2,
+      "body_sha256": "fe6ad1c2052c2a6397c8dac648ef470b399b24e5a2a2756ae03c047ea6e62fbf"
+    },
+    {
+      "id": "t_f4d107ea",
+      "title": "Q1 — Rust/native toolchain, retained-input audit and ABI contract",
+      "assignee": "architect",
+      "workspace_kind": "worktree",
+      "max_runtime_seconds": 7200,
+      "key": "q1",
+      "parents": [
+        "t_82c76197"
+      ],
+      "reviewer": "reviewer",
+      "max_retries_policy": 2,
+      "body_sha256": "5fab14038e39bd75a8242c5ef85e02f8775078eeb2d1f801d0a0946d080dcfc9"
+    },
+    {
+      "id": "t_31358a3f",
+      "title": "S1 — Rust workspace and owned archive domain contracts",
+      "assignee": "coder",
+      "workspace_kind": "worktree",
+      "max_runtime_seconds": 7200,
+      "key": "s1",
+      "parents": [
+        "t_82c76197",
+        "t_f4d107ea"
+      ],
+      "reviewer": "reviewer",
+      "max_retries_policy": 2,
+      "body_sha256": "6c4637a755d55b7c2d63d50cc812ed39d7eb2059c1425b9055a83177cbcd58f1"
+    },
+    {
+      "id": "t_3859d918",
+      "title": "B05 — Password callback states and encrypted error characterization",
+      "assignee": "tester",
+      "workspace_kind": "worktree",
+      "max_runtime_seconds": 7200,
+      "key": "b05",
+      "parents": [
+        "t_22299c6f",
+        "t_82c76197"
+      ],
+      "reviewer": "reviewer",
+      "max_retries_policy": 2,
+      "body_sha256": "8735e985830c33e1ed6ee31edddc2a78bc4a86c9f4a56cd0869b690bf98ff738"
+    },
+    {
+      "id": "t_83983e9c",
+      "title": "B06 — Native staged cancellation, progress and shutdown oracle",
+      "assignee": "tester",
+      "workspace_kind": "worktree",
+      "max_runtime_seconds": 7200,
+      "key": "b06",
+      "parents": [
+        "t_2a64c953",
+        "t_82c76197"
+      ],
+      "reviewer": "reviewer",
+      "max_retries_policy": 2,
+      "body_sha256": "688f376d076e386d1728d4238521aab5afb63bfc6adc4247eff336f13a146c86"
+    },
+    {
+      "id": "t_071e4cd7",
+      "title": "S2a — Internal retained-engine facade qualification implementation",
+      "assignee": "coder",
+      "workspace_kind": "worktree",
+      "max_runtime_seconds": 7200,
+      "key": "s2a",
+      "parents": [
+        "t_22299c6f",
+        "t_31358a3f",
+        "t_3859d918",
+        "t_7019eca0",
+        "t_82c76197",
+        "t_83983e9c",
+        "t_bf92ce13",
+        "t_f4d107ea"
+      ],
+      "reviewer": "reviewer",
+      "max_retries_policy": 2,
+      "body_sha256": "6d8cacdc62d712c6d692c8b8aea1c1a42265255b83f8204ae600e2e06681f103"
+    },
+    {
+      "id": "t_0a04d8dd",
+      "title": "B08 — Independent native FFI lifetime, fault and concurrency qualification",
+      "assignee": "tester",
+      "workspace_kind": "worktree",
+      "max_runtime_seconds": 7200,
+      "key": "b08",
+      "parents": [
+        "t_071e4cd7",
+        "t_82c76197"
+      ],
+      "reviewer": "reviewer",
+      "max_retries_policy": 2,
+      "body_sha256": "d45040d85f1c8fd8b5d21d1b9f640b21563960af3a7b6afa2658912cb8fea1e6"
+    },
+    {
+      "id": "t_481c87b0",
+      "title": "S3 — Qualified safe engine exposure and Rust CLI archive listing",
+      "assignee": "coder",
+      "workspace_kind": "worktree",
+      "max_runtime_seconds": 7200,
+      "key": "s3",
+      "parents": [
+        "t_0a04d8dd",
+        "t_22299c6f",
+        "t_7019eca0",
+        "t_82c76197"
+      ],
+      "reviewer": "reviewer",
+      "max_retries_policy": 2,
+      "body_sha256": "374fa1a59cb513225bf762868d8ff76584a7227b108f896edaf11c4ac6811340"
+    },
+    {
+      "id": "t_e398de63",
+      "title": "S4 — Rust CLI extraction through retained policy",
+      "assignee": "coder",
+      "workspace_kind": "worktree",
+      "max_runtime_seconds": 7200,
+      "key": "s4",
+      "parents": [
+        "t_2a64c953",
+        "t_3859d918",
+        "t_481c87b0",
+        "t_82c76197",
+        "t_83983e9c",
+        "t_bf92ce13"
+      ],
+      "reviewer": "reviewer",
+      "max_retries_policy": 2,
+      "body_sha256": "ae07802fcae8d5eb296260968bada1dcf8dded40e75278261cc67ca60c043da0"
+    },
+    {
+      "id": "t_9ca14b05",
+      "title": "S5 — Rust CLI archive testing with retained testMode",
+      "assignee": "coder",
+      "workspace_kind": "worktree",
+      "max_runtime_seconds": 7200,
+      "key": "s5",
+      "parents": [
+        "t_22299c6f",
+        "t_3859d918",
+        "t_82c76197",
+        "t_83983e9c",
+        "t_e398de63"
+      ],
+      "reviewer": "reviewer",
+      "max_retries_policy": 2,
+      "body_sha256": "7e648c44baabb29d4cdae786c35a078f4e3a0efba9e80cf4cd8228fa363dcd85"
+    },
+    {
+      "id": "t_425adbdd",
+      "title": "S6 — Rust CLI fresh archive creation with retained UpdateArchive",
+      "assignee": "coder",
+      "workspace_kind": "worktree",
+      "max_runtime_seconds": 7200,
+      "key": "s6",
+      "parents": [
+        "t_3859d918",
+        "t_7019eca0",
+        "t_82c76197",
+        "t_83983e9c",
+        "t_9ca14b05",
+        "t_bf92ce13"
+      ],
+      "reviewer": "reviewer",
+      "max_retries_policy": 2,
+      "body_sha256": "8b950513c290da5ba27e20d7f3396278ffecb5a7e991c8ca89abf5524c2c02b3"
+    },
+    {
+      "id": "t_61c84597",
+      "title": "S7 — Task, lossless outcome, progress and cooperative cancellation infrastructure",
+      "assignee": "coder",
+      "workspace_kind": "worktree",
+      "max_runtime_seconds": 7200,
+      "key": "s7",
+      "parents": [
+        "t_0a04d8dd",
+        "t_425adbdd",
+        "t_82c76197",
+        "t_83983e9c"
+      ],
+      "reviewer": "reviewer",
+      "max_retries_policy": 2,
+      "body_sha256": "8c138631b5bdd6772994410a692ea050e8652658569ae0e0713c25a573cc85eb"
+    },
+    {
+      "id": "t_49ccd799",
+      "title": "S8 — Portable filesystem ports and retained read-only stream seam",
+      "assignee": "coder",
+      "workspace_kind": "worktree",
+      "max_runtime_seconds": 7200,
+      "key": "s8",
+      "parents": [
+        "t_2a64c953",
+        "t_61c84597",
+        "t_7019eca0",
+        "t_82c76197",
+        "t_bf92ce13"
+      ],
+      "reviewer": "reviewer",
+      "max_retries_policy": 2,
+      "body_sha256": "60bfb4bcd1f4c92192a7790cc184be1eafe633a94a6e3b4edf945e881e85e016"
+    },
+    {
+      "id": "t_595610a4",
+      "title": "S8W — Native Windows read-only stream and fork compatibility",
+      "assignee": "coder",
+      "workspace_kind": "worktree",
+      "max_runtime_seconds": 7200,
+      "key": "s8w",
+      "parents": [
+        "t_49ccd799",
+        "t_82c76197"
+      ],
+      "reviewer": "reviewer",
+      "max_retries_policy": 2,
+      "body_sha256": "5088676f9094dcd0c1bd195a1d2a19f9df8536d5fa2d60cbd088278383c43d4b"
+    },
+    {
+      "id": "t_600ba1b2",
+      "title": "S8M — Native macOS read-only stream and CLI compatibility",
+      "assignee": "coder",
+      "workspace_kind": "worktree",
+      "max_runtime_seconds": 7200,
+      "key": "s8m",
+      "parents": [
+        "t_49ccd799",
+        "t_82c76197"
+      ],
+      "reviewer": "reviewer",
+      "max_retries_policy": 2,
+      "body_sha256": "92eb602a74b6326cd9ca493e071c4f5b3e11531fc94b9a4a7b76a9fe2b14fadd"
+    },
+    {
+      "id": "t_be89f382",
+      "title": "S8L — Native Linux read-only stream implementation and CLI compatibility",
+      "assignee": "coder",
+      "workspace_kind": "worktree",
+      "max_runtime_seconds": 7200,
+      "key": "s8l",
+      "parents": [
+        "t_49ccd799",
+        "t_82c76197"
+      ],
+      "reviewer": "reviewer",
+      "max_retries_policy": 2,
+      "body_sha256": "c5bf963525f5023e5a199d23632ba130a1e1d98454ff2a0a3a1fb3ac9d62f520"
+    },
+    {
+      "id": "t_2e00825a",
+      "title": "B07 — Native GUI, reopen, settings and desktop characterization",
+      "assignee": "tester",
+      "workspace_kind": "worktree",
+      "max_runtime_seconds": 7200,
+      "key": "b07",
+      "parents": [
+        "t_3859d918",
+        "t_61c84597",
+        "t_7019eca0",
+        "t_82c76197"
+      ],
+      "reviewer": "reviewer",
+      "max_retries_policy": 2,
+      "body_sha256": "2f04784935ee44a3c7369b2ef729805a6482f1bce4b32177622ac3d7865a7075"
+    },
+    {
+      "id": "t_7ac2c6d5",
+      "title": "Q2 — Native Qt 6/CXX-Qt pin, license and lifetime spike",
+      "assignee": "architect",
+      "workspace_kind": "worktree",
+      "max_runtime_seconds": 7200,
+      "key": "q2",
+      "parents": [
+        "t_595610a4",
+        "t_600ba1b2",
+        "t_82c76197",
+        "t_be89f382",
+        "t_f4d107ea"
+      ],
+      "reviewer": "reviewer",
+      "max_retries_policy": 2,
+      "body_sha256": "62849c545918ce3674f04650b79ad83957e3e04f6addc3ace65997c916417a7b"
+    },
+    {
+      "id": "t_bedc9b95",
+      "title": "S9a — Qt 6/QML shell and CXX-Qt presentation adapter",
+      "assignee": "coder",
+      "workspace_kind": "worktree",
+      "max_runtime_seconds": 7200,
+      "key": "s9a",
+      "parents": [
+        "t_2e00825a",
+        "t_595610a4",
+        "t_600ba1b2",
+        "t_7ac2c6d5",
+        "t_82c76197",
+        "t_be89f382"
+      ],
+      "reviewer": "reviewer",
+      "max_retries_policy": 2,
+      "body_sha256": "bec53636dd816a55dc19444242119f23f55872e37579bcbcfcb0c14408e51865"
+    },
+    {
+      "id": "t_ce984818",
+      "title": "S9b — Archive browser, owned selection and qualified code-page reopen",
+      "assignee": "coder",
+      "workspace_kind": "worktree",
+      "max_runtime_seconds": 7200,
+      "key": "s9b",
+      "parents": [
+        "t_2e00825a",
+        "t_7019eca0",
+        "t_82c76197",
+        "t_bedc9b95"
+      ],
+      "reviewer": "reviewer",
+      "max_retries_policy": 2,
+      "body_sha256": "e9d2abbbad14cfec5c5cf5402e1389326bf78d4a26ef3f910afcc97e8169ec87"
+    },
+    {
+      "id": "t_d3f76753",
+      "title": "S10 — Extraction/create dialogs and asynchronous task UI",
+      "assignee": "coder",
+      "workspace_kind": "worktree",
+      "max_runtime_seconds": 7200,
+      "key": "s10",
+      "parents": [
+        "t_2e00825a",
+        "t_425adbdd",
+        "t_61c84597",
+        "t_82c76197",
+        "t_ce984818",
+        "t_e398de63"
+      ],
+      "reviewer": "reviewer",
+      "max_retries_policy": 2,
+      "body_sha256": "073d1d5b73757fd3d25ffec4597acbf3ad13e839be1996f361dce3024b5b5e94"
+    },
+    {
+      "id": "t_1f366758",
+      "title": "S11W — Windows Explorer, OLE and coexistence integration",
+      "assignee": "coder",
+      "workspace_kind": "worktree",
+      "max_runtime_seconds": 7200,
+      "key": "s11w",
+      "parents": [
+        "t_2e00825a",
+        "t_595610a4",
+        "t_82c76197",
+        "t_d3f76753"
+      ],
+      "reviewer": "reviewer",
+      "max_retries_policy": 2,
+      "body_sha256": "a2f084f2ba280080f505738df6299288494fc777a2a5582138209c82fb899b25"
+    },
+    {
+      "id": "t_7b347d4f",
+      "title": "S11M — macOS app bundle and Finder integration",
+      "assignee": "coder",
+      "workspace_kind": "worktree",
+      "max_runtime_seconds": 7200,
+      "key": "s11m",
+      "parents": [
+        "t_2e00825a",
+        "t_600ba1b2",
+        "t_82c76197",
+        "t_d3f76753"
+      ],
+      "reviewer": "reviewer",
+      "max_retries_policy": 2,
+      "body_sha256": "056199fddd8d2a0d95609be1c9921673da6e813d6cf133ee155a3e0128d291b1"
+    },
+    {
+      "id": "t_f757c611",
+      "title": "S11L — Linux desktop activation and opt-in package integration",
+      "assignee": "coder",
+      "workspace_kind": "worktree",
+      "max_runtime_seconds": 7200,
+      "key": "s11l",
+      "parents": [
+        "t_2e00825a",
+        "t_82c76197",
+        "t_be89f382",
+        "t_d3f76753"
+      ],
+      "reviewer": "reviewer",
+      "max_retries_policy": 2,
+      "body_sha256": "10957cb6ab401fb79ad0526999a549cbc3da70249f215537f45de3483b4f52fa"
+    },
+    {
+      "id": "t_8342040b",
+      "title": "Q3 — Selected-package audit and human release-validation scope gate",
+      "assignee": "architect",
+      "workspace_kind": "worktree",
+      "max_runtime_seconds": 7200,
+      "key": "q3",
+      "parents": [
+        "t_1f366758",
+        "t_7ac2c6d5",
+        "t_7b347d4f",
+        "t_82c76197",
+        "t_f757c611"
+      ],
+      "reviewer": "reviewer",
+      "max_retries_policy": 2,
+      "body_sha256": "ac5499fd08240c3fcee8003da5da914b8ba0a9d1cb42f7b4fa64427567e0c10e"
+    },
+    {
+      "id": "t_11923d05",
+      "title": "S12 — Exact-head native release-candidate validation, no publication",
+      "assignee": "tester",
+      "workspace_kind": "worktree",
+      "max_runtime_seconds": 7200,
+      "key": "s12",
+      "parents": [
+        "t_1f366758",
+        "t_7b347d4f",
+        "t_82c76197",
+        "t_8342040b",
+        "t_f757c611"
+      ],
+      "reviewer": "reviewer",
+      "max_retries_policy": 2,
+      "body_sha256": "09b9b613d84d95f15ba11ee8de2626cf2ea8f4ee4a9b6a3a57cb7de61392041d"
+    }
+  ]
+}
