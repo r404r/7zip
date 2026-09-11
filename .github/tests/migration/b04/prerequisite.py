@@ -119,6 +119,17 @@ def capture(destination):
             if build.returncode:
                 raise RuntimeError('native probe build failed: ' + str(build.returncode))
         report['executable_sha256'] = hashlib.sha256(executable.read_bytes()).hexdigest()
+        if system == 'Windows':
+            # A nonexistent envelope must fail at the ACL read, never launch.
+            rejection = run([destination / 'winlaunch.exe', destination / 'missing'],
+                            destination, 'launcher-rejection',
+                            {'SystemRoot': os.environ['SystemRoot']})
+            report['launcher_rejection_pass'] = (
+                rejection.returncode != 0 and
+                b'B04-launch stage=setup api=GetNamedSecurityInfoW error=' in rejection.stdout
+                and b'stage=child' not in rejection.stdout)
+            if not report['launcher_rejection_pass']:
+                raise RuntimeError('launcher rejection diagnostic failed')
         # Baseline and sandbox share no mutable files. Every external target is
         # a new control file, never a real host/user file. Baseline is intentional
         # unconfined control execution, not an archive or an isolation fallback.
@@ -140,6 +151,12 @@ def capture(destination):
             env = {'PATH': os.defpath}
             if system == 'Windows':
                 env['SystemRoot'] = os.environ['SystemRoot']
+            if label == 'sandbox' and system in ('Linux', 'Darwin'):
+                # Same restrictions and mounts; only replace the probe argv with
+                # a fixed no-op to distinguish sandbox startup from probe work.
+                # Success here never changes the control gate.
+                startup = run(command[:-3] + ['/usr/bin/true'], destination, 'startup', env)
+                report['startup_returncode'] = startup.returncode
             result = run(command, destination, label, env)
             report[label + '_returncode'] = result.returncode
             raw = result.stdout

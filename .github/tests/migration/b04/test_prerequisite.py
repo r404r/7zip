@@ -42,6 +42,14 @@ class GateTest(unittest.TestCase):
             self.assertIs(report['b04_complete'], False)
             self.assertEqual(report['stage'], 'file-write-prerequisite-candidate')
             self.assertEqual(report['controls_pass'], result.returncode == 0)
+            if report['system'] in ('Linux', 'Darwin'):
+                self.assertIn('startup_returncode', report)
+                self.assertTrue((destination / 'startup.command.json').exists())
+                command = json.loads((destination / 'startup.command.json').read_text())
+                self.assertEqual(command[-1], '/usr/bin/true')
+            elif report['system'] == 'Windows':
+                self.assertTrue(report['launcher_rejection_pass'])
+                self.assertIn('B04-launch stage=', (destination / 'sandbox.stdout').read_text())
 
     def test_only_complete_real_control_relations_pass(self):
         import prerequisite as p
