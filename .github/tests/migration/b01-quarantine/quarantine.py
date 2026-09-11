@@ -48,6 +48,21 @@ def read_bounded(response, declared_size):
     return b''.join(chunks)
 
 
+def check_opaque_body(data):
+    """Reject markup-looking responses, not qualify archive formats.
+
+    Inspect only the already byte-capped body. Conservatively reject any leading
+    '<' after ASCII whitespace and an optional UTF-8 BOM: this includes comments,
+    doctypes and XML declarations without parsing or trusting their terminators.
+    A rejection requires inspection, never automatic retries or alternate sources.
+    """
+    prefix = data.lstrip()
+    if prefix.startswith(b'\xef\xbb\xbf'):
+        prefix = prefix[3:].lstrip()
+    if prefix.startswith(b'<'):
+        raise ValueError('unexpected markup body; not retained as archive')
+
+
 def verify_local(manifest, baseline, root, notice, require_complete=False):
     """Verify a pinned manifest and exact private tree, returning missing records.
 

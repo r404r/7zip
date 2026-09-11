@@ -35,7 +35,8 @@ content encoding, and a binary Content-Type allowlist before reading a body.
 Each read is capped to the remaining reviewed byte budget; it does not probe an
 extra byte. HTTP Content-Length defines the response body boundary; this is not
 inspection of trailing transport bytes. No archive signature/member parser runs.
-A shallow HTML prefix rejection is an error-page guard, not format qualification.
+A shared markup-looking response rejection is an error-page guard, not format
+qualification; the stage-review repair below supersedes the original shallow check.
 
 At `2026-09-11T12:31:12.828193+00:00`, the first exact URL returned HTTP 200,
 `Content-Type: application/vnd.rar`, `Content-Length: 102400`, no redirect and no
@@ -249,3 +250,69 @@ no concurrent same-owner tampering in the private root; this is not a malicious
 local-user sandbox or crash-proof transaction. HTTP Content-Length defines the
 body boundary; no over-budget probe or format validation is authorized. All rights,
 historical writer, member hashes, native/GUI/desktop qualification limits remain.
+
+## Stage CHANGES repair: wrapped error-page rejection
+
+Independent reviewer rejected preparation commit `9a5d8e3f76e9fbe09158ca59e1abc126c3caaaed`
+in comment 112: both acquisition paths accepted HTML preceded by a UTF-8 BOM or
+comment. This is the first substantive review failure, not a reopened MIME gate.
+No stage PASS exists yet; no real GET was made during this repair.
+
+The root cause was duplicated checks for only two literal prefixes after whitespace.
+Both paths now call `check_opaque_body` before writing any opaque file. It examines
+only the already length-capped response bytes, skips leading ASCII whitespace and
+one optional UTF-8 BOM, and conservatively rejects a leading `<`. Comments, HTML
+doctypes and XML/XHTML declarations are therefore stopped without parsing their
+contents or trusting a closing delimiter. This intentionally also rejects other
+markup-looking responses; false positives require inspection, not automatic retry.
+This is not a general content classifier, archive signature test, rights check or
+proof that an accepted body is an archive. No extra reads/GETs, archive libraries,
+MIME exceptions or source substitutions were added.
+
+[Error-page regressions](../../../.github/tests/migration/b01-quarantine/check_error_pages.py)
+exercise real `fetch_one`, real `run_resume` with its default fetch, and the initial
+`acquire.main` path. Only HTTPS transport and temporary destinations are patched.
+Six synthetic page variants cover bare HTML, BOM, comments, repeated comments with
+doctype, XML-declared XHTML and combined BOM/XML/comments. The fetch control uses
+the exact pinned `.r01` URL and 2572 bytes with missing MIME. Resume controls use
+the pinned first pending `.r00` URL and 102400 bytes. Tests enforce bounded reads,
+one request only, closed connections, no new opaque file, retained original
+manifest/notices/synthetic prior success, saved HTTP/null MIME/final URL/error
+evidence and no request on a second invocation. An ordinary synthetic binary body
+is the positive control. No acquired original is mutated or parsed.
+
+Repair commands (from task worktree):
+
+```text
+python3 .github/tests/migration/b01-quarantine/check_error_pages.py
+python3 .github/tests/migration/b01-quarantine/check_controls.py
+python3 .github/tests/migration/b01-quarantine/check_resume.py
+python3 .github/tests/migration/b01-quarantine/resume.py --preflight
+python3 .github/tests/migration/b01-quarantine/check_document.py
+python3 -m json.tool .github/tests/migration/b01-quarantine/manifest.json /dev/null
+python3 -m py_compile .github/tests/migration/b01-quarantine/acquire.py .github/tests/migration/b01-quarantine/quarantine.py .github/tests/migration/b01-quarantine/resume.py .github/tests/migration/b01-quarantine/check_error_pages.py
+python3 .github/tests/migration/b01-quarantine/__pycache__/audit_repair.py
+sha256sum .github/tests/migration/b01-quarantine/manifest.json /home/ding/work/github/r404r/b01-quarantine-t_d32ff791/manifest.json /home/ding/work/github/r404r/b01-quarantine-t_d32ff791/DRF-OLD/rar3-old.rar.opaque
+wc -c /home/ding/work/github/r404r/b01-quarantine-t_d32ff791/DRF-OLD/rar3-old.rar.opaque
+stat -c '%a %F %n' /home/ding/work/github/r404r/b01-quarantine-t_d32ff791 /home/ding/work/github/r404r/b01-quarantine-t_d32ff791/DRF-OLD/rar3-old.rar.opaque
+git diff --check
+git diff --cached --check
+```
+
+RED: new regressions failed in 15 subcases before the implementation repair:
+wrapped bodies returned success or caused a second mock request. GREEN: three
+new regression methods, four existing header/stream tests and three existing
+resume/verifier tests pass. The latter retains the expected diagnostic
+`ValueError: synthetic response conflict`. Offline preflight still reports six
+pending files. Document checks cover three notices and twelve local links;
+JSON/compile/diff checks pass. Original manifest hashes, opaque hash, 102400-byte
+length and modes remain exactly as recorded above. Read-only audit reconfirmed
+B01 `triage` and inherited default Telegram `notify+wake` without route disclosure.
+The audit helper is ignored local scratch, not a deliverable or new dependency.
+
+Changed deliverables in this repair: `acquire.py`, `quarantine.py`, `resume.py`,
+`check_error_pages.py` under the owned quarantine bookkeeping directory, and this
+report. No real quarantine bytes/notices/manifests changed, no production build
+is applicable, and no compatibility qualification is claimed. Request same-card
+stage re-review on the committed repair; PASS must return to tester without
+completing or integrating the still-incomplete acquisition card.

@@ -17,7 +17,7 @@ import sys
 from urllib.parse import urlsplit
 
 from acquire import HERE, IDS, MATRIX, MATRIX_SHA256, ROOT
-from quarantine import check_headers, read_bounded, verify_local
+from quarantine import check_headers, check_opaque_body, read_bounded, verify_local
 
 BASELINE_SHA256 = '5bf0600459996c638697eb902d789670186db72197d65665b3ee881b0f59655e'
 
@@ -67,8 +67,7 @@ def fetch_one(item):
                     tls_validation='ssl.create_default_context; certificate and hostname verified')
         check_headers(response.status, response.headers, item['declared_size'], url)
         data = read_bounded(response, item['declared_size'])
-        if data.lstrip().lower().startswith((b'<!doctype html', b'<html')):
-            raise ValueError('unexpected HTML body; not retained as archive')
+        check_opaque_body(data)
         return data
     finally:
         connection.close()

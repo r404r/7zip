@@ -9,7 +9,7 @@ import ssl
 import sys
 from urllib.parse import urlsplit
 
-from quarantine import check_headers, read_bounded
+from quarantine import check_headers, check_opaque_body, read_bounded
 
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[3]
@@ -102,8 +102,7 @@ def main():
                     item['tls_validation'] = 'ssl.create_default_context; certificate and hostname verified'
                     check_headers(response.status, response.headers, item['declared_size'])
                     data = read_bounded(response, item['declared_size'])
-                    if data.lstrip().lower().startswith((b'<!doctype html', b'<html')):
-                        raise ValueError('unexpected HTML body; not retained as archive')
+                    check_opaque_body(data)
                     target = Path(item['local_opaque_path'])
                     with target.open('xb') as output:
                         output.write(data)
