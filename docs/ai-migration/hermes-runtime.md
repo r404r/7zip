@@ -58,7 +58,9 @@ Board: `archive-rust-migration`; default workspace:
 `/home/ding/work/github/r404r/7zip`. Task workspaces explicitly use `worktree`;
 the board's default alone does not turn a scratch card into a worktree.
 The dispatcher holds `~/.hermes/kanban/.dispatcher.lock` and scans boards.
-The installed global and per-profile running caps are both configured.
+The total cap is host-wide across boards. The per-profile cap is board-local in
+this version; the migration is the only populated board. Do not claim a host-wide
+per-profile cap if other boards are later populated.
 
 Milestones have `--max-retries 2` (block on the second failure, not two further
 retries) and `--max-runtime 2h`. Runtime/spawn/crash/timeout failure accounting is
@@ -74,7 +76,10 @@ so they cannot run before its review succeeds.
 Important installed-version behavior: an initial `blocked` status without a typed
 block event can be promoted. The bootstrap gate was picked up once, and the
 orchestrator correctly recorded `needs_input` and stopped without releasing M0.
-Use `kanban block TASK --kind needs_input REASON` for durable human gates.
+Use `kanban block --kind needs_input TASK REASON` for durable human gates.
+Never archive an unresolved gate: archived parents also satisfy dependencies.
+Worktrees start from the source checkout's current HEAD, so that checkout must
+stay on the automation base; there is no fixed base-ref option configured here.
 
 ## Service and notifications
 
@@ -108,3 +113,9 @@ Directory mode is 0700; backup files and runtime secret/config files are 0600.
 The original default had no auth.json. Existing Codex and profile auth stores were
 not replaced. The default configuration was section-merged and checked to preserve
 all unrelated parsed values. Installed `validate_config_structure` passed.
+
+A second private role-prompt backup was created before audit safeguards:
+`~/.hermes/backups/archive-migration-role-audit-20260911T010610Z/`.
+Final validation passed for all six configuration structures and runtime secret
+permissions. B1 t_181faa42 completed after independent reviewer PASS. G0 and B2
+have sticky needs_input events; all four milestones remain unstarted.

@@ -72,6 +72,19 @@ workflow had no diff. Local validation does not execute GitHub's workflow engine
 No native macOS or Windows execution was available in this local check; CI results
 remain pending until the review branch runs on their genuine runners.
 
+## Verified remote bootstrap runs
+
+The review branch was pushed without tags. At source commit
+`7e4ec5a0a13976ab7d5a89cc0cc43b7451a443dd`, both native Linux and macOS arm64 jobs
+passed in [migration-native-cli run 34548991963](https://github.com/r404r/7zip/actions/runs/34548991963).
+Logs show both archive formats passed the four-operation path/content smoke on
+macOS as well as Linux. Native Windows MSVC build, existing regression checks and
+MSI validation passed in [Windows run 34548991981](https://github.com/r404r/7zip/actions/runs/34548991981).
+The release job was skipped on the branch. No release was published.
+These results establish the checked legacy build/smoke coverage, not Rust, Qt/QML,
+full archive compatibility or cross-platform desktop support. Subsequent bootstrap
+documentation-only commits do not change that tested implementation or workflow.
+
 ## M1 and later requirements
 
 M1 must create reviewed fixtures and observations for list/extract/create/test,

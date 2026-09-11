@@ -86,11 +86,13 @@ attempts. Explain the exact issue, evidence, two or three options, a recommendat
 and each option's impact. Record the decision on the card; resume only after the
 required human answer. Independent eligible cards continue.
 
-For human gates use `hermes kanban block TASK --kind needs_input REASON`.
+For human gates use `hermes kanban block --kind needs_input TASK REASON`.
 This Hermes version can promote an initially blocked card without a typed block
 event; `create --initial-status blocked` alone is not a durable human gate.
 Credential activation requires the credential and verification evidence, not an
 additional permission request after the user has already authorized setup.
+Never archive an unresolved gate or unreviewed prerequisite: Hermes treats an
+archived parent as satisfied and can release dependent work.
 
 Use durable Telegram subscriptions owned by the default gateway, preferably
 notify+wake. Children must inherit subscriptions (creator_task_id and dependency
@@ -128,6 +130,10 @@ unrelated provider/auth settings and validate the result.
 The bootstrap branch `ai/migration-bootstrap-20260911` is the local automation
 base, initially descended from `dev-main`; it must contain AGENTS.md before
 workers are dispatched. Never auto-merge into dev-main or another shared branch.
+Hermes creates worktrees from the source checkout's current HEAD. Keep that
+checkout on the automation base; verify its branch and the worktree's AGENTS.md
+before each task. Block a base mismatch rather than starting migration from an
+unverified branch.
 Each task starts an isolated branch from the automation base. Before work, bring
 required reviewed parent commits into that task's branch with ordinary Git merges
 or cherry-picks; inspect parent card results and paths. Resolve routine conflicts
