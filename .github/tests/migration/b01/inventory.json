@@ -1,0 +1,540 @@
+{
+  "schema_version": 1,
+  "scope": "Full native Alone2 registration inventory; CLI only",
+  "formats": [
+    {
+      "format": "7z",
+      "registration": "C...F..........c.a.m+..  7z       7z            7 z BC AF ' 1C",
+      "status": "covered",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [
+        "copy.7z",
+        "lzma2.7z",
+        "header.7z",
+        "truncated.7z",
+        "next-header.7z",
+        "tail-truncated.7z"
+      ],
+      "production_release": false
+    },
+    {
+      "format": "APFS",
+      "registration": "    ......................  APFS     apfs img      offset=32 N X S B 00",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "APM",
+      "registration": "    ......................  APM      apm           E R",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "Ar",
+      "registration": "    ......................  Ar       ar a deb udeb lib ! < a r c h > 0A",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "Arj",
+      "registration": "    ......................  Arj      arj           ` EA",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "Base64",
+      "registration": "    K.....O.....X.........  Base64   b64           ",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "COFF",
+      "registration": "    ......O...............  COFF     obj           ",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "Cab",
+      "registration": "    ...F..................  Cab      cab           M S C F 00 00 00 00",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "Chm",
+      "registration": "    ......................  Chm      chm chi chq chw I T S F 03 00 00 00 ` 00 00 00",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "Compound",
+      "registration": "    ......................  Compound msi msp msm doc xls ppt aaf D0 CF 11 E0 A1 B1 1A E1",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "Cpio",
+      "registration": "    ....M.................  Cpio     cpio          0 7 0 7 0  ||  C7 q  ||  q C7",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "CramFS",
+      "registration": "    ......................  CramFS   cramfs        offset=16 C o m p r e s s e d 20 R O M F S",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "Dmg",
+      "registration": "    .....G..B.............  Dmg      dmg           k o l y 00 00 00 04 00 00 02 00",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "ELF",
+      "registration": "    .........E............  ELF      elf           \u007f E L F",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "Ext",
+      "registration": "    ......................  Ext      ext ext2 ext3 ext4 img offset=1080 S EF",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "FAT",
+      "registration": "    ......................  FAT      fat img       offset=510 U AA",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "FLV",
+      "registration": "    ......................  FLV      flv           F L V 01",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "GPT",
+      "registration": "    ......................  GPT      gpt mbr       offset=512 E F I 20 P A R T 00 00 01 00",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "HFS",
+      "registration": "    ....M.................  HFS      hfs hfsx      offset=1024 B D  ||  H + 00 04  ||  H X 00 05",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "Hxs",
+      "registration": "    ...F..................  Hxs      hxs hxi hxr hxq hxw lit I T O L I T L S 01 00 00 00 ( 00 00 00",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "IHex",
+      "registration": "    ......O...............  IHex     ihex          ",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "Iso",
+      "registration": "    ......................  Iso      iso img       offset=32769 C D 0 0 1",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "LP",
+      "registration": "    ......................  LP       lpimg img     offset=4096 g D l a 4 00 00 00",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "Lzh",
+      "registration": "    ......................  Lzh      lzh lha       offset=2 - l h",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "MBR",
+      "registration": "    .......P..............  MBR      mbr           ",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "MachO",
+      "registration": "    ....M....E............  MachO    macho         CE FA ED FE  ||  CF FA ED FE  ||  FE ED FA CE  ||  FE ED FA CF",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "MsLZ",
+      "registration": "    ......................  MsLZ     mslz          S Z D D 88 F0 ' 3 A",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "Mub",
+      "registration": "    ....M.................  Mub      mub           CA FE BA BE 00 00 00  ||  B9 FA F1 0E",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "NTFS",
+      "registration": "    ......................  NTFS     ntfs img      offset=3 N T F S 20 20 20 20 00",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "Nsis",
+      "registration": "    ...F.G................  Nsis     nsis          offset=4 EF BE AD DE N u l l s o f t I n s t",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "PE",
+      "registration": "    .........E............  PE       exe dll sys   M Z",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "Ppmd",
+      "registration": "    ......................  Ppmd     pmd           8F AF AC 84",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "QCOW",
+      "registration": "    ......................  QCOW     qcow qcow2 qcow2c Q F I FB 00 00 00",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "Rar",
+      "registration": "    ...F..................  Rar      rar r00       R a r ! 1A 07 00",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "Rar5",
+      "registration": "    ...F..................  Rar5     rar r00       R a r ! 1A 07 01 00",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "Rpm",
+      "registration": "    ......................  Rpm      rpm           ED AB EE DB",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "SWF",
+      "registration": "    K.....................  SWF      swf           F W S",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "SWFc",
+      "registration": "    ....M.................  SWFc     swf (~.swf)   C W S  ||  Z W S",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "Sparse",
+      "registration": "    ......................  Sparse   simg img      : FF & ED 01 00",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "Split",
+      "registration": "    ......................  Split    001           ",
+      "status": "covered",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [
+        "volume.7z.001"
+      ],
+      "production_release": false
+    },
+    {
+      "format": "SquashFS",
+      "registration": "    ....M.................  SquashFS squashfs      h s q s  ||  s q s h  ||  s h s q  ||  q s h s",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "TE",
+      "registration": "    .........E............  TE       te            V Z",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "UEFIc",
+      "registration": "    ...FM.................  UEFIc    scap          BD 86 f ; v 0D 0 @ B7 0E B5 Q 9E / C5 A0  ||  8B A6 < J # w FB H 80 = W 8C C1 FE C4 M  ||  B9 82 91 S B5 AB 91 C B6 9A E3 A9 C F7 / CC",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "UEFIf",
+      "registration": "    ...FM.................  UEFIf    uefif         offset=16 D9 T 93 z h 04 J D 81 CE 0B F6 17 D8 90 DF  ||  x E5 8C 8C = 8A 1C O 99 5 89 a 85 C3 - D3",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "Udf",
+      "registration": "    ....M.O...............  Udf      udf iso img   offset=32768 00 B E A 0 1 01 00  ||  01 C D 0 0 1",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "VDI",
+      "registration": "    ......................  VDI      vdi           offset=64 \u007f 10 DA BE",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "VHD",
+      "registration": "    .....G................  VHD      vhd           c o n e c t i x 00 00",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "VHDX",
+      "registration": "    ......................  VHDX     vhdx avhdx    v h d x f i l e",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "VMDK",
+      "registration": "    ......................  VMDK     vmdk          K D M V",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "Xar",
+      "registration": "    ......................  Xar      xar pkg xip   x a r ! 00",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "Z",
+      "registration": "    ......................  Z        z taz (.tar)  1F 9D",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "bzip2",
+      "registration": "   CK.....................  bzip2    bz2 bzip2 tbz2 (.tar) tbz (.tar) B Z h",
+      "status": "covered",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [
+        "payload.bz2"
+      ],
+      "production_release": false
+    },
+    {
+      "format": "gzip",
+      "registration": "   CK.................m+..  gzip     gz gzip tgz (.tar) tpz (.tar) apk (.tar) 1F 8B 08",
+      "status": "covered",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [
+        "payload.gz",
+        "nested.tar.gz"
+      ],
+      "production_release": false
+    },
+    {
+      "format": "lzma",
+      "registration": "    K.....O...............  lzma     lzma          ",
+      "status": "covered",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [
+        "payload.lzma"
+      ],
+      "production_release": false
+    },
+    {
+      "format": "lzma86",
+      "registration": "    K.....................  lzma86   lzma86        ",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "tar",
+      "registration": "   C......O...LH......m+..  tar      tar ova       offset=257 u s t a r",
+      "status": "covered",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [
+        "payload.tar"
+      ],
+      "production_release": false
+    },
+    {
+      "format": "wim",
+      "registration": "   C.SN.......LH..c.a.m+..  wim      wim swm esd ppkg M S W I M 00 00 00",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "xz",
+      "registration": "   CK.....................  xz       xz txz (.tar) FD 7 z X Z 00",
+      "status": "covered",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [
+        "payload.xz"
+      ],
+      "production_release": false
+    },
+    {
+      "format": "zip",
+      "registration": "   C...FMG........c.a.m+..  zip      zip z01 zipx jar xpi odt ods docx xlsx epub ipa apk appx P K 03 04  ||  P K 05 06  ||  P K 06 06  ||  P K 07 08 P K  ||  P K 0 0 P K",
+      "status": "covered",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [
+        "store.zip",
+        "deflate.zip",
+        "bzip2.zip",
+        "lzma.zip",
+        "crc.zip",
+        "unsupported.zip",
+        "data.zip",
+        "truncated.zip",
+        "misnamed.dat"
+      ],
+      "production_release": false
+    },
+    {
+      "format": "zstd",
+      "registration": "    K.....................  zstd     zst tzst (.tar) ( B5 / FD",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    },
+    {
+      "format": "Hash",
+      "registration": "   CK.....O.....XC........  Hash     sha256 sha512 sha384 sha224 sha512-224 sha512-256 sha3-224 sha3-256 sha3-384 sha3-512 sha1 sha2 sha3 sha md5 blake2s blake2b blake2sp xxh64 crc32 crc64 cksum asc ",
+      "status": "unqualified",
+      "scope": "Only listed fixtures/operations; not complete format/method qualification",
+      "fixtures": [],
+      "production_release": false
+    }
+  ],
+  "unsupported": [
+    {
+      "case": "ZIP method 65535",
+      "evidence": "unsupported.zip/test",
+      "scope": "This measured method value only; not all unknown methods"
+    }
+  ],
+  "unqualified_required": [
+    "All other methods/format variants",
+    "External 7z/RAR/CAB/ISO/WIM fixtures",
+    "RAR multivolume",
+    "Automatic arbitrary nested handler chains",
+    "Numeric HRESULT/NOperationResult/CArcErrorInfo at FFI boundary",
+    "Windows GUI 7z.dll product capability comparison"
+  ],
+  "policy": "No full B01 closure or affected production release while required cases are unqualified"
+}

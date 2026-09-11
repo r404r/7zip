@@ -1,0 +1,102 @@
+name: b01-native
+
+on:
+  push:
+    branches: ['wt/t_22299c6f']
+  pull_request:
+    paths: ['.github/tests/migration/b01/**', '.github/workflows/b01-native.yml', 'C/**', 'CPP/**']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  b01:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            baseline: linux
+          - os: windows-latest
+            baseline: windows
+          - os: macos-latest
+            baseline: macos
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUTF8: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Build native Unix Alone2
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p evidence
+          uname -a > evidence/toolchain.txt
+          python --version >> evidence/toolchain.txt
+          cd CPP/7zip/Bundles/Alone2
+          case "$(uname -s)/$(uname -m)" in
+            Linux/*)
+              gcc --version >> "$GITHUB_WORKSPACE/evidence/toolchain.txt"
+              make -j2 -f ../../cmpl_gcc.mak O="$RUNNER_TEMP/b01-cli" 2>&1 | tee "$GITHUB_WORKSPACE/evidence/build.log"
+              ;;
+            Darwin/arm64)
+              clang --version >> "$GITHUB_WORKSPACE/evidence/toolchain.txt"
+              make -j2 -f ../../cmpl_mac_arm64.mak O="$RUNNER_TEMP/b01-cli" 2>&1 | tee "$GITHUB_WORKSPACE/evidence/build.log"
+              ;;
+            *) exit 1 ;;
+          esac
+          echo "ORACLE_EXE=$RUNNER_TEMP/b01-cli/7zz" >> "$GITHUB_ENV"
+      - name: Build native Windows Alone2
+        if: runner.os == 'Windows'
+        shell: cmd
+        run: |
+          mkdir evidence
+          for /f "usebackq tokens=*" %%i in (`"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath`) do set "VSPATH=%%i"
+          if not defined VSPATH (echo Visual Studio with the C++ toolset was not found & exit /b 1)
+          call "%VSPATH%\VC\Auxiliary\Build\vcvars64.bat" || exit /b 1
+          cl > evidence\toolchain.txt 2>&1
+          python --version >> evidence\toolchain.txt
+          pushd CPP\7zip\Bundles\Alone2
+          nmake /NOLOGO PLATFORM=x64 > "%GITHUB_WORKSPACE%\evidence\build.log" 2>&1 || exit /b 1
+          popd
+          echo ORACLE_EXE=%GITHUB_WORKSPACE%\CPP\7zip\Bundles\Alone2\x64\7zz.exe>> "%GITHUB_ENV%"
+      - name: Capture and repeat actual native observations
+        shell: bash
+        run: |
+          set -euo pipefail
+          python .github/tests/migration/b01/capture.py "$ORACLE_EXE" --report evidence/capture.json
+          python .github/tests/migration/b01/capture.py "$ORACLE_EXE" --report evidence/repeat.json --expect evidence/capture.json
+          python .github/tests/migration/b01/negative_test.py evidence/capture.json
+          python .github/tests/migration/b01/summarize.py evidence/capture.json --inventory evidence/inventory.json > evidence/summary.txt
+      - name: Compare frozen native corpus when present
+        shell: bash
+        run: |
+          set -euo pipefail
+          baseline=".github/tests/migration/b01/oracles/${{ matrix.baseline }}.json"
+          if test -f "$baseline"; then
+            python .github/tests/migration/b01/capture.py "$ORACLE_EXE" --report evidence/regression.json --expect "$baseline"
+          else
+            echo 'Capture-only; no frozen baseline approval is implied.'
+          fi
+      - name: Preserve M1 baseline
+        shell: bash
+        run: |
+          case '${{ matrix.baseline }}' in
+            linux) oracle=linux-x86_64-core;;
+            windows) oracle=windows-amd64-core;;
+            macos) oracle=macos-arm64-core;;
+          esac
+          python .github/tests/archive_characterization.py "$ORACLE_EXE" --report evidence/m1-regression.json --expect ".github/tests/oracles/$oracle.json"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: b01-${{ matrix.baseline }}-${{ github.sha }}
+          path: evidence/
+          if-no-files-found: error
