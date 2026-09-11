@@ -48,6 +48,9 @@ jobs:
       - name: Validate source-backed relations and completeness
         shell: bash
         run: python .github/tests/migration/b02/validate.py "$RUNNER_TEMP/b02/capture.json"
+      - name: Verify immutable captured baseline bytes
+        shell: bash
+        run: python .github/tests/migration/b02/verify_frozen.py .github/tests/migration/b02/evidence/34559743445
       - name: Upload native evidence even on failure
         if: always()
         uses: actions/upload-artifact@v4

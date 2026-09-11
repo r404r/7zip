@@ -12,6 +12,7 @@ from run import negative_controls, sha
 
 def validate(report):
     obs = report['observations']
+    assert all(obs['native_roundtrip'][op]['exit'] == 0 for op in ('create', 'list', 'extract'))
     assert set(obs['cases']) == set(corpus()), 'incomplete corpus'
     for label, (_, data, _) in corpus().items():
         case = obs['cases'][label]
@@ -37,6 +38,16 @@ def validate(report):
             assert a['listing']['exit'] == b['listing']['exit'] == 0
         assert case['cli']['invalid_cp_type']['listing']['exit'] != 0
         assert case['cli']['other_scope'].get('tree') == case['cli']['default'].get('tree')
+        assert case['cli']['ordered_override'].get('tree') == case['cli']['scoped936'].get('tree')
+        assert case['cli']['reverse_override'].get('tree') == case['cli']['scoped932'].get('tree')
+    cases = obs['cases']
+    for label in ('unicode-bad-crc', 'unicode-bad-version', 'unicode-invalid-utf8'):
+        for actual, fallback in zip(cases[label]['handler']['phases'], cases['cp932-zip']['handler']['phases']):
+            assert actual['items'] == fallback['items'], (label, 'invalid extra must fall back')
+    for label in ('unicode-valid', 'efs-beats-extra'):
+        phases = cases[label]['handler']['phases']
+        assert all(p['items'] == phases[0]['items'] for p in phases), (label, 'cp must not override declared Unicode')
+    assert cases['unicode-valid']['handler']['phases'][0]['items'] != cases['efs-beats-extra']['handler']['phases'][0]['items']
     if obs['platform'] == 'Windows':
         for fmt in ('zip', 'tar'):
             for cp, text in (('932', '日本語.txt'), ('936', '中文.txt')):
