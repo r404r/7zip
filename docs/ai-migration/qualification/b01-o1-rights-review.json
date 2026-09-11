@@ -1,0 +1,608 @@
+{
+  "schema_version": 1,
+  "task_id": "t_4ea8d1ca",
+  "status": "awaiting_independent_review",
+  "assessment_type": "engineering_risk_assessment_not_legal_advice",
+  "policy_document": "b01-replay-policy.md",
+  "authority": {
+    "b01_task": "t_22299c6f",
+    "comment_id": 89,
+    "recorded_at": 1789127406,
+    "operator_decision": "批准",
+    "same_scope_confirmation": "选择O1",
+    "parent_commit": "1fc1f83091a50bab2c691e372eb8b86b745fe008",
+    "integration_commit": "b7c30b273fd930c3167434c87b85c685aac846cd",
+    "policy_approved": true,
+    "import_authorized": false
+  },
+  "evidence_class_enum": [
+    "acquired-immutable",
+    "generated-reproducible"
+  ],
+  "scope": {
+    "distribution": "python-rarfile",
+    "version": "4.5-1",
+    "upstream_context_pin": "d2f7df6fc843dae356fd6b0a85971dc36fd6e757",
+    "archive_payload_downloads": 0,
+    "imports": 0,
+    "extractions": 0,
+    "writer_executions": 0,
+    "native_tests": 0,
+    "correspondence_sent": 0,
+    "spending": 0,
+    "dag_changes": 0,
+    "b01_unblocked_or_archived": false,
+    "b03_b04_authorization_changed": false
+  },
+  "rights_common": {
+    "copyright_source_id": 2,
+    "literal_selected_stanza": "Files: *\nCopyright: 2005-2026 Marko Kreen <markokr@gmail.com>\nLicense: ISC\n  Permission to use, copy, modify, and/or distribute this software for any\n  purpose with or without fee is hereby granted, provided that the above\n  copyright notice and this permission notice appear in all copies.\n  .\n  THE SOFTWARE IS PROVIDED “AS IS” AND ISC DISCLAIMS ALL WARRANTIES WITH\n  REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY\n  AND FITNESS. IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT,\n  OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF\n  USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER\n  TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE\n  OF THIS SOFTWARE.",
+    "literal_exception_stanza": "Files: debian/*\nCopyright:\n 2014-2019 Hugo Lefeuvre <hle@debian.org>\n 2023-2026 Jeroen Ploemen <jcfp@debian.org>\nLicense: GPL-2+\n This package is free software; you can redistribute it and/or modify\n it under the terms of the GNU General Public License as published by\n the Free Software Foundation; either version 2 of the License, or\n (at your option) any later version.\n .\n This package is distributed in the hope that it will be useful,\n but WITHOUT ANY WARRANTY; without even the implied warranty of\n MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n GNU General Public License for more details.\n .\n You should have received a copy of the GNU General Public License\n along with this program. If not, see <http://www.gnu.org/licenses/>\n .\n On Debian systems, the complete text of the GNU General\n Public License version 2 can be found in \"/usr/share/common-licenses/GPL-2\".",
+    "path_assignment": "All seven test/files paths match Files: *; none match the only later exception Files: debian/*. Assigned ISC, copyright 2005-2026 Marko Kreen.",
+    "format_source_id": 1,
+    "container_applicability": "Affirmative distribution path-level ISC assignment, corroborated by contribution history; reasonable basis for an import decision, not legal warranty or operator permission.",
+    "member_metadata_applicability": "Distribution declaration has no selected-file carve-out, but no individually identified embedded-member sources/rights statement. Extension to each actual member is an engineering inference with residual third-party-content risk, NOT an established complete grant.",
+    "grant_authority": "Marko Kreen attribution aligns with named upstream contributor. No personal or exhaustive rights-chain attestation established; do not invent it.",
+    "exceptions": "Only debian/* GPL-2+ packaging exception in inspected manifest; no selected test/files exception. Absence of exceptions is not proof no third-party embedded rights exist.",
+    "notice_obligations": [
+      "Preserve exact copyright and permission notice in all copies; retain full ISC disclaimer unchanged as distributed, including its literal ISC wording.",
+      "Carry exact source/version/path and rights-review reference alongside each selected fixture and derivative; do not relicense as CC0/MIT.",
+      "Do not copy packaging implementation into corpus; if later packaging files are redistributed, evaluate their GPL-2+ obligations separately."
+    ],
+    "assessment_rule": "A personalized per-file grant is not an automatic prerequisite when distribution coverage and contribution attribution are coherent. Ready means evidence supports presenting a bounded decision, not that complete member rights are certified."
+  },
+  "candidates": {
+    "DRF-OLD": {
+      "evidence_class": "acquired-immutable",
+      "outcome": "ready_for_import_decision",
+      "import_approved": false,
+      "qualified": false,
+      "files": [
+        {
+          "path": "test/files/rar3-old.rar",
+          "retrieval_url": "https://sources.debian.org/data/main/p/python-rarfile/4.5-1/test/files/rar3-old.rar",
+          "declared_size": 102400,
+          "size_source_id": 7,
+          "archive_sha256": null,
+          "sha256_unknown_reason": "Archive acquisition prohibited in this phase.",
+          "upstream_context_git_blob_sha1": "962d8b6f4b9d7e60396c1b5366f8962868c71fe1",
+          "upstream_context_source_id": 3,
+          "same_bytes_as_upstream": null
+        },
+        {
+          "path": "test/files/rar3-old.r00",
+          "retrieval_url": "https://sources.debian.org/data/main/p/python-rarfile/4.5-1/test/files/rar3-old.r00",
+          "declared_size": 102400,
+          "size_source_id": 7,
+          "archive_sha256": null,
+          "sha256_unknown_reason": "Archive acquisition prohibited in this phase.",
+          "upstream_context_git_blob_sha1": "0ba628367eaae36c92a648217e9baf96125c2acb",
+          "upstream_context_source_id": 3,
+          "same_bytes_as_upstream": null
+        },
+        {
+          "path": "test/files/rar3-old.r01",
+          "retrieval_url": "https://sources.debian.org/data/main/p/python-rarfile/4.5-1/test/files/rar3-old.r01",
+          "declared_size": 2572,
+          "size_source_id": 7,
+          "archive_sha256": null,
+          "sha256_unknown_reason": "Archive acquisition prohibited in this phase.",
+          "upstream_context_git_blob_sha1": "9bc19dde8cb2e46d3e064b83074c7fc4e7e5c3da",
+          "upstream_context_source_id": 3,
+          "same_bytes_as_upstream": null
+        }
+      ],
+      "proposed_volume_order": [
+        "test/files/rar3-old.rar",
+        "test/files/rar3-old.r00",
+        "test/files/rar3-old.r01"
+      ],
+      "volume_order_basis": "Listed source naming and expected metadata, not native verified acquisition.",
+      "case_ids": [
+        "R4-OLDVOL"
+      ],
+      "known_facts": [
+        "ISC Files:* declaration; expected metadata says meth=0 and SPLIT_AFTER; history names Marko Kreen.",
+        "Stored old-name multipart intent; ver=20 is unpack-version metadata, not writer/Rar3 coverage."
+      ],
+      "expected_metadata": {
+        "source_id": 6,
+        "literal_text": "Archive: test/files/rar3-old.rar\nFILE: hdrlen=50 datlen=102310 is=F--\n  flags=0x9022:SPLIT_AFTER,EXTTIME,LONG,D128\n  os=3:UNIX ver=20 mode=-rw-rw-r-- meth=0 cmp=205000 dec=205000 vol=0\n  crc=0x509ad74c (1352324940) date_time=2016-05-24 11:42:37\n  name=vols/bigfile.txt\n  mtime=2016-05-24T11:42:37\nFILE: hdrlen=52 datlen=2050 is=F--\n  flags=0x9020:EXTTIME,LONG,D128\n  os=3:UNIX ver=20 mode=-rw-rw-r-- meth=0 cmp=2050 dec=2050 vol=2\n  crc=0xd08a1f86 (3498712966) date_time=2016-05-24 11:42:43\n  name=vols/smallfile.txt\n  mtime=2016-05-24T11:42:43\n",
+        "members": [
+          {
+            "name": "vols/bigfile.txt",
+            "declared_decoded_size": 205000,
+            "sha256": null,
+            "rights_source_binding": null,
+            "observation_class": "upstream_expected_metadata_not_actual_member"
+          },
+          {
+            "name": "vols/smallfile.txt",
+            "declared_decoded_size": 2050,
+            "sha256": null,
+            "rights_source_binding": null,
+            "observation_class": "upstream_expected_metadata_not_actual_member"
+          }
+        ]
+      },
+      "history": {
+        "source_id": 10,
+        "scope": "Current entrypoint path bounded, not first creation or rename-complete history. Part paths also bound by pinned tree; per-part authoring not asserted.",
+        "commit": "6ab3317c6a02c4f1082ab8570a34d4868c7baa3c",
+        "author": "Marko Kreen",
+        "literal_message": "New test files for rar5\n\nMove away from shell scripts to tox+nose"
+      },
+      "historical_writer": {
+        "generator": null,
+        "version": null,
+        "build": null,
+        "package_sha256": null,
+        "executable_sha256": null,
+        "invocation": null,
+        "unknown_reason": "No actual historical writer identity/build/invocation records established in the inspected fixed evidence. O1 permits explicit unknowns for acquired replay only.",
+        "named_writer_interoperability_claim": false,
+        "regeneration_claim": false
+      },
+      "unknowns": [
+        "Actual Debian archive/part hashes and equality with upstream Git objects.",
+        "Complete actual member bytes, metadata and source authorship; individual embedded rights-chain authority.",
+        "Native method/handler, operation, error, missing-volume/probing and repeat/drift behavior."
+      ],
+      "rights_assessment": {
+        "context": "rights_common applies to every exact file and every expected member; no per-member grant fabricated.",
+        "reasoning": "Positive path-specific distribution ISC assignment plus matching contribution author is proportionate evidence to submit this exact family for an operator import decision. No selected-path exception or contradictory attribution appears in the inspected sources. Missing personalized grant or historical writer executable alone does not force rejection. Actual all-member applicability remains a disclosed risk and inventory obligation, not a certified fact.",
+        "outcome_not_permission": true,
+        "rejection_evidence_found": false
+      },
+      "risks": [
+        "Embedded third-party content may contradict distribution attribution; expected member names/sizes cannot exclude it.",
+        "GitHub history verified from reviewed snapshots, not freshly fetched after rate limit.",
+        "Metadata intent is not measured behavioral equivalence; family may fill only a subset of its case."
+      ],
+      "finite_next_action": "After independent PASS, present exact named family and ISC notice obligations for one explicit bounded acquisition/quarantine/import decision; do not execute it on this card. Require actual byte/member inventory and review before accepted corpus status; unexpected provenance/content stops the pilot.",
+      "stop_condition": "Stop this assessment after handoff. If the later decision requires stronger exact-member authority evidence, record that gap and stop; no automatic inquiry or expanded search.",
+      "decision_question": "Does the operator accept the disclosed distribution-attribution/member-authority risk sufficiently to authorize only this pinned family for bounded quarantine/acquisition and subsequent rights/byte review, without corpus qualification or named-writer claims?",
+      "unresolved_evidence_question": "Are all actual embedded members and their metadata original or otherwise covered by the stated ISC grant, and is any contrary notice/source attribution present? Not sent externally."
+    },
+    "DRF-SOLID": {
+      "evidence_class": "acquired-immutable",
+      "outcome": "ready_for_import_decision",
+      "import_approved": false,
+      "qualified": false,
+      "files": [
+        {
+          "path": "test/files/rar5-solid.rar",
+          "retrieval_url": "https://sources.debian.org/data/main/p/python-rarfile/4.5-1/test/files/rar5-solid.rar",
+          "declared_size": 169,
+          "size_source_id": 7,
+          "archive_sha256": null,
+          "sha256_unknown_reason": "Archive acquisition prohibited in this phase.",
+          "upstream_context_git_blob_sha1": "277cfe7206417067faf2fbd7c3f0bd7a1bf878a2",
+          "upstream_context_source_id": 3,
+          "same_bytes_as_upstream": null
+        }
+      ],
+      "proposed_volume_order": [
+        "test/files/rar5-solid.rar"
+      ],
+      "volume_order_basis": "Listed source naming and expected metadata, not native verified acquisition.",
+      "case_ids": [
+        "R5-LZ-SOLID"
+      ],
+      "known_facts": [
+        "ISC package declaration; expected dump says cmp_meth=3 and second member solid=True.",
+        "RAR5 compressed method 3, second member solid=True; not proof of native LZ/solid decoding."
+      ],
+      "expected_metadata": {
+        "source_id": 4,
+        "literal_text": "Archive: test/files/rar5-solid.rar\nR5_FILE: hdrlen=33 datlen=58 hdr_extra=0 is=F--\n  block_flags=0x0002:DATA\n  name=stest1.txt\n  file_flags=0x0004:CRC32\n  cmp_algo=0 cmp_meth=3 dict=3 solid=False\n  os=1:UNIX mode=-rw-rw-rw- cmp=58 dec=2048 vol=0\n  crc=0xc5b7e6a2 (3317163682)\nR5_FILE: hdrlen=33 datlen=13 hdr_extra=0 is=F--\n  block_flags=0x0002:DATA\n  name=stest2.txt\n  file_flags=0x0004:CRC32\n  cmp_algo=0 cmp_meth=3 dict=3 solid=True\n  os=1:UNIX mode=-rw-rw-rw- cmp=13 dec=2048 vol=0\n  crc=0xc5b7e6a2 (3317163682)\n",
+        "members": [
+          {
+            "name": "stest1.txt",
+            "declared_decoded_size": 2048,
+            "sha256": null,
+            "rights_source_binding": null,
+            "observation_class": "upstream_expected_metadata_not_actual_member"
+          },
+          {
+            "name": "stest2.txt",
+            "declared_decoded_size": 2048,
+            "sha256": null,
+            "rights_source_binding": null,
+            "observation_class": "upstream_expected_metadata_not_actual_member"
+          }
+        ]
+      },
+      "history": {
+        "source_id": 8,
+        "scope": "Current entrypoint path bounded, not first creation or rename-complete history. Part paths also bound by pinned tree; per-part authoring not asserted.",
+        "commit": "6ab3317c6a02c4f1082ab8570a34d4868c7baa3c",
+        "author": "Marko Kreen",
+        "literal_message": "New test files for rar5\n\nMove away from shell scripts to tox+nose"
+      },
+      "historical_writer": {
+        "generator": null,
+        "version": null,
+        "build": null,
+        "package_sha256": null,
+        "executable_sha256": null,
+        "invocation": null,
+        "unknown_reason": "No actual historical writer identity/build/invocation records established in the inspected fixed evidence. O1 permits explicit unknowns for acquired replay only.",
+        "named_writer_interoperability_claim": false,
+        "regeneration_claim": false
+      },
+      "unknowns": [
+        "Actual Debian archive/part hashes and equality with upstream Git objects.",
+        "Complete actual member bytes, metadata and source authorship; individual embedded rights-chain authority.",
+        "Native method/handler, operation, error, missing-volume/probing and repeat/drift behavior."
+      ],
+      "rights_assessment": {
+        "context": "rights_common applies to every exact file and every expected member; no per-member grant fabricated.",
+        "reasoning": "Positive path-specific distribution ISC assignment plus matching contribution author is proportionate evidence to submit this exact family for an operator import decision. No selected-path exception or contradictory attribution appears in the inspected sources. Missing personalized grant or historical writer executable alone does not force rejection. Actual all-member applicability remains a disclosed risk and inventory obligation, not a certified fact.",
+        "outcome_not_permission": true,
+        "rejection_evidence_found": false
+      },
+      "risks": [
+        "Embedded third-party content may contradict distribution attribution; expected member names/sizes cannot exclude it.",
+        "GitHub history verified from reviewed snapshots, not freshly fetched after rate limit.",
+        "Metadata intent is not measured behavioral equivalence; family may fill only a subset of its case."
+      ],
+      "finite_next_action": "After independent PASS, present exact named family and ISC notice obligations for one explicit bounded acquisition/quarantine/import decision; do not execute it on this card. Require actual byte/member inventory and review before accepted corpus status; unexpected provenance/content stops the pilot.",
+      "stop_condition": "Stop this assessment after handoff. If the later decision requires stronger exact-member authority evidence, record that gap and stop; no automatic inquiry or expanded search.",
+      "decision_question": "Does the operator accept the disclosed distribution-attribution/member-authority risk sufficiently to authorize only this pinned family for bounded quarantine/acquisition and subsequent rights/byte review, without corpus qualification or named-writer claims?",
+      "unresolved_evidence_question": "Are all actual embedded members and their metadata original or otherwise covered by the stated ISC grant, and is any contrary notice/source attribution present? Not sent externally."
+    },
+    "DRF-VOL": {
+      "evidence_class": "acquired-immutable",
+      "outcome": "ready_for_import_decision",
+      "import_approved": false,
+      "qualified": false,
+      "files": [
+        {
+          "path": "test/files/rar5-vols.part1.rar",
+          "retrieval_url": "https://sources.debian.org/data/main/p/python-rarfile/4.5-1/test/files/rar5-vols.part1.rar",
+          "declared_size": 102400,
+          "size_source_id": 7,
+          "archive_sha256": null,
+          "sha256_unknown_reason": "Archive acquisition prohibited in this phase.",
+          "upstream_context_git_blob_sha1": "0926f2f8f6d74bd1a7e8c4c1ebe74432c0b8d4e2",
+          "upstream_context_source_id": 3,
+          "same_bytes_as_upstream": null
+        },
+        {
+          "path": "test/files/rar5-vols.part2.rar",
+          "retrieval_url": "https://sources.debian.org/data/main/p/python-rarfile/4.5-1/test/files/rar5-vols.part2.rar",
+          "declared_size": 102400,
+          "size_source_id": 7,
+          "archive_sha256": null,
+          "sha256_unknown_reason": "Archive acquisition prohibited in this phase.",
+          "upstream_context_git_blob_sha1": "d4f55a2f859d0c7b422b99e111db4fc5e8b7e34f",
+          "upstream_context_source_id": 3,
+          "same_bytes_as_upstream": null
+        },
+        {
+          "path": "test/files/rar5-vols.part3.rar",
+          "retrieval_url": "https://sources.debian.org/data/main/p/python-rarfile/4.5-1/test/files/rar5-vols.part3.rar",
+          "declared_size": 11384,
+          "size_source_id": 7,
+          "archive_sha256": null,
+          "sha256_unknown_reason": "Archive acquisition prohibited in this phase.",
+          "upstream_context_git_blob_sha1": "ba6e9924a6db984d321364b8788301cda8c3bfba",
+          "upstream_context_source_id": 3,
+          "same_bytes_as_upstream": null
+        }
+      ],
+      "proposed_volume_order": [
+        "test/files/rar5-vols.part1.rar",
+        "test/files/rar5-vols.part2.rar",
+        "test/files/rar5-vols.part3.rar"
+      ],
+      "volume_order_basis": "Listed source naming and expected metadata, not native verified acquisition.",
+      "case_ids": [
+        "R5-VOL"
+      ],
+      "known_facts": [
+        "ISC package declaration; expected dump has cmp_meth=0, split flag and vol=2.",
+        "RAR5 stored non-solid native multipart intent, split flag and vol=2; actual set/entrypoint outcomes unmeasured."
+      ],
+      "expected_metadata": {
+        "source_id": 5,
+        "literal_text": "Archive: test/files/rar5-vols.part1.rar\nR5_FILE: hdrlen=45 datlen=205000 hdr_extra=0 is=F--\n  block_flags=0x0012:DATA,SPLIT_AFTER\n  name=vols/bigfile.txt\n  file_flags=0x0006:MTIME,CRC32\n  cmp_algo=0 cmp_meth=0 dict=0 solid=False\n  os=1:UNIX mode=-rw-rw-r-- cmp=205000 dec=205000 vol=0\n  crc=0x509ad74c (1352324940)\n  date_time=2016-05-24 08:42:37\n  mtime=2016-05-24T08:42:37+00:00\nR5_FILE: hdrlen=45 datlen=2050 hdr_extra=0 is=F--\n  block_flags=0x0002:DATA\n  name=vols/smallfile.txt\n  file_flags=0x0006:MTIME,CRC32\n  cmp_algo=0 cmp_meth=0 dict=0 solid=False\n  os=1:UNIX mode=-rw-rw-r-- cmp=2050 dec=2050 vol=2\n  crc=0xd08a1f86 (3498712966)\n  date_time=2016-05-24 08:42:43\n  mtime=2016-05-24T08:42:43+00:00\n",
+        "members": [
+          {
+            "name": "vols/bigfile.txt",
+            "declared_decoded_size": 205000,
+            "sha256": null,
+            "rights_source_binding": null,
+            "observation_class": "upstream_expected_metadata_not_actual_member"
+          },
+          {
+            "name": "vols/smallfile.txt",
+            "declared_decoded_size": 2050,
+            "sha256": null,
+            "rights_source_binding": null,
+            "observation_class": "upstream_expected_metadata_not_actual_member"
+          }
+        ]
+      },
+      "history": {
+        "source_id": 9,
+        "scope": "Current entrypoint path bounded, not first creation or rename-complete history. Part paths also bound by pinned tree; per-part authoring not asserted.",
+        "commit": "6ab3317c6a02c4f1082ab8570a34d4868c7baa3c",
+        "author": "Marko Kreen",
+        "literal_message": "New test files for rar5\n\nMove away from shell scripts to tox+nose"
+      },
+      "historical_writer": {
+        "generator": null,
+        "version": null,
+        "build": null,
+        "package_sha256": null,
+        "executable_sha256": null,
+        "invocation": null,
+        "unknown_reason": "No actual historical writer identity/build/invocation records established in the inspected fixed evidence. O1 permits explicit unknowns for acquired replay only.",
+        "named_writer_interoperability_claim": false,
+        "regeneration_claim": false
+      },
+      "unknowns": [
+        "Actual Debian archive/part hashes and equality with upstream Git objects.",
+        "Complete actual member bytes, metadata and source authorship; individual embedded rights-chain authority.",
+        "Native method/handler, operation, error, missing-volume/probing and repeat/drift behavior."
+      ],
+      "rights_assessment": {
+        "context": "rights_common applies to every exact file and every expected member; no per-member grant fabricated.",
+        "reasoning": "Positive path-specific distribution ISC assignment plus matching contribution author is proportionate evidence to submit this exact family for an operator import decision. No selected-path exception or contradictory attribution appears in the inspected sources. Missing personalized grant or historical writer executable alone does not force rejection. Actual all-member applicability remains a disclosed risk and inventory obligation, not a certified fact.",
+        "outcome_not_permission": true,
+        "rejection_evidence_found": false
+      },
+      "risks": [
+        "Embedded third-party content may contradict distribution attribution; expected member names/sizes cannot exclude it.",
+        "GitHub history verified from reviewed snapshots, not freshly fetched after rate limit.",
+        "Metadata intent is not measured behavioral equivalence; family may fill only a subset of its case."
+      ],
+      "finite_next_action": "After independent PASS, present exact named family and ISC notice obligations for one explicit bounded acquisition/quarantine/import decision; do not execute it on this card. Require actual byte/member inventory and review before accepted corpus status; unexpected provenance/content stops the pilot.",
+      "stop_condition": "Stop this assessment after handoff. If the later decision requires stronger exact-member authority evidence, record that gap and stop; no automatic inquiry or expanded search.",
+      "decision_question": "Does the operator accept the disclosed distribution-attribution/member-authority risk sufficiently to authorize only this pinned family for bounded quarantine/acquisition and subsequent rights/byte review, without corpus qualification or named-writer claims?",
+      "unresolved_evidence_question": "Are all actual embedded members and their metadata original or otherwise covered by the stated ISC grant, and is any contrary notice/source attribution present? Not sent externally."
+    }
+  },
+  "case_mapping": {
+    "R4-STORE": {
+      "candidate_ids": [],
+      "qualified": false,
+      "recipe_identity_claim": false,
+      "policy_delta": "No in-scope candidate or qualification; no recipe/behavior waiver.",
+      "remaining_gap": "Original case remains unqualified; previous out-of-scope leads not reassessed."
+    },
+    "R4-LZ": {
+      "candidate_ids": [],
+      "qualified": false,
+      "recipe_identity_claim": false,
+      "policy_delta": "No in-scope candidate or qualification; no recipe/behavior waiver.",
+      "remaining_gap": "Original case remains unqualified; previous out-of-scope leads not reassessed."
+    },
+    "R4-PPM": {
+      "candidate_ids": [],
+      "qualified": false,
+      "recipe_identity_claim": false,
+      "policy_delta": "No in-scope candidate or qualification; no recipe/behavior waiver.",
+      "remaining_gap": "Original case remains unqualified; previous out-of-scope leads not reassessed."
+    },
+    "R4-VOL": {
+      "candidate_ids": [],
+      "qualified": false,
+      "recipe_identity_claim": false,
+      "policy_delta": "No in-scope candidate or qualification; no recipe/behavior waiver.",
+      "remaining_gap": "Original case remains unqualified; previous out-of-scope leads not reassessed."
+    },
+    "R4-OLDVOL": {
+      "candidate_ids": [
+        "DRF-OLD"
+      ],
+      "qualified": false,
+      "recipe_identity_claim": false,
+      "policy_delta": "Acquired measured-intent equivalence replaces exact B01-W generation recipe only; full behavior goals retained.",
+      "remaining_gap": "Actual native case behavior and all original feature dimensions not demonstrated by acquired members remain required."
+    },
+    "R5-STORE": {
+      "candidate_ids": [],
+      "qualified": false,
+      "recipe_identity_claim": false,
+      "policy_delta": "No in-scope candidate or qualification; no recipe/behavior waiver.",
+      "remaining_gap": "Original case remains unqualified; previous out-of-scope leads not reassessed."
+    },
+    "R5-LZ-SOLID": {
+      "candidate_ids": [
+        "DRF-SOLID"
+      ],
+      "qualified": false,
+      "recipe_identity_claim": false,
+      "policy_delta": "Acquired measured-intent equivalence replaces exact B01-W generation recipe only; full behavior goals retained.",
+      "remaining_gap": "Actual native case behavior and all original feature dimensions not demonstrated by acquired members remain required."
+    },
+    "R5-VOL": {
+      "candidate_ids": [
+        "DRF-VOL"
+      ],
+      "qualified": false,
+      "recipe_identity_claim": false,
+      "policy_delta": "Acquired measured-intent equivalence replaces exact B01-W generation recipe only; full behavior goals retained.",
+      "remaining_gap": "Actual native case behavior and all original feature dimensions not demonstrated by acquired members remain required."
+    }
+  },
+  "remaining_other_b01_coverage": [
+    "Rar1/Rar2 streams",
+    "Rar3 PPM/LZ transitions and filters",
+    "classic compressed solid/multipart",
+    "compression levels/dictionary boundaries",
+    "RAR-specific unsupported methods/damaged compressed streams",
+    "encryption/password callback states B05",
+    "Unicode/fork code pages B02",
+    "filesystem metadata/links/permissions and large files B03/B04",
+    "recovery/SFX",
+    "nested/probing chains",
+    "external 7z/CAB/ISO/WIM and other inventory rows",
+    "list/create numeric outcomes and stable operation/item identity",
+    "FFI B08",
+    "GUI and desktop qualification"
+  ],
+  "sources": [
+    {
+      "id": 1,
+      "url": "https://www.debian.org/doc/packaging-manuals/copyright-format/1.0",
+      "snapshot_file": "dep5.txt",
+      "quotes": [
+        "Both match slashes ( / ) and leading dots, unlike shell globs."
+      ],
+      "kind": "html_text",
+      "pin_kind": "versioned_specification",
+      "limitation": "Versioned source text/metadata, not acquired archive bytes. Raw snapshot SHA-256 identifies this text response only.",
+      "retrieval_url": "https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/",
+      "parent_source_id": 1,
+      "verification_mode": "online_text_metadata_get",
+      "raw_snapshot_sha256": "a2fadc4004b18a0296ee9651b6f630dc676fa198dd2f06c76e3e936c78d6e115"
+    },
+    {
+      "id": 2,
+      "url": "https://sources.debian.org/data/main/p/python-rarfile/4.5-1/debian/copyright",
+      "snapshot_file": "rarfile-copyright.txt",
+      "quotes": [
+        "Copyright: 2005-2026 Marko Kreen",
+        "Permission to use, copy, modify, and/or distribute this software for any\n  purpose with or without fee is hereby granted, provided that the above\n  copyright notice and this permission notice appear in all copies."
+      ],
+      "kind": "text",
+      "pin_kind": "distribution_version",
+      "limitation": "Versioned source text/metadata, not acquired archive bytes. Raw snapshot SHA-256 identifies this text response only.",
+      "retrieval_url": "https://sources.debian.org/data/main/p/python-rarfile/4.5-1/debian/copyright",
+      "parent_source_id": 8,
+      "verification_mode": "online_text_metadata_get",
+      "raw_snapshot_sha256": "03bfd2007ce25db146e37f8448face658deb0989d0b1eb93d75dcb6af307a4f4"
+    },
+    {
+      "id": 3,
+      "url": "https://api.github.com/repos/markokr/rarfile/git/trees/d2f7df6fc843dae356fd6b0a85971dc36fd6e757?recursive=1",
+      "snapshot_file": "rarfile-tree.json",
+      "quotes": [
+        "\"path\": \"test/files/rar3-old.rar\",\n      \"mode\": \"100644\",\n      \"type\": \"blob\""
+      ],
+      "kind": "tree",
+      "pin_kind": "git_revision",
+      "limitation": "Text/metadata evidence only; exact retrieval URL preserved. GitHub sources locally verified against reviewed parent snapshot SHA-256 after online rate limit; no fresh GitHub GET success claimed.",
+      "retrieval_url": "https://api.github.com/repos/markokr/rarfile/git/trees/d2f7df6fc843dae356fd6b0a85971dc36fd6e757?recursive=1",
+      "parent_source_id": 9,
+      "verification_mode": "reviewed_parent_snapshot_verified",
+      "raw_snapshot_sha256": "cc4eab302a959c4196c804ad28b704c1e9a78d5845a906e7239533d65d17d79b"
+    },
+    {
+      "id": 4,
+      "url": "https://sources.debian.org/data/main/p/python-rarfile/4.5-1/test/files/rar5-solid.rar.exp",
+      "snapshot_file": "rf-solid-exp.txt",
+      "quotes": [
+        "cmp_algo=0 cmp_meth=3 dict=3 solid=True"
+      ],
+      "kind": "text",
+      "pin_kind": "distribution_version",
+      "limitation": "Versioned source text/metadata, not acquired archive bytes. Raw snapshot SHA-256 identifies this text response only.",
+      "retrieval_url": "https://sources.debian.org/data/main/p/python-rarfile/4.5-1/test/files/rar5-solid.rar.exp",
+      "parent_source_id": 10,
+      "verification_mode": "online_text_metadata_get",
+      "raw_snapshot_sha256": "ba2163f0462dca487c14e60d6a443132778d3ddba9f72e2744634b8d9631c656"
+    },
+    {
+      "id": 5,
+      "url": "https://sources.debian.org/data/main/p/python-rarfile/4.5-1/test/files/rar5-vols.part1.rar.exp",
+      "snapshot_file": "rf-vol-exp.txt",
+      "quotes": [
+        "cmp_algo=0 cmp_meth=0 dict=0 solid=False"
+      ],
+      "kind": "text",
+      "pin_kind": "distribution_version",
+      "limitation": "Versioned source text/metadata, not acquired archive bytes. Raw snapshot SHA-256 identifies this text response only.",
+      "retrieval_url": "https://sources.debian.org/data/main/p/python-rarfile/4.5-1/test/files/rar5-vols.part1.rar.exp",
+      "parent_source_id": 11,
+      "verification_mode": "online_text_metadata_get",
+      "raw_snapshot_sha256": "e6b917e05b29fd7bef06b51a7939589f9031d8b467998491e3195211d27c9788"
+    },
+    {
+      "id": 6,
+      "url": "https://sources.debian.org/data/main/p/python-rarfile/4.5-1/test/files/rar3-old.rar.exp",
+      "snapshot_file": "rf-old-exp.txt",
+      "quotes": [
+        "os=3:UNIX ver=20 mode=-rw-rw-r-- meth=0 cmp=205000 dec=205000 vol=0"
+      ],
+      "kind": "text",
+      "pin_kind": "distribution_version",
+      "limitation": "Versioned source text/metadata, not acquired archive bytes. Raw snapshot SHA-256 identifies this text response only.",
+      "retrieval_url": "https://sources.debian.org/data/main/p/python-rarfile/4.5-1/test/files/rar3-old.rar.exp",
+      "parent_source_id": 16,
+      "verification_mode": "online_text_metadata_get",
+      "raw_snapshot_sha256": "6038272de71c6356f4f7daf855446ca93ee323480fc38c8b428c4f853af7f201"
+    },
+    {
+      "id": 7,
+      "url": "https://sources.debian.org/api/src/python-rarfile/4.5-1/test/files",
+      "snapshot_file": "rarfile-debian-files.json",
+      "quotes": [],
+      "kind": "tree",
+      "pin_kind": "distribution_version",
+      "limitation": "Versioned source text/metadata, not acquired archive bytes. Raw snapshot SHA-256 identifies this text response only.",
+      "retrieval_url": "https://sources.debian.org/api/src/python-rarfile/4.5-1/test/files/",
+      "parent_source_id": 19,
+      "verification_mode": "online_text_metadata_get",
+      "raw_snapshot_sha256": "ad9d93ea1f36bc07f7cc86ab372fce65af10a3042a03d0672e5732946d2dc29e"
+    },
+    {
+      "id": 8,
+      "url": "https://api.github.com/repos/markokr/rarfile/commits?sha=d2f7df6fc843dae356fd6b0a85971dc36fd6e757&path=test%2Ffiles%2Frar5-solid.rar&per_page=100",
+      "snapshot_file": "rf-solid-history.json",
+      "quotes": [
+        "New test files for rar5"
+      ],
+      "kind": "history",
+      "pin_kind": "git_revision",
+      "limitation": "Text/metadata evidence only; exact retrieval URL preserved. GitHub sources locally verified against reviewed parent snapshot SHA-256 after online rate limit; no fresh GitHub GET success claimed.",
+      "retrieval_url": "https://api.github.com/repos/markokr/rarfile/commits?sha=d2f7df6fc843dae356fd6b0a85971dc36fd6e757&path=test%2Ffiles%2Frar5-solid.rar&per_page=100",
+      "parent_source_id": 20,
+      "verification_mode": "reviewed_parent_snapshot_verified",
+      "raw_snapshot_sha256": "6048a5e1dad4d6a6ac349dff1353244c2525f823b17e82cb8d5bb997337bad0d"
+    },
+    {
+      "id": 9,
+      "url": "https://api.github.com/repos/markokr/rarfile/commits?sha=d2f7df6fc843dae356fd6b0a85971dc36fd6e757&path=test%2Ffiles%2Frar5-vols.part1.rar&per_page=100",
+      "snapshot_file": "rf-vol-history.json",
+      "quotes": [
+        "New test files for rar5"
+      ],
+      "kind": "history",
+      "pin_kind": "git_revision",
+      "limitation": "Text/metadata evidence only; exact retrieval URL preserved. GitHub sources locally verified against reviewed parent snapshot SHA-256 after online rate limit; no fresh GitHub GET success claimed.",
+      "retrieval_url": "https://api.github.com/repos/markokr/rarfile/commits?sha=d2f7df6fc843dae356fd6b0a85971dc36fd6e757&path=test%2Ffiles%2Frar5-vols.part1.rar&per_page=100",
+      "parent_source_id": 21,
+      "verification_mode": "reviewed_parent_snapshot_verified",
+      "raw_snapshot_sha256": "6048a5e1dad4d6a6ac349dff1353244c2525f823b17e82cb8d5bb997337bad0d"
+    },
+    {
+      "id": 10,
+      "url": "https://api.github.com/repos/markokr/rarfile/commits?sha=d2f7df6fc843dae356fd6b0a85971dc36fd6e757&path=test%2Ffiles%2Frar3-old.rar&per_page=100",
+      "snapshot_file": "rf-history.json",
+      "quotes": [
+        "New test files for rar5"
+      ],
+      "kind": "history",
+      "pin_kind": "git_revision",
+      "limitation": "Text/metadata evidence only; exact retrieval URL preserved. GitHub sources locally verified against reviewed parent snapshot SHA-256 after online rate limit; no fresh GitHub GET success claimed.",
+      "retrieval_url": "https://api.github.com/repos/markokr/rarfile/commits?sha=d2f7df6fc843dae356fd6b0a85971dc36fd6e757&path=test%2Ffiles%2Frar3-old.rar&per_page=100",
+      "parent_source_id": 22,
+      "verification_mode": "reviewed_parent_snapshot_verified",
+      "raw_snapshot_sha256": "fb51619fbfc376650cc688af913d63f0fe0dd72d0eee1ac454aa617036edc973"
+    }
+  ],
+  "import_review_candidates": [
+    "DRF-OLD",
+    "DRF-SOLID",
+    "DRF-VOL"
+  ],
+  "accepted_fixtures": [],
+  "complete_b01_solution": false,
+  "native_results_produced": false,
+  "stop": "Stop after independent review and handoff of these three families; no automatic import, new audit, broader search, correspondence or DAG/B01 gate change."
+}
