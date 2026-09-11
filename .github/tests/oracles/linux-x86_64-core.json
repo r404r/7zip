@@ -1,0 +1,967 @@
+{
+  "commands": {
+    "7z-headers/correct": {
+      "argv": [
+        "/home/ding/work/github/r404r/7zip/.worktrees/t_f4afeee1/.m1-artifacts/build/7zz",
+        "t",
+        "-pfixture-only-\u65e5\u672c\u8a9e",
+        "<TEMP>/7z-headers.7z",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stderr": "",
+      "stdout": "\n7-Zip (z) 26.03 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-09-03\n 64-bit locale=en_US.UTF-8 Threads:16 OPEN_MAX:4096\n\nScanning the drive for archives:\n1 file, 222 bytes (1 KiB)\n\nTesting archive: <TEMP>/7z-headers.7z\n--\nPath = <TEMP>/7z-headers.7z\nType = 7z\nPhysical Size = 222\nHeaders Size = 190\nMethod = LZMA2:12 7zAES\nSolid = -\nBlocks = 1\n\nEverything is Ok\n\nSize:       25\nCompressed: 222\n"
+    },
+    "7z-headers/create": {
+      "argv": [
+        "/home/ding/work/github/r404r/7zip/.worktrees/t_f4afeee1/.m1-artifacts/build/7zz",
+        "a",
+        "-t7z",
+        "-mhe=on",
+        "-pfixture-only-\u65e5\u672c\u8a9e",
+        "<TEMP>/7z-headers.7z",
+        "plain.txt",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stderr": "",
+      "stdout": "\n7-Zip (z) 26.03 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-09-03\n 64-bit locale=en_US.UTF-8 Threads:16 OPEN_MAX:4096\n\nScanning the drive:\n1 file, 25 bytes (1 KiB)\n\nCreating archive: <TEMP>/7z-headers.7z\n\nAdd new data to archive: 1 file, 25 bytes (1 KiB)\n\n\nFiles read from disk: 1\nArchive size: 222 bytes (1 KiB)\nEverything is Ok\n"
+    },
+    "7z-headers/empty-eof": {
+      "argv": [
+        "/home/ding/work/github/r404r/7zip/.worktrees/t_f4afeee1/.m1-artifacts/build/7zz",
+        "t",
+        "-p",
+        "<TEMP>/7z-headers.7z",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 2,
+      "stderr": "ERROR: <TEMP>/7z-headers.7z\nCannot open encrypted archive. Wrong password?\n\nERRORS:\nHeaders Error\n",
+      "stdout": "\n7-Zip (z) 26.03 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-09-03\n 64-bit locale=en_US.UTF-8 Threads:16 OPEN_MAX:4096\n\nScanning the drive for archives:\n1 file, 222 bytes (1 KiB)\n\nTesting archive: <TEMP>/7z-headers.7z\n\nCan't open as archive: 1\nFiles: 0\nSize:       0\nCompressed: 0\n"
+    },
+    "7z-headers/extract": {
+      "argv": [
+        "/home/ding/work/github/r404r/7zip/.worktrees/t_f4afeee1/.m1-artifacts/build/7zz",
+        "x",
+        "-pfixture-only-\u65e5\u672c\u8a9e",
+        "<TEMP>/7z-headers.7z",
+        "-o<TEMP>/decrypt-7z-headers",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stderr": "",
+      "stdout": "\n7-Zip (z) 26.03 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-09-03\n 64-bit locale=en_US.UTF-8 Threads:16 OPEN_MAX:4096\n\nScanning the drive for archives:\n1 file, 222 bytes (1 KiB)\n\nExtracting archive: <TEMP>/7z-headers.7z\n--\nPath = <TEMP>/7z-headers.7z\nType = 7z\nPhysical Size = 222\nHeaders Size = 190\nMethod = LZMA2:12 7zAES\nSolid = -\nBlocks = 1\n\nEverything is Ok\n\nSize:       25\nCompressed: 222\n"
+    },
+    "7z-headers/missing-eof": {
+      "argv": [
+        "/home/ding/work/github/r404r/7zip/.worktrees/t_f4afeee1/.m1-artifacts/build/7zz",
+        "t",
+        "<TEMP>/7z-headers.7z",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 255,
+      "stderr": "\n\nBreak signaled\n",
+      "stdout": "\n7-Zip (z) 26.03 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-09-03\n 64-bit locale=en_US.UTF-8 Threads:16 OPEN_MAX:4096\n\nScanning the drive for archives:\n1 file, 222 bytes (1 KiB)\n\nTesting archive: <TEMP>/7z-headers.7z\n\nEnter password:\n\n"
+    },
+    "7z-headers/wrong": {
+      "argv": [
+        "/home/ding/work/github/r404r/7zip/.worktrees/t_f4afeee1/.m1-artifacts/build/7zz",
+        "t",
+        "-pwrong-fixture",
+        "<TEMP>/7z-headers.7z",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 2,
+      "stderr": "ERROR: <TEMP>/7z-headers.7z\nCannot open encrypted archive. Wrong password?\n\nERRORS:\nHeaders Error\n",
+      "stdout": "\n7-Zip (z) 26.03 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-09-03\n 64-bit locale=en_US.UTF-8 Threads:16 OPEN_MAX:4096\n\nScanning the drive for archives:\n1 file, 222 bytes (1 KiB)\n\nTesting archive: <TEMP>/7z-headers.7z\n\nCan't open as archive: 1\nFiles: 0\nSize:       0\nCompressed: 0\n"
+    },
+    "7z/create": {
+      "argv": [
+        "/home/ding/work/github/r404r/7zip/.worktrees/t_f4afeee1/.m1-artifacts/build/7zz",
+        "a",
+        "-t7z",
+        "<TEMP>/fixture.7z",
+        ".",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stderr": "",
+      "stdout": "\n7-Zip (z) 26.03 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-09-03\n 64-bit locale=en_US.UTF-8 Threads:16 OPEN_MAX:4096\n\nScanning the drive:\n1 folder, 4 files, 1065 bytes (2 KiB)\n\nCreating archive: <TEMP>/fixture.7z\n\nAdd new data to archive: 1 folder, 4 files, 1065 bytes (2 KiB)\n\n\nFiles read from disk: 3\nArchive size: 519 bytes (1 KiB)\nEverything is Ok\n"
+    },
+    "7z/extract": {
+      "argv": [
+        "/home/ding/work/github/r404r/7zip/.worktrees/t_f4afeee1/.m1-artifacts/build/7zz",
+        "x",
+        "<TEMP>/fixture.7z",
+        "-o<TEMP>/out-7z",
+        "-y",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stderr": "",
+      "stdout": "\n7-Zip (z) 26.03 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-09-03\n 64-bit locale=en_US.UTF-8 Threads:16 OPEN_MAX:4096\n\nScanning the drive for archives:\n1 file, 519 bytes (1 KiB)\n\nExtracting archive: <TEMP>/fixture.7z\n--\nPath = <TEMP>/fixture.7z\nType = 7z\nPhysical Size = 519\nHeaders Size = 237\nMethod = LZMA2:12\nSolid = +\nBlocks = 1\n\nEverything is Ok\n\nFolders: 1\nFiles: 4\nSize:       1065\nCompressed: 519\n"
+    },
+    "7z/list": {
+      "argv": [
+        "/home/ding/work/github/r404r/7zip/.worktrees/t_f4afeee1/.m1-artifacts/build/7zz",
+        "l",
+        "-slt",
+        "-ba",
+        "<TEMP>/fixture.7z",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stderr": "",
+      "stdout": "Path = nested\nSize = 0\nPacked Size = 0\nModified = 2026-09-11 11:22:50.3034502\nAttributes = D drwxrwxr-x\nCRC = \nEncrypted = -\nMethod = \nBlock = \n\nPath = empty.txt\nSize = 0\nPacked Size = 0\nModified = 2023-11-15 07:13:20.0000000\nAttributes = A -rw-r--r--\nCRC = \nEncrypted = -\nMethod = \nBlock = \n\nPath = nested/binary.bin\nSize = 1024\nPacked Size = 282\nModified = 2023-11-15 07:13:20.0000000\nAttributes = A -rw-r--r--\nCRC = B70B4C26\nEncrypted = -\nMethod = LZMA2:12\nBlock = 0\n\nPath = nested/\u65e5\u672c\u8a9e-\ud83d\ude00.txt\nSize = 16\nPacked Size = \nModified = 2023-11-15 07:13:20.0000000\nAttributes = A -rw-r--r--\nCRC = 55DA8F67\nEncrypted = -\nMethod = LZMA2:12\nBlock = 0\n\nPath = plain.txt\nSize = 25\nPacked Size = \nModified = 2023-11-15 07:13:20.0000000\nAttributes = A -rw-r--r--\nCRC = CE8DB660\nEncrypted = -\nMethod = LZMA2:12\nBlock = 0\n\n"
+    },
+    "7z/overwrite/-aoa": {
+      "argv": [
+        "/home/ding/work/github/r404r/7zip/.worktrees/t_f4afeee1/.m1-artifacts/build/7zz",
+        "x",
+        "<TEMP>/fixture.7z",
+        "plain.txt",
+        "-o<TEMP>/overwrite-7z--aoa",
+        "-aoa",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stderr": "",
+      "stdout": "\n7-Zip (z) 26.03 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-09-03\n 64-bit locale=en_US.UTF-8 Threads:16 OPEN_MAX:4096\n\nScanning the drive for archives:\n1 file, 519 bytes (1 KiB)\n\nExtracting archive: <TEMP>/fixture.7z\n--\nPath = <TEMP>/fixture.7z\nType = 7z\nPhysical Size = 519\nHeaders Size = 237\nMethod = LZMA2:12\nSolid = +\nBlocks = 1\n\nEverything is Ok\n\nFiles: 3\nSize:       1065\nCompressed: 519\n"
+    },
+    "7z/overwrite/-aos": {
+      "argv": [
+        "/home/ding/work/github/r404r/7zip/.worktrees/t_f4afeee1/.m1-artifacts/build/7zz",
+        "x",
+        "<TEMP>/fixture.7z",
+        "plain.txt",
+        "-o<TEMP>/overwrite-7z--aos",
+        "-aos",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stderr": "",
+      "stdout": "\n7-Zip (z) 26.03 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-09-03\n 64-bit locale=en_US.UTF-8 Threads:16 OPEN_MAX:4096\n\nScanning the drive for archives:\n1 file, 519 bytes (1 KiB)\n\nExtracting archive: <TEMP>/fixture.7z\n--\nPath = <TEMP>/fixture.7z\nType = 7z\nPhysical Size = 519\nHeaders Size = 237\nMethod = LZMA2:12\nSolid = +\nBlocks = 1\n\nEverything is Ok\n\nFiles: 3\nSize:       1065\nCompressed: 519\n"
+    },
+    "7z/overwrite/-aot": {
+      "argv": [
+        "/home/ding/work/github/r404r/7zip/.worktrees/t_f4afeee1/.m1-artifacts/build/7zz",
+        "x",
+        "<TEMP>/fixture.7z",
+        "plain.txt",
+        "-o<TEMP>/overwrite-7z--aot",
+        "-aot",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stderr": "",
+      "stdout": "\n7-Zip (z) 26.03 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-09-03\n 64-bit locale=en_US.UTF-8 Threads:16 OPEN_MAX:4096\n\nScanning the drive for archives:\n1 file, 519 bytes (1 KiB)\n\nExtracting archive: <TEMP>/fixture.7z\n--\nPath = <TEMP>/fixture.7z\nType = 7z\nPhysical Size = 519\nHeaders Size = 237\nMethod = LZMA2:12\nSolid = +\nBlocks = 1\n\nEverything is Ok\n\nFiles: 3\nSize:       1065\nCompressed: 519\n"
+    },
+    "7z/overwrite/-aou": {
+      "argv": [
+        "/home/ding/work/github/r404r/7zip/.worktrees/t_f4afeee1/.m1-artifacts/build/7zz",
+        "x",
+        "<TEMP>/fixture.7z",
+        "plain.txt",
+        "-o<TEMP>/overwrite-7z--aou",
+        "-aou",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stderr": "",
+      "stdout": "\n7-Zip (z) 26.03 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-09-03\n 64-bit locale=en_US.UTF-8 Threads:16 OPEN_MAX:4096\n\nScanning the drive for archives:\n1 file, 519 bytes (1 KiB)\n\nExtracting archive: <TEMP>/fixture.7z\n--\nPath = <TEMP>/fixture.7z\nType = 7z\nPhysical Size = 519\nHeaders Size = 237\nMethod = LZMA2:12\nSolid = +\nBlocks = 1\n\nEverything is Ok\n\nFiles: 3\nSize:       1065\nCompressed: 519\n"
+    },
+    "7z/test": {
+      "argv": [
+        "/home/ding/work/github/r404r/7zip/.worktrees/t_f4afeee1/.m1-artifacts/build/7zz",
+        "t",
+        "<TEMP>/fixture.7z",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stderr": "",
+      "stdout": "\n7-Zip (z) 26.03 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-09-03\n 64-bit locale=en_US.UTF-8 Threads:16 OPEN_MAX:4096\n\nScanning the drive for archives:\n1 file, 519 bytes (1 KiB)\n\nTesting archive: <TEMP>/fixture.7z\n--\nPath = <TEMP>/fixture.7z\nType = 7z\nPhysical Size = 519\nHeaders Size = 237\nMethod = LZMA2:12\nSolid = +\nBlocks = 1\n\nEverything is Ok\n\nFolders: 1\nFiles: 4\nSize:       1065\nCompressed: 519\n"
+    },
+    "7z/truncated": {
+      "argv": [
+        "/home/ding/work/github/r404r/7zip/.worktrees/t_f4afeee1/.m1-artifacts/build/7zz",
+        "t",
+        "<TEMP>/truncated.7z",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 2,
+      "stderr": "ERROR: <TEMP>/truncated.7z\n<TEMP>/truncated.7z\nOpen ERROR: Cannot open the file as [7z] archive\n\n\nERRORS:\nIs not archive\n",
+      "stdout": "\n7-Zip (z) 26.03 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-09-03\n 64-bit locale=en_US.UTF-8 Threads:16 OPEN_MAX:4096\n\nScanning the drive for archives:\n1 file, 16 bytes (1 KiB)\n\nTesting archive: <TEMP>/truncated.7z\n\nCan't open as archive: 1\nFiles: 0\nSize:       0\nCompressed: 0\n"
+    },
+    "capabilities": {
+      "argv": [
+        "/home/ding/work/github/r404r/7zip/.worktrees/t_f4afeee1/.m1-artifacts/build/7zz",
+        "i",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stderr": "",
+      "stdout": "\n7-Zip (z) 26.03 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-09-03\n 64-bit locale=en_US.UTF-8 Threads:16 OPEN_MAX:4096\n\n\nFormats:\n   C...F..........c.a.m+..  7z       7z            7 z BC AF ' 1C\n    ......................  APFS     apfs img      offset=32 N X S B 00\n    ......................  APM      apm           E R\n    ......................  Ar       ar a deb udeb lib ! < a r c h > 0A\n    ......................  Arj      arj           ` EA\n    K.....O.....X.........  Base64   b64           \n    ......O...............  COFF     obj           \n    ...F..................  Cab      cab           M S C F 00 00 00 00\n    ......................  Chm      chm chi chq chw I T S F 03 00 00 00 ` 00 00 00\n    ......................  Compound msi msp msm doc xls ppt aaf D0 CF 11 E0 A1 B1 1A E1\n    ....M.................  Cpio     cpio          0 7 0 7 0  ||  C7 q  ||  q C7\n    ......................  CramFS   cramfs        offset=16 C o m p r e s s e d 20 R O M F S\n    .....G..B.............  Dmg      dmg           k o l y 00 00 00 04 00 00 02 00\n    .........E............  ELF      elf           \u007f E L F\n    ......................  Ext      ext ext2 ext3 ext4 img offset=1080 S EF\n    ......................  FAT      fat img       offset=510 U AA\n    ......................  FLV      flv           F L V 01\n    ......................  GPT      gpt mbr       offset=512 E F I 20 P A R T 00 00 01 00\n    ....M.................  HFS      hfs hfsx      offset=1024 B D  ||  H + 00 04  ||  H X 00 05\n    ...F..................  Hxs      hxs hxi hxr hxq hxw lit I T O L I T L S 01 00 00 00 ( 00 00 00\n    ......O...............  IHex     ihex          \n    ......................  Iso      iso img       offset=32769 C D 0 0 1\n    ......................  LP       lpimg img     offset=4096 g D l a 4 00 00 00\n    ......................  Lzh      lzh lha       offset=2 - l h\n    .......P..............  MBR      mbr           \n    ....M....E............  MachO    macho         CE FA ED FE  ||  CF FA ED FE  ||  FE ED FA CE  ||  FE ED FA CF\n    ......................  MsLZ     mslz          S Z D D 88 F0 ' 3 A\n    ....M.................  Mub      mub           CA FE BA BE 00 00 00  ||  B9 FA F1 0E\n    ......................  NTFS     ntfs img      offset=3 N T F S 20 20 20 20 00\n    ...F.G................  Nsis     nsis          offset=4 EF BE AD DE N u l l s o f t I n s t\n    .........E............  PE       exe dll sys   M Z\n    ......................  Ppmd     pmd           8F AF AC 84\n    ......................  QCOW     qcow qcow2 qcow2c Q F I FB 00 00 00\n    ...F..................  Rar      rar r00       R a r ! 1A 07 00\n    ...F..................  Rar5     rar r00       R a r ! 1A 07 01 00\n    ......................  Rpm      rpm           ED AB EE DB\n    K.....................  SWF      swf           F W S\n    ....M.................  SWFc     swf (~.swf)   C W S  ||  Z W S\n    ......................  Sparse   simg img      : FF & ED 01 00\n    ......................  Split    001           \n    ....M.................  SquashFS squashfs      h s q s  ||  s q s h  ||  s h s q  ||  q s h s\n    .........E............  TE       te            V Z\n    ...FM.................  UEFIc    scap          BD 86 f ; v 0D 0 @ B7 0E B5 Q 9E / C5 A0  ||  8B A6 < J # w FB H 80 = W 8C C1 FE C4 M  ||  B9 82 91 S B5 AB 91 C B6 9A E3 A9 C F7 / CC\n    ...FM.................  UEFIf    uefif         offset=16 D9 T 93 z h 04 J D 81 CE 0B F6 17 D8 90 DF  ||  x E5 8C 8C = 8A 1C O 99 5 89 a 85 C3 - D3\n    ....M.O...............  Udf      udf iso img   offset=32768 00 B E A 0 1 01 00  ||  01 C D 0 0 1\n    ......................  VDI      vdi           offset=64 \u007f 10 DA BE\n    .....G................  VHD      vhd           c o n e c t i x 00 00\n    ......................  VHDX     vhdx avhdx    v h d x f i l e\n    ......................  VMDK     vmdk          K D M V\n    ......................  Xar      xar pkg xip   x a r ! 00\n    ......................  Z        z taz (.tar)  1F 9D\n   CK.....................  bzip2    bz2 bzip2 tbz2 (.tar) tbz (.tar) B Z h\n   CK.................m+..  gzip     gz gzip tgz (.tar) tpz (.tar) apk (.tar) 1F 8B 08\n    K.....O...............  lzma     lzma          \n    K.....................  lzma86   lzma86        \n   C......O...LH......m+..  tar      tar ova       offset=257 u s t a r\n   C.SN.......LH..c.a.m+..  wim      wim swm esd ppkg M S W I M 00 00 00\n   CK.....................  xz       xz txz (.tar) FD 7 z X Z 00\n   C...FMG........c.a.m+..  zip      zip z01 zipx jar xpi odt ods docx xlsx epub ipa apk appx P K 03 04  ||  P K 05 06  ||  P K 06 06  ||  P K 07 08 P K  ||  P K 0 0 P K\n    K.....................  zstd     zst tzst (.tar) ( B5 / FD\n   CK.....O.....XC........  Hash     sha256 sha512 sha384 sha224 sha512-224 sha512-256 sha3-224 sha3-256 sha3-384 sha3-512 sha1 sha2 sha3 sha md5 blake2s blake2b blake2sp xxh64 crc32 crc64 cksum asc \n\nCodecs:\n   4ED   303011B BCJ2\n    EDF  3030103 BCJ\n    EDF  3030205 PPC\n    EDF  3030401 IA64\n    EDF  3030501 ARM\n    EDF  3030701 ARMT\n    EDF  3030805 SPARC\n    EDF        A ARM64\n    EDF        B RISCV\n    EDF    20302 Swap2\n    EDF    20304 Swap4\n    ED     40202 BZip2\n    ED         0 Copy\n    ED     40109 Deflate64\n    ED     40108 Deflate\n    EDF        3 Delta\n    ED        21 LZMA2\n    ED     30101 LZMA\n    ED     30401 PPMD\n     D     40301 Rar1\n     D     40302 Rar2\n     D     40303 Rar3\n     D     40305 Rar5\n    EDF  6F10701 7zAES\n    EDF  6F00181 AES256CBC\n\nHashers:\n      4        1 CRC32\n     16      208 MD5\n     20      201 SHA1\n     32        A SHA256\n     32      231 SHA3-256\n     48      222 SHA384\n     64      223 SHA512\n      8      211 XXH64\n      8        4 CRC64\n     32      202 BLAKE2sp\n"
+    },
+    "crc/create": {
+      "argv": [
+        "/home/ding/work/github/r404r/7zip/.worktrees/t_f4afeee1/.m1-artifacts/build/7zz",
+        "a",
+        "-tzip",
+        "-mm=Copy",
+        "<TEMP>/crc.zip",
+        "plain.txt",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stderr": "",
+      "stdout": "\n7-Zip (z) 26.03 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-09-03\n 64-bit locale=en_US.UTF-8 Threads:16 OPEN_MAX:4096\n\nScanning the drive:\n1 file, 25 bytes (1 KiB)\n\nCreating archive: <TEMP>/crc.zip\n\nAdd new data to archive: 1 file, 25 bytes (1 KiB)\n\n\nFiles read from disk: 1\nArchive size: 177 bytes (1 KiB)\nEverything is Ok\n"
+    },
+    "crc/test": {
+      "argv": [
+        "/home/ding/work/github/r404r/7zip/.worktrees/t_f4afeee1/.m1-artifacts/build/7zz",
+        "t",
+        "<TEMP>/crc.zip",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 2,
+      "stderr": "ERROR: CRC Failed : plain.txt\n",
+      "stdout": "\n7-Zip (z) 26.03 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-09-03\n 64-bit locale=en_US.UTF-8 Threads:16 OPEN_MAX:4096\n\nScanning the drive for archives:\n1 file, 177 bytes (1 KiB)\n\nTesting archive: <TEMP>/crc.zip\n--\nPath = <TEMP>/crc.zip\nType = zip\nPhysical Size = 177\n\n\nSub items Errors: 1\n\nArchives with Errors: 1\n\nSub items Errors: 1\n"
+    },
+    "zip-aes/correct": {
+      "argv": [
+        "/home/ding/work/github/r404r/7zip/.worktrees/t_f4afeee1/.m1-artifacts/build/7zz",
+        "t",
+        "-pfixture-only-ascii",
+        "<TEMP>/zip-aes.zip",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stderr": "",
+      "stdout": "\n7-Zip (z) 26.03 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-09-03\n 64-bit locale=en_US.UTF-8 Threads:16 OPEN_MAX:4096\n\nScanning the drive for archives:\n1 file, 227 bytes (1 KiB)\n\nTesting archive: <TEMP>/zip-aes.zip\n--\nPath = <TEMP>/zip-aes.zip\nType = zip\nPhysical Size = 227\n\nEverything is Ok\n\nSize:       25\nCompressed: 227\n"
+    },
+    "zip-aes/create": {
+      "argv": [
+        "/home/ding/work/github/r404r/7zip/.worktrees/t_f4afeee1/.m1-artifacts/build/7zz",
+        "a",
+        "-tzip",
+        "-mem=AES256",
+        "-pfixture-only-ascii",
+        "<TEMP>/zip-aes.zip",
+        "plain.txt",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stderr": "",
+      "stdout": "\n7-Zip (z) 26.03 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-09-03\n 64-bit locale=en_US.UTF-8 Threads:16 OPEN_MAX:4096\n\nScanning the drive:\n1 file, 25 bytes (1 KiB)\n\nCreating archive: <TEMP>/zip-aes.zip\n\nAdd new data to archive: 1 file, 25 bytes (1 KiB)\n\n\nFiles read from disk: 1\nArchive size: 227 bytes (1 KiB)\nEverything is Ok\n"
+    },
+    "zip-aes/empty-eof": {
+      "argv": [
+        "/home/ding/work/github/r404r/7zip/.worktrees/t_f4afeee1/.m1-artifacts/build/7zz",
+        "t",
+        "-p",
+        "<TEMP>/zip-aes.zip",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 2,
+      "stderr": "ERROR: Wrong password : plain.txt\n",
+      "stdout": "\n7-Zip (z) 26.03 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-09-03\n 64-bit locale=en_US.UTF-8 Threads:16 OPEN_MAX:4096\n\nScanning the drive for archives:\n1 file, 227 bytes (1 KiB)\n\nTesting archive: <TEMP>/zip-aes.zip\n--\nPath = <TEMP>/zip-aes.zip\nType = zip\nPhysical Size = 227\n\n\nSub items Errors: 1\n\nArchives with Errors: 1\n\nSub items Errors: 1\n"
+    },
+    "zip-aes/extract": {
+      "argv": [
+        "/home/ding/work/github/r404r/7zip/.worktrees/t_f4afeee1/.m1-artifacts/build/7zz",
+        "x",
+        "-pfixture-only-ascii",
+        "<TEMP>/zip-aes.zip",
+        "-o<TEMP>/decrypt-zip-aes",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stderr": "",
+      "stdout": "\n7-Zip (z) 26.03 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-09-03\n 64-bit locale=en_US.UTF-8 Threads:16 OPEN_MAX:4096\n\nScanning the drive for archives:\n1 file, 227 bytes (1 KiB)\n\nExtracting archive: <TEMP>/zip-aes.zip\n--\nPath = <TEMP>/zip-aes.zip\nType = zip\nPhysical Size = 227\n\nEverything is Ok\n\nSize:       25\nCompressed: 227\n"
+    },
+    "zip-aes/missing-eof": {
+      "argv": [
+        "/home/ding/work/github/r404r/7zip/.worktrees/t_f4afeee1/.m1-artifacts/build/7zz",
+        "t",
+        "<TEMP>/zip-aes.zip",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 255,
+      "stderr": "\n\nBreak signaled\n",
+      "stdout": "\n7-Zip (z) 26.03 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-09-03\n 64-bit locale=en_US.UTF-8 Threads:16 OPEN_MAX:4096\n\nScanning the drive for archives:\n1 file, 227 bytes (1 KiB)\n\nTesting archive: <TEMP>/zip-aes.zip\n--\nPath = <TEMP>/zip-aes.zip\nType = zip\nPhysical Size = 227\n\n\nEnter password:\n\n"
+    },
+    "zip-aes/non-ascii-create": {
+      "argv": [
+        "/home/ding/work/github/r404r/7zip/.worktrees/t_f4afeee1/.m1-artifacts/build/7zz",
+        "a",
+        "-tzip",
+        "-mem=AES256",
+        "-pfixture-only-\u65e5\u672c\u8a9e",
+        "<TEMP>/unicode-zip-aes.zip",
+        "plain.txt",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 2,
+      "stderr": "\n\nSystem ERROR:\nE_INVALIDARG : One or more arguments are invalid\n",
+      "stdout": "\n7-Zip (z) 26.03 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-09-03\n 64-bit locale=en_US.UTF-8 Threads:16 OPEN_MAX:4096\n\nScanning the drive:\n1 file, 25 bytes (1 KiB)\n\nCreating archive: <TEMP>/unicode-zip-aes.zip\n\nAdd new data to archive: 1 file, 25 bytes (1 KiB)\n\n"
+    },
+    "zip-aes/wrong": {
+      "argv": [
+        "/home/ding/work/github/r404r/7zip/.worktrees/t_f4afeee1/.m1-artifacts/build/7zz",
+        "t",
+        "-pwrong-fixture",
+        "<TEMP>/zip-aes.zip",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 2,
+      "stderr": "ERROR: Wrong password : plain.txt\n",
+      "stdout": "\n7-Zip (z) 26.03 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-09-03\n 64-bit locale=en_US.UTF-8 Threads:16 OPEN_MAX:4096\n\nScanning the drive for archives:\n1 file, 227 bytes (1 KiB)\n\nTesting archive: <TEMP>/zip-aes.zip\n--\nPath = <TEMP>/zip-aes.zip\nType = zip\nPhysical Size = 227\n\n\nSub items Errors: 1\n\nArchives with Errors: 1\n\nSub items Errors: 1\n"
+    },
+    "zip-crypto/correct": {
+      "argv": [
+        "/home/ding/work/github/r404r/7zip/.worktrees/t_f4afeee1/.m1-artifacts/build/7zz",
+        "t",
+        "-pfixture-only-ascii",
+        "<TEMP>/zip-crypto.zip",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stderr": "",
+      "stdout": "\n7-Zip (z) 26.03 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-09-03\n 64-bit locale=en_US.UTF-8 Threads:16 OPEN_MAX:4096\n\nScanning the drive for archives:\n1 file, 189 bytes (1 KiB)\n\nTesting archive: <TEMP>/zip-crypto.zip\n--\nPath = <TEMP>/zip-crypto.zip\nType = zip\nPhysical Size = 189\n\nEverything is Ok\n\nSize:       25\nCompressed: 189\n"
+    },
+    "zip-crypto/create": {
+      "argv": [
+        "/home/ding/work/github/r404r/7zip/.worktrees/t_f4afeee1/.m1-artifacts/build/7zz",
+        "a",
+        "-tzip",
+        "-mem=ZipCrypto",
+        "-pfixture-only-ascii",
+        "<TEMP>/zip-crypto.zip",
+        "plain.txt",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stderr": "",
+      "stdout": "\n7-Zip (z) 26.03 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-09-03\n 64-bit locale=en_US.UTF-8 Threads:16 OPEN_MAX:4096\n\nScanning the drive:\n1 file, 25 bytes (1 KiB)\n\nCreating archive: <TEMP>/zip-crypto.zip\n\nAdd new data to archive: 1 file, 25 bytes (1 KiB)\n\n\nFiles read from disk: 1\nArchive size: 189 bytes (1 KiB)\nEverything is Ok\n"
+    },
+    "zip-crypto/empty-eof": {
+      "argv": [
+        "/home/ding/work/github/r404r/7zip/.worktrees/t_f4afeee1/.m1-artifacts/build/7zz",
+        "t",
+        "-p",
+        "<TEMP>/zip-crypto.zip",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 2,
+      "stderr": "ERROR: Wrong password : plain.txt\n",
+      "stdout": "\n7-Zip (z) 26.03 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-09-03\n 64-bit locale=en_US.UTF-8 Threads:16 OPEN_MAX:4096\n\nScanning the drive for archives:\n1 file, 189 bytes (1 KiB)\n\nTesting archive: <TEMP>/zip-crypto.zip\n--\nPath = <TEMP>/zip-crypto.zip\nType = zip\nPhysical Size = 189\n\n\nSub items Errors: 1\n\nArchives with Errors: 1\n\nSub items Errors: 1\n"
+    },
+    "zip-crypto/extract": {
+      "argv": [
+        "/home/ding/work/github/r404r/7zip/.worktrees/t_f4afeee1/.m1-artifacts/build/7zz",
+        "x",
+        "-pfixture-only-ascii",
+        "<TEMP>/zip-crypto.zip",
+        "-o<TEMP>/decrypt-zip-crypto",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stderr": "",
+      "stdout": "\n7-Zip (z) 26.03 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-09-03\n 64-bit locale=en_US.UTF-8 Threads:16 OPEN_MAX:4096\n\nScanning the drive for archives:\n1 file, 189 bytes (1 KiB)\n\nExtracting archive: <TEMP>/zip-crypto.zip\n--\nPath = <TEMP>/zip-crypto.zip\nType = zip\nPhysical Size = 189\n\nEverything is Ok\n\nSize:       25\nCompressed: 189\n"
+    },
+    "zip-crypto/missing-eof": {
+      "argv": [
+        "/home/ding/work/github/r404r/7zip/.worktrees/t_f4afeee1/.m1-artifacts/build/7zz",
+        "t",
+        "<TEMP>/zip-crypto.zip",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 255,
+      "stderr": "\n\nBreak signaled\n",
+      "stdout": "\n7-Zip (z) 26.03 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-09-03\n 64-bit locale=en_US.UTF-8 Threads:16 OPEN_MAX:4096\n\nScanning the drive for archives:\n1 file, 189 bytes (1 KiB)\n\nTesting archive: <TEMP>/zip-crypto.zip\n--\nPath = <TEMP>/zip-crypto.zip\nType = zip\nPhysical Size = 189\n\n\nEnter password:\n\n"
+    },
+    "zip-crypto/non-ascii-create": {
+      "argv": [
+        "/home/ding/work/github/r404r/7zip/.worktrees/t_f4afeee1/.m1-artifacts/build/7zz",
+        "a",
+        "-tzip",
+        "-mem=ZipCrypto",
+        "-pfixture-only-\u65e5\u672c\u8a9e",
+        "<TEMP>/unicode-zip-crypto.zip",
+        "plain.txt",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 2,
+      "stderr": "\n\nSystem ERROR:\nE_INVALIDARG : One or more arguments are invalid\n",
+      "stdout": "\n7-Zip (z) 26.03 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-09-03\n 64-bit locale=en_US.UTF-8 Threads:16 OPEN_MAX:4096\n\nScanning the drive:\n1 file, 25 bytes (1 KiB)\n\nCreating archive: <TEMP>/unicode-zip-crypto.zip\n\nAdd new data to archive: 1 file, 25 bytes (1 KiB)\n\n"
+    },
+    "zip-crypto/wrong": {
+      "argv": [
+        "/home/ding/work/github/r404r/7zip/.worktrees/t_f4afeee1/.m1-artifacts/build/7zz",
+        "t",
+        "-pwrong-fixture",
+        "<TEMP>/zip-crypto.zip",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 2,
+      "stderr": "ERROR: Wrong password : plain.txt\n",
+      "stdout": "\n7-Zip (z) 26.03 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-09-03\n 64-bit locale=en_US.UTF-8 Threads:16 OPEN_MAX:4096\n\nScanning the drive for archives:\n1 file, 189 bytes (1 KiB)\n\nTesting archive: <TEMP>/zip-crypto.zip\n--\nPath = <TEMP>/zip-crypto.zip\nType = zip\nPhysical Size = 189\n\n\nSub items Errors: 1\n\nArchives with Errors: 1\n\nSub items Errors: 1\n"
+    },
+    "zip/create": {
+      "argv": [
+        "/home/ding/work/github/r404r/7zip/.worktrees/t_f4afeee1/.m1-artifacts/build/7zz",
+        "a",
+        "-tzip",
+        "<TEMP>/fixture.zip",
+        ".",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stderr": "",
+      "stdout": "\n7-Zip (z) 26.03 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-09-03\n 64-bit locale=en_US.UTF-8 Threads:16 OPEN_MAX:4096\n\nScanning the drive:\n1 folder, 4 files, 1065 bytes (2 KiB)\n\nCreating archive: <TEMP>/fixture.zip\n\nAdd new data to archive: 1 folder, 4 files, 1065 bytes (2 KiB)\n\n\nFiles read from disk: 4\nArchive size: 1051 bytes (2 KiB)\nEverything is Ok\n"
+    },
+    "zip/extract": {
+      "argv": [
+        "/home/ding/work/github/r404r/7zip/.worktrees/t_f4afeee1/.m1-artifacts/build/7zz",
+        "x",
+        "<TEMP>/fixture.zip",
+        "-o<TEMP>/out-zip",
+        "-y",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stderr": "",
+      "stdout": "\n7-Zip (z) 26.03 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-09-03\n 64-bit locale=en_US.UTF-8 Threads:16 OPEN_MAX:4096\n\nScanning the drive for archives:\n1 file, 1051 bytes (2 KiB)\n\nExtracting archive: <TEMP>/fixture.zip\n--\nPath = <TEMP>/fixture.zip\nType = zip\nPhysical Size = 1051\n\nEverything is Ok\n\nFolders: 1\nFiles: 4\nSize:       1065\nCompressed: 1051\n"
+    },
+    "zip/list": {
+      "argv": [
+        "/home/ding/work/github/r404r/7zip/.worktrees/t_f4afeee1/.m1-artifacts/build/7zz",
+        "l",
+        "-slt",
+        "-ba",
+        "<TEMP>/fixture.zip",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stderr": "",
+      "stdout": "Path = empty.txt\nFolder = -\nSize = 0\nPacked Size = 0\nModified = 2023-11-15 07:13:20.0000000\nCreated = \nAccessed = \nAttributes =  -rw-r--r--\nEncrypted = -\nComment = \nCRC = 00000000\nMethod = Store\nCharacteristics = NTFS\nHost OS = Unix\nVersion = 10\nVolume Index = 0\nOffset = 0\n\nPath = nested\nFolder = +\nSize = 0\nPacked Size = 0\nModified = 2026-09-11 11:22:50.3034502\nCreated = \nAccessed = \nAttributes = D drwxrwxr-x\nEncrypted = -\nComment = \nCRC = \nMethod = Store\nCharacteristics = NTFS\nHost OS = Unix\nVersion = 20\nVolume Index = 0\nOffset = 39\n\nPath = nested/binary.bin\nFolder = -\nSize = 1024\nPacked Size = 294\nModified = 2023-11-15 07:13:20.0000000\nCreated = \nAccessed = \nAttributes =  -rw-r--r--\nEncrypted = -\nComment = \nCRC = B70B4C26\nMethod = Deflate\nCharacteristics = NTFS\nHost OS = Unix\nVersion = 20\nVolume Index = 0\nOffset = 76\n\nPath = nested/\u65e5\u672c\u8a9e-\ud83d\ude00.txt\nFolder = -\nSize = 16\nPacked Size = 16\nModified = 2023-11-15 07:13:20.0000000\nCreated = \nAccessed = \nAttributes =  -rw-r--r--\nEncrypted = -\nComment = \nCRC = 55DA8F67\nMethod = Store\nCharacteristics = NTFS : UTF8\nHost OS = Unix\nVersion = 10\nVolume Index = 0\nOffset = 417\n\nPath = plain.txt\nFolder = -\nSize = 25\nPacked Size = 25\nModified = 2023-11-15 07:13:20.0000000\nCreated = \nAccessed = \nAttributes =  -rw-r--r--\nEncrypted = -\nComment = \nCRC = CE8DB660\nMethod = Store\nCharacteristics = NTFS\nHost OS = Unix\nVersion = 10\nVolume Index = 0\nOffset = 488\n\n"
+    },
+    "zip/overwrite/-aoa": {
+      "argv": [
+        "/home/ding/work/github/r404r/7zip/.worktrees/t_f4afeee1/.m1-artifacts/build/7zz",
+        "x",
+        "<TEMP>/fixture.zip",
+        "plain.txt",
+        "-o<TEMP>/overwrite-zip--aoa",
+        "-aoa",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stderr": "",
+      "stdout": "\n7-Zip (z) 26.03 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-09-03\n 64-bit locale=en_US.UTF-8 Threads:16 OPEN_MAX:4096\n\nScanning the drive for archives:\n1 file, 1051 bytes (2 KiB)\n\nExtracting archive: <TEMP>/fixture.zip\n--\nPath = <TEMP>/fixture.zip\nType = zip\nPhysical Size = 1051\n\nEverything is Ok\n\nSize:       25\nCompressed: 1051\n"
+    },
+    "zip/overwrite/-aos": {
+      "argv": [
+        "/home/ding/work/github/r404r/7zip/.worktrees/t_f4afeee1/.m1-artifacts/build/7zz",
+        "x",
+        "<TEMP>/fixture.zip",
+        "plain.txt",
+        "-o<TEMP>/overwrite-zip--aos",
+        "-aos",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stderr": "",
+      "stdout": "\n7-Zip (z) 26.03 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-09-03\n 64-bit locale=en_US.UTF-8 Threads:16 OPEN_MAX:4096\n\nScanning the drive for archives:\n1 file, 1051 bytes (2 KiB)\n\nExtracting archive: <TEMP>/fixture.zip\n--\nPath = <TEMP>/fixture.zip\nType = zip\nPhysical Size = 1051\n\nEverything is Ok\n\nFiles: 0\nSize:       0\nCompressed: 1051\n"
+    },
+    "zip/overwrite/-aot": {
+      "argv": [
+        "/home/ding/work/github/r404r/7zip/.worktrees/t_f4afeee1/.m1-artifacts/build/7zz",
+        "x",
+        "<TEMP>/fixture.zip",
+        "plain.txt",
+        "-o<TEMP>/overwrite-zip--aot",
+        "-aot",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stderr": "",
+      "stdout": "\n7-Zip (z) 26.03 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-09-03\n 64-bit locale=en_US.UTF-8 Threads:16 OPEN_MAX:4096\n\nScanning the drive for archives:\n1 file, 1051 bytes (2 KiB)\n\nExtracting archive: <TEMP>/fixture.zip\n--\nPath = <TEMP>/fixture.zip\nType = zip\nPhysical Size = 1051\n\nEverything is Ok\n\nSize:       25\nCompressed: 1051\n"
+    },
+    "zip/overwrite/-aou": {
+      "argv": [
+        "/home/ding/work/github/r404r/7zip/.worktrees/t_f4afeee1/.m1-artifacts/build/7zz",
+        "x",
+        "<TEMP>/fixture.zip",
+        "plain.txt",
+        "-o<TEMP>/overwrite-zip--aou",
+        "-aou",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stderr": "",
+      "stdout": "\n7-Zip (z) 26.03 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-09-03\n 64-bit locale=en_US.UTF-8 Threads:16 OPEN_MAX:4096\n\nScanning the drive for archives:\n1 file, 1051 bytes (2 KiB)\n\nExtracting archive: <TEMP>/fixture.zip\n--\nPath = <TEMP>/fixture.zip\nType = zip\nPhysical Size = 1051\n\nEverything is Ok\n\nSize:       25\nCompressed: 1051\n"
+    },
+    "zip/test": {
+      "argv": [
+        "/home/ding/work/github/r404r/7zip/.worktrees/t_f4afeee1/.m1-artifacts/build/7zz",
+        "t",
+        "<TEMP>/fixture.zip",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stderr": "",
+      "stdout": "\n7-Zip (z) 26.03 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-09-03\n 64-bit locale=en_US.UTF-8 Threads:16 OPEN_MAX:4096\n\nScanning the drive for archives:\n1 file, 1051 bytes (2 KiB)\n\nTesting archive: <TEMP>/fixture.zip\n--\nPath = <TEMP>/fixture.zip\nType = zip\nPhysical Size = 1051\n\nEverything is Ok\n\nFolders: 1\nFiles: 4\nSize:       1065\nCompressed: 1051\n"
+    },
+    "zip/truncated": {
+      "argv": [
+        "/home/ding/work/github/r404r/7zip/.worktrees/t_f4afeee1/.m1-artifacts/build/7zz",
+        "t",
+        "<TEMP>/truncated.zip",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 2,
+      "stderr": "ERROR: <TEMP>/truncated.zip\n<TEMP>/truncated.zip\nOpen ERROR: Cannot open the file as [zip] archive\n\n\nERRORS:\nIs not archive\n",
+      "stdout": "\n7-Zip (z) 26.03 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-09-03\n 64-bit locale=en_US.UTF-8 Threads:16 OPEN_MAX:4096\n\nScanning the drive for archives:\n1 file, 16 bytes (1 KiB)\n\nTesting archive: <TEMP>/truncated.zip\n\nCan't open as archive: 1\nFiles: 0\nSize:       0\nCompressed: 0\n"
+    }
+  },
+  "fixtures": {
+    "empty.txt": {
+      "mode": 420,
+      "mtime_ns": 1700000000000000000,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    "nested/binary.bin": {
+      "mode": 420,
+      "mtime_ns": 1700000000000000000,
+      "sha256": "785b0751fc2c53dc14a4ce3d800e69ef9ce1009eb327ccf458afe09c242c26c9",
+      "size": 1024
+    },
+    "nested/\u65e5\u672c\u8a9e-\ud83d\ude00.txt": {
+      "mode": 420,
+      "mtime_ns": 1700000000000000000,
+      "sha256": "f08d5237cf259a265af181b9886e3c424f086dd39b2245df830c42e6d557b397",
+      "size": 16
+    },
+    "plain.txt": {
+      "mode": 420,
+      "mtime_ns": 1700000000000000000,
+      "sha256": "6b8efdc8c00454fc4cb31f180536e215c05fcaf3d04ad467cc64952c8c9000b8",
+      "size": 25
+    }
+  },
+  "observations": {
+    "7z-headers/correct": {
+      "exit": 0
+    },
+    "7z-headers/create": {
+      "exit": 0
+    },
+    "7z-headers/empty-eof": {
+      "exit": 2
+    },
+    "7z-headers/extract": {
+      "exit": 0,
+      "files": {
+        "plain.txt": {
+          "mode": 420,
+          "mtime_ns": 1700000000000000000,
+          "sha256": "6b8efdc8c00454fc4cb31f180536e215c05fcaf3d04ad467cc64952c8c9000b8",
+          "size": 25
+        }
+      }
+    },
+    "7z-headers/missing-eof": {
+      "exit": 255
+    },
+    "7z-headers/wrong": {
+      "exit": 2
+    },
+    "7z/create": {
+      "exit": 0
+    },
+    "7z/extract": {
+      "exit": 0,
+      "files": {
+        "empty.txt": {
+          "mode": 420,
+          "mtime_ns": 1700000000000000000,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size": 0
+        },
+        "nested/binary.bin": {
+          "mode": 420,
+          "mtime_ns": 1700000000000000000,
+          "sha256": "785b0751fc2c53dc14a4ce3d800e69ef9ce1009eb327ccf458afe09c242c26c9",
+          "size": 1024
+        },
+        "nested/\u65e5\u672c\u8a9e-\ud83d\ude00.txt": {
+          "mode": 420,
+          "mtime_ns": 1700000000000000000,
+          "sha256": "f08d5237cf259a265af181b9886e3c424f086dd39b2245df830c42e6d557b397",
+          "size": 16
+        },
+        "plain.txt": {
+          "mode": 420,
+          "mtime_ns": 1700000000000000000,
+          "sha256": "6b8efdc8c00454fc4cb31f180536e215c05fcaf3d04ad467cc64952c8c9000b8",
+          "size": 25
+        }
+      }
+    },
+    "7z/list": {
+      "entries": [
+        {
+          "CRC": "",
+          "Encrypted": "-",
+          "Path": "empty.txt",
+          "Size": "0"
+        },
+        {
+          "CRC": "",
+          "Encrypted": "-",
+          "Path": "nested",
+          "Size": "0"
+        },
+        {
+          "CRC": "B70B4C26",
+          "Encrypted": "-",
+          "Path": "nested/binary.bin",
+          "Size": "1024"
+        },
+        {
+          "CRC": "55DA8F67",
+          "Encrypted": "-",
+          "Path": "nested/\u65e5\u672c\u8a9e-\ud83d\ude00.txt",
+          "Size": "16"
+        },
+        {
+          "CRC": "CE8DB660",
+          "Encrypted": "-",
+          "Path": "plain.txt",
+          "Size": "25"
+        }
+      ],
+      "exit": 0
+    },
+    "7z/overwrite/-aoa": {
+      "exit": 0,
+      "files": {
+        "plain.txt": {
+          "mode": 420,
+          "mtime_ns": 1700000000000000000,
+          "sha256": "6b8efdc8c00454fc4cb31f180536e215c05fcaf3d04ad467cc64952c8c9000b8",
+          "size": 25
+        }
+      }
+    },
+    "7z/overwrite/-aos": {
+      "exit": 0,
+      "files": {
+        "plain.txt": {
+          "mode": 420,
+          "mtime_ns": 1699999900000000000,
+          "sha256": "284a9884f9f33011f699b0b612476319e5248bdb8227b42c8d87f6c16687a418",
+          "size": 21
+        }
+      }
+    },
+    "7z/overwrite/-aot": {
+      "exit": 0,
+      "files": {
+        "plain.txt": {
+          "mode": 420,
+          "mtime_ns": 1700000000000000000,
+          "sha256": "6b8efdc8c00454fc4cb31f180536e215c05fcaf3d04ad467cc64952c8c9000b8",
+          "size": 25
+        },
+        "plain_1.txt": {
+          "mode": 420,
+          "mtime_ns": 1699999900000000000,
+          "sha256": "284a9884f9f33011f699b0b612476319e5248bdb8227b42c8d87f6c16687a418",
+          "size": 21
+        }
+      }
+    },
+    "7z/overwrite/-aou": {
+      "exit": 0,
+      "files": {
+        "plain.txt": {
+          "mode": 420,
+          "mtime_ns": 1699999900000000000,
+          "sha256": "284a9884f9f33011f699b0b612476319e5248bdb8227b42c8d87f6c16687a418",
+          "size": 21
+        },
+        "plain_1.txt": {
+          "mode": 420,
+          "mtime_ns": 1700000000000000000,
+          "sha256": "6b8efdc8c00454fc4cb31f180536e215c05fcaf3d04ad467cc64952c8c9000b8",
+          "size": 25
+        }
+      }
+    },
+    "7z/test": {
+      "exit": 0
+    },
+    "7z/truncated": {
+      "exit": 2
+    },
+    "capabilities": {
+      "exit": 0
+    },
+    "crc/create": {
+      "exit": 0
+    },
+    "crc/test": {
+      "exit": 2
+    },
+    "zip-aes/correct": {
+      "exit": 0
+    },
+    "zip-aes/create": {
+      "exit": 0
+    },
+    "zip-aes/empty-eof": {
+      "exit": 2
+    },
+    "zip-aes/extract": {
+      "exit": 0,
+      "files": {
+        "plain.txt": {
+          "mode": 420,
+          "mtime_ns": 1700000000000000000,
+          "sha256": "6b8efdc8c00454fc4cb31f180536e215c05fcaf3d04ad467cc64952c8c9000b8",
+          "size": 25
+        }
+      }
+    },
+    "zip-aes/missing-eof": {
+      "exit": 255
+    },
+    "zip-aes/non-ascii-create": {
+      "exit": 2
+    },
+    "zip-aes/wrong": {
+      "exit": 2
+    },
+    "zip-crypto/correct": {
+      "exit": 0
+    },
+    "zip-crypto/create": {
+      "exit": 0
+    },
+    "zip-crypto/empty-eof": {
+      "exit": 2
+    },
+    "zip-crypto/extract": {
+      "exit": 0,
+      "files": {
+        "plain.txt": {
+          "mode": 420,
+          "mtime_ns": 1700000000000000000,
+          "sha256": "6b8efdc8c00454fc4cb31f180536e215c05fcaf3d04ad467cc64952c8c9000b8",
+          "size": 25
+        }
+      }
+    },
+    "zip-crypto/missing-eof": {
+      "exit": 255
+    },
+    "zip-crypto/non-ascii-create": {
+      "exit": 2
+    },
+    "zip-crypto/wrong": {
+      "exit": 2
+    },
+    "zip/create": {
+      "exit": 0
+    },
+    "zip/extract": {
+      "exit": 0,
+      "files": {
+        "empty.txt": {
+          "mode": 420,
+          "mtime_ns": 1700000000000000000,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size": 0
+        },
+        "nested/binary.bin": {
+          "mode": 420,
+          "mtime_ns": 1700000000000000000,
+          "sha256": "785b0751fc2c53dc14a4ce3d800e69ef9ce1009eb327ccf458afe09c242c26c9",
+          "size": 1024
+        },
+        "nested/\u65e5\u672c\u8a9e-\ud83d\ude00.txt": {
+          "mode": 420,
+          "mtime_ns": 1700000000000000000,
+          "sha256": "f08d5237cf259a265af181b9886e3c424f086dd39b2245df830c42e6d557b397",
+          "size": 16
+        },
+        "plain.txt": {
+          "mode": 420,
+          "mtime_ns": 1700000000000000000,
+          "sha256": "6b8efdc8c00454fc4cb31f180536e215c05fcaf3d04ad467cc64952c8c9000b8",
+          "size": 25
+        }
+      }
+    },
+    "zip/list": {
+      "entries": [
+        {
+          "CRC": "00000000",
+          "Encrypted": "-",
+          "Folder": "-",
+          "Path": "empty.txt",
+          "Size": "0"
+        },
+        {
+          "CRC": "",
+          "Encrypted": "-",
+          "Folder": "+",
+          "Path": "nested",
+          "Size": "0"
+        },
+        {
+          "CRC": "B70B4C26",
+          "Encrypted": "-",
+          "Folder": "-",
+          "Path": "nested/binary.bin",
+          "Size": "1024"
+        },
+        {
+          "CRC": "55DA8F67",
+          "Encrypted": "-",
+          "Folder": "-",
+          "Path": "nested/\u65e5\u672c\u8a9e-\ud83d\ude00.txt",
+          "Size": "16"
+        },
+        {
+          "CRC": "CE8DB660",
+          "Encrypted": "-",
+          "Folder": "-",
+          "Path": "plain.txt",
+          "Size": "25"
+        }
+      ],
+      "exit": 0
+    },
+    "zip/overwrite/-aoa": {
+      "exit": 0,
+      "files": {
+        "plain.txt": {
+          "mode": 420,
+          "mtime_ns": 1700000000000000000,
+          "sha256": "6b8efdc8c00454fc4cb31f180536e215c05fcaf3d04ad467cc64952c8c9000b8",
+          "size": 25
+        }
+      }
+    },
+    "zip/overwrite/-aos": {
+      "exit": 0,
+      "files": {
+        "plain.txt": {
+          "mode": 420,
+          "mtime_ns": 1699999900000000000,
+          "sha256": "284a9884f9f33011f699b0b612476319e5248bdb8227b42c8d87f6c16687a418",
+          "size": 21
+        }
+      }
+    },
+    "zip/overwrite/-aot": {
+      "exit": 0,
+      "files": {
+        "plain.txt": {
+          "mode": 420,
+          "mtime_ns": 1700000000000000000,
+          "sha256": "6b8efdc8c00454fc4cb31f180536e215c05fcaf3d04ad467cc64952c8c9000b8",
+          "size": 25
+        },
+        "plain_1.txt": {
+          "mode": 420,
+          "mtime_ns": 1699999900000000000,
+          "sha256": "284a9884f9f33011f699b0b612476319e5248bdb8227b42c8d87f6c16687a418",
+          "size": 21
+        }
+      }
+    },
+    "zip/overwrite/-aou": {
+      "exit": 0,
+      "files": {
+        "plain.txt": {
+          "mode": 420,
+          "mtime_ns": 1699999900000000000,
+          "sha256": "284a9884f9f33011f699b0b612476319e5248bdb8227b42c8d87f6c16687a418",
+          "size": 21
+        },
+        "plain_1.txt": {
+          "mode": 420,
+          "mtime_ns": 1700000000000000000,
+          "sha256": "6b8efdc8c00454fc4cb31f180536e215c05fcaf3d04ad467cc64952c8c9000b8",
+          "size": 25
+        }
+      }
+    },
+    "zip/test": {
+      "exit": 0
+    },
+    "zip/truncated": {
+      "exit": 2
+    }
+  },
+  "provenance": {
+    "cancel": false,
+    "commit": "3aea9f861807d6f9af1bc1ab0ef489030233ec59",
+    "executable_sha256": "42349815b23dd2fe2adc4d712cd9275754012c43576438ab4c24a76589575646",
+    "harness_sha256": "87129129ec8c1f5ce7ba18bf01b6a871585f6101f21bd547e15aea4c27af35e9",
+    "large": false,
+    "machine": "x86_64",
+    "platform": "Linux-7.0.0-28-generic-x86_64-with-glibc2.43",
+    "python": "3.11.16",
+    "source_diff": "",
+    "system": "Linux"
+  },
+  "result": "PASS",
+  "schema": 1
+}
