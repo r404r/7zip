@@ -5,8 +5,14 @@
 #include "CPP/Common/MyWindows.h"
 #include "CPP/7zip/Archive/IArchive.h"
 
+#ifdef _WIN32
+// Archive2.def marks these PRIVATE: exported, deliberately absent from 7z.lib.
+static Func_GetNumberOfFormats GetNumberOfFormats;
+static Func_GetHandlerProperty2 GetHandlerProperty2;
+#else
 STDAPI GetNumberOfFormats(UInt32 *count);
 STDAPI GetHandlerProperty2(UInt32 index, PROPID id, PROPVARIANT *value);
+#endif
 
 static bool ReadUInt32(UInt32 index, PROPID id, UInt32 &out)
 {
@@ -21,7 +27,7 @@ static bool ReadUInt32(UInt32 index, PROPID id, UInt32 &out)
   return true;
 }
 
-int main()
+static int Observe()
 {
   UInt32 count = 0;
   if (GetNumberOfFormats(&count) != S_OK || count == 0) return 1;
@@ -55,3 +61,24 @@ int main()
   }
   return 0;
 }
+
+#ifdef _WIN32
+int wmain(int argc, wchar_t **argv)
+{
+  if (argc != 2) return 3;
+  HMODULE module = LoadLibraryExW(argv[1], NULL,
+      LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR | LOAD_LIBRARY_SEARCH_DEFAULT_DIRS);
+  if (!module) return 4;
+  // The original IArchive.h function pointer types match these exact exports.
+  GetNumberOfFormats = reinterpret_cast<Func_GetNumberOfFormats>(
+      GetProcAddress(module, "GetNumberOfFormats"));
+  GetHandlerProperty2 = reinterpret_cast<Func_GetHandlerProperty2>(
+      GetProcAddress(module, "GetHandlerProperty2"));
+  const int result = GetNumberOfFormats && GetHandlerProperty2 ? Observe() : 5;
+  // Observe releases all property allocations before the module is unloaded.
+  FreeLibrary(module);
+  return result;
+}
+#else
+int main() { return Observe(); }
+#endif

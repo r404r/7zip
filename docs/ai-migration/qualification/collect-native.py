@@ -112,13 +112,13 @@ def main():
     if system == 'Windows':
         run(['cl', '/nologo', '/EHsc', '/W4', '/WX', '/std:c++17', '/I' + str(ROOT),
              '/Fo' + str(product_dir / 'observe-formats.obj'), '/Fe' + str(observer),
-             observer_source, str(ROOT / 'CPP/7zip/Bundles/Format7zF/x64/7z.lib'),
-             'oleaut32.lib'], 'format-observer-build.log')
+             observer_source, 'oleaut32.lib'], 'format-observer-build.log')
     else:
         run(['g++' if system == 'Linux' else 'clang++', '-std=c++17', '-Wall', '-Wextra',
              '-Werror', '-I', str(ROOT), observer_source, str(product_dir / '7z.so'),
              '-o', str(observer)], 'format-observer-build.log')
-    run([str(observer)], 'format-registry.tsv', product_dir)
+    run([str(observer)] + ([str(product_dir / '7z.dll')] if system == 'Windows' else []),
+        'format-registry.tsv', product_dir)
     run([str(binary), 'i'], 'capabilities.txt')
     run(['python3' if system != 'Windows' else 'python',
          '.github/tests/archive_characterization.py', str(binary),
