@@ -17,6 +17,30 @@ from typing import Any
 LIMIT = 64 << 20
 
 
+def fill_tail(write, tell, record):
+    """Bounded coarse-to-fine writes, not evidence of an archive-layer error."""
+    record['fill_steps'] = []
+    attempted = 0
+    for chunk in (1 << 20, 64 << 10, 4096):
+        step: dict[str, Any] = dict(chunk=chunk, writes=0)
+        record['fill_steps'].append(step)
+        while True:
+            attempted += chunk
+            assert attempted <= LIMIT + (2 << 20), 'Image fill exceeded write budget'
+            try:
+                n = write(b'F' * chunk)
+                assert n is not None and 0 < n <= chunk, 'Invalid filler short write'
+                step['writes'] += 1
+                assert tell() <= LIMIT, 'Filler exceeded image size'
+            except OSError as exc:
+                error = dict(errno=exc.errno, winerror=getattr(exc, 'winerror', None))
+                step['error'] = error
+                assert exc.errno == errno.ENOSPC or error['winerror'] == 112
+                record['fill_error'] = error
+                break
+    record['filled_size'] = tell()
+
+
 def check_mount(root, parent, info, parent_info):
     assert not root.is_symlink(), 'Refuse symbolic-link mount target'
     usage = shutil.disk_usage(root)
@@ -79,10 +103,14 @@ def mounted(case, result, command, fs_info):
             result['cleanup'] = command(['hdiutil', 'detach', str(root)], case)
         if 'cleanup' in result:
             assert result['cleanup']['exit'] == 0, result['cleanup']
+            # diskpart may return zero even when a script command failed.
+            result['detached'] = (root.stat().st_dev == case.stat().st_dev if os.name != 'nt'
+                                  else fs_info(root)['volume'] == parent_info['volume'])
+            assert result['detached'], 'Image still mounted after detach'
 
 
 def observe(plain, sandbox, result, command, fs_info, digest):
-    """Exercise real retained create/update with only 16 KiB output space left."""
+    """Exercise retained create/update after measuring less than input capacity."""
     result['layer'] = 'COutFileStream / bounded image filesystem'
     result['operations'] = []
     result['completed'] = False
@@ -105,22 +133,12 @@ def observe(plain, sandbox, result, command, fs_info, digest):
             assert record['control_test']['exit'] == 0
             control.unlink()
             filler = root / 'filler.bin'
-            written = 0
             with filler.open('xb', buffering=0) as f:
-                try:
-                    # Hard write budget independent of possibly erroneous free-space
-                    # reporting. Never attempt more than image capacity plus one block.
-                    while written <= LIMIT:
-                        n = f.write(b'F' * (1 << 20))
-                        assert n is not None and n > 0
-                        written += n
-                    raise AssertionError('Image fill did not encounter ENOSPC within bound')
-                except OSError as exc:
-                    record['fill_error'] = dict(errno=exc.errno, winerror=getattr(exc, 'winerror', None))
-                    assert exc.errno == errno.ENOSPC or getattr(exc, 'winerror', None) == 112
-                    record['filled_size'] = f.tell()
-                    assert 16 << 10 < f.tell() <= LIMIT
-                    f.truncate(f.tell() - (16 << 10))
+                fill_tail(f.write, f.tell, record)
+                assert 16 << 10 < f.tell() <= LIMIT
+                f.truncate(f.tell() - (16 << 10))
+            # Recheck the owned mount immediately before the error-path operation.
+            record['capacity_before_archive'] = check_mount(root, case, fs_info(root), record['parent_filesystem'])
             record['free_before_archive'] = shutil.disk_usage(root).free
             assert record['free_before_archive'] < source.stat().st_size
             record['run'] = command([plain, 'a' if operation == 'create' else 'u', '-tzip', '-mx=0',

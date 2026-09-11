@@ -1,0 +1,16 @@
+{
+  "stage": "preflight-plan review only; not native qualification",
+  "base_commit": "ae3dfe7b61c0032859bea07cd367ac23392ec8e0",
+  "branch": "wt/t_bf92ce13",
+  "commands_and_raw_output": "checks.log",
+  "final_pipeline_exit": 0,
+  "preflight_unit_tests": 6,
+  "existing_integrity_tests_executed": 8,
+  "explicitly_not_executed": ["test_native_small_sparse_proof_records_allocation", "native full-volume", "native preflight", "full capture/repeat", "ZIP64", "push", "dispatch", "rerun"],
+  "preservation_scripts": 6,
+  "historical_ci_archive_checksums": "all three OK",
+  "build_rationale": "Python/workflow plan-only changes; compileall passed. No retained C++ build or new native behavior claimed.",
+  "red_green": ["Missing fill_tail helper failed before implementation; residual-tail cases then passed", "Missing preflight module failed before implementation; gate controls then passed"],
+  "limitations": ["Modelled unit writes are not oracle data", "Workflow dispatch registration must be checked before authorized post-review execution", "No actionlint executable found", "Optional execute_code batching was blocked by single-query policy; normal tools ran the recorded checks without policy changes"],
+  "review_instruction": "Record exact-commit stage PASS/CHANGES and return same card to tester; do not complete or integrate B03"
+}

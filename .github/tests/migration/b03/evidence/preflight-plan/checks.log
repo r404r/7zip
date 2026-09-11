@@ -1,0 +1,193 @@
+++ python3 .github/tests/migration/b03/test_preflight.py -v
+test_cleanup_runs_after_probe_failure_and_checks_detachment (__main__.TailTests.test_cleanup_runs_after_probe_failure_and_checks_detachment) ... ok
+test_execution_gate_rejects_unreviewed_and_rerun (__main__.TailTests.test_execution_gate_rejects_unreviewed_and_rerun) ... ok
+test_fill_is_bounded_even_if_no_enospc (__main__.TailTests.test_fill_is_bounded_even_if_no_enospc) ... ok
+test_large_request_enospc_does_not_mean_tail_is_full (__main__.TailTests.test_large_request_enospc_does_not_mean_tail_is_full) ... ok
+test_unrelated_error_and_zero_progress_rejected (__main__.TailTests.test_unrelated_error_and_zero_progress_rejected) ... ok
+test_workflow_contains_no_full_capture_or_push_native_entry (__main__.TailTests.test_workflow_contains_no_full_capture_or_push_native_entry) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.007s
+
+OK
+++ python3 .github/tests/migration/b03/test_integrity.py -v EvidenceTests.test_new_capture_cannot_omit_native_qualification EvidenceTests.test_full_volume_refuses_host_directory EvidenceTests.test_large_sparse_requires_small_proof EvidenceTests.test_windows_reserved_storage_is_not_a_typed_value EvidenceTests.test_frozen_candidate_integrity EvidenceTests.test_corrupt_stored_archive_is_rejected EvidenceTests.test_nonzero_exit_is_not_enospc_evidence EvidenceTests.test_document_relative_links_exist
+test_new_capture_cannot_omit_native_qualification (__main__.EvidenceTests.test_new_capture_cannot_omit_native_qualification) ... ok
+test_full_volume_refuses_host_directory (__main__.EvidenceTests.test_full_volume_refuses_host_directory) ... ok
+test_large_sparse_requires_small_proof (__main__.EvidenceTests.test_large_sparse_requires_small_proof) ... ok
+test_windows_reserved_storage_is_not_a_typed_value (__main__.EvidenceTests.test_windows_reserved_storage_is_not_a_typed_value) ... ok
+test_frozen_candidate_integrity (__main__.EvidenceTests.test_frozen_candidate_integrity) ... ok
+test_corrupt_stored_archive_is_rejected (__main__.EvidenceTests.test_corrupt_stored_archive_is_rejected) ... ok
+test_nonzero_exit_is_not_enospc_evidence (__main__.EvidenceTests.test_nonzero_exit_is_not_enospc_evidence) ... ok
+test_document_relative_links_exist (__main__.EvidenceTests.test_document_relative_links_exist) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.077s
+
+OK
+++ python3 -m compileall -q .github/tests/migration/b03
+++ sha256sum -c .github/tests/migration/b03/evidence/ci-attempts/SHA256SUMS
+.github/tests/migration/b03/evidence/ci-attempts/34568438732.tar.gz: OK
+.github/tests/migration/b03/evidence/ci-attempts/34568709582.tar.gz: OK
+.github/tests/migration/b03/evidence/ci-attempts/34571301200.tar.gz: OK
+++ git diff --exit-code ae3dfe7 -- C CPP Asm AGENTS.md .github/tests/migration/b03/evidence/local-linux .github/tests/migration/b03/evidence/local-linux-repair .github/tests/migration/b03/evidence/ci-attempts
+++ git diff --check
+++ python3 .github/tests/release_version_test.py
+-- tag names
+  PASS 26.02-fork.1 -> ('26.02', 1, None) (got ('26.02', 1, None))
+  PASS 26.02-fork.12 -> ('26.02', 12, None) (got ('26.02', 12, None))
+  PASS 26.02-fork.3-rc.1 -> ('26.02', 3, 1) (got ('26.02', 3, 1))
+  PASS 27.00-fork.1 -> ('27.00', 1, None) (got ('27.00', 1, None))
+  PASS 26.02 is rejected
+  PASS v26.02-fork.1 is rejected
+  PASS 26.02-fork.0 is rejected
+  PASS 26.02-fork.01 is rejected
+  PASS 26.02-fork.1-rc.0 is rejected
+  PASS 26.02-fork.1-rc1 is rejected
+  PASS 26.02-fork is rejected
+  PASS 26.2-fork.1 is rejected
+  PASS 26.02-fork.1-beta.1 is rejected
+  PASS 26.02-fork.1  is rejected
+-- the limits of an MSI ProductVersion: 255.255.65535
+  PASS 255.99-fork.65535 -> ('255.99', 65535, None) (got ('255.99', 65535, None))
+  PASS 255.99-fork.65535 -> 255.99.65535
+  PASS 256.00-fork.1 is rejected
+  PASS 26.02-fork.65536 is rejected
+-- the upstream version in readme.txt
+  PASS the first line of readme.txt gives 26.02
+  PASS and 27.00
+  PASS a readme without a version is rejected
+-- the tag must be based on the upstream version of the tagged tree
+  PASS 26.02-fork.3 on 26.02 sources: fine
+  PASS 26.02-fork.3 on 26.03 sources is rejected
+-- what the tag becomes
+  PASS MSI version of 26.02-fork.3 is 26.2.3
+  PASS an rc has the MSI version of the release it precedes
+  PASS MSI version of 27.00-fork.1 is 27.0.1
+  PASS rc is a prerelease
+  PASS a release is not
+  PASS title without an alias
+  PASS title with an alias
+  PASS the alias is trimmed
+  PASS asset names start with 7zip-fork-<tag>
+-- ordering
+  PASS fork numbers sort numerically, an rc comes before its release, a newer upstream comes last
+-- the previous release, for the notes
+  PASS of 26.02-fork.3: 26.02-fork.2, not one of the rc tags
+  PASS of an rc: the last release before it
+  PASS of 26.02-fork.2: 26.02-fork.1
+  PASS the first release has none
+  PASS across an upstream bump: the last release on the old one
+  PASS a later release is not a previous one
+0 failed
+++ python3 .github/tests/change_notice_test.py /home/ding/work/github/r404r/7zip/.worktrees/t_bf92ce13
+  PASS .gitattributes
+  PASS CPP/7zip/UI/Agent/Agent.cpp
+  PASS CPP/7zip/UI/Agent/Agent.h
+  PASS CPP/7zip/UI/Agent/ArchiveFolderOut.cpp
+  PASS CPP/7zip/UI/Common/OpenArchive.cpp
+  PASS CPP/7zip/UI/Common/SetProperties.cpp
+  PASS CPP/7zip/UI/Common/SetProperties.h
+  PASS CPP/7zip/UI/Common/Update.cpp
+  PASS CPP/7zip/UI/Common/ZipRegistry.cpp
+  PASS CPP/7zip/UI/Common/ZipRegistry.h
+  PASS CPP/7zip/UI/Explorer/ContextMenu.cpp
+  PASS CPP/7zip/UI/Explorer/DllExportsExplorer.cpp
+  PASS CPP/7zip/UI/Explorer/MyMessages.cpp
+  PASS CPP/7zip/UI/Explorer/RegistryContextMenu.cpp
+  PASS CPP/7zip/UI/FileManager/App.h
+  PASS CPP/7zip/UI/FileManager/LangUtils.cpp
+  PASS CPP/7zip/UI/FileManager/LangUtils.h
+  PASS CPP/7zip/UI/FileManager/MyLoadMenu.cpp
+  PASS CPP/7zip/UI/FileManager/Panel.h
+  PASS CPP/7zip/UI/FileManager/PanelOperations.cpp
+  PASS CPP/7zip/UI/FileManager/resource.h
+  PASS CPP/7zip/UI/FileManager/resource.rc
+  PASS CPP/7zip/UI/GUI/CompressDialog.cpp
+  PASS CPP/7zip/UI/GUI/CompressDialog.h
+  PASS CPP/7zip/UI/GUI/CompressDialog.rc
+  PASS CPP/7zip/UI/GUI/CompressDialogRes.h
+  PASS CPP/7zip/UI/GUI/Extract.rc
+  PASS CPP/7zip/UI/GUI/ExtractDialog.cpp
+  PASS CPP/7zip/UI/GUI/ExtractDialog.h
+  PASS CPP/7zip/UI/GUI/ExtractDialog.rc
+  PASS CPP/7zip/UI/GUI/ExtractDialogRes.h
+  PASS CPP/7zip/UI/GUI/ExtractGUI.cpp
+  PASS CPP/7zip/UI/GUI/ExtractRes.h
+  PASS CPP/7zip/UI/GUI/UpdateGUI.cpp
+  SKIP README.md (the fork's own statement)
+34 modified upstream files, 0 without a notice
+++ python3 .github/tests/lang_files_test.py /home/ding/work/github/r404r/7zip/.worktrees/t_bf92ce13
+  30000 IDS_EXTRACT_CODEPAGE_AUTO      CPP/7zip/UI/GUI/ExtractDialog.cpp, CPP/7zip/UI/GUI/Extract.rc
+  30001 IDS_EXTRACT_CODEPAGE_INCORRECT CPP/7zip/UI/GUI/ExtractDialog.cpp, CPP/7zip/UI/GUI/Extract.rc
+  30002 IDS_EXTRACT_CODEPAGE           CPP/7zip/UI/GUI/ExtractDialog.cpp
+  30003 IDS_COMPRESS_UTF8_NAMES        CPP/7zip/UI/GUI/CompressDialog.cpp
+  30004 IDS_VIEW_NAME_CODE_PAGE        CPP/7zip/UI/FileManager/MyLoadMenu.cpp
+  30005 IDS_NAME_CODE_PAGE_TITLE       CPP/7zip/UI/FileManager/PanelOperations.cpp, CPP/7zip/UI/FileManager/resource.rc
+  30006 IDS_NAME_CODE_PAGE_PROMPT      CPP/7zip/UI/FileManager/PanelOperations.cpp, CPP/7zip/UI/FileManager/resource.rc
+93 language files checked, 0 problem(s)
+++ python3 .github/tests/shell_ext_identity.py /home/ding/work/github/r404r/7zip/.worktrees/t_bf92ce13
+-- CLSID
+  PASS RegistryContextMenu.cpp: k_Clsid_A is the fork CLSID
+  PASS DllExportsExplorer.cpp: k_Clsid is the fork CLSID
+  PASS DllExportsExplorer.cpp: Z7_DEFINE_GUID(CLSID_CZipContextMenu) spells the fork CLSID (got {1281FA63-F95D-48AC-9342-EE333A3F71F8})
+  PASS CPP/7zip/UI/Explorer/RegistryContextMenu.cpp: the official CLSID does not appear
+  PASS CPP/7zip/UI/Explorer/DllExportsExplorer.cpp: the official CLSID does not appear
+  PASS .github/msi/7zip-fork.wxs: the official CLSID does not appear
+-- registry key names
+  PASS RegistryContextMenu.cpp: ContextMenuHandlers key is 7-Zip-fork
+  PASS RegistryContextMenu.cpp: DragDropHandlers key is 7-Zip-fork
+  PASS CPP/7zip/UI/Explorer/RegistryContextMenu.cpp: the Approved-list name says 7-Zip-fork
+  PASS CPP/7zip/UI/Explorer/DllExportsExplorer.cpp: the Approved-list name says 7-Zip-fork
+-- menu caption
+  PASS ContextMenu.cpp: the cascaded submenu is captioned 7-Zip-fork
+  PASS ContextMenu.cpp: the IExplorerCommand root is named 7-Zip-fork
+  PASS ContextMenu.cpp: no caption left that reads plain 7-Zip
+-- MSI
+  PASS wxs: 7-zip.dll is installed
+  PASS wxs registers HKCR\CLSID\{1281FA63-F95D-48AC-9342-EE333A3F71F8}\InprocServer32 = [INSTALLFOLDER]7-zip.dll
+  PASS wxs registers HKCR\CLSID\{1281FA63-F95D-48AC-9342-EE333A3F71F8}\InprocServer32 [ThreadingModel] = Apartment
+  PASS wxs registers HKLM\Software\Microsoft\Windows\CurrentVersion\Shell Extensions\Approved [{1281FA63-F95D-48AC-9342-EE333A3F71F8}] = 7-Zip-fork Shell Extension
+  PASS wxs registers HKCR\*\shellex\ContextMenuHandlers\7-Zip-fork = {1281FA63-F95D-48AC-9342-EE333A3F71F8}
+  PASS wxs registers HKCR\Directory\shellex\ContextMenuHandlers\7-Zip-fork = {1281FA63-F95D-48AC-9342-EE333A3F71F8}
+  PASS wxs registers HKCR\Folder\shellex\ContextMenuHandlers\7-Zip-fork = {1281FA63-F95D-48AC-9342-EE333A3F71F8}
+  PASS wxs registers HKCR\Directory\shellex\DragDropHandlers\7-Zip-fork = {1281FA63-F95D-48AC-9342-EE333A3F71F8}
+  PASS wxs registers HKCR\Drive\shellex\DragDropHandlers\7-Zip-fork = {1281FA63-F95D-48AC-9342-EE333A3F71F8}
+  PASS wxs: no registry value carries the CLSID or the handler name of 7-Zip (0 found)
+0 failed
+++ python3 .github/tests/shell_ext_lang_reload.py /home/ding/work/github/r404r/7zip/.worktrees/t_bf92ce13
+0 problem(s)
+++ bash .github/tests/release_notes_test.sh
+-- first release: everything on top of upstream
+  PASS no previous release
+-- after a rebase onto a newer upstream
+  PASS only the fork commit that is new
+  PASS first release on the new upstream, without a previous: all fork commits
+-- after a merge of a newer upstream
+  PASS the merge commit has two parents
+  PASS the previous release is still an ancestor
+  PASS only the fork commit that is new, not the upstream one, not the merge
+  PASS first release on 26.04 without a previous: every fork commit, once
+0 failed
+++ python3 .github/tests/migration/b03/test_preflight.py -v
+test_cleanup_runs_after_probe_failure_and_checks_detachment (__main__.TailTests.test_cleanup_runs_after_probe_failure_and_checks_detachment) ... ok
+test_execution_gate_rejects_unreviewed_and_rerun (__main__.TailTests.test_execution_gate_rejects_unreviewed_and_rerun) ... ok
+test_fill_is_bounded_even_if_no_enospc (__main__.TailTests.test_fill_is_bounded_even_if_no_enospc) ... ok
+test_large_request_enospc_does_not_mean_tail_is_full (__main__.TailTests.test_large_request_enospc_does_not_mean_tail_is_full) ... ok
+test_unrelated_error_and_zero_progress_rejected (__main__.TailTests.test_unrelated_error_and_zero_progress_rejected) ... ok
+test_workflow_contains_no_full_capture_or_push_native_entry (__main__.TailTests.test_workflow_contains_no_full_capture_or_push_native_entry) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.007s
+
+OK
+++ python3 .github/tests/migration/b03/test_integrity.py -v EvidenceTests.test_document_relative_links_exist
+test_document_relative_links_exist (__main__.EvidenceTests.test_document_relative_links_exist) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+OK
+++ git diff --check
+++ git merge-base --is-ancestor 0706af3d714e8c2701691a19a0c663ae7b749c88 HEAD
+++ git -C /home/ding/work/github/r404r/7zip branch --show-current
+ai/migration-bootstrap-20260911
