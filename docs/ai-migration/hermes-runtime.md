@@ -1,0 +1,110 @@
+# Hermes migration runtime
+
+Installed and exercised: Hermes v0.21.1 (2026.9.7), upstream `8068c094`, Codex CLI
+0.154.0. Installed CLI help and source are the configuration authority for this
+host; no unsupported policy keys or package upgrades were introduced.
+
+## Provider and profiles
+
+Default model is now `gpt-6-astra`, provider `openai-codex`, supported base URL
+`https://chatgpt.com/backend-api/codex`. This matches the host's existing working
+Hermes profiles. The previous default model section is backed up. Other default
+settings and the existing `research-hermes` and `work-lab` profiles are preserved.
+
+The installed `_import_codex_cli_tokens` and `_save_codex_tokens` helpers imported
+valid existing CLI credentials into Hermes's private root auth store without
+writing to Codex's auth file. No OAuth interaction was necessary. New profiles
+use Hermes's supported global provider-state fallback rather than copied tokens.
+Refresh handling remains owned by Hermes. No credential contents enter Git.
+
+The default profile returned `HERMES_CODEX_BOOTSTRAP_OK` from a real request.
+Each specialist returned its own `PROFILE_<ROLE>_OK` in a real request; all five
+exited successfully. Provider testing used at most two simultaneous calls.
+
+| Profile | Role |
+| --- | --- |
+| default | Single gateway/dispatcher and human-facing migration coordinator |
+| orchestrator | Milestones, small dependency-aware DAGs; normally no production edits |
+| architect | Archaeology, ADRs, FFI and Rust/platform boundaries |
+| coder | Scoped implementation, build/test, reviewer handoff |
+| tester | Characterization, fixtures, compatibility, native CI |
+| reviewer | Independent behavior/FFI/unsafe/path/error/regression review |
+
+Specialists were created through `hermes profile create NAME --clone-from default
+--no-alias --description DESCRIPTION`; each has a separate SOUL.md, config and
+session context under `~/.hermes/profiles/NAME`. The `kanban` toolset is explicitly
+enabled for the default coordinator and specialists. No worker Telegram gateway
+is installed. Worker `dispatch_in_gateway` is false; the default owns dispatch.
+
+## Supported dispatcher configuration
+
+The following keys are read by the installed gateway dispatcher or Kanban code:
+
+```yaml
+kanban:
+  dispatch_in_gateway: true
+  dispatch_interval_seconds: 60
+  review_dispatch: true
+  max_in_progress: 2
+  max_in_progress_per_profile: 1
+  failure_limit: 2
+  auto_promote_children: true
+  auto_decompose: false
+  orchestrator_profile: orchestrator
+  default_assignee: coder
+```
+
+Board: `archive-rust-migration`; default workspace:
+`/home/ding/work/github/r404r/7zip`. Task workspaces explicitly use `worktree`;
+the board's default alone does not turn a scratch card into a worktree.
+The dispatcher holds `~/.hermes/kanban/.dispatcher.lock` and scans boards.
+The installed global and per-profile running caps are both configured.
+
+Milestones have `--max-retries 2` (block on the second failure, not two further
+retries) and `--max-runtime 2h`. Runtime/spawn/crash/timeout failure accounting is
+implemented by Hermes. Counting repeated substantive review failures additionally
+relies on the reviewer role and AGENTS.md; there is no invented YAML circuit
+breaker for semantic review. Use the same card and original implementer for fixes.
+
+Review dispatch by itself can use the assignee; every implementer is instructed
+to request review explicitly with `--reviewer reviewer`. Parent cards remain
+incomplete until independent PASS. M3's new production children must depend on M3
+so they cannot run before its review succeeds.
+
+Important installed-version behavior: an initial `blocked` status without a typed
+block event can be promoted. The bootstrap gate was picked up once, and the
+orchestrator correctly recorded `needs_input` and stopped without releasing M0.
+Use `kanban block TASK --kind needs_input REASON` for durable human gates.
+
+## Service and notifications
+
+`hermes -p default gateway install --no-start-now --start-on-login` installed the
+user unit; `gateway start` started it. `hermes-gateway.service` is enabled,
+active/running, and uses `Restart=always`. Linger is enabled, without sudo.
+Gateway logs confirm a singleton embedded dispatcher with a 60-second interval.
+Gateway can run without messaging adapters, so independent setup is operational
+while Telegram credentials are missing. No Telegram success is claimed yet.
+
+`display.tool_progress: off` suppresses normal tool chatter. The installed durable
+notifier handles completed, blocked, gave_up, crashed, timed_out, review_requested,
+changes_requested and related state events. `notify+wake` is supported. Subscribers
+inherit through parent links and creator_task_id, but subscriptions added after
+children already exist must be installed on those children explicitly.
+
+Telegram remains unconfigured pending bot token and numeric user ID. On receipt,
+the operator will merge the private `.env`, enforce `TELEGRAM_ALLOWED_USERS`, keep
+`GATEWAY_ALLOW_ALL_USERS=false`, set the private home conversation, restart the
+gateway, verify API connectivity plus inbound authorization, and install durable
+subscriptions. A harmless block/reply/unblock test must pass before G0 releases M0.
+Automatic notification wakes are never human decisions.
+
+## Backups and validation
+
+Private timestamped backup directory:
+`~/.hermes/backups/archive-migration-20260911T005519Z/`.
+It includes original default config, `.env`, SOUL.md and existing profile configs,
+plus each newly created profile's initial config/SOUL/.env before role edits.
+Directory mode is 0700; backup files and runtime secret/config files are 0600.
+The original default had no auth.json. Existing Codex and profile auth stores were
+not replaced. The default configuration was section-merged and checked to preserve
+all unrelated parsed values. Installed `validate_config_structure` passed.

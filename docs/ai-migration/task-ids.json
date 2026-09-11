@@ -1,0 +1,10 @@
+{
+  "board": "archive-rust-migration",
+  "tasks": {
+    "M0": "t_48d08249",
+    "M1": "t_f4afeee1",
+    "M2": "t_db8ffe0b",
+    "M3": "t_82c76197",
+    "G0": "t_5f1b2423"
+  }
+}

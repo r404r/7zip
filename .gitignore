@@ -1,0 +1,8 @@
+# Local autonomous worker state and secrets must never become source artifacts.
+/.worktrees/
+/.hermes/
+/.codex/
+/.env
+/.env.*
+/auth.json
+__pycache__/
