@@ -92,6 +92,40 @@ jobs:
             macos) oracle=macos-arm64-core;;
           esac
           python .github/tests/archive_characterization.py "$ORACLE_EXE" --report evidence/m1-regression.json --expect ".github/tests/oracles/$oracle.json"
+      - name: Prepare test-only numeric observer source copy
+        shell: bash
+        run: python .github/tests/migration/b01/prepare_observer.py "$RUNNER_TEMP/b01-observer-source"
+      - name: Build native Unix numeric observer
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP/b01-observer-source/CPP/7zip/Bundles/Alone2"
+          case "$(uname -s)" in
+            Linux) mf=../../cmpl_gcc.mak;;
+            Darwin) mf=../../cmpl_mac_arm64.mak;;
+            *) exit 1;;
+          esac
+          make -j2 -f "$mf" O="$RUNNER_TEMP/b01-observer-build" > "$GITHUB_WORKSPACE/evidence/numeric-build.log" 2>&1
+          echo "NUMERIC_EXE=$RUNNER_TEMP/b01-observer-build/7zz" >> "$GITHUB_ENV"
+      - name: Build native Windows numeric observer
+        if: runner.os == 'Windows'
+        shell: cmd
+        run: |
+          for /f "usebackq tokens=*" %%i in (`"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath`) do set "VSPATH=%%i"
+          if not defined VSPATH (echo Visual Studio with the C++ toolset was not found & exit /b 1)
+          call "%VSPATH%\VC\Auxiliary\Build\vcvars64.bat" || exit /b 1
+          pushd "%RUNNER_TEMP%\b01-observer-source\CPP\7zip\Bundles\Alone2"
+          nmake /NOLOGO PLATFORM=x64 > "%GITHUB_WORKSPACE%\evidence\numeric-build.log" 2>&1 || exit /b 1
+          popd
+          echo NUMERIC_EXE=%RUNNER_TEMP%\b01-observer-source\CPP\7zip\Bundles\Alone2\x64\7zz.exe>> "%GITHUB_ENV%"
+      - name: Capture actual native numeric outcomes and observer controls
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp "$RUNNER_TEMP/b01-observer-source/observer-provenance.json" evidence/
+          python .github/tests/migration/b01/numeric_capture.py "$ORACLE_EXE" "$NUMERIC_EXE" --report evidence/numeric.json
+          python .github/tests/migration/b01/numeric_capture.py "$ORACLE_EXE" "$NUMERIC_EXE" --report evidence/numeric-repeat.json --expect evidence/numeric.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:
