@@ -61,4 +61,8 @@ jobs:
             ${{ runner.temp }}/b03/*.json
             ${{ runner.temp }}/b03/*.log
             ${{ runner.temp }}/b03/frozen/
+            ${{ runner.temp }}/b03/b03-*/**/*.zip
+            ${{ runner.temp }}/b03/b03-*/**/*.tar
+            ${{ runner.temp }}/b03/b03-*/**/*.7z
+            ${{ runner.temp }}/b03/b03-*/**/retained/*
           if-no-files-found: error

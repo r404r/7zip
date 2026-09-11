@@ -21,10 +21,21 @@ static const char *B03Mode()
 
 static void B03Value(const PROPVARIANT &v)
 {
-  printf("\"vt\":%u,\"reserved\":[%u,%u,%u]", (unsigned)v.vt,
-      (unsigned)v.wReserved1, (unsigned)v.wReserved2, (unsigned)v.wReserved3);
+  printf("\"vt\":%u", (unsigned)v.vt);
+  // PropID.h defines precision words only for VT_FILETIME. CPropVariant's
+  // constructor/scalar setters do not initialize wReserved2/3. Do not read
+  // indeterminate storage for non-time tags (including VT_EMPTY).
   if (v.vt == VT_FILETIME)
+  {
+    // Backward-compatible precision 0 explicitly leaves words 2/3 undefined
+    // (PropID.h:146-148); null labels absence, it is not a measured zero.
+    if (v.wReserved1 == 0)
+      printf(",\"reserved\":[0,null,null]");
+    else
+      printf(",\"reserved\":[%u,%u,%u]", (unsigned)v.wReserved1,
+          (unsigned)v.wReserved2, (unsigned)v.wReserved3);
     printf(",\"filetime\":[%u,%u]", (unsigned)v.filetime.dwLowDateTime, (unsigned)v.filetime.dwHighDateTime);
+  }
   else if (v.vt == VT_UI8) printf(",\"ui8\":%llu", (unsigned long long)v.uhVal.QuadPart);
   else if (v.vt == VT_UI4) printf(",\"ui4\":%u", (unsigned)v.ulVal);
   else if (v.vt == VT_BOOL) printf(",\"bool\":%d", (int)v.boolVal);

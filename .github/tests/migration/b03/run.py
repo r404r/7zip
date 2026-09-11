@@ -9,12 +9,14 @@ import locale
 import os
 from pathlib import Path
 import platform
+import plistlib
 import shutil
 import stat
 import subprocess
 import tempfile
 import time
 import zipfile
+from typing import Any
 
 HERE = Path(__file__).resolve().parent
 BIG = (1 << 32) + 33
@@ -29,7 +31,7 @@ def digest(path):
     return h.hexdigest()
 
 
-def command(argv, cwd, env=None, timeout=300):
+def command(argv, cwd, env=None, timeout=300) -> dict[str, Any]:
     e = dict(os.environ)
     e.pop('B03_MODE', None)
     e.pop('B03_FAULT', None)
@@ -38,6 +40,41 @@ def command(argv, cwd, env=None, timeout=300):
                        stderr=subprocess.PIPE, timeout=timeout)
     return dict(argv=[str(x) for x in argv], env=env or {}, exit=r.returncode,
                 stdout_b64=base64.b64encode(r.stdout).decode(), stderr_b64=base64.b64encode(r.stderr).decode())
+
+
+def native_acl(path):
+    if os.name == 'nt':
+        import ctypes.wintypes as w
+        a = ctypes.WinDLL('advapi32', use_last_error=True)
+        k = ctypes.WinDLL('kernel32', use_last_error=True)
+        a.GetFileSecurityW.argtypes = [w.LPCWSTR, w.DWORD, w.LPVOID, w.DWORD, ctypes.POINTER(w.DWORD)]
+        a.GetFileSecurityW.restype = w.BOOL
+        a.ConvertSecurityDescriptorToStringSecurityDescriptorW.argtypes = [w.LPVOID, w.DWORD, w.DWORD, ctypes.POINTER(w.LPWSTR), ctypes.POINTER(w.DWORD)]
+        a.ConvertSecurityDescriptorToStringSecurityDescriptorW.restype = w.BOOL
+        k.LocalFree.argtypes = [w.HLOCAL]
+        k.LocalFree.restype = w.HLOCAL
+        needed = w.DWORD()
+        a.GetFileSecurityW(str(path), 7, None, 0, ctypes.byref(needed))
+        if not needed.value:
+            raise ctypes.WinError(ctypes.get_last_error())
+        sd = ctypes.create_string_buffer(needed.value)
+        if not a.GetFileSecurityW(str(path), 7, sd, len(sd), ctypes.byref(needed)):
+            raise ctypes.WinError(ctypes.get_last_error())
+        text = w.LPWSTR()
+        if not a.ConvertSecurityDescriptorToStringSecurityDescriptorW(sd, 1, 7, ctypes.byref(text), None):
+            raise ctypes.WinError(ctypes.get_last_error())
+        try:
+            return dict(api='GetFileSecurityW OWNER|GROUP|DACL / SDDL', sddl=text.value)
+        finally:
+            k.LocalFree(ctypes.cast(text, w.HLOCAL))
+    if platform.system() == 'Darwin':
+        raw = command(['ls', '-lde', str(path)], path.parent)
+        assert raw['exit'] == 0, raw
+        # The first ls line includes volatile times/path; subsequent lines are
+        # native ACL entries. Preserve both, never infer POSIX ACL equivalence.
+        entries = base64.b64decode(raw['stdout_b64']).decode().splitlines()[1:]
+        return dict(api='ls -lde', entries=entries, raw=raw)
+    return None
 
 
 def inventory(root):
@@ -50,6 +87,8 @@ def inventory(root):
                     kind='dir' if p.is_dir() else 'file', mode=s.st_mode, size=s.st_size,
                     mtime_ns=s.st_mtime_ns, atime_ns=s.st_atime_ns, ctime_ns=s.st_ctime_ns,
                     blocks=getattr(s, 'st_blocks', None), attributes=getattr(s, 'st_file_attributes', None))
+        if os.name == 'nt' or platform.system() == 'Darwin':
+            item['native_acl'] = native_acl(p)
         if p.is_file():
             if s.st_size > 64 << 20:
                 raise AssertionError('Small-file inventory refuses unbounded hashing')
@@ -89,11 +128,49 @@ def fs_info(root):
         serial, maximum, flags = w.DWORD(), w.DWORD(), w.DWORD()
         assert k.GetVolumeInformationW(volume.value, name, len(name), ctypes.byref(serial), ctypes.byref(maximum), ctypes.byref(flags), fs, len(fs))
         return dict(type=fs.value, max_component=maximum.value, flags=flags.value, volume=volume.value)
-    return command(['stat', '-f', '-c', '%T', str(root)] if platform.system() == 'Linux' else ['stat', '-f', '%T', str(root)], root)
+    if platform.system() == 'Darwin':
+        located = command(['df', '-P', str(root)], root)
+        assert located['exit'] == 0, located
+        device = base64.b64decode(located['stdout_b64']).decode().splitlines()[-1].split()[0]
+        assert device.startswith('/dev/'), 'Unexpected native filesystem device'
+        measured = command(['diskutil', 'info', '-plist', device], root)
+        assert measured['exit'] == 0, measured
+        info = plistlib.loads(base64.b64decode(measured['stdout_b64']))
+        assert info.get('FilesystemType'), 'Native filesystem identity missing'
+        return dict(type=info['FilesystemType'], mount_point=info['MountPoint'], raw=measured, location=located)
+    measured = command(['stat', '-f', '-c', '%T', str(root)], root)
+    assert measured['exit'] == 0, measured
+    return dict(type=base64.b64decode(measured['stdout_b64']).decode().strip(), raw=measured)
 
 
-def sparse(path, size=BIG):
-    with path.open('xb') as f:
+def allocated_bytes(path) -> int:
+    if os.name != 'nt':
+        blocks = path.stat().st_blocks
+        assert blocks is not None
+        return blocks * 512
+    import ctypes.wintypes as w
+    k = ctypes.WinDLL('kernel32', use_last_error=True)
+    k.GetCompressedFileSizeW.argtypes = [w.LPCWSTR, ctypes.POINTER(w.DWORD)]
+    k.GetCompressedFileSizeW.restype = w.DWORD
+    high = w.DWORD()
+    ctypes.set_last_error(0)
+    low = k.GetCompressedFileSizeW(str(path), ctypes.byref(high))
+    if low == 0xffffffff and ctypes.get_last_error():
+        raise ctypes.WinError(ctypes.get_last_error())
+    return (high.value << 32) | low
+
+
+def sparse(path, size=BIG, small_proof=None, observation=None):
+    assert 0 < size <= BIG
+    if size > 64 << 20:
+        assert small_proof is not None, 'large input requires small sparse proof'
+        assert small_proof.parent == path.parent and small_proof.stat().st_dev == path.parent.stat().st_dev
+        assert small_proof.stat().st_size == 16 << 20 and allocated_bytes(small_proof) < 1 << 20
+    # Even a platform unexpectedly allocating the whole logical length must not
+    # exhaust the host. This is additional to, not a replacement for, sparse proof.
+    free = shutil.disk_usage(path.parent).free
+    assert free > size + (512 << 20), 'Insufficient free capacity for bounded sparse experiment'
+    with path.open('xb', buffering=0) as f:
         if os.name == 'nt':
             import msvcrt
             import ctypes.wintypes as w
@@ -103,14 +180,23 @@ def sparse(path, size=BIG):
                                    None, 0, None, 0, ctypes.byref(returned), None)
             if not ok:
                 raise OSError(ctypes.get_last_error(), 'FSCTL_SET_SPARSE failed; refusing 4 GiB allocation')
+        # Set EOF before writing endpoints: distinguish native truncate from
+        # seek-past-EOF zero-fill behavior. The allocation bound is unchanged.
+        f.truncate(size)
         f.write(b'B03-BEGIN')
         f.seek(size - 7)
         f.write(b'B03-END')
+        os.fsync(f.fileno())
     os.utime(path, ns=(STAMP, STAMP))
     s = path.stat()
-    if hasattr(s, 'st_blocks'):
-        assert s.st_blocks * 512 < 1 << 20, 'Sparse source unexpectedly allocated'
-    return dict(size=s.st_size, blocks=getattr(s, 'st_blocks', None), attributes=getattr(s, 'st_file_attributes', None))
+    allocated = allocated_bytes(path)
+    measured = dict(size=s.st_size, blocks=getattr(s, 'st_blocks', None),
+                    attributes=getattr(s, 'st_file_attributes', None), allocated_bytes=allocated,
+                    free_before=free, recipe='truncate-before-endpoint-writes')
+    if observation is not None:
+        observation.update(measured)
+    assert allocated < 1 << 20, 'Sparse source unexpectedly allocated'
+    return measured
 
 
 def probe(exe, archive, fmt, cwd):
@@ -134,7 +220,7 @@ def capture(work, report):
     tested = Path(build['executables']['probe']['path'])
     for variant, exe in [('plain', plain), ('probe', tested)]:
         assert digest(exe) == build['executables'][variant]['sha256']
-    result = dict(schema=1, platform=platform.system(), platform_detail=platform.platform(),
+    result: dict[str, Any] = dict(schema=2, platform=platform.system(), platform_detail=platform.platform(),
                   locale=locale.setlocale(locale.LC_ALL, None), timezone=list(time.tzname),
                   build_sha256=digest(work / 'build.json'), executables=build['executables'],
                   cases=[], probes=[], faults=[], large={}, limitations=[])
@@ -157,14 +243,15 @@ def capture(work, report):
         os.chmod(inputs / 'executable.sh', 0o755)
         os.chmod(inputs / 'readonly.txt', 0o444)
         os.chmod(inputs / 'directory', 0o750)
-        capability = {}
+        capability: dict[str, Any] = {}
         if os.name == 'nt':
             try:
                 Path(str(inputs / 'fractional.txt') + ':b03').write_bytes(b'native ADS payload')
                 capability['ads'] = 'created'
             except OSError as exc:
                 capability['ads'] = dict(winerror=exc.winerror)
-            capability['security'] = command(['icacls', str(inputs)], sandbox)
+            capability['security'] = command(['icacls', str(inputs / 'fractional.txt'), '/deny', '*S-1-1-0:(DE)'], sandbox)
+            assert capability['security']['exit'] == 0, capability['security']
         else:
             key = 'user.b03' if platform.system() == 'Linux' else 'org.b03'
             if platform.system() == 'Darwin':
@@ -177,6 +264,7 @@ def capture(work, report):
                     capability['xattr'] = dict(errno=exc.errno)
             if platform.system() == 'Darwin':
                 capability['acl'] = command(['chmod', '+a', 'everyone deny delete', str(inputs / 'fractional.txt')], sandbox)
+                assert capability['acl']['exit'] == 0, capability['acl']
             elif shutil.which('setfacl'):
                 capability['acl'] = command(['setfacl', '-m', 'u:65534:r--', str(inputs / 'fractional.txt')], sandbox)
             else:
@@ -185,13 +273,19 @@ def capture(work, report):
             os.utime(p, ns=(STAMP - 123456789, STAMP))
         result['capability_setup'] = capability
         result['inputs'] = inventory(inputs)
+        if platform.system() == 'Darwin':
+            source_acl = next(i['native_acl'] for i in result['inputs'] if i['path'] == 'fractional.txt')
+            assert source_acl['entries'], 'ACL setup did not produce a native file ACL'
+        elif os.name == 'nt':
+            source_acl = next(i['native_acl'] for i in result['inputs'] if i['path'] == 'fractional.txt')
+            assert '(D;' in source_acl['sddl'], 'Deny ACE missing from native file DACL'
         for fmt in ('7z', 'zip', 'tar'):
             for zone in ('UTC0', 'EST5EDT'):
                 case = sandbox / f'{fmt}-{zone}'
                 case.mkdir()
                 archive = case / f'metadata.{fmt}'
                 opts = ['-mtc=off', '-mta=off'] if fmt != 'tar' else []
-                c = dict(format=fmt, zone=zone)
+                c: dict[str, Any] = dict(format=fmt, zone=zone)
                 c['create'] = command([plain, 'a', f'-t{fmt}', '-mx=0', '-mmt=off', *opts, archive, '.'], inputs, {'TZ': zone})
                 assert c['create']['exit'] == 0, c
                 c['archive_sha256'] = digest(archive)
@@ -264,11 +358,14 @@ def capture(work, report):
             result['kernel_full'] = dict(argv=full_argv, exit=r.returncode, stderr_b64=base64.b64encode(r.stderr).decode(),
                                          target='/dev/full', layer='CStdOutFileStream / kernel ENOSPC')
         else:
-            result['kernel_full'] = dict(status='not exercised', reason='No bounded full volume provisioned; write-full is explicit stream-boundary injection, not kernel evidence')
+            from full_volume import observe
+            result['kernel_full'] = {}
+            observe(plain, sandbox, result['kernel_full'], command, fs_info, digest)
         bigdir = sandbox / 'large'
         bigdir.mkdir()
         small = bigdir / 'small-sparse.bin'
-        result['sparse_roundtrip'] = dict(source=sparse(small, 16 << 20))
+        result['sparse_roundtrip'] = dict(source={})
+        sparse(small, 16 << 20, observation=result['sparse_roundtrip']['source'])
         small_arc = bigdir / 'sparse.7z'
         result['sparse_roundtrip']['create'] = command([plain, 'a', '-t7z', '-mx=1', '-mmt=off', '-mtc=off', '-mta=off', small_arc.name, small.name], bigdir)
         sparse_out = bigdir / 'sparse-out'
@@ -277,7 +374,8 @@ def capture(work, report):
         result['sparse_roundtrip']['outputs'] = inventory(sparse_out)
         result['sparse_roundtrip']['source_sha256'] = digest(small)
         big = bigdir / 'big.bin'
-        result['large']['source'] = sparse(big)
+        result['large']['source'] = {}
+        sparse(big, small_proof=small, observation=result['large']['source'])
         result['large']['seek'] = probe(tested, big, 'io', bigdir)
         archive = bigdir / 'large.zip'
         result['large']['create'] = command([plain, 'a', '-tzip', '-mx=1', '-mmt=off', '-mtc=off', '-mta=off', archive.name, big.name], bigdir, timeout=600)
@@ -307,7 +405,7 @@ def capture(work, report):
             result['large']['extract_stdout'] = dict(argv=argv, exit=code, bytes=count, sha256=h.hexdigest(), stderr_b64=base64.b64encode(err.read()).decode())
         assert code == 0 and count == BIG and h.hexdigest() == result['large']['source_sha256']
         result['limitations'] = ['One tested filesystem per runner, not all supported volumes.',
-                                'Windows/macOS kernel-full volume not provisioned; injected stream error is labeled separately.',
+                                'Kernel-full image observations and injected stream faults are separate layers; no host volume is filled.',
                                 'Raw CTime/ATime observations retained; volatile times excluded only from repeat comparator.',
                                 'Large extraction streams to a hash, not a 4 GiB allocated output file; sparse allocation preservation is not asserted.',
                                 'No GUI, desktop, network-volume, privilege escalation or portable ACL mapping claim.']

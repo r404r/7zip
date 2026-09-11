@@ -60,7 +60,7 @@ def main():
         root = Path(report['sandbox']).resolve()
         assert root.is_relative_to(a.work.resolve())
         for src in sorted(root.rglob('*')):
-            if src.is_file() and src.suffix in ('.zip', '.tar', '.7z'):
+            if src.is_file() and (src.suffix in ('.zip', '.tar', '.7z') or src.parent.name == 'retained'):
                 assert src.stat().st_size < 64 << 20
                 sources[f'{label}-archives/{src.relative_to(root).as_posix()}'] = src
     a.destination.mkdir(parents=True)
