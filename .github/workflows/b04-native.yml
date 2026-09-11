@@ -1,0 +1,60 @@
+name: b04-native
+
+on:
+  push:
+    branches: ['wt/t_2a64c953']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prerequisite:
+    if: github.ref == 'refs/heads/wt/t_2a64c953'
+    name: B04 prerequisite candidate / ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUTF8: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install Linux candidate without changing host security policy
+        if: runner.os == 'Linux'
+        run: command -v bwrap || (sudo apt-get update && sudo apt-get install -y bubblewrap)
+      - name: Test candidate and capture controls on Unix (never archives)
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          python .github/tests/migration/b04/test_prerequisite.py
+          python .github/tests/migration/b04/prerequisite.py "$RUNNER_TEMP/b04"
+      - name: Test candidate and capture controls on Windows (never archives)
+        if: runner.os == 'Windows'
+        shell: cmd
+        run: |
+          for /f "usebackq tokens=*" %%i in (`"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath`) do set "VSPATH=%%i"
+          if not defined VSPATH (echo Visual Studio with the C++ toolset was not found & exit /b 1)
+          call "%VSPATH%\VC\Auxiliary\Build\vcvars64.bat" || exit /b 1
+          python .github/tests/migration/b04/test_prerequisite.py || exit /b 1
+          python .github/tests/migration/b04/prerequisite.py "%RUNNER_TEMP%\b04"
+      - name: Retain raw prerequisite evidence even when candidate is rejected
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: b04-prerequisite-${{ matrix.os }}-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/b04/*.json
+            ${{ runner.temp }}/b04/*.stdout
+            ${{ runner.temp }}/b04/*.stderr
+            ${{ runner.temp }}/b04/*.log
+            ${{ runner.temp }}/b04/sandbox/candidate.sb
+          if-no-files-found: error

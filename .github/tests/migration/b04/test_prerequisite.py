@@ -1,0 +1,52 @@
+"""Tests for the prerequisite-only fail-closed decision; no archives."""
+import importlib.util
+from pathlib import Path
+import unittest
+import subprocess
+import sys
+import tempfile
+import json
+
+
+class GateTest(unittest.TestCase):
+    def test_native_candidate_emits_fail_closed_report(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            destination = Path(tmp) / 'evidence'
+            result = subprocess.run([sys.executable, str(Path(__file__).with_name('prerequisite.py')),
+                                     str(destination)], capture_output=True, timeout=90)
+            self.assertIn(result.returncode, (0, 2), result.stderr)
+            self.assertTrue((destination / 'report.json').exists(), 'no native evidence report')
+            report = json.loads((destination / 'report.json').read_text())
+            self.assertIs(report['hostile_execution_authorized'], False)
+            self.assertIs(report['b04_complete'], False)
+            self.assertEqual(report['stage'], 'file-write-prerequisite-candidate')
+            self.assertEqual(report['controls_pass'], result.returncode == 0)
+
+    def test_only_complete_real_control_relations_pass(self):
+        import prerequisite as p
+        inside = {name: True for name in p.INSIDE}
+        outside = {name: False for name in p.OUTSIDE}
+        report = dict(baseline={**inside, **{name: True for name in p.OUTSIDE}},
+                      sandbox={**inside, **outside}, sentinels_unchanged=True,
+                      baseline_returncode=0, sandbox_returncode=0)
+        self.assertTrue(p.controls_pass(report))
+        for name in p.OUTSIDE:
+            damaged = {**report, 'sandbox': {**report['sandbox'], name: True}}
+            self.assertFalse(p.controls_pass(damaged), name)
+        for field in report:
+            damaged = dict(report)
+            del damaged[field]
+            self.assertFalse(p.controls_pass(damaged), field)
+
+    def test_missing_evidence_is_not_a_pass(self):
+        path = Path(__file__).with_name('prerequisite.py')
+        self.assertTrue(path.exists(), 'prerequisite runner is missing')
+        spec = importlib.util.spec_from_file_location('prerequisite', path)
+        assert spec is not None and spec.loader is not None
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        self.assertFalse(module.controls_pass({}))
+
+
+if __name__ == '__main__':
+    unittest.main()
