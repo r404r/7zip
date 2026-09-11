@@ -1,10 +1,10 @@
-# B01-Q: bounded quarantine acquisition and reviewed-resume preparation
+# B01-Q: bounded quarantine acquisition and verification
 
-Task `t_d32ff791`; branch `wt/t_d32ff791`. Status: **1/7 acquired; resume
-preparation awaiting independent stage review**. The MIME decision is resolved,
-but no network acquisition occurred during this preparation stage. Stage PASS
-must return this same card to tester, not complete it. Final acquisition and
-independent acceptance remain pending.
+Task `t_d32ff791`; branch `wt/t_d32ff791`. Status: **7/7 acquired and locally
+byte-verified; final independent acceptance pending**. Exact-commit stage PASS
+authorized the one-shot continuation, which succeeded. `import_approved=false`
+and `qualified=false` remain. Earlier sections below preserve historical attempts;
+the final section and separate `resume.json` describe the current result.
 
 ## Authority and preflight
 
@@ -70,7 +70,7 @@ corruption; it is an unexpected response under this strict acquisition guard.
 The first attempt stopped as required. Its evidence is unchanged; the later
 operator-authorized exception is described below and has not been used online.
 
-## Exact incomplete set
+## First-attempt incomplete set (historical)
 
 The [manifest](../../../.github/tests/migration/b01-quarantine/manifest.json) records
 all seven paths in the reviewed candidate/part order, their fixed URLs, declared
@@ -174,7 +174,7 @@ Zero extra product fees, no releases, no shared-branch integration or binary Git
 publication. Independent reviewer must inspect safe byte identities and complete
 scope controls after the blocker is resolved; this report does not self-approve.
 
-## Current preparation implementation and offline evidence
+## Preparation implementation and offline evidence (historical)
 
 Changes build on `ed7950b87b50ae305d51b7e26ccf6a0dabdc56f6`; no reviewed parent
 merge was needed. Both AGENTS.md, source branch and parent ancestry were rechecked.
@@ -256,7 +256,7 @@ historical writer, member hashes, native/GUI/desktop qualification limits remain
 Independent reviewer rejected preparation commit `9a5d8e3f76e9fbe09158ca59e1abc126c3caaaed`
 in comment 112: both acquisition paths accepted HTML preceded by a UTF-8 BOM or
 comment. This is the first substantive review failure, not a reopened MIME gate.
-No stage PASS exists yet; no real GET was made during this repair.
+At that repair stage no stage PASS existed; no real GET was made during the repair.
 
 The root cause was duplicated checks for only two literal prefixes after whitespace.
 Both paths now call `check_opaque_body` before writing any opaque file. It examines
@@ -316,3 +316,87 @@ report. No real quarantine bytes/notices/manifests changed, no production build
 is applicable, and no compatibility qualification is claimed. Request same-card
 stage re-review on the committed repair; PASS must return to tester without
 completing or integrating the still-incomplete acquisition card.
+
+## Final authorized continuation and current result
+
+Reviewer comment 115 at `1789132689` grants stage PASS for exact commit
+`cd221f8b3817e5b0e94615de1bf27291faf7fadb`; the same card returned to tester
+for the already authorized continuation, not another substantive review failure.
+Before GETs, source branch, both AGENTS.md, clean task HEAD, reviewed-parent
+ancestry, original manifest/hash, ten offline tests and six-item preflight were
+rechecked. Current B01 comments and inherited default Telegram notify+wake were
+read-only verified again without exposing route identities.
+
+The reviewed `--resume-reviewed-six` ran once and exited 0. Six requests started
+between `2026-09-11T13:20:14.192492+00:00` and
+`2026-09-11T13:20:16.893229+00:00`. Each returned HTTP 200 at its exact pinned URL,
+with exact declared Content-Length, no Location/encoding/transfer encoding and
+verified TLS. Only `.r00` and `.r01` lacked MIME, recorded literally as null under
+the authorized exception; the other four returned `application/vnd.rar`.
+The existing `.rar` was not requested again. No new response deviation occurred.
+
+The separate [result manifest](../../../.github/tests/migration/b01-quarantine/resume.json)
+is a byte-identical copy of the durable root's `resume.json`, SHA-256
+`a275139f24d853b6efe405eaf3f9df32f798acfb89d1a91f9b5b2c3f9445773b`.
+The original stopped `manifest.json`, failed response, original success metadata,
+original bytes and all three literal notices are unchanged. Current missing set
+is empty; all seven outcomes are `acquired_quarantined`, total 423725 bytes.
+
+| Candidate | File (under `test/files/`) | Actual bytes | SHA-256 |
+| --- | --- | --- | --- |
+| DRF-OLD | rar3-old.rar | 102400 | 57f57c2d61f4a6b437cbb38fbabecb42e6f826b5d3ce952d6e74cbbc7d5dcd71 |
+| DRF-OLD | rar3-old.r00 | 102400 | f0741e5cba62f81280136d841318af1a448c1d446d931c34039d0b4c834dab42 |
+| DRF-OLD | rar3-old.r01 | 2572 | c0bd5bf9d02916b2aa23661e1448833bab3e96cc244189ae3ffdba9909d6d9a5 |
+| DRF-SOLID | rar5-solid.rar | 169 | d97d23b2edee9a7daa49e45015ea72aa3f162efeb0abaf559740ab797276203b |
+| DRF-VOL | rar5-vols.part1.rar | 102400 | c997e965ad319646e3bead59b372a9bd87459aa471c8bc8ad02267d43e328c2f |
+| DRF-VOL | rar5-vols.part2.rar | 102400 | 484343c1ca19e1eac8103946f1c0e7746d6df5d995f8f55395f03786ad34e709 |
+| DRF-VOL | rar5-vols.part3.rar | 11384 | 0b117cf1cb7b46877124d5f07ebc45580b4a5feadc24f5578196036a32c9eadc |
+
+All opaque paths are `/home/ding/work/github/r404r/b01-quarantine-t_d32ff791/`
+plus candidate directory and filename plus `.opaque`, explicitly enumerated in
+the result JSON. `stat` confirmed all seven files mode 0400, root/families 0700,
+original/result manifests 0600. Keep this durable directory and attempt marker;
+neither acquisition entry point should be rerun. Offline verification is safe.
+
+Final commands from this worktree (all validation commands exit 0):
+
+```text
+python3 .github/tests/migration/b01-quarantine/__pycache__/audit_acquisition.py
+python3 .github/tests/migration/b01-quarantine/check_error_pages.py
+python3 .github/tests/migration/b01-quarantine/check_controls.py
+python3 .github/tests/migration/b01-quarantine/check_resume.py
+python3 .github/tests/migration/b01-quarantine/resume.py --verify-complete
+python3 .github/tests/migration/b01-quarantine/check_document.py
+python3 -m json.tool .github/tests/migration/b01-quarantine/resume.json /dev/null
+python3 -m py_compile .github/tests/migration/b01-quarantine/*.py
+sha256sum /home/ding/work/github/r404r/b01-quarantine-t_d32ff791/*/*.opaque
+wc -c /home/ding/work/github/r404r/b01-quarantine-t_d32ff791/*/*.opaque
+stat -c '%a %F %n' /home/ding/work/github/r404r/b01-quarantine-t_d32ff791 /home/ding/work/github/r404r/b01-quarantine-t_d32ff791/* /home/ding/work/github/r404r/b01-quarantine-t_d32ff791/*/*.opaque
+cmp /home/ding/work/github/r404r/b01-quarantine-t_d32ff791/resume.json .github/tests/migration/b01-quarantine/resume.json
+git diff --check
+git diff --cached --check
+```
+
+Safe local verifier reopened all seven bytes; independent `sha256sum` and `wc -c`
+agreed with the result. Ten offline test methods, including the required
+missing/extra/size/hash/source/accepted-status negative controls, passed using
+harmless temporary data without modifying originals. The expected synthetic
+failure diagnostic remains `ValueError: synthetic response conflict`.
+Documentation checker now validates both historical evidence and exact tracked/
+durable result equality plus the complete local verifier; thirteen local links
+and all three notices pass. JSON/compile/diff checks pass. No acquisition guard
+was changed after stage PASS. Result copying emitted a non-failing tool warning:
+`cp: warning: behavior of -n is non-portable and may change in future; use --update=none instead`.
+Copy identity was verified with `cmp` and SHA-256; no original was overwritten.
+
+Changed deliverables in this phase: this report, `check_document.py`, and new
+`resume.json`. Full card review also includes prior bookkeeping/guard/test changes.
+No archive bytes are in Git or attachments; no parser/list/test/extract, writer,
+preview, native CI, product build, publication or fees. Product builds are not
+applicable to byte-only bookkeeping and cannot establish rights. Hashes establish
+opaque identity only; unknown member rights/hashes, historical writer and native
+compatibility remain unknown. No general error-classification or format proof is
+claimed; private-root single-worker and HTTP body-boundary limitations remain.
+Final independent reviewer must hash the exact durable bytes, inspect all notices
+and controls, and may complete only B01-Q, posting/readback of the reviewed handoff
+to B01. B01/B03/B04 gates, import approval and qualification remain unchanged.

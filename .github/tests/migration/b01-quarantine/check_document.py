@@ -1,8 +1,10 @@
-"""Offline partial documentation checks; NOT the pending byte-manifest verifier."""
+"""Offline historical/result documentation checks plus safe local byte verification."""
 import hashlib
 import json
 from pathlib import Path
 import re
+from resume import load_evidence
+from quarantine import verify_local
 
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[3]
@@ -28,5 +30,11 @@ for link in links:
     assert not link.startswith(('http:', 'https:'))
     assert (report.parent / link).is_file(), link
 assert (Path(manifest['quarantine_root']) / 'manifest.json').read_bytes() == (HERE / 'manifest.json').read_bytes()
-print('Partial JSON/notice/link checks PASS:', outcomes, 'local links:', len(links))
-print('Not a full manifest verifier; pending negative controls are not claimed.')
+result_raw = (HERE / 'resume.json').read_bytes()
+assert result_raw == (Path(manifest['quarantine_root']) / 'resume.json').read_bytes()
+baseline, bound_notice = load_evidence()
+result = json.loads(result_raw)
+assert not verify_local(result, baseline, Path(manifest['quarantine_root']),
+                        bound_notice, require_complete=True)
+print('Historical JSON/notice/link checks PASS:', outcomes, 'local links:', len(links))
+print('Separate result/durable equality and all-seven local byte verification PASS')
