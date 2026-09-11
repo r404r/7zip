@@ -130,6 +130,12 @@ File Manager; do not advertise new interruptibility without characterization.
 
 ## 4. Engine facade, ABI and lifetime
 
+Q1 naming amendment (task `t_f4d107ea`, human authorization recorded on that
+card): the new public, non-secret C symbol namespace is `archive_bridge_v1_`.
+This supersedes the earlier proposed prefix below, without reconstructing it.
+All downstream cards must use the independently reviewed Q1 contract in
+[ABI v1](qualification/abi-v1.md); this naming amendment is not ABI qualification.
+
 ADR-0001 selects an internal versioned C ABI over a C++ orchestration facade.
 `archive-engine-sys` is not a general COM binding. v1 is a source-tree-internal
 matched build contract, not a stable third-party plugin API. A version/capability

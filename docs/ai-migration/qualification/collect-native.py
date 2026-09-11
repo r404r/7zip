@@ -1,0 +1,129 @@
+#!/usr/bin/env python3
+"""Q1 evidence capture for a real native Alone2 build; no production changes.
+
+Run from the repository root. Windows requires an initialized x64 MSVC prompt.
+This collects observations, not an assertion of ABI or license qualification.
+"""
+import argparse
+import hashlib
+import json
+import os
+from pathlib import Path
+import platform
+import re
+import shlex
+import subprocess
+
+ROOT = Path(__file__).resolve().parents[3]
+BUNDLE = ROOT / 'CPP/7zip/Bundles/Alone2'
+
+
+def digest(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--output', required=True, type=Path)
+    args = parser.parse_args()
+    out = args.output.resolve()
+    out.mkdir(parents=True, exist_ok=True)
+    records = []
+
+    def run(argv, name, cwd=ROOT, accepted=(0,)):
+        proc = subprocess.run(argv, cwd=cwd, stdout=subprocess.PIPE,
+                              stderr=subprocess.STDOUT, check=False)
+        (out / name).write_bytes(proc.stdout)
+        records.append({'argv': argv, 'cwd': str(cwd), 'exit_code': proc.returncode,
+                        'log': name, 'sha256': digest(out / name)})
+        (out / 'commands.json').write_text(json.dumps(records, indent=2) + '\n')
+        if proc.returncode not in accepted:
+            raise RuntimeError(f'{name}: exit {proc.returncode}; see {out / name}')
+        return proc.stdout.decode('utf-8', errors='replace')
+
+    system = platform.system()
+    machine = platform.machine()
+    commit = run(['git', 'rev-parse', 'HEAD'], 'source-commit.txt').strip()
+    if system == 'Windows':
+        run(['cl'], 'compiler.txt', accepted=(0, 2))
+        run(['nmake', '/?'], 'driver.txt')
+        # The legacy makefile owns the platform output directory.
+        build = ['nmake', '/NOLOGO', 'PLATFORM=x64']
+        binary = BUNDLE / 'x64/7zz.exe'
+        run(build, 'build.log', BUNDLE)
+        run(['dumpbin', '/DEPENDENTS', str(binary)], 'runtime.txt')
+        run(['dumpbin', '/HEADERS', str(binary)], 'binary-headers.txt')
+    else:
+        compiler = 'gcc' if system == 'Linux' else 'clang'
+        run([compiler, '--version'], 'compiler.txt')
+        run(['make', '--version'], 'driver.txt')
+        if system == 'Linux':
+            fragments = ['../../cmpl_gcc.mak']
+        elif system == 'Darwin' and machine == 'arm64':
+            fragments = ['../../cmpl_mac_arm64.mak']
+        elif system == 'Darwin' and machine == 'x86_64':
+            fragments = ['../../var_mac_x64.mak', '../../warn_clang_mac.mak', 'makefile.gcc']
+        else:
+            raise RuntimeError(f'Unsupported native host: {system}/{machine}')
+        build = ['make', '-j2']
+        for fragment in fragments:
+            build += ['-f', fragment]
+        build += ['O=' + str(out / 'build')]
+        if (out / 'build').exists():
+            raise RuntimeError('Fresh output required: do not claim cached objects as new compilation')
+        run(build, 'build.log', BUNDLE)
+        run(build + ['-pn'], 'make-database.txt', BUNDLE)
+        binary = out / 'build/7zz'
+        run((['ldd'] if system == 'Linux' else ['otool', '-L']) + [str(binary)], 'runtime.txt')
+    run([str(binary), 'i'], 'capabilities.txt')
+    run(['python3' if system != 'Windows' else 'python',
+         '.github/tests/archive_characterization.py', str(binary),
+         '--report', str(out / 'core.json'), '--expect',
+         '.github/tests/oracles/' + {'Linux': 'linux-x86_64', 'Darwin': 'macos-arm64',
+                                   'Windows': 'windows-amd64'}[system] + '-core.json'],
+        'characterization.log')
+    # Preserve every command. Selected source inventory is derived from emitted
+    # compile commands, never from a hand-maintained format/object list.
+    sources = set()
+    for line in (out / 'build.log').read_text(errors='replace').splitlines():
+        for token in shlex.split(line, posix=system != 'Windows'):
+            token = token.strip('"')
+            if token.endswith(('.c', '.cpp', '.asm', '.S')):
+                path = (BUNDLE / token.replace('\\', '/')).resolve()
+                if path.is_file() and path.is_relative_to(ROOT):
+                    sources.add(path)
+    if not sources:
+        raise RuntimeError('No selected sources recovered; inventory cannot pass')
+    inventory = []
+    for path in sorted(sources):
+        relative = path.relative_to(ROOT).as_posix()
+        text = path.read_text(errors='replace')
+        header = '\n'.join(text.splitlines()[:35])
+        if relative.startswith('CPP/7zip/Compress/Rar'):
+            license_id = 'LGPL-2.1-or-later AND LicenseRef-unRAR-restriction'
+        elif relative in ('CPP/7zip/Compress/LzfseDecoder.cpp', 'C/ZstdDec.c'):
+            license_id = 'BSD-3-Clause'
+        elif relative == 'C/Xxh64.c':
+            license_id = 'BSD-2-Clause'
+        elif re.search(r'public domain', header, re.I):
+            license_id = 'LicenseRef-Public-Domain'
+        else:
+            license_id = 'LGPL-2.1-or-later'
+        inventory.append({'path': relative, 'sha256': digest(path),
+                          'license': license_id, 'license_basis': 'DOC/License.txt:8-30 and source header',
+                          'header': header})
+    manifest = {'schema_version': 1, 'status': 'observed-not-ABI-qualified',
+                'oracle_commit': commit, 'system': system, 'machine': machine,
+                'binary_sha256': digest(binary), 'binary': str(binary),
+                'selected_translation_units': inventory,
+                'license_review': 'requires independent selected-input review',
+                'facade_commit': None, 'qualified_application_operations': [],
+                'limits': ['Native CLI only; no shared facade, Rust ABI, GUI or desktop evidence',
+                           'Header and transitive include audit remains separate',
+                           'Capability enumeration is not per-handler behavior qualification']}
+    (out / 'engine-observation.json').write_text(json.dumps(manifest, indent=2) + '\n')
+    print(f'Captured native {system}/{machine}: {len(inventory)} translation units; {out}')
+
+
+if __name__ == '__main__':
+    main()

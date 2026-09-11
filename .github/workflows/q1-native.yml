@@ -1,0 +1,48 @@
+name: q1-native
+
+on:
+  push:
+    branches: ['wt/t_f4d107ea']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  qualify:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-2022, macos-14]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    env:
+      PYTHONUTF8: '1'
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Capture native Unix build
+        if: runner.os != 'Windows'
+        shell: bash
+        run: python3 docs/ai-migration/qualification/collect-native.py --output q1-evidence
+      - name: Capture native Windows build
+        if: runner.os == 'Windows'
+        shell: cmd
+        run: |
+          for /f "usebackq tokens=*" %%i in (`"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath`) do set "VSPATH=%%i"
+          if not defined VSPATH exit /b 1
+          call "%VSPATH%\VC\Auxiliary\Build\vcvars64.bat" || exit /b 1
+          python docs/ai-migration/qualification/collect-native.py --output q1-evidence
+      - name: Preserve evidence even on failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: q1-${{ matrix.os }}-${{ github.sha }}
+          path: |
+            q1-evidence/*.txt
+            q1-evidence/*.log
+            q1-evidence/*.json
+          if-no-files-found: error

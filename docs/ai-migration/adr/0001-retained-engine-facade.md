@@ -20,6 +20,12 @@ implementations under CPP/Windows. A replacement limited to C/7z.h loses semanti
 
 ## Decision
 
+Q1 amendment: human authorization on task `t_f4d107ea` permits a new public
+namespace, `archive_bridge_v1_`, replacing the earlier proposal below. The old
+spelling is neither inferred nor recovered. See [ABI v1](../qualification/abi-v1.md)
+for the naming contract; downstream implementations consume its reviewed commit.
+This does not approve production linkage or change the retained-engine direction.
+
 Use an internal versioned C ABI (`am_engine_v1_`) implemented by a narrow C++ RAII
 facade. Rust has a private unsafe sys crate and a safe ArchiveEngine implementation.
 The ABI carries fixed-width typed values, explicit native paths and engine text,
