@@ -1,0 +1,3 @@
+fixtures/** -text
+
+oracles/*.json text eol=lf

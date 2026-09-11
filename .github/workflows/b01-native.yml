@@ -77,16 +77,12 @@ jobs:
           python .github/tests/migration/b01/capture.py "$ORACLE_EXE" --report evidence/repeat.json --expect evidence/capture.json
           python .github/tests/migration/b01/negative_test.py evidence/capture.json
           python .github/tests/migration/b01/summarize.py evidence/capture.json --inventory evidence/inventory.json > evidence/summary.txt
-      - name: Compare frozen native corpus when present
+      - name: Compare frozen native corpus (independent review still required)
         shell: bash
         run: |
           set -euo pipefail
           baseline=".github/tests/migration/b01/oracles/${{ matrix.baseline }}.json"
-          if test -f "$baseline"; then
-            python .github/tests/migration/b01/capture.py "$ORACLE_EXE" --report evidence/regression.json --expect "$baseline"
-          else
-            echo 'Capture-only; no frozen baseline approval is implied.'
-          fi
+          python .github/tests/migration/b01/capture.py "$ORACLE_EXE" --report evidence/regression.json --expect "$baseline"
       - name: Preserve M1 baseline
         shell: bash
         run: |

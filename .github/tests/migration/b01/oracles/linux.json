@@ -1,0 +1,2840 @@
+{
+  "schema_version": 1,
+  "platform": {
+    "os": "Linux",
+    "arch": "x86_64"
+  },
+  "provenance": {
+    "commit": "151c187b07c413be9c8ee9c3d9eb2bf09dbe0599",
+    "engine_diff": "",
+    "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+    "python": "3.11.16",
+    "executable_sha256": "6dedf84aaaae105fdd5cb00fe89d6e4d89de74a5f8a5dc9cd1fb0827c8d1e75a",
+    "harness_sha256": "3f168edd3f23e0b621955ea3eea8f9655a631885f9011002c2c97547a6110460"
+  },
+  "manifest_sha256": "06e6f75f786f857ab29e558caeb6bb9dbe29fe13b6bd2f27eaad748aaa396600",
+  "commands": {
+    "capabilities": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "i",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKCkZvcm1hdHM6CiAgIEMuLi5GLi4uLi4uLi4uLmMuYS5tKy4uICA3eiAgICAgICA3eiAgICAgICAgICAgIDcgeiBCQyBBRiAnIDFDCiAgICAuLi4uLi4uLi4uLi4uLi4uLi4uLi4uICBBUEZTICAgICBhcGZzIGltZyAgICAgIG9mZnNldD0zMiBOIFggUyBCIDAwCiAgICAuLi4uLi4uLi4uLi4uLi4uLi4uLi4uICBBUE0gICAgICBhcG0gICAgICAgICAgIEUgUgogICAgLi4uLi4uLi4uLi4uLi4uLi4uLi4uLiAgQXIgICAgICAgYXIgYSBkZWIgdWRlYiBsaWIgISA8IGEgciBjIGggPiAwQQogICAgLi4uLi4uLi4uLi4uLi4uLi4uLi4uLiAgQXJqICAgICAgYXJqICAgICAgICAgICBgIEVBCiAgICBLLi4uLi5PLi4uLi5YLi4uLi4uLi4uICBCYXNlNjQgICBiNjQgICAgICAgICAgIAogICAgLi4uLi4uTy4uLi4uLi4uLi4uLi4uLiAgQ09GRiAgICAgb2JqICAgICAgICAgICAKICAgIC4uLkYuLi4uLi4uLi4uLi4uLi4uLi4gIENhYiAgICAgIGNhYiAgICAgICAgICAgTSBTIEMgRiAwMCAwMCAwMCAwMAogICAgLi4uLi4uLi4uLi4uLi4uLi4uLi4uLiAgQ2htICAgICAgY2htIGNoaSBjaHEgY2h3IEkgVCBTIEYgMDMgMDAgMDAgMDAgYCAwMCAwMCAwMAogICAgLi4uLi4uLi4uLi4uLi4uLi4uLi4uLiAgQ29tcG91bmQgbXNpIG1zcCBtc20gZG9jIHhscyBwcHQgYWFmIEQwIENGIDExIEUwIEExIEIxIDFBIEUxCiAgICAuLi4uTS4uLi4uLi4uLi4uLi4uLi4uICBDcGlvICAgICBjcGlvICAgICAgICAgIDAgNyAwIDcgMCAgfHwgIEM3IHEgIHx8ICBxIEM3CiAgICAuLi4uLi4uLi4uLi4uLi4uLi4uLi4uICBDcmFtRlMgICBjcmFtZnMgICAgICAgIG9mZnNldD0xNiBDIG8gbSBwIHIgZSBzIHMgZSBkIDIwIFIgTyBNIEYgUwogICAgLi4uLi5HLi5CLi4uLi4uLi4uLi4uLiAgRG1nICAgICAgZG1nICAgICAgICAgICBrIG8gbCB5IDAwIDAwIDAwIDA0IDAwIDAwIDAyIDAwCiAgICAuLi4uLi4uLi5FLi4uLi4uLi4uLi4uICBFTEYgICAgICBlbGYgICAgICAgICAgIH8gRSBMIEYKICAgIC4uLi4uLi4uLi4uLi4uLi4uLi4uLi4gIEV4dCAgICAgIGV4dCBleHQyIGV4dDMgZXh0NCBpbWcgb2Zmc2V0PTEwODAgUyBFRgogICAgLi4uLi4uLi4uLi4uLi4uLi4uLi4uLiAgRkFUICAgICAgZmF0IGltZyAgICAgICBvZmZzZXQ9NTEwIFUgQUEKICAgIC4uLi4uLi4uLi4uLi4uLi4uLi4uLi4gIEZMViAgICAgIGZsdiAgICAgICAgICAgRiBMIFYgMDEKICAgIC4uLi4uLi4uLi4uLi4uLi4uLi4uLi4gIEdQVCAgICAgIGdwdCBtYnIgICAgICAgb2Zmc2V0PTUxMiBFIEYgSSAyMCBQIEEgUiBUIDAwIDAwIDAxIDAwCiAgICAuLi4uTS4uLi4uLi4uLi4uLi4uLi4uICBIRlMgICAgICBoZnMgaGZzeCAgICAgIG9mZnNldD0xMDI0IEIgRCAgfHwgIEggKyAwMCAwNCAgfHwgIEggWCAwMCAwNQogICAgLi4uRi4uLi4uLi4uLi4uLi4uLi4uLiAgSHhzICAgICAgaHhzIGh4aSBoeHIgaHhxIGh4dyBsaXQgSSBUIE8gTCBJIFQgTCBTIDAxIDAwIDAwIDAwICggMDAgMDAgMDAKICAgIC4uLi4uLk8uLi4uLi4uLi4uLi4uLi4gIElIZXggICAgIGloZXggICAgICAgICAgCiAgICAuLi4uLi4uLi4uLi4uLi4uLi4uLi4uICBJc28gICAgICBpc28gaW1nICAgICAgIG9mZnNldD0zMjc2OSBDIEQgMCAwIDEKICAgIC4uLi4uLi4uLi4uLi4uLi4uLi4uLi4gIExQICAgICAgIGxwaW1nIGltZyAgICAgb2Zmc2V0PTQwOTYgZyBEIGwgYSA0IDAwIDAwIDAwCiAgICAuLi4uLi4uLi4uLi4uLi4uLi4uLi4uICBMemggICAgICBsemggbGhhICAgICAgIG9mZnNldD0yIC0gbCBoCiAgICAuLi4uLi4uUC4uLi4uLi4uLi4uLi4uICBNQlIgICAgICBtYnIgICAgICAgICAgIAogICAgLi4uLk0uLi4uRS4uLi4uLi4uLi4uLiAgTWFjaE8gICAgbWFjaG8gICAgICAgICBDRSBGQSBFRCBGRSAgfHwgIENGIEZBIEVEIEZFICB8fCAgRkUgRUQgRkEgQ0UgIHx8ICBGRSBFRCBGQSBDRgogICAgLi4uLi4uLi4uLi4uLi4uLi4uLi4uLiAgTXNMWiAgICAgbXNseiAgICAgICAgICBTIFogRCBEIDg4IEYwICcgMyBBCiAgICAuLi4uTS4uLi4uLi4uLi4uLi4uLi4uICBNdWIgICAgICBtdWIgICAgICAgICAgIENBIEZFIEJBIEJFIDAwIDAwIDAwICB8fCAgQjkgRkEgRjEgMEUKICAgIC4uLi4uLi4uLi4uLi4uLi4uLi4uLi4gIE5URlMgICAgIG50ZnMgaW1nICAgICAgb2Zmc2V0PTMgTiBUIEYgUyAyMCAyMCAyMCAyMCAwMAogICAgLi4uRi5HLi4uLi4uLi4uLi4uLi4uLiAgTnNpcyAgICAgbnNpcyAgICAgICAgICBvZmZzZXQ9NCBFRiBCRSBBRCBERSBOIHUgbCBsIHMgbyBmIHQgSSBuIHMgdAogICAgLi4uLi4uLi4uRS4uLi4uLi4uLi4uLiAgUEUgICAgICAgZXhlIGRsbCBzeXMgICBNIFoKICAgIC4uLi4uLi4uLi4uLi4uLi4uLi4uLi4gIFBwbWQgICAgIHBtZCAgICAgICAgICAgOEYgQUYgQUMgODQKICAgIC4uLi4uLi4uLi4uLi4uLi4uLi4uLi4gIFFDT1cgICAgIHFjb3cgcWNvdzIgcWNvdzJjIFEgRiBJIEZCIDAwIDAwIDAwCiAgICAuLi5GLi4uLi4uLi4uLi4uLi4uLi4uICBSYXIgICAgICByYXIgcjAwICAgICAgIFIgYSByICEgMUEgMDcgMDAKICAgIC4uLkYuLi4uLi4uLi4uLi4uLi4uLi4gIFJhcjUgICAgIHJhciByMDAgICAgICAgUiBhIHIgISAxQSAwNyAwMSAwMAogICAgLi4uLi4uLi4uLi4uLi4uLi4uLi4uLiAgUnBtICAgICAgcnBtICAgICAgICAgICBFRCBBQiBFRSBEQgogICAgSy4uLi4uLi4uLi4uLi4uLi4uLi4uLiAgU1dGICAgICAgc3dmICAgICAgICAgICBGIFcgUwogICAgLi4uLk0uLi4uLi4uLi4uLi4uLi4uLiAgU1dGYyAgICAgc3dmICh+LnN3ZikgICBDIFcgUyAgfHwgIFogVyBTCiAgICAuLi4uLi4uLi4uLi4uLi4uLi4uLi4uICBTcGFyc2UgICBzaW1nIGltZyAgICAgIDogRkYgJiBFRCAwMSAwMAogICAgLi4uLi4uLi4uLi4uLi4uLi4uLi4uLiAgU3BsaXQgICAgMDAxICAgICAgICAgICAKICAgIC4uLi5NLi4uLi4uLi4uLi4uLi4uLi4gIFNxdWFzaEZTIHNxdWFzaGZzICAgICAgaCBzIHEgcyAgfHwgIHMgcSBzIGggIHx8ICBzIGggcyBxICB8fCAgcSBzIGggcwogICAgLi4uLi4uLi4uRS4uLi4uLi4uLi4uLiAgVEUgICAgICAgdGUgICAgICAgICAgICBWIFoKICAgIC4uLkZNLi4uLi4uLi4uLi4uLi4uLi4gIFVFRkljICAgIHNjYXAgICAgICAgICAgQkQgODYgZiA7IHYgMEQgMCBAIEI3IDBFIEI1IFEgOUUgLyBDNSBBMCAgfHwgIDhCIEE2IDwgSiAjIHcgRkIgSCA4MCA9IFcgOEMgQzEgRkUgQzQgTSAgfHwgIEI5IDgyIDkxIFMgQjUgQUIgOTEgQyBCNiA5QSBFMyBBOSBDIEY3IC8gQ0MKICAgIC4uLkZNLi4uLi4uLi4uLi4uLi4uLi4gIFVFRklmICAgIHVlZmlmICAgICAgICAgb2Zmc2V0PTE2IEQ5IFQgOTMgeiBoIDA0IEogRCA4MSBDRSAwQiBGNiAxNyBEOCA5MCBERiAgfHwgIHggRTUgOEMgOEMgPSA4QSAxQyBPIDk5IDUgODkgYSA4NSBDMyAtIEQzCiAgICAuLi4uTS5PLi4uLi4uLi4uLi4uLi4uICBVZGYgICAgICB1ZGYgaXNvIGltZyAgIG9mZnNldD0zMjc2OCAwMCBCIEUgQSAwIDEgMDEgMDAgIHx8ICAwMSBDIEQgMCAwIDEKICAgIC4uLi4uLi4uLi4uLi4uLi4uLi4uLi4gIFZESSAgICAgIHZkaSAgICAgICAgICAgb2Zmc2V0PTY0IH8gMTAgREEgQkUKICAgIC4uLi4uRy4uLi4uLi4uLi4uLi4uLi4gIFZIRCAgICAgIHZoZCAgICAgICAgICAgYyBvIG4gZSBjIHQgaSB4IDAwIDAwCiAgICAuLi4uLi4uLi4uLi4uLi4uLi4uLi4uICBWSERYICAgICB2aGR4IGF2aGR4ICAgIHYgaCBkIHggZiBpIGwgZQogICAgLi4uLi4uLi4uLi4uLi4uLi4uLi4uLiAgVk1ESyAgICAgdm1kayAgICAgICAgICBLIEQgTSBWCiAgICAuLi4uLi4uLi4uLi4uLi4uLi4uLi4uICBYYXIgICAgICB4YXIgcGtnIHhpcCAgIHggYSByICEgMDAKICAgIC4uLi4uLi4uLi4uLi4uLi4uLi4uLi4gIFogICAgICAgIHogdGF6ICgudGFyKSAgMUYgOUQKICAgQ0suLi4uLi4uLi4uLi4uLi4uLi4uLi4gIGJ6aXAyICAgIGJ6MiBiemlwMiB0YnoyICgudGFyKSB0YnogKC50YXIpIEIgWiBoCiAgIENLLi4uLi4uLi4uLi4uLi4uLi5tKy4uICBnemlwICAgICBneiBnemlwIHRneiAoLnRhcikgdHB6ICgudGFyKSBhcGsgKC50YXIpIDFGIDhCIDA4CiAgICBLLi4uLi5PLi4uLi4uLi4uLi4uLi4uICBsem1hICAgICBsem1hICAgICAgICAgIAogICAgSy4uLi4uLi4uLi4uLi4uLi4uLi4uLiAgbHptYTg2ICAgbHptYTg2ICAgICAgICAKICAgQy4uLi4uLk8uLi5MSC4uLi4uLm0rLi4gIHRhciAgICAgIHRhciBvdmEgICAgICAgb2Zmc2V0PTI1NyB1IHMgdCBhIHIKICAgQy5TTi4uLi4uLi5MSC4uYy5hLm0rLi4gIHdpbSAgICAgIHdpbSBzd20gZXNkIHBwa2cgTSBTIFcgSSBNIDAwIDAwIDAwCiAgIENLLi4uLi4uLi4uLi4uLi4uLi4uLi4uICB4eiAgICAgICB4eiB0eHogKC50YXIpIEZEIDcgeiBYIFogMDAKICAgQy4uLkZNRy4uLi4uLi4uYy5hLm0rLi4gIHppcCAgICAgIHppcCB6MDEgemlweCBqYXIgeHBpIG9kdCBvZHMgZG9jeCB4bHN4IGVwdWIgaXBhIGFwayBhcHB4IFAgSyAwMyAwNCAgfHwgIFAgSyAwNSAwNiAgfHwgIFAgSyAwNiAwNiAgfHwgIFAgSyAwNyAwOCBQIEsgIHx8ICBQIEsgMCAwIFAgSwogICAgSy4uLi4uLi4uLi4uLi4uLi4uLi4uLiAgenN0ZCAgICAgenN0IHR6c3QgKC50YXIpICggQjUgLyBGRAogICBDSy4uLi4uTy4uLi4uWEMuLi4uLi4uLiAgSGFzaCAgICAgc2hhMjU2IHNoYTUxMiBzaGEzODQgc2hhMjI0IHNoYTUxMi0yMjQgc2hhNTEyLTI1NiBzaGEzLTIyNCBzaGEzLTI1NiBzaGEzLTM4NCBzaGEzLTUxMiBzaGExIHNoYTIgc2hhMyBzaGEgbWQ1IGJsYWtlMnMgYmxha2UyYiBibGFrZTJzcCB4eGg2NCBjcmMzMiBjcmM2NCBja3N1bSBhc2MgCgpDb2RlY3M6CiAgIDRFRCAgIDMwMzAxMUIgQkNKMgogICAgRURGICAzMDMwMTAzIEJDSgogICAgRURGICAzMDMwMjA1IFBQQwogICAgRURGICAzMDMwNDAxIElBNjQKICAgIEVERiAgMzAzMDUwMSBBUk0KICAgIEVERiAgMzAzMDcwMSBBUk1UCiAgICBFREYgIDMwMzA4MDUgU1BBUkMKICAgIEVERiAgICAgICAgQSBBUk02NAogICAgRURGICAgICAgICBCIFJJU0NWCiAgICBFREYgICAgMjAzMDIgU3dhcDIKICAgIEVERiAgICAyMDMwNCBTd2FwNAogICAgRUQgICAgIDQwMjAyIEJaaXAyCiAgICBFRCAgICAgICAgIDAgQ29weQogICAgRUQgICAgIDQwMTA5IERlZmxhdGU2NAogICAgRUQgICAgIDQwMTA4IERlZmxhdGUKICAgIEVERiAgICAgICAgMyBEZWx0YQogICAgRUQgICAgICAgIDIxIExaTUEyCiAgICBFRCAgICAgMzAxMDEgTFpNQQogICAgRUQgICAgIDMwNDAxIFBQTUQKICAgICBEICAgICA0MDMwMSBSYXIxCiAgICAgRCAgICAgNDAzMDIgUmFyMgogICAgIEQgICAgIDQwMzAzIFJhcjMKICAgICBEICAgICA0MDMwNSBSYXI1CiAgICBFREYgIDZGMTA3MDEgN3pBRVMKICAgIEVERiAgNkYwMDE4MSBBRVMyNTZDQkMKCkhhc2hlcnM6CiAgICAgIDQgICAgICAgIDEgQ1JDMzIKICAgICAxNiAgICAgIDIwOCBNRDUKICAgICAyMCAgICAgIDIwMSBTSEExCiAgICAgMzIgICAgICAgIEEgU0hBMjU2CiAgICAgMzIgICAgICAyMzEgU0hBMy0yNTYKICAgICA0OCAgICAgIDIyMiBTSEEzODQKICAgICA2NCAgICAgIDIyMyBTSEE1MTIKICAgICAgOCAgICAgIDIxMSBYWEg2NAogICAgICA4ICAgICAgICA0IENSQzY0CiAgICAgMzIgICAgICAyMDIgQkxBS0Uyc3AK",
+      "stderr_base64": ""
+    },
+    "store.zip/list": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "l",
+        "/tmp/b01-5e68pkgf/fixtures/store.zip",
+        "-y",
+        "-slt",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCA0MjE2IGJ5dGVzICg1IEtpQikKCkxpc3RpbmcgYXJjaGl2ZTogL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvc3RvcmUuemlwCgotLQpQYXRoID0gL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvc3RvcmUuemlwClR5cGUgPSB6aXAKUGh5c2ljYWwgU2l6ZSA9IDQyMTYKCi0tLS0tLS0tLS0KUGF0aCA9IHBheWxvYWQuYmluCkZvbGRlciA9IC0KU2l6ZSA9IDQwOTYKUGFja2VkIFNpemUgPSA0MDk2Ck1vZGlmaWVkID0gMjAyMy0xMS0xNCAyMjoxMzoyMApDcmVhdGVkID0gCkFjY2Vzc2VkID0gCkF0dHJpYnV0ZXMgPSBWIDAxODAwMDAwIDBydy0tLS0tLS0KRW5jcnlwdGVkID0gLQpDb21tZW50ID0gCkNSQyA9IEEyOTEyMDgyCk1ldGhvZCA9IFN0b3JlCkNoYXJhY3RlcmlzdGljcyA9IApIb3N0IE9TID0gVW5peApWZXJzaW9uID0gMjAKVm9sdW1lIEluZGV4ID0gMApPZmZzZXQgPSAwCgo=",
+      "stderr_base64": ""
+    },
+    "store.zip/test": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "t",
+        "/tmp/b01-5e68pkgf/fixtures/store.zip",
+        "-y",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCA0MjE2IGJ5dGVzICg1IEtpQikKClRlc3RpbmcgYXJjaGl2ZTogL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvc3RvcmUuemlwCi0tClBhdGggPSAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9zdG9yZS56aXAKVHlwZSA9IHppcApQaHlzaWNhbCBTaXplID0gNDIxNgoKRXZlcnl0aGluZyBpcyBPawoKU2l6ZTogICAgICAgNDA5NgpDb21wcmVzc2VkOiA0MjE2Cg==",
+      "stderr_base64": ""
+    },
+    "store.zip/extract": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "x",
+        "/tmp/b01-5e68pkgf/fixtures/store.zip",
+        "-y",
+        "-o/tmp/b01-5e68pkgf/out-store.zip",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCA0MjE2IGJ5dGVzICg1IEtpQikKCkV4dHJhY3RpbmcgYXJjaGl2ZTogL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvc3RvcmUuemlwCi0tClBhdGggPSAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9zdG9yZS56aXAKVHlwZSA9IHppcApQaHlzaWNhbCBTaXplID0gNDIxNgoKRXZlcnl0aGluZyBpcyBPawoKU2l6ZTogICAgICAgNDA5NgpDb21wcmVzc2VkOiA0MjE2Cg==",
+      "stderr_base64": ""
+    },
+    "deflate.zip/list": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "l",
+        "/tmp/b01-5e68pkgf/fixtures/deflate.zip",
+        "-y",
+        "-slt",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCA0MjkgYnl0ZXMgKDEgS2lCKQoKTGlzdGluZyBhcmNoaXZlOiAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9kZWZsYXRlLnppcAoKLS0KUGF0aCA9IC90bXAvYjAxLTVlNjhwa2dmL2ZpeHR1cmVzL2RlZmxhdGUuemlwClR5cGUgPSB6aXAKUGh5c2ljYWwgU2l6ZSA9IDQyOQoKLS0tLS0tLS0tLQpQYXRoID0gcGF5bG9hZC5iaW4KRm9sZGVyID0gLQpTaXplID0gNDA5NgpQYWNrZWQgU2l6ZSA9IDMwOQpNb2RpZmllZCA9IDIwMjMtMTEtMTQgMjI6MTM6MjAKQ3JlYXRlZCA9IApBY2Nlc3NlZCA9IApBdHRyaWJ1dGVzID0gViAwMTgwMDAwMCAwcnctLS0tLS0tCkVuY3J5cHRlZCA9IC0KQ29tbWVudCA9IApDUkMgPSBBMjkxMjA4MgpNZXRob2QgPSBEZWZsYXRlCkNoYXJhY3RlcmlzdGljcyA9IApIb3N0IE9TID0gVW5peApWZXJzaW9uID0gMjAKVm9sdW1lIEluZGV4ID0gMApPZmZzZXQgPSAwCgo=",
+      "stderr_base64": ""
+    },
+    "deflate.zip/test": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "t",
+        "/tmp/b01-5e68pkgf/fixtures/deflate.zip",
+        "-y",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCA0MjkgYnl0ZXMgKDEgS2lCKQoKVGVzdGluZyBhcmNoaXZlOiAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9kZWZsYXRlLnppcAotLQpQYXRoID0gL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvZGVmbGF0ZS56aXAKVHlwZSA9IHppcApQaHlzaWNhbCBTaXplID0gNDI5CgpFdmVyeXRoaW5nIGlzIE9rCgpTaXplOiAgICAgICA0MDk2CkNvbXByZXNzZWQ6IDQyOQo=",
+      "stderr_base64": ""
+    },
+    "deflate.zip/extract": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "x",
+        "/tmp/b01-5e68pkgf/fixtures/deflate.zip",
+        "-y",
+        "-o/tmp/b01-5e68pkgf/out-deflate.zip",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCA0MjkgYnl0ZXMgKDEgS2lCKQoKRXh0cmFjdGluZyBhcmNoaXZlOiAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9kZWZsYXRlLnppcAotLQpQYXRoID0gL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvZGVmbGF0ZS56aXAKVHlwZSA9IHppcApQaHlzaWNhbCBTaXplID0gNDI5CgpFdmVyeXRoaW5nIGlzIE9rCgpTaXplOiAgICAgICA0MDk2CkNvbXByZXNzZWQ6IDQyOQo=",
+      "stderr_base64": ""
+    },
+    "bzip2.zip/list": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "l",
+        "/tmp/b01-5e68pkgf/fixtures/bzip2.zip",
+        "-y",
+        "-slt",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCA3NzcgYnl0ZXMgKDEgS2lCKQoKTGlzdGluZyBhcmNoaXZlOiAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9iemlwMi56aXAKCi0tClBhdGggPSAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9iemlwMi56aXAKVHlwZSA9IHppcApQaHlzaWNhbCBTaXplID0gNzc3CgotLS0tLS0tLS0tClBhdGggPSBwYXlsb2FkLmJpbgpGb2xkZXIgPSAtClNpemUgPSA0MDk2ClBhY2tlZCBTaXplID0gNjU3Ck1vZGlmaWVkID0gMjAyMy0xMS0xNCAyMjoxMzoyMApDcmVhdGVkID0gCkFjY2Vzc2VkID0gCkF0dHJpYnV0ZXMgPSBWIDAxODAwMDAwIDBydy0tLS0tLS0KRW5jcnlwdGVkID0gLQpDb21tZW50ID0gCkNSQyA9IEEyOTEyMDgyCk1ldGhvZCA9IEJaaXAyCkNoYXJhY3RlcmlzdGljcyA9IApIb3N0IE9TID0gVW5peApWZXJzaW9uID0gNDYKVm9sdW1lIEluZGV4ID0gMApPZmZzZXQgPSAwCgo=",
+      "stderr_base64": ""
+    },
+    "bzip2.zip/test": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "t",
+        "/tmp/b01-5e68pkgf/fixtures/bzip2.zip",
+        "-y",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCA3NzcgYnl0ZXMgKDEgS2lCKQoKVGVzdGluZyBhcmNoaXZlOiAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9iemlwMi56aXAKLS0KUGF0aCA9IC90bXAvYjAxLTVlNjhwa2dmL2ZpeHR1cmVzL2J6aXAyLnppcApUeXBlID0gemlwClBoeXNpY2FsIFNpemUgPSA3NzcKCkV2ZXJ5dGhpbmcgaXMgT2sKClNpemU6ICAgICAgIDQwOTYKQ29tcHJlc3NlZDogNzc3Cg==",
+      "stderr_base64": ""
+    },
+    "bzip2.zip/extract": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "x",
+        "/tmp/b01-5e68pkgf/fixtures/bzip2.zip",
+        "-y",
+        "-o/tmp/b01-5e68pkgf/out-bzip2.zip",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCA3NzcgYnl0ZXMgKDEgS2lCKQoKRXh0cmFjdGluZyBhcmNoaXZlOiAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9iemlwMi56aXAKLS0KUGF0aCA9IC90bXAvYjAxLTVlNjhwa2dmL2ZpeHR1cmVzL2J6aXAyLnppcApUeXBlID0gemlwClBoeXNpY2FsIFNpemUgPSA3NzcKCkV2ZXJ5dGhpbmcgaXMgT2sKClNpemU6ICAgICAgIDQwOTYKQ29tcHJlc3NlZDogNzc3Cg==",
+      "stderr_base64": ""
+    },
+    "lzma.zip/list": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "l",
+        "/tmp/b01-5e68pkgf/fixtures/lzma.zip",
+        "-y",
+        "-slt",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCAzOTMgYnl0ZXMgKDEgS2lCKQoKTGlzdGluZyBhcmNoaXZlOiAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9sem1hLnppcAoKLS0KUGF0aCA9IC90bXAvYjAxLTVlNjhwa2dmL2ZpeHR1cmVzL2x6bWEuemlwClR5cGUgPSB6aXAKUGh5c2ljYWwgU2l6ZSA9IDM5MwoKLS0tLS0tLS0tLQpQYXRoID0gcGF5bG9hZC5iaW4KRm9sZGVyID0gLQpTaXplID0gNDA5NgpQYWNrZWQgU2l6ZSA9IDI3MwpNb2RpZmllZCA9IDIwMjMtMTEtMTQgMjI6MTM6MjAKQ3JlYXRlZCA9IApBY2Nlc3NlZCA9IApBdHRyaWJ1dGVzID0gViAwMTgwMDAwMCAwcnctLS0tLS0tCkVuY3J5cHRlZCA9IC0KQ29tbWVudCA9IApDUkMgPSBBMjkxMjA4MgpNZXRob2QgPSBMWk1BOmVvcwpDaGFyYWN0ZXJpc3RpY3MgPSAKSG9zdCBPUyA9IFVuaXgKVmVyc2lvbiA9IDYzClZvbHVtZSBJbmRleCA9IDAKT2Zmc2V0ID0gMAoK",
+      "stderr_base64": ""
+    },
+    "lzma.zip/test": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "t",
+        "/tmp/b01-5e68pkgf/fixtures/lzma.zip",
+        "-y",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCAzOTMgYnl0ZXMgKDEgS2lCKQoKVGVzdGluZyBhcmNoaXZlOiAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9sem1hLnppcAotLQpQYXRoID0gL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvbHptYS56aXAKVHlwZSA9IHppcApQaHlzaWNhbCBTaXplID0gMzkzCgpFdmVyeXRoaW5nIGlzIE9rCgpTaXplOiAgICAgICA0MDk2CkNvbXByZXNzZWQ6IDM5Mwo=",
+      "stderr_base64": ""
+    },
+    "lzma.zip/extract": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "x",
+        "/tmp/b01-5e68pkgf/fixtures/lzma.zip",
+        "-y",
+        "-o/tmp/b01-5e68pkgf/out-lzma.zip",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCAzOTMgYnl0ZXMgKDEgS2lCKQoKRXh0cmFjdGluZyBhcmNoaXZlOiAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9sem1hLnppcAotLQpQYXRoID0gL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvbHptYS56aXAKVHlwZSA9IHppcApQaHlzaWNhbCBTaXplID0gMzkzCgpFdmVyeXRoaW5nIGlzIE9rCgpTaXplOiAgICAgICA0MDk2CkNvbXByZXNzZWQ6IDM5Mwo=",
+      "stderr_base64": ""
+    },
+    "crc.zip/list": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "l",
+        "/tmp/b01-5e68pkgf/fixtures/crc.zip",
+        "-y",
+        "-slt",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCA0MjE2IGJ5dGVzICg1IEtpQikKCkxpc3RpbmcgYXJjaGl2ZTogL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvY3JjLnppcAoKLS0KUGF0aCA9IC90bXAvYjAxLTVlNjhwa2dmL2ZpeHR1cmVzL2NyYy56aXAKVHlwZSA9IHppcApQaHlzaWNhbCBTaXplID0gNDIxNgoKLS0tLS0tLS0tLQpQYXRoID0gcGF5bG9hZC5iaW4KRm9sZGVyID0gLQpTaXplID0gNDA5NgpQYWNrZWQgU2l6ZSA9IDQwOTYKTW9kaWZpZWQgPSAyMDIzLTExLTE0IDIyOjEzOjIwCkNyZWF0ZWQgPSAKQWNjZXNzZWQgPSAKQXR0cmlidXRlcyA9IFYgMDE4MDAwMDAgMHJ3LS0tLS0tLQpFbmNyeXB0ZWQgPSAtCkNvbW1lbnQgPSAKQ1JDID0gQTI5MTIwODIKTWV0aG9kID0gU3RvcmUKQ2hhcmFjdGVyaXN0aWNzID0gCkhvc3QgT1MgPSBVbml4ClZlcnNpb24gPSAyMApWb2x1bWUgSW5kZXggPSAwCk9mZnNldCA9IDAKCg==",
+      "stderr_base64": ""
+    },
+    "crc.zip/test": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "t",
+        "/tmp/b01-5e68pkgf/fixtures/crc.zip",
+        "-y",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 2,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCA0MjE2IGJ5dGVzICg1IEtpQikKClRlc3RpbmcgYXJjaGl2ZTogL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvY3JjLnppcAotLQpQYXRoID0gL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvY3JjLnppcApUeXBlID0gemlwClBoeXNpY2FsIFNpemUgPSA0MjE2CgoKU3ViIGl0ZW1zIEVycm9yczogMQoKQXJjaGl2ZXMgd2l0aCBFcnJvcnM6IDEKClN1YiBpdGVtcyBFcnJvcnM6IDEK",
+      "stderr_base64": "RVJST1I6IENSQyBGYWlsZWQgOiBwYXlsb2FkLmJpbgo="
+    },
+    "crc.zip/extract": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "x",
+        "/tmp/b01-5e68pkgf/fixtures/crc.zip",
+        "-y",
+        "-o/tmp/b01-5e68pkgf/out-crc.zip",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 2,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCA0MjE2IGJ5dGVzICg1IEtpQikKCkV4dHJhY3RpbmcgYXJjaGl2ZTogL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvY3JjLnppcAotLQpQYXRoID0gL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvY3JjLnppcApUeXBlID0gemlwClBoeXNpY2FsIFNpemUgPSA0MjE2CgoKU3ViIGl0ZW1zIEVycm9yczogMQoKQXJjaGl2ZXMgd2l0aCBFcnJvcnM6IDEKClN1YiBpdGVtcyBFcnJvcnM6IDEK",
+      "stderr_base64": "RVJST1I6IENSQyBGYWlsZWQgOiBwYXlsb2FkLmJpbgo="
+    },
+    "unsupported.zip/list": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "l",
+        "/tmp/b01-5e68pkgf/fixtures/unsupported.zip",
+        "-y",
+        "-slt",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCA0MjE2IGJ5dGVzICg1IEtpQikKCkxpc3RpbmcgYXJjaGl2ZTogL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvdW5zdXBwb3J0ZWQuemlwCgotLQpQYXRoID0gL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvdW5zdXBwb3J0ZWQuemlwClR5cGUgPSB6aXAKUGh5c2ljYWwgU2l6ZSA9IDQyMTYKCi0tLS0tLS0tLS0KUGF0aCA9IHBheWxvYWQuYmluCkZvbGRlciA9IC0KU2l6ZSA9IDQwOTYKUGFja2VkIFNpemUgPSA0MDk2Ck1vZGlmaWVkID0gMjAyMy0xMS0xNCAyMjoxMzoyMApDcmVhdGVkID0gCkFjY2Vzc2VkID0gCkF0dHJpYnV0ZXMgPSBWIDAxODAwMDAwIDBydy0tLS0tLS0KRW5jcnlwdGVkID0gLQpDb21tZW50ID0gCkNSQyA9IEEyOTEyMDgyCk1ldGhvZCA9IDY1NTM1CkNoYXJhY3RlcmlzdGljcyA9IApIb3N0IE9TID0gVW5peApWZXJzaW9uID0gMjAKVm9sdW1lIEluZGV4ID0gMApPZmZzZXQgPSAwCgo=",
+      "stderr_base64": ""
+    },
+    "unsupported.zip/test": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "t",
+        "/tmp/b01-5e68pkgf/fixtures/unsupported.zip",
+        "-y",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 2,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCA0MjE2IGJ5dGVzICg1IEtpQikKClRlc3RpbmcgYXJjaGl2ZTogL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvdW5zdXBwb3J0ZWQuemlwCi0tClBhdGggPSAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy91bnN1cHBvcnRlZC56aXAKVHlwZSA9IHppcApQaHlzaWNhbCBTaXplID0gNDIxNgoKClN1YiBpdGVtcyBFcnJvcnM6IDEKCkFyY2hpdmVzIHdpdGggRXJyb3JzOiAxCgpTdWIgaXRlbXMgRXJyb3JzOiAxCg==",
+      "stderr_base64": "RVJST1I6IFVuc3VwcG9ydGVkIE1ldGhvZCA6IHBheWxvYWQuYmluCg=="
+    },
+    "unsupported.zip/extract": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "x",
+        "/tmp/b01-5e68pkgf/fixtures/unsupported.zip",
+        "-y",
+        "-o/tmp/b01-5e68pkgf/out-unsupported.zip",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 2,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCA0MjE2IGJ5dGVzICg1IEtpQikKCkV4dHJhY3RpbmcgYXJjaGl2ZTogL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvdW5zdXBwb3J0ZWQuemlwCi0tClBhdGggPSAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy91bnN1cHBvcnRlZC56aXAKVHlwZSA9IHppcApQaHlzaWNhbCBTaXplID0gNDIxNgoKClN1YiBpdGVtcyBFcnJvcnM6IDEKCkFyY2hpdmVzIHdpdGggRXJyb3JzOiAxCgpTdWIgaXRlbXMgRXJyb3JzOiAxCg==",
+      "stderr_base64": "RVJST1I6IFVuc3VwcG9ydGVkIE1ldGhvZCA6IHBheWxvYWQuYmluCg=="
+    },
+    "data.zip/list": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "l",
+        "/tmp/b01-5e68pkgf/fixtures/data.zip",
+        "-y",
+        "-slt",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCA0MjkgYnl0ZXMgKDEgS2lCKQoKTGlzdGluZyBhcmNoaXZlOiAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9kYXRhLnppcAoKLS0KUGF0aCA9IC90bXAvYjAxLTVlNjhwa2dmL2ZpeHR1cmVzL2RhdGEuemlwClR5cGUgPSB6aXAKUGh5c2ljYWwgU2l6ZSA9IDQyOQoKLS0tLS0tLS0tLQpQYXRoID0gcGF5bG9hZC5iaW4KRm9sZGVyID0gLQpTaXplID0gNDA5NgpQYWNrZWQgU2l6ZSA9IDMwOQpNb2RpZmllZCA9IDIwMjMtMTEtMTQgMjI6MTM6MjAKQ3JlYXRlZCA9IApBY2Nlc3NlZCA9IApBdHRyaWJ1dGVzID0gViAwMTgwMDAwMCAwcnctLS0tLS0tCkVuY3J5cHRlZCA9IC0KQ29tbWVudCA9IApDUkMgPSBBMjkxMjA4MgpNZXRob2QgPSBEZWZsYXRlCkNoYXJhY3RlcmlzdGljcyA9IApIb3N0IE9TID0gVW5peApWZXJzaW9uID0gMjAKVm9sdW1lIEluZGV4ID0gMApPZmZzZXQgPSAwCgo=",
+      "stderr_base64": ""
+    },
+    "data.zip/test": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "t",
+        "/tmp/b01-5e68pkgf/fixtures/data.zip",
+        "-y",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 2,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCA0MjkgYnl0ZXMgKDEgS2lCKQoKVGVzdGluZyBhcmNoaXZlOiAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9kYXRhLnppcAotLQpQYXRoID0gL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvZGF0YS56aXAKVHlwZSA9IHppcApQaHlzaWNhbCBTaXplID0gNDI5CgoKU3ViIGl0ZW1zIEVycm9yczogMQoKQXJjaGl2ZXMgd2l0aCBFcnJvcnM6IDEKClN1YiBpdGVtcyBFcnJvcnM6IDEK",
+      "stderr_base64": "RVJST1I6IERhdGEgRXJyb3IgOiBwYXlsb2FkLmJpbgo="
+    },
+    "data.zip/extract": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "x",
+        "/tmp/b01-5e68pkgf/fixtures/data.zip",
+        "-y",
+        "-o/tmp/b01-5e68pkgf/out-data.zip",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 2,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCA0MjkgYnl0ZXMgKDEgS2lCKQoKRXh0cmFjdGluZyBhcmNoaXZlOiAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9kYXRhLnppcAotLQpQYXRoID0gL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvZGF0YS56aXAKVHlwZSA9IHppcApQaHlzaWNhbCBTaXplID0gNDI5CgoKU3ViIGl0ZW1zIEVycm9yczogMQoKQXJjaGl2ZXMgd2l0aCBFcnJvcnM6IDEKClN1YiBpdGVtcyBFcnJvcnM6IDEK",
+      "stderr_base64": "RVJST1I6IERhdGEgRXJyb3IgOiBwYXlsb2FkLmJpbgo="
+    },
+    "truncated.zip/list": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "l",
+        "/tmp/b01-5e68pkgf/fixtures/truncated.zip",
+        "-y",
+        "-slt",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 2,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCAxNiBieXRlcyAoMSBLaUIpCgpMaXN0aW5nIGFyY2hpdmU6IC90bXAvYjAxLTVlNjhwa2dmL2ZpeHR1cmVzL3RydW5jYXRlZC56aXAKCgpFcnJvcnM6IDEK",
+      "stderr_base64": "CkVSUk9SOiAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy90cnVuY2F0ZWQuemlwIDogL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvdHJ1bmNhdGVkLnppcApPcGVuIEVSUk9SOiBDYW5ub3Qgb3BlbiB0aGUgZmlsZSBhcyBbemlwXSBhcmNoaXZlCgoKRVJST1JTOgpJcyBub3QgYXJjaGl2ZQoK"
+    },
+    "truncated.zip/test": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "t",
+        "/tmp/b01-5e68pkgf/fixtures/truncated.zip",
+        "-y",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 2,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCAxNiBieXRlcyAoMSBLaUIpCgpUZXN0aW5nIGFyY2hpdmU6IC90bXAvYjAxLTVlNjhwa2dmL2ZpeHR1cmVzL3RydW5jYXRlZC56aXAKCkNhbid0IG9wZW4gYXMgYXJjaGl2ZTogMQpGaWxlczogMApTaXplOiAgICAgICAwCkNvbXByZXNzZWQ6IDAK",
+      "stderr_base64": "RVJST1I6IC90bXAvYjAxLTVlNjhwa2dmL2ZpeHR1cmVzL3RydW5jYXRlZC56aXAKL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvdHJ1bmNhdGVkLnppcApPcGVuIEVSUk9SOiBDYW5ub3Qgb3BlbiB0aGUgZmlsZSBhcyBbemlwXSBhcmNoaXZlCgoKRVJST1JTOgpJcyBub3QgYXJjaGl2ZQo="
+    },
+    "truncated.zip/extract": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "x",
+        "/tmp/b01-5e68pkgf/fixtures/truncated.zip",
+        "-y",
+        "-o/tmp/b01-5e68pkgf/out-truncated.zip",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 2,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCAxNiBieXRlcyAoMSBLaUIpCgpFeHRyYWN0aW5nIGFyY2hpdmU6IC90bXAvYjAxLTVlNjhwa2dmL2ZpeHR1cmVzL3RydW5jYXRlZC56aXAKCkNhbid0IG9wZW4gYXMgYXJjaGl2ZTogMQpGaWxlczogMApTaXplOiAgICAgICAwCkNvbXByZXNzZWQ6IDAK",
+      "stderr_base64": "RVJST1I6IC90bXAvYjAxLTVlNjhwa2dmL2ZpeHR1cmVzL3RydW5jYXRlZC56aXAKL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvdHJ1bmNhdGVkLnppcApPcGVuIEVSUk9SOiBDYW5ub3Qgb3BlbiB0aGUgZmlsZSBhcyBbemlwXSBhcmNoaXZlCgoKRVJST1JTOgpJcyBub3QgYXJjaGl2ZQo="
+    },
+    "misnamed.dat/list": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "l",
+        "/tmp/b01-5e68pkgf/fixtures/misnamed.dat",
+        "-y",
+        "-slt",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCA0MjE2IGJ5dGVzICg1IEtpQikKCkxpc3RpbmcgYXJjaGl2ZTogL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvbWlzbmFtZWQuZGF0CgotLQpQYXRoID0gL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvbWlzbmFtZWQuZGF0ClR5cGUgPSB6aXAKUGh5c2ljYWwgU2l6ZSA9IDQyMTYKCi0tLS0tLS0tLS0KUGF0aCA9IHBheWxvYWQuYmluCkZvbGRlciA9IC0KU2l6ZSA9IDQwOTYKUGFja2VkIFNpemUgPSA0MDk2Ck1vZGlmaWVkID0gMjAyMy0xMS0xNCAyMjoxMzoyMApDcmVhdGVkID0gCkFjY2Vzc2VkID0gCkF0dHJpYnV0ZXMgPSBWIDAxODAwMDAwIDBydy0tLS0tLS0KRW5jcnlwdGVkID0gLQpDb21tZW50ID0gCkNSQyA9IEEyOTEyMDgyCk1ldGhvZCA9IFN0b3JlCkNoYXJhY3RlcmlzdGljcyA9IApIb3N0IE9TID0gVW5peApWZXJzaW9uID0gMjAKVm9sdW1lIEluZGV4ID0gMApPZmZzZXQgPSAwCgo=",
+      "stderr_base64": ""
+    },
+    "misnamed.dat/test": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "t",
+        "/tmp/b01-5e68pkgf/fixtures/misnamed.dat",
+        "-y",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCA0MjE2IGJ5dGVzICg1IEtpQikKClRlc3RpbmcgYXJjaGl2ZTogL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvbWlzbmFtZWQuZGF0Ci0tClBhdGggPSAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9taXNuYW1lZC5kYXQKVHlwZSA9IHppcApQaHlzaWNhbCBTaXplID0gNDIxNgoKRXZlcnl0aGluZyBpcyBPawoKU2l6ZTogICAgICAgNDA5NgpDb21wcmVzc2VkOiA0MjE2Cg==",
+      "stderr_base64": ""
+    },
+    "misnamed.dat/extract": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "x",
+        "/tmp/b01-5e68pkgf/fixtures/misnamed.dat",
+        "-y",
+        "-o/tmp/b01-5e68pkgf/out-misnamed.dat",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCA0MjE2IGJ5dGVzICg1IEtpQikKCkV4dHJhY3RpbmcgYXJjaGl2ZTogL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvbWlzbmFtZWQuZGF0Ci0tClBhdGggPSAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9taXNuYW1lZC5kYXQKVHlwZSA9IHppcApQaHlzaWNhbCBTaXplID0gNDIxNgoKRXZlcnl0aGluZyBpcyBPawoKU2l6ZTogICAgICAgNDA5NgpDb21wcmVzc2VkOiA0MjE2Cg==",
+      "stderr_base64": ""
+    },
+    "payload.tar/list": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "l",
+        "/tmp/b01-5e68pkgf/fixtures/payload.tar",
+        "-y",
+        "-slt",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCAxMDI0MCBieXRlcyAoMTAgS2lCKQoKTGlzdGluZyBhcmNoaXZlOiAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9wYXlsb2FkLnRhcgoKLS0KUGF0aCA9IC90bXAvYjAxLTVlNjhwa2dmL2ZpeHR1cmVzL3BheWxvYWQudGFyClR5cGUgPSB0YXIKUGh5c2ljYWwgU2l6ZSA9IDEwMjQwCkhlYWRlcnMgU2l6ZSA9IDYxNDQKQ29kZSBQYWdlID0gVVRGLTgKQ2hhcmFjdGVyaXN0aWNzID0gUE9TSVggQVNDSUkKCi0tLS0tLS0tLS0KUGF0aCA9IHBheWxvYWQuYmluCkZvbGRlciA9IC0KU2l6ZSA9IDQwOTYKUGFja2VkIFNpemUgPSA0MDk2Ck1vZGlmaWVkID0gMjAyMy0xMS0xNCAyMjoxMzoyMApDcmVhdGVkID0gCkFjY2Vzc2VkID0gCk1vZGUgPSAtcnctci0tci0tClVzZXIgPSAKR3JvdXAgPSAKVXNlciBJRCA9IDAKR3JvdXAgSUQgPSAwClN5bWJvbGljIExpbmsgPSAKSGFyZCBMaW5rID0gCkNoYXJhY3RlcmlzdGljcyA9IDAgUE9TSVggQVNDSUkKQ29tbWVudCA9IApEZXZpY2UgTWFqb3IgPSAKRGV2aWNlIE1pbm9yID0gCgo=",
+      "stderr_base64": ""
+    },
+    "payload.tar/test": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "t",
+        "/tmp/b01-5e68pkgf/fixtures/payload.tar",
+        "-y",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCAxMDI0MCBieXRlcyAoMTAgS2lCKQoKVGVzdGluZyBhcmNoaXZlOiAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9wYXlsb2FkLnRhcgotLQpQYXRoID0gL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvcGF5bG9hZC50YXIKVHlwZSA9IHRhcgpQaHlzaWNhbCBTaXplID0gMTAyNDAKSGVhZGVycyBTaXplID0gNjE0NApDb2RlIFBhZ2UgPSBVVEYtOApDaGFyYWN0ZXJpc3RpY3MgPSBQT1NJWCBBU0NJSQoKRXZlcnl0aGluZyBpcyBPawoKU2l6ZTogICAgICAgNDA5NgpDb21wcmVzc2VkOiAxMDI0MAo=",
+      "stderr_base64": ""
+    },
+    "payload.tar/extract": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "x",
+        "/tmp/b01-5e68pkgf/fixtures/payload.tar",
+        "-y",
+        "-o/tmp/b01-5e68pkgf/out-payload.tar",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCAxMDI0MCBieXRlcyAoMTAgS2lCKQoKRXh0cmFjdGluZyBhcmNoaXZlOiAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9wYXlsb2FkLnRhcgotLQpQYXRoID0gL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvcGF5bG9hZC50YXIKVHlwZSA9IHRhcgpQaHlzaWNhbCBTaXplID0gMTAyNDAKSGVhZGVycyBTaXplID0gNjE0NApDb2RlIFBhZ2UgPSBVVEYtOApDaGFyYWN0ZXJpc3RpY3MgPSBQT1NJWCBBU0NJSQoKRXZlcnl0aGluZyBpcyBPawoKU2l6ZTogICAgICAgNDA5NgpDb21wcmVzc2VkOiAxMDI0MAo=",
+      "stderr_base64": ""
+    },
+    "payload.gz/list": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "l",
+        "/tmp/b01-5e68pkgf/fixtures/payload.gz",
+        "-y",
+        "-slt",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCAzMjcgYnl0ZXMgKDEgS2lCKQoKTGlzdGluZyBhcmNoaXZlOiAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9wYXlsb2FkLmd6CgotLQpQYXRoID0gL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvcGF5bG9hZC5negpUeXBlID0gZ3ppcApIZWFkZXJzIFNpemUgPSAxMAoKLS0tLS0tLS0tLQpQYXRoID0gcGF5bG9hZApTaXplID0gNDA5NgpQYWNrZWQgU2l6ZSA9IDMyNwpNb2RpZmllZCA9IApIb3N0IE9TID0gVW5peApDUkMgPSBBMjkxMjA4MgoK",
+      "stderr_base64": ""
+    },
+    "payload.gz/test": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "t",
+        "/tmp/b01-5e68pkgf/fixtures/payload.gz",
+        "-y",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCAzMjcgYnl0ZXMgKDEgS2lCKQoKVGVzdGluZyBhcmNoaXZlOiAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9wYXlsb2FkLmd6Ci0tClBhdGggPSAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9wYXlsb2FkLmd6ClR5cGUgPSBnemlwCkhlYWRlcnMgU2l6ZSA9IDEwCgpFdmVyeXRoaW5nIGlzIE9rCgpTaXplOiAgICAgICA0MDk2CkNvbXByZXNzZWQ6IDMyNwo=",
+      "stderr_base64": ""
+    },
+    "payload.gz/extract": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "x",
+        "/tmp/b01-5e68pkgf/fixtures/payload.gz",
+        "-y",
+        "-o/tmp/b01-5e68pkgf/out-payload.gz",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCAzMjcgYnl0ZXMgKDEgS2lCKQoKRXh0cmFjdGluZyBhcmNoaXZlOiAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9wYXlsb2FkLmd6Ci0tClBhdGggPSAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9wYXlsb2FkLmd6ClR5cGUgPSBnemlwCkhlYWRlcnMgU2l6ZSA9IDEwCgpFdmVyeXRoaW5nIGlzIE9rCgpTaXplOiAgICAgICA0MDk2CkNvbXByZXNzZWQ6IDMyNwo=",
+      "stderr_base64": ""
+    },
+    "payload.bz2/list": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "l",
+        "/tmp/b01-5e68pkgf/fixtures/payload.bz2",
+        "-y",
+        "-slt",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCA2NTcgYnl0ZXMgKDEgS2lCKQoKTGlzdGluZyBhcmNoaXZlOiAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9wYXlsb2FkLmJ6MgoKLS0KUGF0aCA9IC90bXAvYjAxLTVlNjhwa2dmL2ZpeHR1cmVzL3BheWxvYWQuYnoyClR5cGUgPSBiemlwMgoKLS0tLS0tLS0tLQpTaXplID0gClBhY2tlZCBTaXplID0gCgo=",
+      "stderr_base64": ""
+    },
+    "payload.bz2/test": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "t",
+        "/tmp/b01-5e68pkgf/fixtures/payload.bz2",
+        "-y",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCA2NTcgYnl0ZXMgKDEgS2lCKQoKVGVzdGluZyBhcmNoaXZlOiAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9wYXlsb2FkLmJ6MgotLQpQYXRoID0gL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvcGF5bG9hZC5iejIKVHlwZSA9IGJ6aXAyCgpFdmVyeXRoaW5nIGlzIE9rCgpTaXplOiAgICAgICA0MDk2CkNvbXByZXNzZWQ6IDY1Nwo=",
+      "stderr_base64": ""
+    },
+    "payload.bz2/extract": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "x",
+        "/tmp/b01-5e68pkgf/fixtures/payload.bz2",
+        "-y",
+        "-o/tmp/b01-5e68pkgf/out-payload.bz2",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCA2NTcgYnl0ZXMgKDEgS2lCKQoKRXh0cmFjdGluZyBhcmNoaXZlOiAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9wYXlsb2FkLmJ6MgotLQpQYXRoID0gL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvcGF5bG9hZC5iejIKVHlwZSA9IGJ6aXAyCgpFdmVyeXRoaW5nIGlzIE9rCgpTaXplOiAgICAgICA0MDk2CkNvbXByZXNzZWQ6IDY1Nwo=",
+      "stderr_base64": ""
+    },
+    "payload.xz/list": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "l",
+        "/tmp/b01-5e68pkgf/fixtures/payload.xz",
+        "-y",
+        "-slt",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCAzMjQgYnl0ZXMgKDEgS2lCKQoKTGlzdGluZyBhcmNoaXZlOiAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9wYXlsb2FkLnh6CgotLQpQYXRoID0gL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvcGF5bG9hZC54egpUeXBlID0geHoKUGh5c2ljYWwgU2l6ZSA9IDMyNApNZXRob2QgPSBMWk1BMjoyMyBDUkM2NApTdHJlYW1zID0gMQpCbG9ja3MgPSAxCgotLS0tLS0tLS0tClNpemUgPSA0MDk2ClBhY2tlZCBTaXplID0gMzI0Ck1ldGhvZCA9IExaTUEyOjIzIENSQzY0Cgo=",
+      "stderr_base64": ""
+    },
+    "payload.xz/test": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "t",
+        "/tmp/b01-5e68pkgf/fixtures/payload.xz",
+        "-y",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCAzMjQgYnl0ZXMgKDEgS2lCKQoKVGVzdGluZyBhcmNoaXZlOiAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9wYXlsb2FkLnh6Ci0tClBhdGggPSAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9wYXlsb2FkLnh6ClR5cGUgPSB4egpQaHlzaWNhbCBTaXplID0gMzI0Ck1ldGhvZCA9IExaTUEyOjIzIENSQzY0ClN0cmVhbXMgPSAxCkJsb2NrcyA9IDEKCkV2ZXJ5dGhpbmcgaXMgT2sKClNpemU6ICAgICAgIDQwOTYKQ29tcHJlc3NlZDogMzI0Cg==",
+      "stderr_base64": ""
+    },
+    "payload.xz/extract": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "x",
+        "/tmp/b01-5e68pkgf/fixtures/payload.xz",
+        "-y",
+        "-o/tmp/b01-5e68pkgf/out-payload.xz",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCAzMjQgYnl0ZXMgKDEgS2lCKQoKRXh0cmFjdGluZyBhcmNoaXZlOiAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9wYXlsb2FkLnh6Ci0tClBhdGggPSAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9wYXlsb2FkLnh6ClR5cGUgPSB4egpQaHlzaWNhbCBTaXplID0gMzI0Ck1ldGhvZCA9IExaTUEyOjIzIENSQzY0ClN0cmVhbXMgPSAxCkJsb2NrcyA9IDEKCkV2ZXJ5dGhpbmcgaXMgT2sKClNpemU6ICAgICAgIDQwOTYKQ29tcHJlc3NlZDogMzI0Cg==",
+      "stderr_base64": ""
+    },
+    "payload.lzma/list": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "l",
+        "/tmp/b01-5e68pkgf/fixtures/payload.lzma",
+        "-y",
+        "-slt",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCAyNzcgYnl0ZXMgKDEgS2lCKQoKTGlzdGluZyBhcmNoaXZlOiAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9wYXlsb2FkLmx6bWEKCi0tClBhdGggPSAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9wYXlsb2FkLmx6bWEKVHlwZSA9IGx6bWEKTWV0aG9kID0gTFpNQToyMwoKLS0tLS0tLS0tLQpTaXplID0gClBhY2tlZCBTaXplID0gCk1ldGhvZCA9IExaTUE6MjMKCg==",
+      "stderr_base64": ""
+    },
+    "payload.lzma/test": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "t",
+        "/tmp/b01-5e68pkgf/fixtures/payload.lzma",
+        "-y",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCAyNzcgYnl0ZXMgKDEgS2lCKQoKVGVzdGluZyBhcmNoaXZlOiAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9wYXlsb2FkLmx6bWEKLS0KUGF0aCA9IC90bXAvYjAxLTVlNjhwa2dmL2ZpeHR1cmVzL3BheWxvYWQubHptYQpUeXBlID0gbHptYQpNZXRob2QgPSBMWk1BOjIzCgpFdmVyeXRoaW5nIGlzIE9rCgpTaXplOiAgICAgICAwCkNvbXByZXNzZWQ6IDI3Nwo=",
+      "stderr_base64": ""
+    },
+    "payload.lzma/extract": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "x",
+        "/tmp/b01-5e68pkgf/fixtures/payload.lzma",
+        "-y",
+        "-o/tmp/b01-5e68pkgf/out-payload.lzma",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCAyNzcgYnl0ZXMgKDEgS2lCKQoKRXh0cmFjdGluZyBhcmNoaXZlOiAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9wYXlsb2FkLmx6bWEKLS0KUGF0aCA9IC90bXAvYjAxLTVlNjhwa2dmL2ZpeHR1cmVzL3BheWxvYWQubHptYQpUeXBlID0gbHptYQpNZXRob2QgPSBMWk1BOjIzCgpFdmVyeXRoaW5nIGlzIE9rCgpTaXplOiAgICAgICA0MDk2CkNvbXByZXNzZWQ6IDI3Nwo=",
+      "stderr_base64": ""
+    },
+    "nested.tar.gz/list": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "l",
+        "/tmp/b01-5e68pkgf/fixtures/nested.tar.gz",
+        "-y",
+        "-slt",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCA0MjAgYnl0ZXMgKDEgS2lCKQoKTGlzdGluZyBhcmNoaXZlOiAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9uZXN0ZWQudGFyLmd6CgotLQpQYXRoID0gL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvbmVzdGVkLnRhci5negpUeXBlID0gZ3ppcApIZWFkZXJzIFNpemUgPSAxMAoKLS0tLS0tLS0tLQpQYXRoID0gbmVzdGVkLnRhcgpTaXplID0gMTAyNDAKUGFja2VkIFNpemUgPSA0MjAKTW9kaWZpZWQgPSAKSG9zdCBPUyA9IFVuaXgKQ1JDID0gODFEOUIyODIKCg==",
+      "stderr_base64": ""
+    },
+    "nested.tar.gz/test": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "t",
+        "/tmp/b01-5e68pkgf/fixtures/nested.tar.gz",
+        "-y",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCA0MjAgYnl0ZXMgKDEgS2lCKQoKVGVzdGluZyBhcmNoaXZlOiAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9uZXN0ZWQudGFyLmd6Ci0tClBhdGggPSAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9uZXN0ZWQudGFyLmd6ClR5cGUgPSBnemlwCkhlYWRlcnMgU2l6ZSA9IDEwCgpFdmVyeXRoaW5nIGlzIE9rCgpTaXplOiAgICAgICAxMDI0MApDb21wcmVzc2VkOiA0MjAK",
+      "stderr_base64": ""
+    },
+    "nested.tar.gz/extract": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "x",
+        "/tmp/b01-5e68pkgf/fixtures/nested.tar.gz",
+        "-y",
+        "-o/tmp/b01-5e68pkgf/out-nested.tar.gz",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCA0MjAgYnl0ZXMgKDEgS2lCKQoKRXh0cmFjdGluZyBhcmNoaXZlOiAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9uZXN0ZWQudGFyLmd6Ci0tClBhdGggPSAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9uZXN0ZWQudGFyLmd6ClR5cGUgPSBnemlwCkhlYWRlcnMgU2l6ZSA9IDEwCgpFdmVyeXRoaW5nIGlzIE9rCgpTaXplOiAgICAgICAxMDI0MApDb21wcmVzc2VkOiA0MjAK",
+      "stderr_base64": ""
+    },
+    "copy.7z/list": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "l",
+        "/tmp/b01-5e68pkgf/fixtures/copy.7z",
+        "-y",
+        "-slt",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCA0MjEwIGJ5dGVzICg1IEtpQikKCkxpc3RpbmcgYXJjaGl2ZTogL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvY29weS43egoKLS0KUGF0aCA9IC90bXAvYjAxLTVlNjhwa2dmL2ZpeHR1cmVzL2NvcHkuN3oKVHlwZSA9IDd6ClBoeXNpY2FsIFNpemUgPSA0MjEwCkhlYWRlcnMgU2l6ZSA9IDExNApNZXRob2QgPSBDb3B5ClNvbGlkID0gLQpCbG9ja3MgPSAxCgotLS0tLS0tLS0tClBhdGggPSBwYXlsb2FkLmJpbgpTaXplID0gNDA5NgpQYWNrZWQgU2l6ZSA9IDQwOTYKTW9kaWZpZWQgPSAKQXR0cmlidXRlcyA9IEEgLXJ3LXJ3LXItLQpDUkMgPSBBMjkxMjA4MgpFbmNyeXB0ZWQgPSAtCk1ldGhvZCA9IENvcHkKQmxvY2sgPSAwCgo=",
+      "stderr_base64": ""
+    },
+    "copy.7z/test": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "t",
+        "/tmp/b01-5e68pkgf/fixtures/copy.7z",
+        "-y",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCA0MjEwIGJ5dGVzICg1IEtpQikKClRlc3RpbmcgYXJjaGl2ZTogL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvY29weS43egotLQpQYXRoID0gL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvY29weS43egpUeXBlID0gN3oKUGh5c2ljYWwgU2l6ZSA9IDQyMTAKSGVhZGVycyBTaXplID0gMTE0Ck1ldGhvZCA9IENvcHkKU29saWQgPSAtCkJsb2NrcyA9IDEKCkV2ZXJ5dGhpbmcgaXMgT2sKClNpemU6ICAgICAgIDQwOTYKQ29tcHJlc3NlZDogNDIxMAo=",
+      "stderr_base64": ""
+    },
+    "copy.7z/extract": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "x",
+        "/tmp/b01-5e68pkgf/fixtures/copy.7z",
+        "-y",
+        "-o/tmp/b01-5e68pkgf/out-copy.7z",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCA0MjEwIGJ5dGVzICg1IEtpQikKCkV4dHJhY3RpbmcgYXJjaGl2ZTogL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvY29weS43egotLQpQYXRoID0gL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvY29weS43egpUeXBlID0gN3oKUGh5c2ljYWwgU2l6ZSA9IDQyMTAKSGVhZGVycyBTaXplID0gMTE0Ck1ldGhvZCA9IENvcHkKU29saWQgPSAtCkJsb2NrcyA9IDEKCkV2ZXJ5dGhpbmcgaXMgT2sKClNpemU6ICAgICAgIDQwOTYKQ29tcHJlc3NlZDogNDIxMAo=",
+      "stderr_base64": ""
+    },
+    "lzma2.7z/list": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "l",
+        "/tmp/b01-5e68pkgf/fixtures/lzma2.7z",
+        "-y",
+        "-slt",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCAzNzkgYnl0ZXMgKDEgS2lCKQoKTGlzdGluZyBhcmNoaXZlOiAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9sem1hMi43egoKLS0KUGF0aCA9IC90bXAvYjAxLTVlNjhwa2dmL2ZpeHR1cmVzL2x6bWEyLjd6ClR5cGUgPSA3egpQaHlzaWNhbCBTaXplID0gMzc5CkhlYWRlcnMgU2l6ZSA9IDExNApNZXRob2QgPSBMWk1BMjoxMgpTb2xpZCA9IC0KQmxvY2tzID0gMQoKLS0tLS0tLS0tLQpQYXRoID0gcGF5bG9hZC5iaW4KU2l6ZSA9IDQwOTYKUGFja2VkIFNpemUgPSAyNjUKTW9kaWZpZWQgPSAKQXR0cmlidXRlcyA9IEEgLXJ3LXJ3LXItLQpDUkMgPSBBMjkxMjA4MgpFbmNyeXB0ZWQgPSAtCk1ldGhvZCA9IExaTUEyOjEyCkJsb2NrID0gMAoK",
+      "stderr_base64": ""
+    },
+    "lzma2.7z/test": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "t",
+        "/tmp/b01-5e68pkgf/fixtures/lzma2.7z",
+        "-y",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCAzNzkgYnl0ZXMgKDEgS2lCKQoKVGVzdGluZyBhcmNoaXZlOiAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9sem1hMi43egotLQpQYXRoID0gL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvbHptYTIuN3oKVHlwZSA9IDd6ClBoeXNpY2FsIFNpemUgPSAzNzkKSGVhZGVycyBTaXplID0gMTE0Ck1ldGhvZCA9IExaTUEyOjEyClNvbGlkID0gLQpCbG9ja3MgPSAxCgpFdmVyeXRoaW5nIGlzIE9rCgpTaXplOiAgICAgICA0MDk2CkNvbXByZXNzZWQ6IDM3OQo=",
+      "stderr_base64": ""
+    },
+    "lzma2.7z/extract": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "x",
+        "/tmp/b01-5e68pkgf/fixtures/lzma2.7z",
+        "-y",
+        "-o/tmp/b01-5e68pkgf/out-lzma2.7z",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCAzNzkgYnl0ZXMgKDEgS2lCKQoKRXh0cmFjdGluZyBhcmNoaXZlOiAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9sem1hMi43egotLQpQYXRoID0gL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvbHptYTIuN3oKVHlwZSA9IDd6ClBoeXNpY2FsIFNpemUgPSAzNzkKSGVhZGVycyBTaXplID0gMTE0Ck1ldGhvZCA9IExaTUEyOjEyClNvbGlkID0gLQpCbG9ja3MgPSAxCgpFdmVyeXRoaW5nIGlzIE9rCgpTaXplOiAgICAgICA0MDk2CkNvbXByZXNzZWQ6IDM3OQo=",
+      "stderr_base64": ""
+    },
+    "volume.7z.001/list": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "l",
+        "/tmp/b01-5e68pkgf/fixtures/volume.7z.001",
+        "-y",
+        "-slt",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCAxMDI0IGJ5dGVzICgxIEtpQikKCkxpc3RpbmcgYXJjaGl2ZTogL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvdm9sdW1lLjd6LjAwMQoKLS0KUGF0aCA9IC90bXAvYjAxLTVlNjhwa2dmL2ZpeHR1cmVzL3ZvbHVtZS43ei4wMDEKVHlwZSA9IFNwbGl0ClBoeXNpY2FsIFNpemUgPSAxMDI0ClZvbHVtZXMgPSA1ClRvdGFsIFBoeXNpY2FsIFNpemUgPSA0MjEwCi0tLS0KUGF0aCA9IHZvbHVtZS43egpTaXplID0gNDIxMAotLQpQYXRoID0gdm9sdW1lLjd6ClR5cGUgPSA3egpQaHlzaWNhbCBTaXplID0gNDIxMApIZWFkZXJzIFNpemUgPSAxMTQKTWV0aG9kID0gQ29weQpTb2xpZCA9IC0KQmxvY2tzID0gMQoKLS0tLS0tLS0tLQpQYXRoID0gcGF5bG9hZC5iaW4KU2l6ZSA9IDQwOTYKUGFja2VkIFNpemUgPSA0MDk2Ck1vZGlmaWVkID0gCkF0dHJpYnV0ZXMgPSBBIC1ydy1ydy1yLS0KQ1JDID0gQTI5MTIwODIKRW5jcnlwdGVkID0gLQpNZXRob2QgPSBDb3B5CkJsb2NrID0gMAoK",
+      "stderr_base64": ""
+    },
+    "volume.7z.001/test": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "t",
+        "/tmp/b01-5e68pkgf/fixtures/volume.7z.001",
+        "-y",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCAxMDI0IGJ5dGVzICgxIEtpQikKClRlc3RpbmcgYXJjaGl2ZTogL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvdm9sdW1lLjd6LjAwMQotLQpQYXRoID0gL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvdm9sdW1lLjd6LjAwMQpUeXBlID0gU3BsaXQKUGh5c2ljYWwgU2l6ZSA9IDEwMjQKVm9sdW1lcyA9IDUKVG90YWwgUGh5c2ljYWwgU2l6ZSA9IDQyMTAKLS0tLQpQYXRoID0gdm9sdW1lLjd6ClNpemUgPSA0MjEwCi0tClBhdGggPSB2b2x1bWUuN3oKVHlwZSA9IDd6ClBoeXNpY2FsIFNpemUgPSA0MjEwCkhlYWRlcnMgU2l6ZSA9IDExNApNZXRob2QgPSBDb3B5ClNvbGlkID0gLQpCbG9ja3MgPSAxCgpFdmVyeXRoaW5nIGlzIE9rCgpTaXplOiAgICAgICA0MDk2CkNvbXByZXNzZWQ6IDQyMTAK",
+      "stderr_base64": ""
+    },
+    "volume.7z.001/extract": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "x",
+        "/tmp/b01-5e68pkgf/fixtures/volume.7z.001",
+        "-y",
+        "-o/tmp/b01-5e68pkgf/out-volume.7z.001",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCAxMDI0IGJ5dGVzICgxIEtpQikKCkV4dHJhY3RpbmcgYXJjaGl2ZTogL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvdm9sdW1lLjd6LjAwMQotLQpQYXRoID0gL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvdm9sdW1lLjd6LjAwMQpUeXBlID0gU3BsaXQKUGh5c2ljYWwgU2l6ZSA9IDEwMjQKVm9sdW1lcyA9IDUKVG90YWwgUGh5c2ljYWwgU2l6ZSA9IDQyMTAKLS0tLQpQYXRoID0gdm9sdW1lLjd6ClNpemUgPSA0MjEwCi0tClBhdGggPSB2b2x1bWUuN3oKVHlwZSA9IDd6ClBoeXNpY2FsIFNpemUgPSA0MjEwCkhlYWRlcnMgU2l6ZSA9IDExNApNZXRob2QgPSBDb3B5ClNvbGlkID0gLQpCbG9ja3MgPSAxCgpFdmVyeXRoaW5nIGlzIE9rCgpTaXplOiAgICAgICA0MDk2CkNvbXByZXNzZWQ6IDQyMTAK",
+      "stderr_base64": ""
+    },
+    "header.7z/list": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "l",
+        "/tmp/b01-5e68pkgf/fixtures/header.7z",
+        "-y",
+        "-slt",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 2,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCA0MjEwIGJ5dGVzICg1IEtpQikKCkxpc3RpbmcgYXJjaGl2ZTogL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvaGVhZGVyLjd6CgoKRXJyb3JzOiAxCg==",
+      "stderr_base64": "CkVSUk9SOiAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9oZWFkZXIuN3ogOiAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9oZWFkZXIuN3oKT3BlbiBFUlJPUjogQ2Fubm90IG9wZW4gdGhlIGZpbGUgYXMgWzd6XSBhcmNoaXZlCgoKRVJST1JTOgpJcyBub3QgYXJjaGl2ZQoK"
+    },
+    "header.7z/test": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "t",
+        "/tmp/b01-5e68pkgf/fixtures/header.7z",
+        "-y",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 2,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCA0MjEwIGJ5dGVzICg1IEtpQikKClRlc3RpbmcgYXJjaGl2ZTogL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvaGVhZGVyLjd6CgpDYW4ndCBvcGVuIGFzIGFyY2hpdmU6IDEKRmlsZXM6IDAKU2l6ZTogICAgICAgMApDb21wcmVzc2VkOiAwCg==",
+      "stderr_base64": "RVJST1I6IC90bXAvYjAxLTVlNjhwa2dmL2ZpeHR1cmVzL2hlYWRlci43egovdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9oZWFkZXIuN3oKT3BlbiBFUlJPUjogQ2Fubm90IG9wZW4gdGhlIGZpbGUgYXMgWzd6XSBhcmNoaXZlCgoKRVJST1JTOgpJcyBub3QgYXJjaGl2ZQo="
+    },
+    "header.7z/extract": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "x",
+        "/tmp/b01-5e68pkgf/fixtures/header.7z",
+        "-y",
+        "-o/tmp/b01-5e68pkgf/out-header.7z",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 2,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCA0MjEwIGJ5dGVzICg1IEtpQikKCkV4dHJhY3RpbmcgYXJjaGl2ZTogL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvaGVhZGVyLjd6CgpDYW4ndCBvcGVuIGFzIGFyY2hpdmU6IDEKRmlsZXM6IDAKU2l6ZTogICAgICAgMApDb21wcmVzc2VkOiAwCg==",
+      "stderr_base64": "RVJST1I6IC90bXAvYjAxLTVlNjhwa2dmL2ZpeHR1cmVzL2hlYWRlci43egovdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9oZWFkZXIuN3oKT3BlbiBFUlJPUjogQ2Fubm90IG9wZW4gdGhlIGZpbGUgYXMgWzd6XSBhcmNoaXZlCgoKRVJST1JTOgpJcyBub3QgYXJjaGl2ZQo="
+    },
+    "truncated.7z/list": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "l",
+        "/tmp/b01-5e68pkgf/fixtures/truncated.7z",
+        "-y",
+        "-slt",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 2,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCAxNiBieXRlcyAoMSBLaUIpCgpMaXN0aW5nIGFyY2hpdmU6IC90bXAvYjAxLTVlNjhwa2dmL2ZpeHR1cmVzL3RydW5jYXRlZC43egoKCkVycm9yczogMQo=",
+      "stderr_base64": "CkVSUk9SOiAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy90cnVuY2F0ZWQuN3ogOiAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy90cnVuY2F0ZWQuN3oKT3BlbiBFUlJPUjogQ2Fubm90IG9wZW4gdGhlIGZpbGUgYXMgWzd6XSBhcmNoaXZlCgoKRVJST1JTOgpJcyBub3QgYXJjaGl2ZQoK"
+    },
+    "truncated.7z/test": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "t",
+        "/tmp/b01-5e68pkgf/fixtures/truncated.7z",
+        "-y",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 2,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCAxNiBieXRlcyAoMSBLaUIpCgpUZXN0aW5nIGFyY2hpdmU6IC90bXAvYjAxLTVlNjhwa2dmL2ZpeHR1cmVzL3RydW5jYXRlZC43egoKQ2FuJ3Qgb3BlbiBhcyBhcmNoaXZlOiAxCkZpbGVzOiAwClNpemU6ICAgICAgIDAKQ29tcHJlc3NlZDogMAo=",
+      "stderr_base64": "RVJST1I6IC90bXAvYjAxLTVlNjhwa2dmL2ZpeHR1cmVzL3RydW5jYXRlZC43egovdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy90cnVuY2F0ZWQuN3oKT3BlbiBFUlJPUjogQ2Fubm90IG9wZW4gdGhlIGZpbGUgYXMgWzd6XSBhcmNoaXZlCgoKRVJST1JTOgpJcyBub3QgYXJjaGl2ZQo="
+    },
+    "truncated.7z/extract": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "x",
+        "/tmp/b01-5e68pkgf/fixtures/truncated.7z",
+        "-y",
+        "-o/tmp/b01-5e68pkgf/out-truncated.7z",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 2,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCAxNiBieXRlcyAoMSBLaUIpCgpFeHRyYWN0aW5nIGFyY2hpdmU6IC90bXAvYjAxLTVlNjhwa2dmL2ZpeHR1cmVzL3RydW5jYXRlZC43egoKQ2FuJ3Qgb3BlbiBhcyBhcmNoaXZlOiAxCkZpbGVzOiAwClNpemU6ICAgICAgIDAKQ29tcHJlc3NlZDogMAo=",
+      "stderr_base64": "RVJST1I6IC90bXAvYjAxLTVlNjhwa2dmL2ZpeHR1cmVzL3RydW5jYXRlZC43egovdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy90cnVuY2F0ZWQuN3oKT3BlbiBFUlJPUjogQ2Fubm90IG9wZW4gdGhlIGZpbGUgYXMgWzd6XSBhcmNoaXZlCgoKRVJST1JTOgpJcyBub3QgYXJjaGl2ZQo="
+    },
+    "next-header.7z/list": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "l",
+        "/tmp/b01-5e68pkgf/fixtures/next-header.7z",
+        "-y",
+        "-slt",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 2,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCA0MjEwIGJ5dGVzICg1IEtpQikKCkxpc3RpbmcgYXJjaGl2ZTogL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvbmV4dC1oZWFkZXIuN3oKCgpFcnJvcnM6IDEK",
+      "stderr_base64": "CkVSUk9SOiAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9uZXh0LWhlYWRlci43eiA6IC90bXAvYjAxLTVlNjhwa2dmL2ZpeHR1cmVzL25leHQtaGVhZGVyLjd6Ck9wZW4gRVJST1I6IENhbm5vdCBvcGVuIHRoZSBmaWxlIGFzIFs3el0gYXJjaGl2ZQoKCkVSUk9SUzoKSGVhZGVycyBFcnJvcgoK"
+    },
+    "next-header.7z/test": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "t",
+        "/tmp/b01-5e68pkgf/fixtures/next-header.7z",
+        "-y",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 2,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCA0MjEwIGJ5dGVzICg1IEtpQikKClRlc3RpbmcgYXJjaGl2ZTogL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvbmV4dC1oZWFkZXIuN3oKCkNhbid0IG9wZW4gYXMgYXJjaGl2ZTogMQpGaWxlczogMApTaXplOiAgICAgICAwCkNvbXByZXNzZWQ6IDAK",
+      "stderr_base64": "RVJST1I6IC90bXAvYjAxLTVlNjhwa2dmL2ZpeHR1cmVzL25leHQtaGVhZGVyLjd6Ci90bXAvYjAxLTVlNjhwa2dmL2ZpeHR1cmVzL25leHQtaGVhZGVyLjd6Ck9wZW4gRVJST1I6IENhbm5vdCBvcGVuIHRoZSBmaWxlIGFzIFs3el0gYXJjaGl2ZQoKCkVSUk9SUzoKSGVhZGVycyBFcnJvcgo="
+    },
+    "next-header.7z/extract": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "x",
+        "/tmp/b01-5e68pkgf/fixtures/next-header.7z",
+        "-y",
+        "-o/tmp/b01-5e68pkgf/out-next-header.7z",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 2,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCA0MjEwIGJ5dGVzICg1IEtpQikKCkV4dHJhY3RpbmcgYXJjaGl2ZTogL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvbmV4dC1oZWFkZXIuN3oKCkNhbid0IG9wZW4gYXMgYXJjaGl2ZTogMQpGaWxlczogMApTaXplOiAgICAgICAwCkNvbXByZXNzZWQ6IDAK",
+      "stderr_base64": "RVJST1I6IC90bXAvYjAxLTVlNjhwa2dmL2ZpeHR1cmVzL25leHQtaGVhZGVyLjd6Ci90bXAvYjAxLTVlNjhwa2dmL2ZpeHR1cmVzL25leHQtaGVhZGVyLjd6Ck9wZW4gRVJST1I6IENhbm5vdCBvcGVuIHRoZSBmaWxlIGFzIFs3el0gYXJjaGl2ZQoKCkVSUk9SUzoKSGVhZGVycyBFcnJvcgo="
+    },
+    "tail-truncated.7z/list": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "l",
+        "/tmp/b01-5e68pkgf/fixtures/tail-truncated.7z",
+        "-y",
+        "-slt",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 2,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCA0MTk0IGJ5dGVzICg1IEtpQikKCkxpc3RpbmcgYXJjaGl2ZTogL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvdGFpbC10cnVuY2F0ZWQuN3oKCgpFcnJvcnM6IDEK",
+      "stderr_base64": "CkVSUk9SOiAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy90YWlsLXRydW5jYXRlZC43eiA6IC90bXAvYjAxLTVlNjhwa2dmL2ZpeHR1cmVzL3RhaWwtdHJ1bmNhdGVkLjd6Ck9wZW4gRVJST1I6IENhbm5vdCBvcGVuIHRoZSBmaWxlIGFzIFs3el0gYXJjaGl2ZQoKCkVSUk9SUzoKVW5leHBlY3RlZCBlbmQgb2YgYXJjaGl2ZQoK"
+    },
+    "tail-truncated.7z/test": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "t",
+        "/tmp/b01-5e68pkgf/fixtures/tail-truncated.7z",
+        "-y",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 2,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCA0MTk0IGJ5dGVzICg1IEtpQikKClRlc3RpbmcgYXJjaGl2ZTogL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvdGFpbC10cnVuY2F0ZWQuN3oKCkNhbid0IG9wZW4gYXMgYXJjaGl2ZTogMQpGaWxlczogMApTaXplOiAgICAgICAwCkNvbXByZXNzZWQ6IDAK",
+      "stderr_base64": "RVJST1I6IC90bXAvYjAxLTVlNjhwa2dmL2ZpeHR1cmVzL3RhaWwtdHJ1bmNhdGVkLjd6Ci90bXAvYjAxLTVlNjhwa2dmL2ZpeHR1cmVzL3RhaWwtdHJ1bmNhdGVkLjd6Ck9wZW4gRVJST1I6IENhbm5vdCBvcGVuIHRoZSBmaWxlIGFzIFs3el0gYXJjaGl2ZQoKCkVSUk9SUzoKVW5leHBlY3RlZCBlbmQgb2YgYXJjaGl2ZQo="
+    },
+    "tail-truncated.7z/extract": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "x",
+        "/tmp/b01-5e68pkgf/fixtures/tail-truncated.7z",
+        "-y",
+        "-o/tmp/b01-5e68pkgf/out-tail-truncated.7z",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 2,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCA0MTk0IGJ5dGVzICg1IEtpQikKCkV4dHJhY3RpbmcgYXJjaGl2ZTogL3RtcC9iMDEtNWU2OHBrZ2YvZml4dHVyZXMvdGFpbC10cnVuY2F0ZWQuN3oKCkNhbid0IG9wZW4gYXMgYXJjaGl2ZTogMQpGaWxlczogMApTaXplOiAgICAgICAwCkNvbXByZXNzZWQ6IDAK",
+      "stderr_base64": "RVJST1I6IC90bXAvYjAxLTVlNjhwa2dmL2ZpeHR1cmVzL3RhaWwtdHJ1bmNhdGVkLjd6Ci90bXAvYjAxLTVlNjhwa2dmL2ZpeHR1cmVzL3RhaWwtdHJ1bmNhdGVkLjd6Ck9wZW4gRVJST1I6IENhbm5vdCBvcGVuIHRoZSBmaWxlIGFzIFs3el0gYXJjaGl2ZQoKCkVSUk9SUzoKVW5leHBlY3RlZCBlbmQgb2YgYXJjaGl2ZQo="
+    },
+    "missing-volume/l": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "l",
+        "/tmp/b01-5e68pkgf/missing/volume.7z.001",
+        "-y",
+        "-slt",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 2,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCAxMDI0IGJ5dGVzICgxIEtpQikKCkxpc3RpbmcgYXJjaGl2ZTogL3RtcC9iMDEtNWU2OHBrZ2YvbWlzc2luZy92b2x1bWUuN3ouMDAxCgoKRXJyb3JzOiAxCg==",
+      "stderr_base64": "CkVSUk9SOiAvdG1wL2IwMS01ZTY4cGtnZi9taXNzaW5nL3ZvbHVtZS43ei4wMDEgOiB2b2x1bWUuN3oKT3BlbiBFUlJPUjogQ2Fubm90IG9wZW4gdGhlIGZpbGUgYXMgWzd6XSBhcmNoaXZlCgoKRVJST1JTOgpVbmV4cGVjdGVkIGVuZCBvZiBhcmNoaXZlCgo="
+    },
+    "missing-volume/t": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "t",
+        "/tmp/b01-5e68pkgf/missing/volume.7z.001",
+        "-y",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 2,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCAxMDI0IGJ5dGVzICgxIEtpQikKClRlc3RpbmcgYXJjaGl2ZTogL3RtcC9iMDEtNWU2OHBrZ2YvbWlzc2luZy92b2x1bWUuN3ouMDAxCgpDYW4ndCBvcGVuIGFzIGFyY2hpdmU6IDEKRmlsZXM6IDAKU2l6ZTogICAgICAgMApDb21wcmVzc2VkOiAwCg==",
+      "stderr_base64": "RVJST1I6IC90bXAvYjAxLTVlNjhwa2dmL21pc3Npbmcvdm9sdW1lLjd6LjAwMQp2b2x1bWUuN3oKT3BlbiBFUlJPUjogQ2Fubm90IG9wZW4gdGhlIGZpbGUgYXMgWzd6XSBhcmNoaXZlCgoKRVJST1JTOgpVbmV4cGVjdGVkIGVuZCBvZiBhcmNoaXZlCg=="
+    },
+    "missing-volume/x": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "x",
+        "/tmp/b01-5e68pkgf/missing/volume.7z.001",
+        "-y",
+        "-o/tmp/b01-5e68pkgf/missing-out",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 2,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCAxMDI0IGJ5dGVzICgxIEtpQikKCkV4dHJhY3RpbmcgYXJjaGl2ZTogL3RtcC9iMDEtNWU2OHBrZ2YvbWlzc2luZy92b2x1bWUuN3ouMDAxCgpDYW4ndCBvcGVuIGFzIGFyY2hpdmU6IDEKRmlsZXM6IDAKU2l6ZTogICAgICAgMApDb21wcmVzc2VkOiAwCg==",
+      "stderr_base64": "RVJST1I6IC90bXAvYjAxLTVlNjhwa2dmL21pc3Npbmcvdm9sdW1lLjd6LjAwMQp2b2x1bWUuN3oKT3BlbiBFUlJPUjogQ2Fubm90IG9wZW4gdGhlIGZpbGUgYXMgWzd6XSBhcmNoaXZlCgoKRVJST1JTOgpVbmV4cGVjdGVkIGVuZCBvZiBhcmNoaXZlCg=="
+    },
+    "nested/stage1": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "x",
+        "/tmp/b01-5e68pkgf/fixtures/nested.tar.gz",
+        "-y",
+        "-o/tmp/b01-5e68pkgf/nested-stage1",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCA0MjAgYnl0ZXMgKDEgS2lCKQoKRXh0cmFjdGluZyBhcmNoaXZlOiAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9uZXN0ZWQudGFyLmd6Ci0tClBhdGggPSAvdG1wL2IwMS01ZTY4cGtnZi9maXh0dXJlcy9uZXN0ZWQudGFyLmd6ClR5cGUgPSBnemlwCkhlYWRlcnMgU2l6ZSA9IDEwCgpFdmVyeXRoaW5nIGlzIE9rCgpTaXplOiAgICAgICAxMDI0MApDb21wcmVzc2VkOiA0MjAK",
+      "stderr_base64": ""
+    },
+    "nested/stage2": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "x",
+        "/tmp/b01-5e68pkgf/nested-stage1/nested.tar",
+        "-y",
+        "-o/tmp/b01-5e68pkgf/nested-stage2",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCAxMDI0MCBieXRlcyAoMTAgS2lCKQoKRXh0cmFjdGluZyBhcmNoaXZlOiAvdG1wL2IwMS01ZTY4cGtnZi9uZXN0ZWQtc3RhZ2UxL25lc3RlZC50YXIKLS0KUGF0aCA9IC90bXAvYjAxLTVlNjhwa2dmL25lc3RlZC1zdGFnZTEvbmVzdGVkLnRhcgpUeXBlID0gdGFyClBoeXNpY2FsIFNpemUgPSAxMDI0MApIZWFkZXJzIFNpemUgPSA2MTQ0CkNvZGUgUGFnZSA9IFVURi04CkNoYXJhY3RlcmlzdGljcyA9IFBPU0lYIEFTQ0lJCgpFdmVyeXRoaW5nIGlzIE9rCgpTaXplOiAgICAgICA0MDk2CkNvbXByZXNzZWQ6IDEwMjQwCg==",
+      "stderr_base64": ""
+    },
+    "create/7z": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "a",
+        "-t7z",
+        "/tmp/b01-5e68pkgf/created.7z",
+        "payload.bin",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlOgoxIGZpbGUsIDQwOTYgYnl0ZXMgKDQgS2lCKQoKQ3JlYXRpbmcgYXJjaGl2ZTogL3RtcC9iMDEtNWU2OHBrZ2YvY3JlYXRlZC43egoKQWRkIG5ldyBkYXRhIHRvIGFyY2hpdmU6IDEgZmlsZSwgNDA5NiBieXRlcyAoNCBLaUIpCgoKRmlsZXMgcmVhZCBmcm9tIGRpc2s6IDEKQXJjaGl2ZSBzaXplOiAzOTUgYnl0ZXMgKDEgS2lCKQpFdmVyeXRoaW5nIGlzIE9rCg==",
+      "stderr_base64": ""
+    },
+    "created-test/7z": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "t",
+        "/tmp/b01-5e68pkgf/created.7z",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCAzOTUgYnl0ZXMgKDEgS2lCKQoKVGVzdGluZyBhcmNoaXZlOiAvdG1wL2IwMS01ZTY4cGtnZi9jcmVhdGVkLjd6Ci0tClBhdGggPSAvdG1wL2IwMS01ZTY4cGtnZi9jcmVhdGVkLjd6ClR5cGUgPSA3egpQaHlzaWNhbCBTaXplID0gMzk1CkhlYWRlcnMgU2l6ZSA9IDEzMApNZXRob2QgPSBMWk1BMjoxMgpTb2xpZCA9IC0KQmxvY2tzID0gMQoKRXZlcnl0aGluZyBpcyBPawoKU2l6ZTogICAgICAgNDA5NgpDb21wcmVzc2VkOiAzOTUK",
+      "stderr_base64": ""
+    },
+    "created-extract/7z": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "x",
+        "/tmp/b01-5e68pkgf/created.7z",
+        "-y",
+        "-o/tmp/b01-5e68pkgf/created-out-7z",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCAzOTUgYnl0ZXMgKDEgS2lCKQoKRXh0cmFjdGluZyBhcmNoaXZlOiAvdG1wL2IwMS01ZTY4cGtnZi9jcmVhdGVkLjd6Ci0tClBhdGggPSAvdG1wL2IwMS01ZTY4cGtnZi9jcmVhdGVkLjd6ClR5cGUgPSA3egpQaHlzaWNhbCBTaXplID0gMzk1CkhlYWRlcnMgU2l6ZSA9IDEzMApNZXRob2QgPSBMWk1BMjoxMgpTb2xpZCA9IC0KQmxvY2tzID0gMQoKRXZlcnl0aGluZyBpcyBPawoKU2l6ZTogICAgICAgNDA5NgpDb21wcmVzc2VkOiAzOTUK",
+      "stderr_base64": ""
+    },
+    "create/zip": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "a",
+        "-tzip",
+        "/tmp/b01-5e68pkgf/created.zip",
+        "payload.bin",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlOgoxIGZpbGUsIDQwOTYgYnl0ZXMgKDQgS2lCKQoKQ3JlYXRpbmcgYXJjaGl2ZTogL3RtcC9iMDEtNWU2OHBrZ2YvY3JlYXRlZC56aXAKCkFkZCBuZXcgZGF0YSB0byBhcmNoaXZlOiAxIGZpbGUsIDQwOTYgYnl0ZXMgKDQgS2lCKQoKCkZpbGVzIHJlYWQgZnJvbSBkaXNrOiAxCkFyY2hpdmUgc2l6ZTogNDcwIGJ5dGVzICgxIEtpQikKRXZlcnl0aGluZyBpcyBPawo=",
+      "stderr_base64": ""
+    },
+    "created-test/zip": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "t",
+        "/tmp/b01-5e68pkgf/created.zip",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCA0NzAgYnl0ZXMgKDEgS2lCKQoKVGVzdGluZyBhcmNoaXZlOiAvdG1wL2IwMS01ZTY4cGtnZi9jcmVhdGVkLnppcAotLQpQYXRoID0gL3RtcC9iMDEtNWU2OHBrZ2YvY3JlYXRlZC56aXAKVHlwZSA9IHppcApQaHlzaWNhbCBTaXplID0gNDcwCgpFdmVyeXRoaW5nIGlzIE9rCgpTaXplOiAgICAgICA0MDk2CkNvbXByZXNzZWQ6IDQ3MAo=",
+      "stderr_base64": ""
+    },
+    "created-extract/zip": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "x",
+        "/tmp/b01-5e68pkgf/created.zip",
+        "-y",
+        "-o/tmp/b01-5e68pkgf/created-out-zip",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCA0NzAgYnl0ZXMgKDEgS2lCKQoKRXh0cmFjdGluZyBhcmNoaXZlOiAvdG1wL2IwMS01ZTY4cGtnZi9jcmVhdGVkLnppcAotLQpQYXRoID0gL3RtcC9iMDEtNWU2OHBrZ2YvY3JlYXRlZC56aXAKVHlwZSA9IHppcApQaHlzaWNhbCBTaXplID0gNDcwCgpFdmVyeXRoaW5nIGlzIE9rCgpTaXplOiAgICAgICA0MDk2CkNvbXByZXNzZWQ6IDQ3MAo=",
+      "stderr_base64": ""
+    },
+    "create/tar": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "a",
+        "-ttar",
+        "/tmp/b01-5e68pkgf/created.tar",
+        "payload.bin",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlOgoxIGZpbGUsIDQwOTYgYnl0ZXMgKDQgS2lCKQoKQ3JlYXRpbmcgYXJjaGl2ZTogL3RtcC9iMDEtNWU2OHBrZ2YvY3JlYXRlZC50YXIKCkFkZCBuZXcgZGF0YSB0byBhcmNoaXZlOiAxIGZpbGUsIDQwOTYgYnl0ZXMgKDQgS2lCKQoKCkZpbGVzIHJlYWQgZnJvbSBkaXNrOiAxCkFyY2hpdmUgc2l6ZTogNTYzMiBieXRlcyAoNiBLaUIpCkV2ZXJ5dGhpbmcgaXMgT2sK",
+      "stderr_base64": ""
+    },
+    "created-test/tar": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "t",
+        "/tmp/b01-5e68pkgf/created.tar",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCA1NjMyIGJ5dGVzICg2IEtpQikKClRlc3RpbmcgYXJjaGl2ZTogL3RtcC9iMDEtNWU2OHBrZ2YvY3JlYXRlZC50YXIKLS0KUGF0aCA9IC90bXAvYjAxLTVlNjhwa2dmL2NyZWF0ZWQudGFyClR5cGUgPSB0YXIKUGh5c2ljYWwgU2l6ZSA9IDU2MzIKSGVhZGVycyBTaXplID0gMTUzNgpDb2RlIFBhZ2UgPSBVVEYtOApDaGFyYWN0ZXJpc3RpY3MgPSBHTlUgQVNDSUkKCkV2ZXJ5dGhpbmcgaXMgT2sKClNpemU6ICAgICAgIDQwOTYKQ29tcHJlc3NlZDogNTYzMgo=",
+      "stderr_base64": ""
+    },
+    "created-extract/tar": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "x",
+        "/tmp/b01-5e68pkgf/created.tar",
+        "-y",
+        "-o/tmp/b01-5e68pkgf/created-out-tar",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCA1NjMyIGJ5dGVzICg2IEtpQikKCkV4dHJhY3RpbmcgYXJjaGl2ZTogL3RtcC9iMDEtNWU2OHBrZ2YvY3JlYXRlZC50YXIKLS0KUGF0aCA9IC90bXAvYjAxLTVlNjhwa2dmL2NyZWF0ZWQudGFyClR5cGUgPSB0YXIKUGh5c2ljYWwgU2l6ZSA9IDU2MzIKSGVhZGVycyBTaXplID0gMTUzNgpDb2RlIFBhZ2UgPSBVVEYtOApDaGFyYWN0ZXJpc3RpY3MgPSBHTlUgQVNDSUkKCkV2ZXJ5dGhpbmcgaXMgT2sKClNpemU6ICAgICAgIDQwOTYKQ29tcHJlc3NlZDogNTYzMgo=",
+      "stderr_base64": ""
+    },
+    "create/gzip": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "a",
+        "-tgzip",
+        "/tmp/b01-5e68pkgf/created.gzip",
+        "payload.bin",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlOgoxIGZpbGUsIDQwOTYgYnl0ZXMgKDQgS2lCKQoKQ3JlYXRpbmcgYXJjaGl2ZTogL3RtcC9iMDEtNWU2OHBrZ2YvY3JlYXRlZC5nemlwCgpBZGQgbmV3IGRhdGEgdG8gYXJjaGl2ZTogMSBmaWxlLCA0MDk2IGJ5dGVzICg0IEtpQikKCgpGaWxlcyByZWFkIGZyb20gZGlzazogMQpBcmNoaXZlIHNpemU6IDM0NCBieXRlcyAoMSBLaUIpCkV2ZXJ5dGhpbmcgaXMgT2sK",
+      "stderr_base64": ""
+    },
+    "created-test/gzip": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "t",
+        "/tmp/b01-5e68pkgf/created.gzip",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCAzNDQgYnl0ZXMgKDEgS2lCKQoKVGVzdGluZyBhcmNoaXZlOiAvdG1wL2IwMS01ZTY4cGtnZi9jcmVhdGVkLmd6aXAKLS0KUGF0aCA9IC90bXAvYjAxLTVlNjhwa2dmL2NyZWF0ZWQuZ3ppcApUeXBlID0gZ3ppcApIZWFkZXJzIFNpemUgPSAyMgoKRXZlcnl0aGluZyBpcyBPawoKU2l6ZTogICAgICAgNDA5NgpDb21wcmVzc2VkOiAzNDQK",
+      "stderr_base64": ""
+    },
+    "created-extract/gzip": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "x",
+        "/tmp/b01-5e68pkgf/created.gzip",
+        "-y",
+        "-o/tmp/b01-5e68pkgf/created-out-gzip",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCAzNDQgYnl0ZXMgKDEgS2lCKQoKRXh0cmFjdGluZyBhcmNoaXZlOiAvdG1wL2IwMS01ZTY4cGtnZi9jcmVhdGVkLmd6aXAKLS0KUGF0aCA9IC90bXAvYjAxLTVlNjhwa2dmL2NyZWF0ZWQuZ3ppcApUeXBlID0gZ3ppcApIZWFkZXJzIFNpemUgPSAyMgoKRXZlcnl0aGluZyBpcyBPawoKU2l6ZTogICAgICAgNDA5NgpDb21wcmVzc2VkOiAzNDQK",
+      "stderr_base64": ""
+    },
+    "create/bzip2": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "a",
+        "-tbzip2",
+        "/tmp/b01-5e68pkgf/created.bzip2",
+        "payload.bin",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlOgoxIGZpbGUsIDQwOTYgYnl0ZXMgKDQgS2lCKQoKQ3JlYXRpbmcgYXJjaGl2ZTogL3RtcC9iMDEtNWU2OHBrZ2YvY3JlYXRlZC5iemlwMgoKQWRkIG5ldyBkYXRhIHRvIGFyY2hpdmU6IDEgZmlsZSwgNDA5NiBieXRlcyAoNCBLaUIpCgoKRmlsZXMgcmVhZCBmcm9tIGRpc2s6IDEKQXJjaGl2ZSBzaXplOiA2NTMgYnl0ZXMgKDEgS2lCKQpFdmVyeXRoaW5nIGlzIE9rCg==",
+      "stderr_base64": ""
+    },
+    "created-test/bzip2": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "t",
+        "/tmp/b01-5e68pkgf/created.bzip2",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCA2NTMgYnl0ZXMgKDEgS2lCKQoKVGVzdGluZyBhcmNoaXZlOiAvdG1wL2IwMS01ZTY4cGtnZi9jcmVhdGVkLmJ6aXAyCi0tClBhdGggPSAvdG1wL2IwMS01ZTY4cGtnZi9jcmVhdGVkLmJ6aXAyClR5cGUgPSBiemlwMgoKRXZlcnl0aGluZyBpcyBPawoKU2l6ZTogICAgICAgNDA5NgpDb21wcmVzc2VkOiA2NTMK",
+      "stderr_base64": ""
+    },
+    "created-extract/bzip2": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "x",
+        "/tmp/b01-5e68pkgf/created.bzip2",
+        "-y",
+        "-o/tmp/b01-5e68pkgf/created-out-bzip2",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCA2NTMgYnl0ZXMgKDEgS2lCKQoKRXh0cmFjdGluZyBhcmNoaXZlOiAvdG1wL2IwMS01ZTY4cGtnZi9jcmVhdGVkLmJ6aXAyCi0tClBhdGggPSAvdG1wL2IwMS01ZTY4cGtnZi9jcmVhdGVkLmJ6aXAyClR5cGUgPSBiemlwMgoKRXZlcnl0aGluZyBpcyBPawoKU2l6ZTogICAgICAgNDA5NgpDb21wcmVzc2VkOiA2NTMK",
+      "stderr_base64": ""
+    },
+    "create/xz": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "a",
+        "-txz",
+        "/tmp/b01-5e68pkgf/created.xz",
+        "payload.bin",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlOgoxIGZpbGUsIDQwOTYgYnl0ZXMgKDQgS2lCKQoKQ3JlYXRpbmcgYXJjaGl2ZTogL3RtcC9iMDEtNWU2OHBrZ2YvY3JlYXRlZC54egoKQWRkIG5ldyBkYXRhIHRvIGFyY2hpdmU6IDEgZmlsZSwgNDA5NiBieXRlcyAoNCBLaUIpCgoKRmlsZXMgcmVhZCBmcm9tIGRpc2s6IDEKQXJjaGl2ZSBzaXplOiAzMjAgYnl0ZXMgKDEgS2lCKQpFdmVyeXRoaW5nIGlzIE9rCg==",
+      "stderr_base64": ""
+    },
+    "created-test/xz": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "t",
+        "/tmp/b01-5e68pkgf/created.xz",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCAzMjAgYnl0ZXMgKDEgS2lCKQoKVGVzdGluZyBhcmNoaXZlOiAvdG1wL2IwMS01ZTY4cGtnZi9jcmVhdGVkLnh6Ci0tClBhdGggPSAvdG1wL2IwMS01ZTY4cGtnZi9jcmVhdGVkLnh6ClR5cGUgPSB4egpQaHlzaWNhbCBTaXplID0gMzIwCk1ldGhvZCA9IExaTUEyOjEyIENSQzMyClN0cmVhbXMgPSAxCkJsb2NrcyA9IDEKCkV2ZXJ5dGhpbmcgaXMgT2sKClNpemU6ICAgICAgIDQwOTYKQ29tcHJlc3NlZDogMzIwCg==",
+      "stderr_base64": ""
+    },
+    "created-extract/xz": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "x",
+        "/tmp/b01-5e68pkgf/created.xz",
+        "-y",
+        "-o/tmp/b01-5e68pkgf/created-out-xz",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCAzMjAgYnl0ZXMgKDEgS2lCKQoKRXh0cmFjdGluZyBhcmNoaXZlOiAvdG1wL2IwMS01ZTY4cGtnZi9jcmVhdGVkLnh6Ci0tClBhdGggPSAvdG1wL2IwMS01ZTY4cGtnZi9jcmVhdGVkLnh6ClR5cGUgPSB4egpQaHlzaWNhbCBTaXplID0gMzIwCk1ldGhvZCA9IExaTUEyOjEyIENSQzMyClN0cmVhbXMgPSAxCkJsb2NrcyA9IDEKCkV2ZXJ5dGhpbmcgaXMgT2sKClNpemU6ICAgICAgIDQwOTYKQ29tcHJlc3NlZDogMzIwCg==",
+      "stderr_base64": ""
+    },
+    "create/wim": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "a",
+        "-twim",
+        "/tmp/b01-5e68pkgf/created.wim",
+        "payload.bin",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlOgoxIGZpbGUsIDQwOTYgYnl0ZXMgKDQgS2lCKQoKQ3JlYXRpbmcgYXJjaGl2ZTogL3RtcC9iMDEtNWU2OHBrZ2YvY3JlYXRlZC53aW0KCkFkZCBuZXcgZGF0YSB0byBhcmNoaXZlOiAxIGZpbGUsIDQwOTYgYnl0ZXMgKDQgS2lCKQoKCkZpbGVzIHJlYWQgZnJvbSBkaXNrOiAxCkFyY2hpdmUgc2l6ZTogNTM1OCBieXRlcyAoNiBLaUIpCkV2ZXJ5dGhpbmcgaXMgT2sK",
+      "stderr_base64": ""
+    },
+    "created-test/wim": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "t",
+        "/tmp/b01-5e68pkgf/created.wim",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCA1MzU4IGJ5dGVzICg2IEtpQikKClRlc3RpbmcgYXJjaGl2ZTogL3RtcC9iMDEtNWU2OHBrZ2YvY3JlYXRlZC53aW0KLS0KUGF0aCA9IC90bXAvYjAxLTVlNjhwa2dmL2NyZWF0ZWQud2ltClR5cGUgPSB3aW0KUGh5c2ljYWwgU2l6ZSA9IDUzNTgKU2l6ZSA9IDQwOTYKUGFja2VkIFNpemUgPSA0MDk2Ck1ldGhvZCA9IENvcHk6MTUKQ2x1c3RlciBTaXplID0gMzI3NjgKQ3JlYXRlZCA9IDIwMjYtMDktMTEgMDM6MTE6MjYuMTg5NzE3MApNb2RpZmllZCA9IDIwMjYtMDktMTEgMDM6MTE6MjYuMTg5NzE3MApDb21tZW50ID0gPFdJTT48VE9UQUxCWVRFUz40NjYwPC9UT1RBTEJZVEVTPjxJTUFHRSBJTkRFWD0iMSI+PE5BTUU+MTwvTkFNRT48RElSQ09VTlQ+MDwvRElSQ09VTlQ+PEZJTEVDT1VOVD4xPC9GSUxFQ09VTlQ+PFRPVEFMQllURVM+NDA5NjwvVE9UQUxCWVRFUz48Q1JFQVRJT05USU1FPjxISUdIUEFSVD4weDAxREQ0MTlCPC9ISUdIUEFSVD48TE9XUEFSVD4weDNCNTEzNUQyPC9MT1dQQVJUPjwvQ1JFQVRJT05USU1FPjxMQVNUTU9ESUZJQ0FUSU9OVElNRT48SElHSFBBUlQ+MHgwMURENDE5QjwvSElHSFBBUlQ+PExPV1BBUlQ+MHgzQjUxMzVEMjwvTE9XUEFSVD48L0xBU1RNT0RJRklDQVRJT05USU1FPjwvSU1BR0U+PC9XSU0+ClZlcnNpb24gPSAxLjEzCk11bHRpdm9sdW1lID0gLQpWb2x1bWUgPSAxClZvbHVtZXMgPSAxCkltYWdlcyA9IDEKCkV2ZXJ5dGhpbmcgaXMgT2sKClNpemU6ICAgICAgIDQwOTYKQ29tcHJlc3NlZDogNTM1OAo=",
+      "stderr_base64": ""
+    },
+    "created-extract/wim": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "x",
+        "/tmp/b01-5e68pkgf/created.wim",
+        "-y",
+        "-o/tmp/b01-5e68pkgf/created-out-wim",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 0,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoKU2Nhbm5pbmcgdGhlIGRyaXZlIGZvciBhcmNoaXZlczoKMSBmaWxlLCA1MzU4IGJ5dGVzICg2IEtpQikKCkV4dHJhY3RpbmcgYXJjaGl2ZTogL3RtcC9iMDEtNWU2OHBrZ2YvY3JlYXRlZC53aW0KLS0KUGF0aCA9IC90bXAvYjAxLTVlNjhwa2dmL2NyZWF0ZWQud2ltClR5cGUgPSB3aW0KUGh5c2ljYWwgU2l6ZSA9IDUzNTgKU2l6ZSA9IDQwOTYKUGFja2VkIFNpemUgPSA0MDk2Ck1ldGhvZCA9IENvcHk6MTUKQ2x1c3RlciBTaXplID0gMzI3NjgKQ3JlYXRlZCA9IDIwMjYtMDktMTEgMDM6MTE6MjYuMTg5NzE3MApNb2RpZmllZCA9IDIwMjYtMDktMTEgMDM6MTE6MjYuMTg5NzE3MApDb21tZW50ID0gPFdJTT48VE9UQUxCWVRFUz40NjYwPC9UT1RBTEJZVEVTPjxJTUFHRSBJTkRFWD0iMSI+PE5BTUU+MTwvTkFNRT48RElSQ09VTlQ+MDwvRElSQ09VTlQ+PEZJTEVDT1VOVD4xPC9GSUxFQ09VTlQ+PFRPVEFMQllURVM+NDA5NjwvVE9UQUxCWVRFUz48Q1JFQVRJT05USU1FPjxISUdIUEFSVD4weDAxREQ0MTlCPC9ISUdIUEFSVD48TE9XUEFSVD4weDNCNTEzNUQyPC9MT1dQQVJUPjwvQ1JFQVRJT05USU1FPjxMQVNUTU9ESUZJQ0FUSU9OVElNRT48SElHSFBBUlQ+MHgwMURENDE5QjwvSElHSFBBUlQ+PExPV1BBUlQ+MHgzQjUxMzVEMjwvTE9XUEFSVD48L0xBU1RNT0RJRklDQVRJT05USU1FPjwvSU1BR0U+PC9XSU0+ClZlcnNpb24gPSAxLjEzCk11bHRpdm9sdW1lID0gLQpWb2x1bWUgPSAxClZvbHVtZXMgPSAxCkltYWdlcyA9IDEKCkV2ZXJ5dGhpbmcgaXMgT2sKClNpemU6ICAgICAgIDQwOTYKQ29tcHJlc3NlZDogNTM1OAo=",
+      "stderr_base64": ""
+    },
+    "create/rar": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "a",
+        "-trar",
+        "/tmp/b01-5e68pkgf/created.rar",
+        "payload.bin",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 2,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoK",
+      "stderr_base64": "CgpTeXN0ZW0gRVJST1I6CkVfTk9USU1QTCA6IE5vdCBpbXBsZW1lbnRlZAo="
+    },
+    "create/iso": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "a",
+        "-tiso",
+        "/tmp/b01-5e68pkgf/created.iso",
+        "payload.bin",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 2,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoK",
+      "stderr_base64": "CgpTeXN0ZW0gRVJST1I6CkVfTk9USU1QTCA6IE5vdCBpbXBsZW1lbnRlZAo="
+    },
+    "create/not-a-format": {
+      "argv": [
+        "/home/runner/work/_temp/b01-cli/7zz",
+        "a",
+        "-tnot-a-format",
+        "/tmp/b01-5e68pkgf/created.not-a-format",
+        "payload.bin",
+        "-sccUTF-8",
+        "-bd"
+      ],
+      "exit": 2,
+      "stdout_base64": "CjctWmlwICh6KSAyNi4wMyAoeDY0KSA6IENvcHlyaWdodCAoYykgMTk5OS0yMDI2IElnb3IgUGF2bG92IDogMjAyNi0wOS0wMwogNjQtYml0IGxvY2FsZT1DLlVURi04IFRocmVhZHM6NCBPUEVOX01BWDo2NTUzNgoK",
+      "stderr_base64": "CgpFUlJPUjoKVW5zdXBwb3J0ZWQgYXJjaGl2ZSB0eXBlCg=="
+    }
+  },
+  "observations": {
+    "capabilities": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      }
+    },
+    "store.zip/list": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "properties": [
+        {
+          "Path": "<TEMP>/fixtures/store.zip",
+          "Type": "zip",
+          "Physical Size": "4216"
+        },
+        {
+          "Path": "payload.bin",
+          "Size": "4096",
+          "CRC": "A2912082",
+          "Method": "Store",
+          "Volume Index": "0",
+          "Offset": "0"
+        }
+      ]
+    },
+    "store.zip/test": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      }
+    },
+    "store.zip/extract": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "files": {
+        "payload.bin": {
+          "size": 4096,
+          "sha256": "c8f5d0341d54d951a71b136e6e2afcb14d11ed8489a7ae126a8fee0df6ecf193"
+        }
+      }
+    },
+    "deflate.zip/list": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "properties": [
+        {
+          "Path": "<TEMP>/fixtures/deflate.zip",
+          "Type": "zip",
+          "Physical Size": "429"
+        },
+        {
+          "Path": "payload.bin",
+          "Size": "4096",
+          "CRC": "A2912082",
+          "Method": "Deflate",
+          "Volume Index": "0",
+          "Offset": "0"
+        }
+      ]
+    },
+    "deflate.zip/test": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      }
+    },
+    "deflate.zip/extract": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "files": {
+        "payload.bin": {
+          "size": 4096,
+          "sha256": "c8f5d0341d54d951a71b136e6e2afcb14d11ed8489a7ae126a8fee0df6ecf193"
+        }
+      }
+    },
+    "bzip2.zip/list": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "properties": [
+        {
+          "Path": "<TEMP>/fixtures/bzip2.zip",
+          "Type": "zip",
+          "Physical Size": "777"
+        },
+        {
+          "Path": "payload.bin",
+          "Size": "4096",
+          "CRC": "A2912082",
+          "Method": "BZip2",
+          "Volume Index": "0",
+          "Offset": "0"
+        }
+      ]
+    },
+    "bzip2.zip/test": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      }
+    },
+    "bzip2.zip/extract": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "files": {
+        "payload.bin": {
+          "size": 4096,
+          "sha256": "c8f5d0341d54d951a71b136e6e2afcb14d11ed8489a7ae126a8fee0df6ecf193"
+        }
+      }
+    },
+    "lzma.zip/list": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "properties": [
+        {
+          "Path": "<TEMP>/fixtures/lzma.zip",
+          "Type": "zip",
+          "Physical Size": "393"
+        },
+        {
+          "Path": "payload.bin",
+          "Size": "4096",
+          "CRC": "A2912082",
+          "Method": "LZMA:eos",
+          "Volume Index": "0",
+          "Offset": "0"
+        }
+      ]
+    },
+    "lzma.zip/test": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      }
+    },
+    "lzma.zip/extract": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "files": {
+        "payload.bin": {
+          "size": 4096,
+          "sha256": "c8f5d0341d54d951a71b136e6e2afcb14d11ed8489a7ae126a8fee0df6ecf193"
+        }
+      }
+    },
+    "crc.zip/list": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "properties": [
+        {
+          "Path": "<TEMP>/fixtures/crc.zip",
+          "Type": "zip",
+          "Physical Size": "4216"
+        },
+        {
+          "Path": "payload.bin",
+          "Size": "4096",
+          "CRC": "A2912082",
+          "Method": "Store",
+          "Volume Index": "0",
+          "Offset": "0"
+        }
+      ]
+    },
+    "crc.zip/test": {
+      "exit": 2,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [
+          "CRC Failed"
+        ],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      }
+    },
+    "crc.zip/extract": {
+      "exit": 2,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [
+          "CRC Failed"
+        ],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "files": {
+        "payload.bin": {
+          "size": 4096,
+          "sha256": "c97d70a8de38fabd3e21103326562309b0616f4e43215e07cd4c6cf87e4b616c"
+        }
+      }
+    },
+    "unsupported.zip/list": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "properties": [
+        {
+          "Path": "<TEMP>/fixtures/unsupported.zip",
+          "Type": "zip",
+          "Physical Size": "4216"
+        },
+        {
+          "Path": "payload.bin",
+          "Size": "4096",
+          "CRC": "A2912082",
+          "Method": "65535",
+          "Volume Index": "0",
+          "Offset": "0"
+        }
+      ]
+    },
+    "unsupported.zip/test": {
+      "exit": 2,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [
+          "Unsupported Method"
+        ],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      }
+    },
+    "unsupported.zip/extract": {
+      "exit": 2,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [
+          "Unsupported Method"
+        ],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "files": {
+        "payload.bin": {
+          "size": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    "data.zip/list": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "properties": [
+        {
+          "Path": "<TEMP>/fixtures/data.zip",
+          "Type": "zip",
+          "Physical Size": "429"
+        },
+        {
+          "Path": "payload.bin",
+          "Size": "4096",
+          "CRC": "A2912082",
+          "Method": "Deflate",
+          "Volume Index": "0",
+          "Offset": "0"
+        }
+      ]
+    },
+    "data.zip/test": {
+      "exit": 2,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [
+          "Data Error"
+        ],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      }
+    },
+    "data.zip/extract": {
+      "exit": 2,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [
+          "Data Error"
+        ],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "files": {
+        "payload.bin": {
+          "size": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    "truncated.zip/list": {
+      "exit": 2,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [
+          "Is not archive"
+        ],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "properties": []
+    },
+    "truncated.zip/test": {
+      "exit": 2,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [
+          "Is not archive"
+        ],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      }
+    },
+    "truncated.zip/extract": {
+      "exit": 2,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [
+          "Is not archive"
+        ],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "files": {}
+    },
+    "misnamed.dat/list": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "properties": [
+        {
+          "Path": "<TEMP>/fixtures/misnamed.dat",
+          "Type": "zip",
+          "Physical Size": "4216"
+        },
+        {
+          "Path": "payload.bin",
+          "Size": "4096",
+          "CRC": "A2912082",
+          "Method": "Store",
+          "Volume Index": "0",
+          "Offset": "0"
+        }
+      ]
+    },
+    "misnamed.dat/test": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      }
+    },
+    "misnamed.dat/extract": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "files": {
+        "payload.bin": {
+          "size": 4096,
+          "sha256": "c8f5d0341d54d951a71b136e6e2afcb14d11ed8489a7ae126a8fee0df6ecf193"
+        }
+      }
+    },
+    "payload.tar/list": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "properties": [
+        {
+          "Path": "<TEMP>/fixtures/payload.tar",
+          "Type": "tar",
+          "Physical Size": "10240",
+          "Headers Size": "6144"
+        },
+        {
+          "Path": "payload.bin",
+          "Size": "4096"
+        }
+      ]
+    },
+    "payload.tar/test": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      }
+    },
+    "payload.tar/extract": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "files": {
+        "payload.bin": {
+          "size": 4096,
+          "sha256": "c8f5d0341d54d951a71b136e6e2afcb14d11ed8489a7ae126a8fee0df6ecf193"
+        }
+      }
+    },
+    "payload.gz/list": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "properties": [
+        {
+          "Path": "<TEMP>/fixtures/payload.gz",
+          "Type": "gzip",
+          "Headers Size": "10"
+        },
+        {
+          "Path": "payload",
+          "Size": "4096",
+          "CRC": "A2912082"
+        }
+      ]
+    },
+    "payload.gz/test": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      }
+    },
+    "payload.gz/extract": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "files": {
+        "payload": {
+          "size": 4096,
+          "sha256": "c8f5d0341d54d951a71b136e6e2afcb14d11ed8489a7ae126a8fee0df6ecf193"
+        }
+      }
+    },
+    "payload.bz2/list": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "properties": [
+        {
+          "Path": "<TEMP>/fixtures/payload.bz2",
+          "Type": "bzip2"
+        },
+        {
+          "Size": ""
+        }
+      ]
+    },
+    "payload.bz2/test": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      }
+    },
+    "payload.bz2/extract": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "files": {
+        "payload": {
+          "size": 4096,
+          "sha256": "c8f5d0341d54d951a71b136e6e2afcb14d11ed8489a7ae126a8fee0df6ecf193"
+        }
+      }
+    },
+    "payload.xz/list": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "properties": [
+        {
+          "Path": "<TEMP>/fixtures/payload.xz",
+          "Type": "xz",
+          "Physical Size": "324",
+          "Method": "LZMA2:23 CRC64"
+        },
+        {
+          "Size": "4096",
+          "Method": "LZMA2:23 CRC64"
+        }
+      ]
+    },
+    "payload.xz/test": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      }
+    },
+    "payload.xz/extract": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "files": {
+        "payload": {
+          "size": 4096,
+          "sha256": "c8f5d0341d54d951a71b136e6e2afcb14d11ed8489a7ae126a8fee0df6ecf193"
+        }
+      }
+    },
+    "payload.lzma/list": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "properties": [
+        {
+          "Path": "<TEMP>/fixtures/payload.lzma",
+          "Type": "lzma",
+          "Method": "LZMA:23"
+        },
+        {
+          "Size": "",
+          "Method": "LZMA:23"
+        }
+      ]
+    },
+    "payload.lzma/test": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      }
+    },
+    "payload.lzma/extract": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "files": {
+        "payload": {
+          "size": 4096,
+          "sha256": "c8f5d0341d54d951a71b136e6e2afcb14d11ed8489a7ae126a8fee0df6ecf193"
+        }
+      }
+    },
+    "nested.tar.gz/list": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "properties": [
+        {
+          "Path": "<TEMP>/fixtures/nested.tar.gz",
+          "Type": "gzip",
+          "Headers Size": "10"
+        },
+        {
+          "Path": "nested.tar",
+          "Size": "10240",
+          "CRC": "81D9B282"
+        }
+      ]
+    },
+    "nested.tar.gz/test": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      }
+    },
+    "nested.tar.gz/extract": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "files": {
+        "nested.tar": {
+          "size": 10240,
+          "sha256": "a0dec7e4046eb83391bee6d3b828fa7e5464713216864a93efdb5cc6bccd0988"
+        }
+      }
+    },
+    "copy.7z/list": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "properties": [
+        {
+          "Path": "<TEMP>/fixtures/copy.7z",
+          "Type": "7z",
+          "Physical Size": "4210",
+          "Headers Size": "114",
+          "Method": "Copy"
+        },
+        {
+          "Path": "payload.bin",
+          "Size": "4096",
+          "CRC": "A2912082",
+          "Method": "Copy"
+        }
+      ]
+    },
+    "copy.7z/test": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      }
+    },
+    "copy.7z/extract": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "files": {
+        "payload.bin": {
+          "size": 4096,
+          "sha256": "c8f5d0341d54d951a71b136e6e2afcb14d11ed8489a7ae126a8fee0df6ecf193"
+        }
+      }
+    },
+    "lzma2.7z/list": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "properties": [
+        {
+          "Path": "<TEMP>/fixtures/lzma2.7z",
+          "Type": "7z",
+          "Physical Size": "379",
+          "Headers Size": "114",
+          "Method": "LZMA2:12"
+        },
+        {
+          "Path": "payload.bin",
+          "Size": "4096",
+          "CRC": "A2912082",
+          "Method": "LZMA2:12"
+        }
+      ]
+    },
+    "lzma2.7z/test": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      }
+    },
+    "lzma2.7z/extract": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "files": {
+        "payload.bin": {
+          "size": 4096,
+          "sha256": "c8f5d0341d54d951a71b136e6e2afcb14d11ed8489a7ae126a8fee0df6ecf193"
+        }
+      }
+    },
+    "volume.7z.001/list": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "properties": [
+        {
+          "Path": "volume.7z",
+          "Type": "7z",
+          "Physical Size": "4210",
+          "Volumes": "5",
+          "Total Physical Size": "4210",
+          "Size": "4210",
+          "Headers Size": "114",
+          "Method": "Copy"
+        },
+        {
+          "Path": "payload.bin",
+          "Size": "4096",
+          "CRC": "A2912082",
+          "Method": "Copy"
+        }
+      ]
+    },
+    "volume.7z.001/test": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      }
+    },
+    "volume.7z.001/extract": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "files": {
+        "payload.bin": {
+          "size": 4096,
+          "sha256": "c8f5d0341d54d951a71b136e6e2afcb14d11ed8489a7ae126a8fee0df6ecf193"
+        }
+      }
+    },
+    "header.7z/list": {
+      "exit": 2,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [
+          "Is not archive"
+        ],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "properties": []
+    },
+    "header.7z/test": {
+      "exit": 2,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [
+          "Is not archive"
+        ],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      }
+    },
+    "header.7z/extract": {
+      "exit": 2,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [
+          "Is not archive"
+        ],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "files": {}
+    },
+    "truncated.7z/list": {
+      "exit": 2,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [
+          "Is not archive"
+        ],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "properties": []
+    },
+    "truncated.7z/test": {
+      "exit": 2,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [
+          "Is not archive"
+        ],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      }
+    },
+    "truncated.7z/extract": {
+      "exit": 2,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [
+          "Is not archive"
+        ],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "files": {}
+    },
+    "next-header.7z/list": {
+      "exit": 2,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [
+          "Headers Error"
+        ],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "properties": []
+    },
+    "next-header.7z/test": {
+      "exit": 2,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [
+          "Headers Error"
+        ],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      }
+    },
+    "next-header.7z/extract": {
+      "exit": 2,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [
+          "Headers Error"
+        ],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "files": {}
+    },
+    "tail-truncated.7z/list": {
+      "exit": 2,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [
+          "Unexpected end of archive"
+        ],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "properties": []
+    },
+    "tail-truncated.7z/test": {
+      "exit": 2,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [
+          "Unexpected end of archive"
+        ],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      }
+    },
+    "tail-truncated.7z/extract": {
+      "exit": 2,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [
+          "Unexpected end of archive"
+        ],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "files": {}
+    },
+    "missing-volume/l": {
+      "exit": 2,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [
+          "Unexpected end of archive"
+        ],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "properties": []
+    },
+    "missing-volume/t": {
+      "exit": 2,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [
+          "Unexpected end of archive"
+        ],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      }
+    },
+    "missing-volume/x": {
+      "exit": 2,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [
+          "Unexpected end of archive"
+        ],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "files": {}
+    },
+    "nested/stage1": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "files": {
+        "nested.tar": {
+          "size": 10240,
+          "sha256": "a0dec7e4046eb83391bee6d3b828fa7e5464713216864a93efdb5cc6bccd0988"
+        }
+      }
+    },
+    "nested/stage2": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "files": {
+        "payload.bin": {
+          "size": 4096,
+          "sha256": "c8f5d0341d54d951a71b136e6e2afcb14d11ed8489a7ae126a8fee0df6ecf193"
+        }
+      }
+    },
+    "create/7z": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "independent_payload_sha256": null
+    },
+    "created-test/7z": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      }
+    },
+    "created-extract/7z": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "files": {
+        "payload.bin": {
+          "size": 4096,
+          "sha256": "c8f5d0341d54d951a71b136e6e2afcb14d11ed8489a7ae126a8fee0df6ecf193"
+        }
+      }
+    },
+    "create/zip": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "independent_payload_sha256": "c8f5d0341d54d951a71b136e6e2afcb14d11ed8489a7ae126a8fee0df6ecf193"
+    },
+    "created-test/zip": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      }
+    },
+    "created-extract/zip": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "files": {
+        "payload.bin": {
+          "size": 4096,
+          "sha256": "c8f5d0341d54d951a71b136e6e2afcb14d11ed8489a7ae126a8fee0df6ecf193"
+        }
+      }
+    },
+    "create/tar": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "independent_payload_sha256": "c8f5d0341d54d951a71b136e6e2afcb14d11ed8489a7ae126a8fee0df6ecf193"
+    },
+    "created-test/tar": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      }
+    },
+    "created-extract/tar": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "files": {
+        "payload.bin": {
+          "size": 4096,
+          "sha256": "c8f5d0341d54d951a71b136e6e2afcb14d11ed8489a7ae126a8fee0df6ecf193"
+        }
+      }
+    },
+    "create/gzip": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "independent_payload_sha256": "c8f5d0341d54d951a71b136e6e2afcb14d11ed8489a7ae126a8fee0df6ecf193"
+    },
+    "created-test/gzip": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      }
+    },
+    "created-extract/gzip": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "files": {
+        "payload.bin": {
+          "size": 4096,
+          "sha256": "c8f5d0341d54d951a71b136e6e2afcb14d11ed8489a7ae126a8fee0df6ecf193"
+        }
+      }
+    },
+    "create/bzip2": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "independent_payload_sha256": "c8f5d0341d54d951a71b136e6e2afcb14d11ed8489a7ae126a8fee0df6ecf193"
+    },
+    "created-test/bzip2": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      }
+    },
+    "created-extract/bzip2": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "files": {
+        "created": {
+          "size": 4096,
+          "sha256": "c8f5d0341d54d951a71b136e6e2afcb14d11ed8489a7ae126a8fee0df6ecf193"
+        }
+      }
+    },
+    "create/xz": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "independent_payload_sha256": "c8f5d0341d54d951a71b136e6e2afcb14d11ed8489a7ae126a8fee0df6ecf193"
+    },
+    "created-test/xz": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      }
+    },
+    "created-extract/xz": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "files": {
+        "created": {
+          "size": 4096,
+          "sha256": "c8f5d0341d54d951a71b136e6e2afcb14d11ed8489a7ae126a8fee0df6ecf193"
+        }
+      }
+    },
+    "create/wim": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "independent_payload_sha256": null
+    },
+    "created-test/wim": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      }
+    },
+    "created-extract/wim": {
+      "exit": 0,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      },
+      "files": {
+        "payload.bin": {
+          "size": 4096,
+          "sha256": "c8f5d0341d54d951a71b136e6e2afcb14d11ed8489a7ae126a8fee0df6ecf193"
+        }
+      }
+    },
+    "create/rar": {
+      "exit": 2,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      }
+    },
+    "create/iso": {
+      "exit": 2,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      }
+    },
+    "create/not-a-format": {
+      "exit": 2,
+      "diagnostics": {
+        "domain": "legacy-cli-text",
+        "labels": [],
+        "hresult": null,
+        "item_result": null,
+        "open_flags": null,
+        "numeric_unavailable_reason": "CLI does not expose lossless structured engine outcomes"
+      }
+    }
+  },
+  "capabilities": "C...F..........c.a.m+..  7z       7z            7 z BC AF ' 1C\n    ......................  APFS     apfs img      offset=32 N X S B 00\n    ......................  APM      apm           E R\n    ......................  Ar       ar a deb udeb lib ! < a r c h > 0A\n    ......................  Arj      arj           ` EA\n    K.....O.....X.........  Base64   b64           \n    ......O...............  COFF     obj           \n    ...F..................  Cab      cab           M S C F 00 00 00 00\n    ......................  Chm      chm chi chq chw I T S F 03 00 00 00 ` 00 00 00\n    ......................  Compound msi msp msm doc xls ppt aaf D0 CF 11 E0 A1 B1 1A E1\n    ....M.................  Cpio     cpio          0 7 0 7 0  ||  C7 q  ||  q C7\n    ......................  CramFS   cramfs        offset=16 C o m p r e s s e d 20 R O M F S\n    .....G..B.............  Dmg      dmg           k o l y 00 00 00 04 00 00 02 00\n    .........E............  ELF      elf           \u007f E L F\n    ......................  Ext      ext ext2 ext3 ext4 img offset=1080 S EF\n    ......................  FAT      fat img       offset=510 U AA\n    ......................  FLV      flv           F L V 01\n    ......................  GPT      gpt mbr       offset=512 E F I 20 P A R T 00 00 01 00\n    ....M.................  HFS      hfs hfsx      offset=1024 B D  ||  H + 00 04  ||  H X 00 05\n    ...F..................  Hxs      hxs hxi hxr hxq hxw lit I T O L I T L S 01 00 00 00 ( 00 00 00\n    ......O...............  IHex     ihex          \n    ......................  Iso      iso img       offset=32769 C D 0 0 1\n    ......................  LP       lpimg img     offset=4096 g D l a 4 00 00 00\n    ......................  Lzh      lzh lha       offset=2 - l h\n    .......P..............  MBR      mbr           \n    ....M....E............  MachO    macho         CE FA ED FE  ||  CF FA ED FE  ||  FE ED FA CE  ||  FE ED FA CF\n    ......................  MsLZ     mslz          S Z D D 88 F0 ' 3 A\n    ....M.................  Mub      mub           CA FE BA BE 00 00 00  ||  B9 FA F1 0E\n    ......................  NTFS     ntfs img      offset=3 N T F S 20 20 20 20 00\n    ...F.G................  Nsis     nsis          offset=4 EF BE AD DE N u l l s o f t I n s t\n    .........E............  PE       exe dll sys   M Z\n    ......................  Ppmd     pmd           8F AF AC 84\n    ......................  QCOW     qcow qcow2 qcow2c Q F I FB 00 00 00\n    ...F..................  Rar      rar r00       R a r ! 1A 07 00\n    ...F..................  Rar5     rar r00       R a r ! 1A 07 01 00\n    ......................  Rpm      rpm           ED AB EE DB\n    K.....................  SWF      swf           F W S\n    ....M.................  SWFc     swf (~.swf)   C W S  ||  Z W S\n    ......................  Sparse   simg img      : FF & ED 01 00\n    ......................  Split    001           \n    ....M.................  SquashFS squashfs      h s q s  ||  s q s h  ||  s h s q  ||  q s h s\n    .........E............  TE       te            V Z\n    ...FM.................  UEFIc    scap          BD 86 f ; v 0D 0 @ B7 0E B5 Q 9E / C5 A0  ||  8B A6 < J # w FB H 80 = W 8C C1 FE C4 M  ||  B9 82 91 S B5 AB 91 C B6 9A E3 A9 C F7 / CC\n    ...FM.................  UEFIf    uefif         offset=16 D9 T 93 z h 04 J D 81 CE 0B F6 17 D8 90 DF  ||  x E5 8C 8C = 8A 1C O 99 5 89 a 85 C3 - D3\n    ....M.O...............  Udf      udf iso img   offset=32768 00 B E A 0 1 01 00  ||  01 C D 0 0 1\n    ......................  VDI      vdi           offset=64 \u007f 10 DA BE\n    .....G................  VHD      vhd           c o n e c t i x 00 00\n    ......................  VHDX     vhdx avhdx    v h d x f i l e\n    ......................  VMDK     vmdk          K D M V\n    ......................  Xar      xar pkg xip   x a r ! 00\n    ......................  Z        z taz (.tar)  1F 9D\n   CK.....................  bzip2    bz2 bzip2 tbz2 (.tar) tbz (.tar) B Z h\n   CK.................m+..  gzip     gz gzip tgz (.tar) tpz (.tar) apk (.tar) 1F 8B 08\n    K.....O...............  lzma     lzma          \n    K.....................  lzma86   lzma86        \n   C......O...LH......m+..  tar      tar ova       offset=257 u s t a r\n   C.SN.......LH..c.a.m+..  wim      wim swm esd ppkg M S W I M 00 00 00\n   CK.....................  xz       xz txz (.tar) FD 7 z X Z 00\n   C...FMG........c.a.m+..  zip      zip z01 zipx jar xpi odt ods docx xlsx epub ipa apk appx P K 03 04  ||  P K 05 06  ||  P K 06 06  ||  P K 07 08 P K  ||  P K 0 0 P K\n    K.....................  zstd     zst tzst (.tar) ( B5 / FD\n   CK.....O.....XC........  Hash     sha256 sha512 sha384 sha224 sha512-224 sha512-256 sha3-224 sha3-256 sha3-384 sha3-512 sha1 sha2 sha3 sha md5 blake2s blake2b blake2sp xxh64 crc32 crc64 cksum asc \n\nCodecs:\n   4ED   303011B BCJ2\n    EDF  3030103 BCJ\n    EDF  3030205 PPC\n    EDF  3030401 IA64\n    EDF  3030501 ARM\n    EDF  3030701 ARMT\n    EDF  3030805 SPARC\n    EDF        A ARM64\n    EDF        B RISCV\n    EDF    20302 Swap2\n    EDF    20304 Swap4\n    ED     40202 BZip2\n    ED         0 Copy\n    ED     40109 Deflate64\n    ED     40108 Deflate\n    EDF        3 Delta\n    ED        21 LZMA2\n    ED     30101 LZMA\n    ED     30401 PPMD\n     D     40301 Rar1\n     D     40302 Rar2\n     D     40303 Rar3\n     D     40305 Rar5\n    EDF  6F10701 7zAES\n    EDF  6F00181 AES256CBC\n\nHashers:\n      4        1 CRC32\n     16      208 MD5\n     20      201 SHA1\n     32        A SHA256\n     32      231 SHA3-256\n     48      222 SHA384\n     64      223 SHA512\n      8      211 XXH64\n      8        4 CRC64\n     32      202 BLAKE2sp"
+}
