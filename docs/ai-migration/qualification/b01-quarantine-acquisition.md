@@ -1,8 +1,10 @@
-# B01-Q: bounded acquisition stopped on an unexpected response
+# B01-Q: bounded quarantine acquisition and reviewed-resume preparation
 
-Task `t_d32ff791`; branch `wt/t_d32ff791`. Status: **incomplete, requires human
-response-policy decision; not independently reviewed**. This is a partial handoff,
-not completion of the acquisition or verification acceptance criteria.
+Task `t_d32ff791`; branch `wt/t_d32ff791`. Status: **1/7 acquired; resume
+preparation awaiting independent stage review**. The MIME decision is resolved,
+but no network acquisition occurred during this preparation stage. Stage PASS
+must return this same card to tester, not complete it. Final acquisition and
+independent acceptance remain pending.
 
 ## Authority and preflight
 
@@ -64,7 +66,8 @@ saved or accepted; the transport may buffer network bytes while obtaining header
 so this is not a claim that no body bytes reached the socket. No further URL was
 requested. Missing MIME metadata is not evidence of a rights conflict or archive
 corruption; it is an unexpected response under this strict acquisition guard.
-The task requires stopping on such responses; the guard has not been weakened.
+The first attempt stopped as required. Its evidence is unchanged; the later
+operator-authorized exception is described below and has not been used online.
 
 ## Exact incomplete set
 
@@ -98,25 +101,33 @@ Tracked notice copies: [DRF-OLD](../../../.github/tests/migration/b01-quarantine
 [DRF-SOLID](../../../.github/tests/migration/b01-quarantine/DRF-SOLID-NOTICE.txt),
 [DRF-VOL](../../../.github/tests/migration/b01-quarantine/DRF-VOL-NOTICE.txt).
 
-## Decision required before any resumption
+## Resolved decision and pre-network stage gate
 
-1. Recommended bounded change: explicitly permit an absent Content-Type for the
-   exact pinned `.r00`/`.r01` URLs only, retaining verified HTTPS, original/final
-   identity, HTTP 200, exact declared Content-Length, no encodings/redirects,
-   opaque byte caps and error-page rejection. Implement/review the narrow response
-   guard change before retrying only missing files; preserve the already acquired
-   original and previous failed provenance. Impact: permits progress without a
-   MIME header, but does not supply a prior trusted SHA-256 or rights/format proof.
-2. Keep the strict MIME guard and leave acquisition paused until the same source
-   supplies the expected header. Impact: no reduced response constraints and no
-   additional acquisition; six files remain missing, with no automatic retry,
-   alternate source search or rights inquiry.
+Actual operator decision `按照推荐1进行`, recorded on this card at `1789130330`,
+authorizes an absent Content-Type only for these two complete URLs:
+
+```text
+https://sources.debian.org/data/main/p/python-rarfile/4.5-1/test/files/rar3-old.r00
+https://sources.debian.org/data/main/p/python-rarfile/4.5-1/test/files/rar3-old.r01
+```
+
+Explicit empty/wrong MIME remains rejected; this is not a suffix/domain exception.
+TLS, exact original/final URL, HTTP 200, exact length, streaming byte caps,
+encoding/redirect/error-page guards remain mandatory. Missing MIME is recorded
+as JSON null, never synthesized. This resolves the previous human gate, not the
+remaining evidence/qualification limits.
+
+The same decision requires independent review of the exact guard/resume commit
+BEFORE any more GETs. Stage PASS must be recorded and the SAME card returned to
+tester for the six previously authorized files, without another MIME permission
+question. Do not complete the card at stage PASS. Final review after acquisition
+may complete only B01-Q; B01/B03/B04 gates remain unchanged.
 
 This is not a repeated request for the already authorized O1 policy or acquisition
 scope. No decision is inferred from notify/wake. B01 remains `triage`; no B01 or
 B03/B04 gates/dependencies were changed.
 
-## Actual verification and remaining work
+## First attempt verification (historical, commit ed7950b)
 
 Commands run from the task worktree root:
 
@@ -145,7 +156,7 @@ and eight local links; outcome counts are one acquired, one failed, five unattem
 JSON parsing and whitespace checks also passed. This is not the pending full
 manifest verifier or its negative-control suite.
 
-The required full manifest/local-byte verifier and its missing/extra-file,
+At that stopped commit, the required full manifest/local-byte verifier and its missing/extra-file,
 wrong-size/hash/source and unexpected-accepted-status negative controls are NOT
 implemented or claimed to pass in this stopped attempt. All-seven byte validation,
 independent review and acquisition completion remain pending. The current code is
@@ -161,3 +172,80 @@ Top-level, family and per-file `import_approved=false`, `qualified=false` remain
 Zero extra product fees, no releases, no shared-branch integration or binary Git
 publication. Independent reviewer must inspect safe byte identities and complete
 scope controls after the blocker is resolved; this report does not self-approve.
+
+## Current preparation implementation and offline evidence
+
+Changes build on `ed7950b87b50ae305d51b7e26ccf6a0dabdc56f6`; no reviewed parent
+merge was needed. Both AGENTS.md, source branch and parent ancestry were rechecked.
+Current B01 comments still leave B01 `triage`. Read-only subscription verification
+again returned complete parent inheritance and default Telegram `notify+wake` true.
+
+- [Header/local verifier](../../../.github/tests/migration/b01-quarantine/quarantine.py):
+  exact two-URL exception; duplicate guard headers and Location rejected; strict
+  private directory, regular-file/no-link, size/hash, source/order/status/notice
+  bindings and exact tree inventory checks. Existing success metadata is immutable.
+- [Resume entry point](../../../.github/tests/migration/b01-quarantine/resume.py):
+  authenticates matrix and stopped manifest digests before planning. Preflight
+  reopens the existing opaque file; only six missing records are eligible, in the
+  original reviewed order. No directory deletion, replacement or request of the
+  already acquired original. The original manifest/notices are never rewritten.
+- A future explicit resume creates `resume.json` exclusively before its first GET.
+  That separate file retains new attempt state, while original `manifest.json`
+  retains the literal failed response forever. State updates use exclusive
+  `.resume.json.tmp`, fsync and replace only this attempt's state. Existing attempt
+  marker, partial write, unknown extra file, corrupt evidence or interruption stops
+  rather than retrying. No cleanup erases forensic evidence. Files use exclusive
+  creation and mode 0400; all acquired bytes are reopened and hashed after each GET.
+- [Local negative controls](../../../.github/tests/migration/b01-quarantine/check_resume.py)
+  use only temporary `harmless` bytes and explicitly synthetic notices/provenance.
+  They are not archive golden data or evidence of TLS/server/native compatibility.
+  Injected transport tests exercise the real response guard/reader without sockets;
+  the actual SSL context still requires certificates and hostname verification.
+
+Commands executed in this preparation stage (all from this worktree):
+
+```text
+python3 .github/tests/migration/b01-quarantine/check_controls.py
+python3 .github/tests/migration/b01-quarantine/check_resume.py
+python3 .github/tests/migration/b01-quarantine/resume.py --preflight
+python3 .github/tests/migration/b01-quarantine/check_document.py
+python3 -m json.tool .github/tests/migration/b01-quarantine/manifest.json /dev/null
+python3 -m py_compile .github/tests/migration/b01-quarantine/quarantine.py .github/tests/migration/b01-quarantine/resume.py .github/tests/migration/b01-quarantine/check_controls.py .github/tests/migration/b01-quarantine/check_resume.py
+sha256sum .github/tests/migration/b01-quarantine/manifest.json /home/ding/work/github/r404r/b01-quarantine-t_d32ff791/manifest.json /home/ding/work/github/r404r/b01-quarantine-t_d32ff791/DRF-OLD/rar3-old.rar.opaque
+wc -c /home/ding/work/github/r404r/b01-quarantine-t_d32ff791/DRF-OLD/rar3-old.rar.opaque
+git diff --check
+git diff --cached --check
+```
+
+RED observed: new MIME API was absent; local verifier and resume module missing;
+duplicate Content-Length/Content-Type accepted. GREEN: four header/stream tests
+and three local/transport/resume tests pass. Subcontrols include missing/extra
+files, wrong size/hash/source/final URL, accepted/qualified status, path escape,
+symlink, execute permission and changed notice; corrupt preflight makes zero
+fetch calls and creates no marker. Complete synthetic six-file continuation and
+first-response failure both preserve original evidence; a second invocation makes
+zero further calls. Expected injected failure prints
+`ValueError: synthetic response conflict`; it is not a live retrieval failure.
+Offline preflight reports exactly the six missing paths in the table above.
+Document/JSON/compile/whitespace checks pass. Existing manifest SHA-256 remains
+`5bf0600459996c638697eb902d789670186db72197d65665b3ee881b0f59655e` in both locations;
+opaque file digest and 102400-byte count remain unchanged. No acquired binaries,
+notices or manifests were modified in this stage. No production build is applicable.
+
+Only after exact-commit stage PASS, the tester may execute (NOT run in this stage):
+
+```text
+python3 .github/tests/migration/b01-quarantine/resume.py --resume-reviewed-six
+python3 .github/tests/migration/b01-quarantine/resume.py --verify-complete
+```
+
+The CLI opt-in is an operational guard, not a cryptographic proof of reviewer
+approval: the worker must check the actual stage verdict first. After execution,
+preserve and commit the separate result JSON and update this report with real
+hashes/outcomes before final review; never replace the original stopped manifest.
+The complete verifier has only been exercised on harmless synthetic data so far;
+no seven-file live completion is claimed. Filesystem checks assume one worker and
+no concurrent same-owner tampering in the private root; this is not a malicious
+local-user sandbox or crash-proof transaction. HTTP Content-Length defines the
+body boundary; no over-budget probe or format validation is authorized. All rights,
+historical writer, member hashes, native/GUI/desktop qualification limits remain.
