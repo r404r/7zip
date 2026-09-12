@@ -215,11 +215,14 @@ succeeding for an unrelated reason).
 **Method**: capture stdout + exit code of the `l` command.
 
 **Verification point**: `l` fails. Observed on the AI's own Linux run:
-`Open() with format candidate 0/1 returned HRESULT=0x00000001`, final
-`Cannot open file as archive (tried 7z, zip)`, exit code 2. Record the
-EXACT HRESULT/exit code your platform produces — if it differs from
-`0x00000001`/exit 2, record the actual value; do not silently expect it to
-match.
+`Open() with format candidate 0 returned HRESULT=0x80004004` (E_ABORT, the
+correct 7z handler detecting the missing password on the header it can
+recognize), then `Open() with format candidate 1 returned
+HRESULT=0x00000001` (the wrong/zip handler rejecting a non-zip file
+generically), final `Cannot open file as archive (tried 7z, zip)`, exit
+code 2. Record the EXACT per-candidate HRESULTs and exit code your
+platform produces — if they differ from `0x80004004`/`0x00000001`/exit 2,
+record the actual values; do not silently expect them to match.
 
 **Negative control**: repeat with `--password-mode correct --password
 B05Synth-Correct-9f2a` — must now succeed and print `item count=1`,
