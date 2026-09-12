@@ -222,6 +222,25 @@ class CTextArena
   // in separately owned vectors so that appending one never moves another.
   std::vector<std::vector<uint16_t> *> _blocks;
 
+  // Owns a block until it is published into _blocks. Every failure path
+  // destroys the block exactly once through this guard, so no error path in
+  // Add performs a manual delete and no throw can free the block twice.
+  class CBlockGuard
+  {
+    std::vector<uint16_t> *_block;
+
+    CBlockGuard(const CBlockGuard &);
+    CBlockGuard &operator=(const CBlockGuard &);
+
+  public:
+    CBlockGuard(): _block(new std::vector<uint16_t>()) {}
+    ~CBlockGuard() { delete _block; }
+    std::vector<uint16_t> *Get() const { return _block; }
+    // Ownership moves to the caller; the guard becomes empty and its
+    // destructor then deletes nothing.
+    void Release() { _block = NULL; }
+  };
+
 public:
   CTextArena() {}
 
@@ -234,6 +253,11 @@ public:
   // Copies a retained UString into the arena as uint16_t code units.
   // wchar_t is 32-bit on this host; a code point above the BMP is re-encoded
   // as a surrogate pair so no information is lost and no unit exceeds 16 bits.
+  //
+  // Exception safety: the block is owned by CBlockGuard for the whole build.
+  // Release happens only after push_back has succeeded, so every throw path
+  // (the refusal below, a push_back allocation failure, or anything else)
+  // frees the block exactly once and never twice.
   archive_bridge_v1_text Add(const wchar_t *source)
   {
     archive_bridge_v1_text view;
@@ -241,36 +265,28 @@ public:
     view.length = 0;
     if (!source || source[0] == 0)
       return view;  // An empty view may be null; abi-v1.md "Text" section.
-    std::vector<uint16_t> *block = new std::vector<uint16_t>();
-    try
+    CBlockGuard guard;
+    std::vector<uint16_t> *block = guard.Get();
+    for (const wchar_t *p = source; *p != 0; p++)
     {
-      for (const wchar_t *p = source; *p != 0; p++)
+      const uint32_t code = (uint32_t)*p;
+      if (code <= 0xFFFF)
+        block->push_back((uint16_t)code);
+      else if (code <= 0x10FFFF)
       {
-        const uint32_t code = (uint32_t)*p;
-        if (code <= 0xFFFF)
-          block->push_back((uint16_t)code);
-        else if (code <= 0x10FFFF)
-        {
-          const uint32_t rest = code - 0x10000;
-          block->push_back((uint16_t)(0xD800 + (rest >> 10)));
-          block->push_back((uint16_t)(0xDC00 + (rest & 0x3FF)));
-        }
-        else
-        {
-          // Not representable as UTF-16; refuse rather than truncate.
-          delete block;
-          throw std::bad_alloc();
-        }
+        const uint32_t rest = code - 0x10000;
+        block->push_back((uint16_t)(0xD800 + (rest >> 10)));
+        block->push_back((uint16_t)(0xDC00 + (rest & 0x3FF)));
       }
-      _blocks.push_back(block);
+      else
+      {
+        // Not representable as UTF-16; refuse rather than truncate. The guard
+        // owns the block here, so this throw must not delete it by hand.
+        throw std::bad_alloc();
+      }
     }
-    catch (...)
-    {
-      // push_back is the only throwing step left; block is still owned here.
-      if (_blocks.empty() || _blocks.back() != block)
-        delete block;
-      throw;
-    }
+    _blocks.push_back(block);
+    guard.Release();  // Published; the arena destructor owns it from now on.
     view.data = block->empty() ? NULL : &(*block)[0];
     view.length = (uint64_t)block->size();
     return view;
@@ -645,3 +661,262 @@ int32_t ARCHIVE_BRIDGE_V1_CALL archive_bridge_v1_result_destroy(
 }
 
 }  // extern "C"
+
+// ---------------------------------------------------------------------------
+// Development self-test (not part of the shared library)
+// ---------------------------------------------------------------------------
+//
+// Compiled only when ARCHIVE_BRIDGE_V1_SELF_TEST is defined, which the shared
+// library build never does, so the exported surface is unchanged. It exists to
+// cover CTextArena::Add's throw path, which no capability query can reach: the
+// retained format/codec/hasher names are ASCII, so the "not representable as
+// UTF-16" refusal is unreachable through the four exported operations. A
+// bounded synthetic code point drives it directly.
+//
+// Double free is detected without a sanitizer or any external dependency by
+// replacing global operator new/delete with a tracking pair: freeing a pointer
+// that is not live is recorded as a violation instead of corrupting the heap.
+
+#ifdef ARCHIVE_BRIDGE_V1_SELF_TEST
+
+#include <cstdio>
+
+namespace {
+
+const size_t kAuditCapacity = 8192;
+
+struct CHeapAudit
+{
+  void *Live[kAuditCapacity];
+  size_t LiveCount;
+  long Allocations;
+  long Frees;
+  long DoubleOrForeignFrees;
+  bool Overflowed;
+
+  void Reset()
+  {
+    LiveCount = 0;
+    Allocations = 0;
+    Frees = 0;
+    DoubleOrForeignFrees = 0;
+    Overflowed = false;
+  }
+
+  void Track(void *p)
+  {
+    Allocations++;
+    if (LiveCount >= kAuditCapacity)
+    {
+      Overflowed = true;
+      return;
+    }
+    Live[LiveCount++] = p;
+  }
+
+  // Returns false when p was not live: that is exactly a double or foreign
+  // free, which is what this regression must catch.
+  bool Untrack(void *p)
+  {
+    for (size_t i = 0; i < LiveCount; i++)
+    {
+      if (Live[i] != p)
+        continue;
+      Live[i] = Live[LiveCount - 1];
+      LiveCount--;
+      Frees++;
+      return true;
+    }
+    DoubleOrForeignFrees++;
+    return false;
+  }
+};
+
+CHeapAudit g_Audit;
+bool g_AuditEnabled = false;
+
+}  // namespace
+
+void *operator new(size_t size)
+{
+  if (size == 0)
+    size = 1;
+  void *p = std::malloc(size);
+  if (!p)
+    throw std::bad_alloc();
+  if (g_AuditEnabled)
+    g_Audit.Track(p);
+  return p;
+}
+
+void operator delete(void *p) throw()
+{
+  if (!p)
+    return;
+  if (g_AuditEnabled && !g_Audit.Untrack(p))
+    return;  // Do not hand a non-live pointer back to free().
+  std::free(p);
+}
+
+// Sized and array forms must route to the same bookkeeping.
+void *operator new[](size_t size) { return operator new(size); }
+void operator delete[](void *p) throw() { operator delete(p); }
+void operator delete(void *p, size_t) throw() { operator delete(p); }
+void operator delete[](void *p, size_t) throw() { operator delete(p); }
+
+namespace {
+
+int g_Failures = 0;
+
+void Check(bool condition, const char *what)
+{
+  std::printf("%s: %s\n", condition ? "ok" : "FAILED", what);
+  if (!condition)
+    g_Failures++;
+}
+
+// The refusal path: Add must throw, free the block exactly once, and leave the
+// arena with nothing published.
+void TestAddRefusalDoesNotDoubleFree()
+{
+  const wchar_t unrepresentable[] = { (wchar_t)0x110000, 0 };
+  bool threw = false;
+  g_Audit.Reset();
+  g_AuditEnabled = true;
+  {
+    CTextArena arena;
+    try
+    {
+      arena.Add(unrepresentable);
+    }
+    catch (const std::bad_alloc &)
+    {
+      threw = true;
+    }
+  }  // Arena destructor runs here; a published-and-guarded block would be
+     // deleted twice and Untrack would record it.
+  g_AuditEnabled = false;
+
+  Check(threw, "Add refuses an unrepresentable code point by throwing");
+  Check(g_Audit.Allocations >= 1,
+      "the audit observed the block allocation (test is not vacuous)");
+  Check(g_Audit.DoubleOrForeignFrees == 0,
+      "Add's throw path performs no double free");
+  Check(!g_Audit.Overflowed, "heap audit did not overflow");
+  Check(g_Audit.Allocations == g_Audit.Frees,
+      "every allocation on the throw path is released exactly once");
+  Check(g_Audit.LiveCount == 0, "no block leaks after the arena is destroyed");
+}
+
+// Mixed input: valid text before the refusal, and the refusal must not disturb
+// text already published in the same arena.
+void TestRefusalAfterSuccessfulAdds()
+{
+  const wchar_t good[] = { 'z', 'i', 'p', 0 };
+  const wchar_t astral[] = { (wchar_t)0x1F600, 0 };  // Surrogate pair path.
+  const wchar_t unrepresentable[] = { 'a', (wchar_t)0x7FFFFFFF, 0 };
+  bool threw = false;
+  g_Audit.Reset();
+  g_AuditEnabled = true;
+  {
+    CTextArena arena;
+    const archive_bridge_v1_text first = arena.Add(good);
+    const archive_bridge_v1_text second = arena.Add(astral);
+    bool lengths_ok = (first.length == 3 && second.length == 2);
+    bool surrogates_ok = (second.data != NULL
+        && second.data[0] >= 0xD800 && second.data[0] <= 0xDBFF
+        && second.data[1] >= 0xDC00 && second.data[1] <= 0xDFFF);
+    bool preserved = false;
+    try
+    {
+      arena.Add(unrepresentable);
+    }
+    catch (const std::bad_alloc &)
+    {
+      threw = true;
+      // Text published before the refusal must still be intact.
+      preserved = (first.data != NULL
+          && first.data[0] == 'z' && first.data[1] == 'i' && first.data[2] == 'p');
+    }
+    g_AuditEnabled = false;
+    Check(lengths_ok, "published views report their code-unit lengths");
+    Check(surrogates_ok, "an astral code point becomes a surrogate pair");
+    Check(preserved, "a later refusal does not disturb published text");
+    g_AuditEnabled = true;
+  }
+  g_AuditEnabled = false;
+
+  Check(threw, "Add still refuses when earlier adds succeeded");
+  Check(g_Audit.DoubleOrForeignFrees == 0,
+      "no double free with published blocks present");
+  Check(g_Audit.LiveCount == 0, "arena releases published blocks exactly once");
+}
+
+// Repeating the refusal must stay balanced; a leak or double free would
+// accumulate here rather than cancel out.
+void TestRepeatedRefusalsStayBalanced()
+{
+  const wchar_t unrepresentable[] = { (wchar_t)0x200000, 0 };
+  int thrown = 0;
+  g_Audit.Reset();
+  g_AuditEnabled = true;
+  {
+    CTextArena arena;
+    for (int i = 0; i < 256; i++)
+    {
+      try
+      {
+        arena.Add(unrepresentable);
+      }
+      catch (const std::bad_alloc &)
+      {
+        thrown++;
+      }
+    }
+  }
+  g_AuditEnabled = false;
+
+  Check(thrown == 256, "every one of 256 refusals throws");
+  Check(g_Audit.DoubleOrForeignFrees == 0,
+      "256 refusals perform no double free");
+  Check(g_Audit.Allocations == g_Audit.Frees,
+      "256 refusals stay allocation balanced");
+  Check(g_Audit.LiveCount == 0, "256 refusals leak nothing");
+}
+
+// Guard against the audit itself being vacuous: a deliberate double free must
+// be reported. Without this, a broken audit would make the tests above pass.
+//
+// The allocation functions are called explicitly rather than through
+// `new int`/`delete`: C++14 lets the compiler elide a new/delete pair whose
+// object never escapes, and GCC does elide it at -O1, which would leave this
+// control auditing nothing. An explicit operator new call cannot be elided,
+// and it exercises exactly the code path the audit replaces.
+void TestAuditDetectsADeliberateDoubleFree()
+{
+  g_Audit.Reset();
+  g_AuditEnabled = true;
+  void *cell = ::operator new(sizeof(int));
+  ::operator delete(cell);
+  ::operator delete(cell);  // Intentional: the audit swallows the second one.
+  g_AuditEnabled = false;
+  Check(g_Audit.Allocations == 1, "the audit observed the control allocation");
+  Check(g_Audit.DoubleOrForeignFrees == 1,
+      "the heap audit reports a deliberate double free (control)");
+  Check(g_Audit.Frees == 1, "the audit frees a double-deleted pointer only once");
+}
+
+}  // namespace
+
+int main()
+{
+  std::printf("archive_bridge_v1 CTextArena self-test (development only)\n");
+  TestAddRefusalDoesNotDoubleFree();
+  TestRefusalAfterSuccessfulAdds();
+  TestRepeatedRefusalsStayBalanced();
+  TestAuditDetectsADeliberateDoubleFree();
+  std::printf("%s: %d failure(s)\n", g_Failures == 0 ? "PASS" : "FAIL", g_Failures);
+  return g_Failures == 0 ? 0 : 1;
+}
+
+#endif  // ARCHIVE_BRIDGE_V1_SELF_TEST
