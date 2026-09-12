@@ -484,5 +484,39 @@
       "max_retries_policy": 2,
       "body_sha256": "09b9b613d84d95f15ba11ee8de2626cf2ea8f4ee4a9b6a3a57cb7de61392041d"
     }
-  ]
+  ],
+  "amendment": {
+    "id": "m3-d",
+    "task": "t_eb4719bf",
+    "schema_version": 1,
+    "document": "development-first-sequencing.md",
+    "adr": "adr/0004-development-first-sequencing.md",
+    "release_path": ["s12", "q3", "s11w", "s11l", "s11m"],
+    "proposed_cards": [
+      {
+        "key": "s2a-dev",
+        "title": "S2a-DEV \u2014 Retained-engine facade handshake, context and capability enumeration (development acceptance)",
+        "assignee": "coder",
+        "workspace_kind": "worktree",
+        "max_runtime_seconds": 7200,
+        "reviewer": "reviewer",
+        "max_retries_policy": 2,
+        "acceptance_mode": "development",
+        "source_card": "s2a",
+        "parents": ["s1", "q1"],
+        "new_parent_of": ["s2a"],
+        "satisfied_parents": [
+          {"key": "b02", "reviewed_commit": "72631ae748e1778af65c30d39e9fe68b8c6442a5"}
+        ],
+        "deferred_obligations": [
+          {"owner": "b01", "evidence": "format, volume and error corpus confirmation of enumerated capabilities"},
+          {"owner": "b03", "evidence": "native metadata, large-file and partial-I/O behavior"},
+          {"owner": "b05", "evidence": "native password callback state behavior"},
+          {"owner": "b06", "evidence": "native staged cancellation, progress and shutdown behavior"},
+          {"owner": "s2a", "evidence": "native Windows/Linux/macOS matched facade build, ABI widths, calling convention, sanitizers and dead-strip retention"},
+          {"owner": "b08", "evidence": "independent native FFI lifetime, fault and concurrency qualification"}
+        ]
+      }
+    ]
+  }
 }

@@ -231,12 +231,34 @@ that required decision is absent. An explicit unsigned validation-only choice ma
 narrow S12, but cannot yield a signed/notarized or release-ready claim. Publication
 still has no authorization or runnable card. Independent eligible work continues.
 
+## Amendment M3-D: development-first sequencing
+
+Task `t_eb4719bf` amends this graph's ACCEPTANCE vocabulary, not its structure.
+See [development-first-sequencing.md](development-first-sequencing.md) and
+[ADR-0004](adr/0004-development-first-sequencing.md). Summary of what changed:
+
+- Development acceptance and qualified/release acceptance are distinguished.
+- One new development-acceptance card is PROPOSED, S2a-DEV, splitting the
+  handshake/context/capability front half out of S2a `t_071e4cd7`. Its parents
+  are a strict subset of S2a's, and S2a keeps every one of its eight parents.
+- No edge is removed, no card is deleted, completed or archived, B04 stays
+  frozen, native budgets stay zero, and release still requires every originally
+  mandated native evidence item.
+- `migration-dag.json` gains an `amendment` object; the validator enforces the
+  acceptance invariants and `test-amendment.py` proves each control fires for its
+  own reason.
+
+The amendment is a reviewed proposal. The runtime board change belongs to the
+coordinator follow-up `t_f34996b9`, after independent PASS.
+
 ## Reproducible validation
 
 Run from the repository/worktree root with ordinary Python 3 (no dependencies):
 
 ```sh
 python3 docs/ai-migration/validate-migration-dag.py
+python3 docs/ai-migration/validate-migration-dag.py --obligations-db "$HERMES_KANBAN_DB"
+python3 docs/ai-migration/test-amendment.py --board-db "$HERMES_KANBAN_DB"
 python3 docs/ai-migration/validate-migration-dag.py --board-db "$HERMES_KANBAN_DB"
 python3 .github/tests/release_version_test.py
 python3 .github/tests/change_notice_test.py "$PWD"
@@ -249,8 +271,24 @@ git diff --check
 
 The offline validator checks all stage IDs, exact independently specified
 prerequisite sets, acyclicity, isolation/review/runtime policy, document card
-coverage and local links. Its three negative controls reject a missing M3 edge,
-a cycle and a dangling edge. The optional live pre-review check reads SQLite with
+coverage and local links. Since M3-D it also validates the `amendment` object:
+proposed split cards must be strictly narrower than their source, the source must
+retain every original parent, every dropped parent must be covered by a retained
+deferred obligation or a real reviewed commit, development acceptance may not
+touch the release path, and a qualified claim may not coexist with open
+obligations. Its ten negative controls reject a missing M3 edge, a cycle, a
+dangling edge, and the seven amendment bypasses. `test-amendment.py` replays
+those bypasses plus three live retired-gate scenarios and one positive control,
+asserting each is rejected for its OWN reason rather than incidentally; the live
+scenarios run on a temporary COPY of the board.
+
+`--obligations-db` is a separate read-only audit that every deferred obligation
+card is still present and has not been marked done without an independent
+reviewer PASS, because Hermes treats an archived or completed parent as
+satisfied. Unlike `--board-db` it does not require the pre-release M3 review
+gate, so it remains runnable for the rest of the migration.
+
+The optional live pre-review check reads SQLite with
 `mode=ro`, validates the entire board DAG, M1/M2 reviewer PASS/commit metadata,
 exact live child bodies/fields/edges, creator lineage, unclaimed `todo` states and
 full inherited routing tuples without emitting identities. It deliberately fails
