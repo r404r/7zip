@@ -67,9 +67,11 @@ copy.
 
 ### Matched facade build
 
-Rebuilt from the committed tree for the record below. The build identity is
-bound to the facade commit, so it changes when the facade source or its build
-inputs change — which is the point of comparing it in the handshake.
+Rebuilt from the committed tree for the record below, at the round 1 fix commit
+`336ebd9`. The identity object records the facade commit alongside every
+selected input's own digest, so it changes both when the facade source or its
+build inputs change and when the recorded commit changes — which is why the
+figures here differ from the round 1 values at `bc244ef`.
 
 | Item | Value |
 | --- | --- |
@@ -254,7 +256,11 @@ than opening an archive or adding a dependency.
 How the regression detects it. `ARCHIVE_BRIDGE_V1_SELF_TEST` compiles a
 development-only `main` into the same translation unit — the shared library
 build never defines it, so the export surface is unchanged (still exactly the
-four in-scope operations; `nm -D` shows no `main` and no self-test symbol).
+four in-scope operations; `nm -D --defined-only` on the shipped
+`libarchive_bridge_v1.so` shows exactly the five `archive_bridge_v1_*` symbols
+the four in-scope operations require — `handshake`, `create_context`,
+`destroy_context`, `capabilities`, `result_destroy` — and no `main`, no
+self-test symbol).
 Global `operator new`/`delete` are replaced with a tracking pair, so freeing a
 pointer that is not live is *recorded* rather than corrupting the heap. This
 needs no sanitizer and no external crate.
