@@ -35,6 +35,7 @@ implementation and not permission to expose its operation.
 | Python | `Python 3.11.16` |
 | Task branch | `wt/t_178b131f` |
 | Base commit | `9d9e72367f549f306fabeac3b2f61db949584e81` |
+| Deliverable commit | `bc244efca0f4af9ba6319c0ef6c03c62e8afa155` |
 
 This host toolchain is the `local_supplement` recorded in
 [toolchains.json](toolchains.json) `policy`, **not** the canonical native CI
@@ -65,16 +66,21 @@ copy.
 
 ### Matched facade build
 
+Rebuilt from the committed tree for the record below. The build identity is
+bound to the facade commit, so it changes when the facade source or its build
+inputs change — which is the point of comparing it in the handshake.
+
 | Item | Value |
 | --- | --- |
 | Artifact | `libarchive_bridge_v1.so` |
-| Artifact SHA-256 | `230c38f04fad74758e6948fa82efab6b784c0fee9d22c966bc08b1a6bec7325f` |
-| Build identity SHA-256 | `fd6d7c99e74c9a970c1bcefd4b6558abb41d4d54ce7104b85902b3c9504dc2f8` |
-| Facade commit | `9d9e72367f549f306fabeac3b2f61db949584e81` |
-| Oracle commit | `9d9e72367f549f306fabeac3b2f61db949584e81` |
+| Artifact SHA-256 | `0ca83c09bacd4855be42882f565e318a5b4544f752749f7e892513a818c2fadd` |
+| Build identity SHA-256 | `faa17d64f0c9c2388755248da7250ad45b7a0018f428b70fba687f115746171c` |
+| Facade commit | `bc244efca0f4af9ba6319c0ef6c03c62e8afa155` |
+| Oracle commit | `bc244efca0f4af9ba6319c0ef6c03c62e8afa155` |
 | Selected translation units | 289 |
 | Identity input records | 295 (289 units + 6 make inputs) |
 | Plugin policy | `built-in-only-no-external-discovery` |
+| Manifest | `.s2a-spike/verify-manifest/facade-build-dev.json` (task worktree) |
 
 Verified properties of the build identity digest:
 
@@ -99,8 +105,11 @@ archive_bridge_v1_result_destroy
 
 ## 3. Commands run and results
 
-Every command below exited 0 on this host. Logs with the literal invocation and
-exit code are under the task worktree at `.s2a-spike/evidence-final/`.
+Every command below exited 0 on this host, verified twice: once before commit
+and once again against the committed tree `bc244ef` with the facade rebuilt
+from scratch. Logs with the literal invocation and exit code are under the task
+worktree at `.s2a-spike/evidence-committed/` (and `.s2a-spike/evidence-final/`
+for the pre-commit run).
 
 | Command | Result |
 | --- | --- |
