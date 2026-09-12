@@ -1,0 +1,107 @@
+# S2a-DEV facade build: retained engine objects plus the bridge translation unit,
+# linked as one internal shared library. Development acceptance only; this is
+# NOT a qualified native Windows/Linux/macOS facade build.
+#
+# Invoke from the retained bundle directory so that every retained compile rule
+# in ../../7zip_gcc.mak resolves its own relative source paths unchanged, the
+# same way docs/ai-migration/qualification/collect-native.py builds the retained
+# products:
+#
+#   make -C CPP/7zip/Bundles/Format7zF \
+#        -f ../../var_gcc.mak -f ../../warn_gcc.mak \
+#        -f <repo>/rust/bridge/makefile.gcc O=<output>
+#
+# The retained ARC_OBJS fragment is included exactly as
+# CPP/7zip/Bundles/Format7zF/makefile.gcc:8 does. Z7_EXTERNAL_CODECS is NOT
+# defined: the frozen Q1 identity pins plugin_policy to
+# built-in-only-no-external-discovery, so CCodecs uses only its built-in
+# registration tables and loads no external module.
+
+PROG = libarchive_bridge_v1.so
+
+# IS_X64 = 1
+# USE_ASM = 1
+# ST_MODE = 1
+
+# Directory holding this makefile and the facade sources, relative to the
+# retained bundle directory the recipes run in.
+BRIDGE_DIR = ../../../../rust/bridge
+
+include Arc_gcc.mak
+
+ifdef SystemDrive
+IS_MINGW = 1
+else
+ifdef SYSTEMDRIVE
+IS_MINGW = 1
+endif
+endif
+
+ifdef IS_MINGW
+$(error S2a-DEV builds the facade on a POSIX development host only; native Windows is a deferred obligation on t_071e4cd7)
+endif
+
+# LDFLAGS_STATIC_3 is an unset extension point in this host's var_gcc.mak, so
+# the retained link recipe emits a shared object without introducing DEF_FILE
+# (a Windows module-definition input the facade does not use).
+LDFLAGS_STATIC_3 = -shared
+
+# Recover the retained CArcInfo registration byte that CArcInfoEx does not keep.
+# --wrap redirects only the registrar call sites; __real_ still runs, so the
+# retained CCodecs::Formats table is built exactly as before. The symbol is the
+# Itanium C++ ABI mangling of RegisterArc(const CArcInfo *); the facade defines
+# the matching __wrap_/__real_ pair.
+LDFLAGS_STATIC_3 += -Wl,--wrap=_Z11RegisterArcPK8CArcInfo
+
+SYS_OBJS = \
+  $O/MyWindows.o \
+
+LOCAL_FLAGS = \
+  $(LOCAL_FLAGS_ST) \
+
+# Only the two UI_COMMON_OBJS members that supply the retained capability
+# tables: LoadCodecs.o for CCodecs/CArcInfoEx and HashCalc.o for
+# Codecs_AddHashArcHandler. No console object is linked.
+UI_COMMON_OBJS = \
+  $O/HashCalc.o \
+  $O/LoadCodecs.o \
+
+# Retained objects the two members above reference, taken unchanged from the
+# retained Alone2 object lists. These add link closure, not new capabilities.
+UI_COMMON_CLOSURE_OBJS = \
+  $O/EnumDirItems.o \
+  $O/SortUtils.o \
+
+WIN_OBJS_2 = \
+  $O/ErrorMsg.o \
+  $O/FileLink.o \
+
+7ZIP_COMMON_OBJS_2 = \
+  $O/FileStreams.o \
+
+BRIDGE_OBJS = \
+  $O/archive_bridge_v1.o \
+
+OBJS = \
+  $(ARC_OBJS) \
+  $(SYS_OBJS) \
+  $(WIN_OBJS_2) \
+  $(7ZIP_COMMON_OBJS_2) \
+  $(UI_COMMON_OBJS) \
+  $(UI_COMMON_CLOSURE_OBJS) \
+  $(BRIDGE_OBJS) \
+
+# SHA-256 of the exact header bytes this build was compiled against. The
+# handshake compares it against the caller's expected digest.
+BRIDGE_HEADER_SHA256 := $(shell sha256sum $(BRIDGE_DIR)/archive_bridge_v1.h | cut -d' ' -f1)
+
+# Build identity digest over the canonical input-identity object, produced by
+# build-manifest.py and passed in by the caller. Empty means "no matched
+# identity", which the handshake then refuses for every caller.
+BRIDGE_BUILD_SHA256 ?=
+
+include ../../7zip_gcc.mak
+
+# One physical line so the echoed build log stays a single parseable command.
+$O/archive_bridge_v1.o: $(BRIDGE_DIR)/archive_bridge_v1.cpp $(BRIDGE_DIR)/archive_bridge_v1.h
+	$(CXX) $(CXXFLAGS) -DARCHIVE_BRIDGE_V1_HEADER_SHA256_HEX=\"$(BRIDGE_HEADER_SHA256)\" -DARCHIVE_BRIDGE_V1_BUILD_SHA256_HEX=\"$(BRIDGE_BUILD_SHA256)\" -I$(BRIDGE_DIR) -I../../../.. $<
