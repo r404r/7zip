@@ -35,7 +35,8 @@ implementation and not permission to expose its operation.
 | Python | `Python 3.11.16` |
 | Task branch | `wt/t_178b131f` |
 | Base commit | `9d9e72367f549f306fabeac3b2f61db949584e81` |
-| Deliverable commit | `bc244efca0f4af9ba6319c0ef6c03c62e8afa155` |
+| Implementation commit (round 1) | `bc244efca0f4af9ba6319c0ef6c03c62e8afa155` |
+| Review round 1 fix commit | `336ebd9c998fca71544f291fdc4ccaa3b0d6b4ce` |
 
 This host toolchain is the `local_supplement` recorded in
 [toolchains.json](toolchains.json) `policy`, **not** the canonical native CI
@@ -73,14 +74,14 @@ inputs change — which is the point of comparing it in the handshake.
 | Item | Value |
 | --- | --- |
 | Artifact | `libarchive_bridge_v1.so` |
-| Artifact SHA-256 | `0ca83c09bacd4855be42882f565e318a5b4544f752749f7e892513a818c2fadd` |
-| Build identity SHA-256 | `faa17d64f0c9c2388755248da7250ad45b7a0018f428b70fba687f115746171c` |
-| Facade commit | `bc244efca0f4af9ba6319c0ef6c03c62e8afa155` |
-| Oracle commit | `bc244efca0f4af9ba6319c0ef6c03c62e8afa155` |
+| Artifact SHA-256 | `04a4975ebfa70e1e29eca1814a276faac33f2319d137c05cf5ee567473ff8462` |
+| Build identity SHA-256 | `a280b56485ca856de12a02b105d96ebb8916730a8c10862971ad5c99401a4738` |
+| Facade commit | `336ebd9c998fca71544f291fdc4ccaa3b0d6b4ce` |
+| Oracle commit | `336ebd9c998fca71544f291fdc4ccaa3b0d6b4ce` |
 | Selected translation units | 289 |
 | Identity input records | 295 (289 units + 6 make inputs) |
 | Plugin policy | `built-in-only-no-external-discovery` |
-| Manifest | `.s2a-spike/verify-manifest/facade-build-dev.json` (task worktree) |
+| Manifest | `.s2a-spike/manifest-final/facade-build-dev.json` (task worktree) |
 
 Verified properties of the build identity digest:
 
@@ -105,11 +106,11 @@ archive_bridge_v1_result_destroy
 
 ## 3. Commands run and results
 
-Every command below exited 0 on this host, verified twice: once before commit
-and once again against the committed tree `bc244ef` with the facade rebuilt
-from scratch. Logs with the literal invocation and exit code are under the task
-worktree at `.s2a-spike/evidence-committed/` (and `.s2a-spike/evidence-final/`
-for the pre-commit run).
+Every command below exited 0 on this host. After the review round 1 fix the
+whole suite was re-run against the committed tree `336ebd9` with the facade
+rebuilt from scratch. Logs with the literal invocation and exit code are under
+the task worktree at `.s2a-spike/evidence-r2/` (round 1 runs are preserved at
+`.s2a-spike/evidence-committed/` and `.s2a-spike/evidence-final/`).
 
 | Command | Result |
 | --- | --- |
@@ -131,6 +132,8 @@ for the pre-commit run).
 | `bash .github/tests/release_notes_test.sh` | exit 0 |
 | `git diff --check` | exit 0 |
 | `python3 docs/ai-migration/validate-migration-dag.py` | exit 0 — manifest PASS 29 children / 104 edges, amendment PASS, 10 negative controls PASS |
+| `python3 docs/ai-migration/qualification/validate.py` | exit 0 — schema, selected input/notice hashes, capability boundaries, links and 4 schema negative controls PASS |
+| `bash .s2a-spike/run-selftest.sh <facade-build-dir> <outdir>` | exit 0 — fixed build 19/19 ok; reconstructed pre-fix build fails, see section 4.1 |
 
 `check-layout.py` is unchanged and was run against the reviewed header, so the
 implemented header still matches the frozen Q1 layout.
@@ -221,6 +224,69 @@ exports, which is a different quantity from what a built-in-path facade
 reports. The test now compares against the effective value and documents why;
 asserting the raw value would have demanded exactly the "repair" of retained
 behavior that `abi-v1.md` forbids.
+
+## 4.1 Review round 1 defect: the CTextArena refusal path double free
+
+Independent review round 1 found a real double free in
+`rust/bridge/archive_bridge_v1.cpp`, `CTextArena::Add`. The verdict was CHANGES
+and this section records the fix and its regression.
+
+What was wrong. The "not representable as UTF-16" branch deleted the block and
+then threw `std::bad_alloc`. That throw was caught by the same function's
+`catch (...)`, and because the block had never been pushed into `_blocks`, the
+`_blocks.empty() || _blocks.back() != block` guard was true, so the catch
+deleted the identical pointer a second time. Two code paths owned the same
+allocation, which is the ownership mistake the FFI boundary must not make.
+
+What changed. The block is now owned by a scoped `CBlockGuard` for the whole
+build and released to the arena only after `push_back` has succeeded. No error
+path deletes by hand, the manual `try`/`catch` is gone, and every throw —
+the refusal, a `push_back` allocation failure, anything else — frees the block
+exactly once through the guard's destructor.
+
+Why no capability query exposed it. The refusal branch is unreachable through
+the four exported operations: every retained format, codec and hasher name is
+ASCII, so `(uint32_t)*p` never exceeds `0x10FFFF` and the branch is never taken.
+That is why the 15 contract tests passed over a latent double free, and why the
+regression drives the branch directly with a bounded synthetic code point rather
+than opening an archive or adding a dependency.
+
+How the regression detects it. `ARCHIVE_BRIDGE_V1_SELF_TEST` compiles a
+development-only `main` into the same translation unit — the shared library
+build never defines it, so the export surface is unchanged (still exactly the
+four in-scope operations; `nm -D` shows no `main` and no self-test symbol).
+Global `operator new`/`delete` are replaced with a tracking pair, so freeing a
+pointer that is not live is *recorded* rather than corrupting the heap. This
+needs no sanitizer and no external crate.
+
+The regression is proven not vacuous. `.s2a-spike/run-selftest.sh` builds the
+self-test against the fixed source, then rebuilds the **same** test against a
+reconstructed pre-fix `Add` and requires that one to fail:
+
+```
+fixed exit=0 (want 0)   buggy exit=1 (want nonzero)
+REGRESSION IS REAL: it passes on the fix and fails on the pre-fix code
+```
+
+The fixed build reports 19/19 `ok`. The pre-fix build fails exactly the three
+double-free assertions (`Add's throw path performs no double free`, `no double
+free with published blocks present`, `256 refusals perform no double free`)
+while the surrounding behavioral assertions still pass — the test discriminates
+the defect, not the build.
+
+Two anti-vacuity controls are included, because an audit that observes nothing
+would make every assertion above pass trivially:
+
+* `the heap audit reports a deliberate double free (control)` — a deliberate
+  double free must be reported. This control initially failed for a real reason
+  worth recording: C++14 permits eliding a `new`/`delete` pair whose object
+  never escapes, and GCC does elide it at `-O1`, so the control allocated
+  nothing. Verified directly (`new=0 plain_delete=0 sized_delete=0` at `-O1`
+  versus `new=1 sized_delete=1` with `-fno-allocation-dce`). The control now
+  calls `::operator new`/`::operator delete` explicitly, which cannot be elided
+  and exercises precisely the functions the audit replaces.
+* `the audit observed the block allocation (test is not vacuous)` — asserts the
+  arena test itself actually allocated under audit.
 
 ## 5. Retained-engine integration
 
@@ -387,6 +453,13 @@ Additional limits of this evidence:
   those are part of the deferred native campaign.
 * The leak check is allocation-balance accounting observable through the
   facade's own BUSY/OK guards, not an external allocator or sanitizer audit.
+* The `CTextArena` regression's heap audit replaces global
+  `operator new`/`delete` inside one development-only test binary. It detects
+  double and foreign frees on the paths it exercises; it is not a general
+  allocator audit, does not track the retained engine's own allocations, and
+  does not substitute for the deferred sanitizer work. The defect it covers was
+  found by independent review, not by the contract tests, which is itself
+  evidence that enumeration-level tests do not cover error-path ownership.
 * Registration-byte recovery is proven only for the GNU-linker Itanium C++ ABI
   toolchain on this host. The Windows mechanism is unsolved and fails closed.
 * Enumerating a capability is not qualifying an operation, and a writer factory
