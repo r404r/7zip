@@ -63,6 +63,27 @@ with evidence and human review before implementation.
 
 Do not skip directly to GUI migration. M3 may begin only after reviewed M1 and M2.
 
+### Development-first sequencing, deferred native qualification
+
+Human decision (2026-09-12): Linux, Windows and macOS real-machine verification
+is deferred to later work; mainline development proceeds first. Development
+acceptance and qualified/release acceptance are separate.
+
+A card may proceed on development acceptance when its remaining dependency on a
+deferred platform campaign is evidence-only, meaning the campaign supplies
+confirming platform evidence rather than a semantic, ownership, safety or
+licensing input the implementation needs. Dependencies that supply such inputs
+stay in force and are not removed to make a card runnable.
+
+Deferral changes ordering only. It does not waive ordinary local compilation,
+unit tests or self-owned contract tests, does not authorize mocks as
+qualification evidence, and does not relax the compatibility, safety, licensing
+or independent-review requirements in this file. Deferred native obligations
+remain open on their existing cards and must never be deleted, completed,
+archived or represented as passed. Capabilities whose native behavior is not yet
+qualified stay unavailable or disabled by default rather than given invented
+behavior. Release still requires every originally mandated native evidence item.
+
 ## Compatibility and test oracle
 
 Preserve archive-format semantics, compression, encryption, password handling,
