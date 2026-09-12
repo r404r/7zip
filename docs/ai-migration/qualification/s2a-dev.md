@@ -56,7 +56,7 @@ S1 `e809c92b2d493412882f8a623f05fbe2ee508ff2`.
 | Path | SHA-256 |
 | --- | --- |
 | `rust/bridge/archive_bridge_v1.h` | `eabe714b31e2076735b8313c06618e5dbb3db4ea924cbef244b78a8b107ee26d` |
-| `rust/bridge/archive_bridge_v1.cpp` | `e3d62f6cc0741668e3e18770227d475fe0e7e731ed469952fc1a99cc62d5251e` |
+| `rust/bridge/archive_bridge_v1.cpp` | `a987593ddec7fc863c21e6e49759cf9e569d3dcd7bc107663366f3cef76099f2` |
 | `rust/bridge/makefile.gcc` | `b3741d2aa467dca0d106ca2bd21671a26db8e7d21fef7fb177a6e158279c6621` |
 | `rust/bridge/makefile` | `f3027c6c729a4d2d969ffceff92ad96e2dfcfc34943fb7c854f5f0ddfb0153f0` |
 | `rust/bridge/build-manifest.py` | `e4a4412204db94057f7cf72c4bd9d3c813bdf508b436ddd5504baf428888974d` |
