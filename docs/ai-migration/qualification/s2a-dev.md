@@ -67,23 +67,38 @@ copy.
 
 ### Matched facade build
 
-Rebuilt from the committed tree for the record below, at the round 1 fix commit
-`336ebd9`. The identity object records the facade commit alongside every
-selected input's own digest, so it changes both when the facade source or its
-build inputs change and when the recorded commit changes — which is why the
-figures here differ from the round 1 values at `bc244ef`.
+Rebuilt from the committed tree for the record below. Two matched builds are
+recorded because the identity object binds the recorded commit as well as every
+selected input's own digest, so a later documentation-only commit produces a
+different — equally matched — identity. Both were built by
+`rust/bridge/build-manifest.py` from scratch and both passed the full contract
+suite against the library they produced.
 
-| Item | Value |
-| --- | --- |
-| Artifact | `libarchive_bridge_v1.so` |
-| Artifact SHA-256 | `04a4975ebfa70e1e29eca1814a276faac33f2319d137c05cf5ee567473ff8462` |
-| Build identity SHA-256 | `a280b56485ca856de12a02b105d96ebb8916730a8c10862971ad5c99401a4738` |
-| Facade commit | `336ebd9c998fca71544f291fdc4ccaa3b0d6b4ce` |
-| Oracle commit | `336ebd9c998fca71544f291fdc4ccaa3b0d6b4ce` |
-| Selected translation units | 289 |
-| Identity input records | 295 (289 units + 6 make inputs) |
-| Plugin policy | `built-in-only-no-external-discovery` |
-| Manifest | `.s2a-spike/manifest-final/facade-build-dev.json` (task worktree) |
+| Item | At `336ebd9` (round 1 fix) | At `9e6b05f` (final re-verification) |
+| --- | --- | --- |
+| Artifact | `libarchive_bridge_v1.so` | `libarchive_bridge_v1.so` |
+| Artifact SHA-256 | `04a4975ebfa70e1e29eca1814a276faac33f2319d137c05cf5ee567473ff8462` | `7fa5e84e364c90038d320fabf4b6ea998697abc4c5e80f1db18eeed20ef5cb87` |
+| Build identity SHA-256 | `a280b56485ca856de12a02b105d96ebb8916730a8c10862971ad5c99401a4738` | `dbcafb611e3a00e259235b13922b8892821b913358df5c5d9f1c3b217aeb67e5` |
+| Facade / oracle commit | `336ebd9c998fca71544f291fdc4ccaa3b0d6b4ce` | `9e6b05fa67fd4a43fac5c0aac96f5d6d0966f3a8` |
+| Selected translation units | 289 | 289 |
+| Identity input records | 295 (289 units + 6 make inputs) | 295 |
+| Plugin policy | `built-in-only-no-external-discovery` | `built-in-only-no-external-discovery` |
+| Manifest | `.s2a-spike/manifest-final/facade-build-dev.json` | `.s2a-spike/manifest-r3/facade-build-dev.json` |
+
+Between those two commits no file under `rust/`, `C/`, `CPP/` or `Asm/`
+changed — only this evidence document — so the differing digests are the
+identity binding working as designed, not a behavioral change. The round 1
+values at `bc244ef` differ for the same reason plus the actual source fix.
+
+One consequence is worth stating plainly rather than hiding: because the
+identity binds the commit, the commit that finally records these figures cannot
+itself be the commit they were measured at — that would be circular. The
+figures above are the real, measured output of a from-scratch build at
+`9e6b05f`. The commit that adds this paragraph sits on top of it and changes
+only this document; `git diff --name-only 9e6b05f HEAD` touches no build input,
+so the facade binary and its behavior are identical and a rebuild at HEAD
+yields the same artifact with a new identity digest. No figure here is
+extrapolated.
 
 Verified properties of the build identity digest:
 
@@ -109,9 +124,12 @@ archive_bridge_v1_result_destroy
 ## 3. Commands run and results
 
 Every command below exited 0 on this host. After the review round 1 fix the
-whole suite was re-run against the committed tree `336ebd9` with the facade
-rebuilt from scratch. Logs with the literal invocation and exit code are under
-the task worktree at `.s2a-spike/evidence-r2/` (round 1 runs are preserved at
+whole suite was re-run twice from scratch: once against `336ebd9` (the fix
+itself) and once against the final tree `9e6b05f`, each against a facade
+rebuilt from scratch for that commit. The results below are the `9e6b05f` run.
+Logs with the literal invocation and exit code are under the task worktree at
+`.s2a-spike/evidence-r3/` (the `336ebd9` run is preserved at
+`.s2a-spike/evidence-r2/`, and the round 1 runs at
 `.s2a-spike/evidence-committed/` and `.s2a-spike/evidence-final/`).
 
 | Command | Result |
@@ -255,15 +273,17 @@ than opening an archive or adding a dependency.
 
 How the regression detects it. `ARCHIVE_BRIDGE_V1_SELF_TEST` compiles a
 development-only `main` into the same translation unit — the shared library
-build never defines it, so the export surface is unchanged (still exactly the
-four in-scope operations; `nm -D --defined-only` on the shipped
-`libarchive_bridge_v1.so` shows exactly the five `archive_bridge_v1_*` symbols
-the four in-scope operations require — `handshake`, `create_context`,
-`destroy_context`, `capabilities`, `result_destroy` — and no `main`, no
-self-test symbol).
-Global `operator new`/`delete` are replaced with a tracking pair, so freeing a
-pointer that is not live is *recorded* rather than corrupting the heap. This
-needs no sanitizer and no external crate.
+build never defines it, so the export surface is unchanged. Verified with
+`nm -D --defined-only` on the shipped `libarchive_bridge_v1.so` at `9e6b05f`:
+the exported function symbols are exactly `archive_bridge_v1_handshake`,
+`_create_context`, `_destroy_context`, `_capabilities` and `_result_destroy`,
+with no `main` and no self-test symbol. (Two weak `std::vector` template
+instantiations carry `archive_bridge_v1_method` inside their mangled names;
+they are implementation detail of the result arena, not exported operations,
+and the manifest generator's word-boundary export check correctly excludes
+them.) Global `operator new`/`delete` are replaced with a tracking pair, so
+freeing a pointer that is not live is *recorded* rather than corrupting the
+heap. This needs no sanitizer and no external crate.
 
 The regression is proven not vacuous. `.s2a-spike/run-selftest.sh` builds the
 self-test against the fixed source, then rebuilds the **same** test against a
