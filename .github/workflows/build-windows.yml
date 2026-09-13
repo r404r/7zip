@@ -7,7 +7,8 @@ name: build-windows-x64
 
 on:
   push:
-    branches: ['**']
+    # Keep migration/worktree pushes out of the legacy product pipeline.
+    branches: ['dev-main']
     tags: ['*-fork.*']
   pull_request:
   workflow_dispatch:
