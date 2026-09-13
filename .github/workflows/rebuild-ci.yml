@@ -102,7 +102,7 @@ jobs:
                 O="$RUNNER_TEMP/rebuild-facade" > "$probe/facade.log" 2>&1
               ;;
             Windows)
-              cmd.exe /d /c 'nmake /NOLOGO /f rust\bridge\makefile' > "$probe/facade.log" 2>&1
+              cmd.exe /d /c "nmake /NOLOGO /f rust\bridge\makefile" > "$probe/facade.log" 2>&1
               ;;
             *)
               printf 'Unsupported runner OS: %s\n' "$RUNNER_OS" > "$probe/facade.log"
