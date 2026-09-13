@@ -16,6 +16,12 @@ produce, such as a password that is *defined and empty* as distinct from
 *undefined* — is directly selectable and independently observable through
 `ICryptoGetTextPassword2`'s explicit `passwordIsDefined` out-parameter.
 
+For ZIP creation, the retained handler also requires its documented `em`
+property to choose an encryption method. The harness exposes that retained
+property only as `--zip-encryption zipcrypto|aes256` and refuses a
+password-bearing ZIP create without it; this prevents a plaintext ZIP from
+being recorded as password-boundary evidence.
+
 ## Why not just use the `7zz`/`7z` CLI?
 
 B05's own acceptance criterion states this explicitly: **"native

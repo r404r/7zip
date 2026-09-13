@@ -141,6 +141,13 @@ enum class PwMode
 static PwMode g_PwMode = PwMode::kUndefined;
 static UString g_PwValue;         // used for kCorrect / kWrong / non-ASCII
 
+// ZIP does not encrypt merely because its update callback returns a password:
+// its retained handler requires the `em` property to select ZipCrypto or AES.
+// Keep this explicit so the harness cannot claim a password test while
+// producing a plaintext ZIP.
+enum class ZipEncryption { kUnspecified, kZipCrypto, kAes256 };
+static ZipEncryption g_ZipEncryption = ZipEncryption::kUnspecified;
+
 // Every password-callback invocation increments this and prints a
 // call-numbered, VALUE-FREE log line, so per-item vs per-call behavior is
 // externally observable without ever printing the secret itself.
@@ -487,6 +494,7 @@ static void PrintHelp()
   PrintLine("MODE in {undefined, defined-empty, wrong, correct, cancel, eof}");
   PrintLine("--password VALUE is required for MODE=wrong and MODE=correct; ignored otherwise.");
   PrintLine("--header-encrypt (create only): forces -mhe=on-equivalent (encrypt header + names, 7z only).");
+  PrintLine("--zip-encryption {zipcrypto,aes256} (ZIP create with a defined password; selects retained em=ZipCrypto/AES256).");
 }
 
 int Z7_CDECL main(int numArgs, const char *args[])
@@ -545,6 +553,16 @@ int Z7_CDECL main(int numArgs, const char *args[])
     {
       headerEncrypt = true;
     }
+    else if (a == "--zip-encryption")
+    {
+      if (++i >= numArgs) { PrintErr("missing value for --zip-encryption\n"); return 2; }
+      AString m(args[i]);
+      if (m.IsEqualTo_Ascii_NoCase("zipcrypto"))
+        g_ZipEncryption = ZipEncryption::kZipCrypto;
+      else if (m.IsEqualTo_Ascii_NoCase("aes256"))
+        g_ZipEncryption = ZipEncryption::kAes256;
+      else { PrintErr("unknown --zip-encryption value (use zipcrypto|aes256)\n"); return 2; }
+    }
     else
     {
       positional.Add(us2fs(GetUnicodeString(args[i])));
@@ -590,6 +608,18 @@ int Z7_CDECL main(int numArgs, const char *args[])
     const FString &formatArg = positional[0];
     const FString &archiveName = positional[1];
     const GUID *clsid = (formatArg == FTEXT("zip")) ? (const GUID *)&CLSID_FormatZip : (const GUID *)&CLSID_Format7z;
+    const bool isZip = (formatArg == FTEXT("zip"));
+
+    if (isZip && headerEncrypt)
+    {
+      PrintErr("--header-encrypt is only valid for 7z archives\n");
+      return 2;
+    }
+    if (isZip && g_PwMode != PwMode::kUndefined && g_ZipEncryption == ZipEncryption::kUnspecified)
+    {
+      PrintErr("ZIP create with a password mode requires --zip-encryption zipcrypto|aes256; refusing plaintext ZIP\n");
+      return 2;
+    }
 
     CObjectVector<CDirItem> dirItems;
     for (unsigned i = 2; i < positional.Size(); i++)
@@ -638,6 +668,27 @@ int Z7_CDECL main(int numArgs, const char *args[])
       else
       {
         PrintErr("ISetProperties unsupported by this format -- --header-encrypt not applicable\n");
+        return 1;
+      }
+    }
+
+    if (isZip && g_ZipEncryption != ZipEncryption::kUnspecified)
+    {
+      CMyComPtr<ISetProperties> setProperties;
+      outArchive->QueryInterface(IID_ISetProperties, (void **)&setProperties);
+      if (!setProperties)
+      {
+        PrintErr("ISetProperties unsupported by ZIP format\n");
+        return 1;
+      }
+      const wchar_t *names[] = { L"em" };
+      NCOM::CPropVariant values[] =
+      {
+        (g_ZipEncryption == ZipEncryption::kZipCrypto) ? L"ZipCrypto" : L"AES256"
+      };
+      if (setProperties->SetProperties(names, values, 1) != S_OK)
+      {
+        PrintErr("SetProperties(em=ZipCrypto|AES256) failed\n");
         return 1;
       }
     }

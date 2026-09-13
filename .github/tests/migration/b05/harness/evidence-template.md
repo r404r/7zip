@@ -53,8 +53,10 @@ selftest-leak output (paste verbatim, must match BUILD.md exactly):
 | 3.2 | defined-empty, header-encrypt | 7z | | | |
 | 3.3 | correct, header-encrypt | 7z | | | |
 | 3.4 | correct non-ASCII, header-encrypt | 7z | | | |
-| 3.5 | correct ASCII | zip | | | |
-| 3.6 | correct non-ASCII (expect E_INVALIDARG / rejection) | zip | | | |
+| 3.5a | correct ASCII | zip / ZipCrypto | | | |
+| 3.5b | correct ASCII | zip / AES256 | | | |
+| 3.6a | correct non-ASCII (expect E_INVALIDARG / rejection) | zip / ZipCrypto | | | |
+| 3.6b | correct non-ASCII (expect E_INVALIDARG / rejection) | zip / AES256 | | | |
 
 ## Section 4 — Redaction / no-leak
 

@@ -431,6 +431,10 @@ the distinction is caused by the password and not by the archive/file.
 mkdir out_undef
 <H>/b05_password_harness x t2.7z out_undef/ --password-mode undefined
 ```
+**Method**: capture combined stdout/stderr and the process exit code. Record
+the callback line, `Extract()` HRESULT, `items_ok`, and `items_error` in the
+Section 2.3 evidence row.
+
 **Verification point**: AI's own Linux observation: this does NOT mirror
 2.2's per-item CRC errors. Instead the callback itself reports failure
 (`[harness] password not defined (extract) -- reporting failure per
@@ -461,6 +465,10 @@ alone — record both counts.
 mkdir out_cancel
 <H>/b05_password_harness x t2.7z out_cancel/ --password-mode cancel
 ```
+**Method**: capture combined stdout/stderr and the process exit code. Record
+the `[harness] password prompt aborted (extract)` line, `Extract()` HRESULT,
+`items_ok`, and `items_error` in the Section 2.4 evidence row.
+
 **Verification point**: AI's own Linux observation:
 `[harness] password prompt aborted (extract)`, then
 `Extract() HRESULT=0x80004004 items_ok=0 items_error=0`, exit 1 — the
@@ -478,16 +486,31 @@ result to force the expected contrast.
 ## Section 3 — Create (update) password states, 7z and ZIP
 
 ### 3.1 undefined password (7z)
+**Exact steps**:
 ```
 <H>/b05_password_harness a 7z t3_undef.7z a.txt --password-mode undefined
 ```
+**Method**: capture combined stdout/stderr and the process exit code. Record
+the `UpdateItems HRESULT` and `password-callback total calls` lines.
+
 **Verification point**: succeeds, exit 0 (creating an unencrypted archive
 needs no password) — AI's own observation: `UpdateItems HRESULT=0x00000000`.
 
+**Negative control**: run `<H>/b05_password_harness l t3_undef.7z
+--password-mode undefined`; it must list `item count=1`, while the
+header-encrypted archive in 3.2 must fail under the same mode. This proves
+that this create operation did not silently turn an undefined password into
+an encrypted empty password.
+
 ### 3.2 defined-empty password, header-encrypt (7z)
+**Exact steps**:
 ```
 <H>/b05_password_harness a 7z t3_empty.7z a.txt --password-mode defined-empty --header-encrypt
 ```
+**Method**: capture combined stdout/stderr and the process exit code. Record
+the `UpdateItems HRESULT` and `password-callback total calls` lines, then
+record the exit code and key line from the negative-control list command.
+
 **Verification point**: succeeds, exit 0 — an archive CAN be created with
 an explicitly-empty-but-defined password (distinguishing this from
 `undefined`, where no encryption is requested at all — cross-check against
@@ -498,6 +521,7 @@ an explicitly-empty-but-defined password (distinguishing this from
 --password-mode undefined` must FAIL (mirrors Section 1.2/1.3's contrast).
 
 ### 3.3 correct password, header-encrypt (7z)
+**Exact steps**:
 ```
 <H>/b05_password_harness a 7z t3_correct.7z a.txt --password-mode correct --password B05Synth-Correct-9f2a --header-encrypt > create_correct_transcript.txt 2>&1
 ```
@@ -505,23 +529,64 @@ an explicitly-empty-but-defined password (distinguishing this from
 
 **Verification point**: exit 0.
 
+**Negative control**: run `<H>/b05_password_harness l t3_correct.7z
+--password-mode wrong --password B05Synth-WRONG-1234`; it must fail. Then
+run it with `--password-mode correct --password B05Synth-Correct-9f2a`; it
+must list `item count=1`. Record both exit codes and key lines. This proves
+that the successful create was protected by the supplied password rather
+than silently producing an unencrypted archive.
+
 ### 3.4 correct non-ASCII password, header-encrypt (7z)
+**Exact steps**:
 ```
 <H>/b05_password_harness a 7z t3_nonascii.7z a.txt --password-mode correct --password "B05Synth-注重-éèü-テスト" --header-encrypt
 ```
+**Method**: capture combined stdout/stderr and the process exit code. Record
+the `UpdateItems HRESULT` and `password-callback total calls` lines.
+
 **Verification point**: exit 0 — 7z accepts non-ASCII passwords on create
 (contrast with 3.6 below).
 
-### 3.5 correct ASCII password (ZIP)
-```
-<H>/b05_password_harness a zip t3_zip_ascii.zip a.txt --password-mode correct --password B05Synth-Correct-9f2a
-```
-**Verification point**: exit 0.
+**Negative control**: Section 3.6 repeats the identical non-ASCII password
+with format `zip` and must reject it. This demonstrates that the success is
+not a harness failure to receive the non-ASCII argument. Record the 3.6
+HRESULT/exit alongside this row.
 
-### 3.6 correct non-ASCII password (ZIP) — expect rejection
+### 3.5 correct ASCII password (ZIP: ZipCrypto and AES256)
+**Exact steps**:
 ```
-<H>/b05_password_harness a zip t3_zip_nonascii.zip a.txt --password-mode correct --password "B05Synth-注重-éèü-テスト"
+<H>/b05_password_harness a zip t3_zipcrypto_ascii.zip a.txt --password-mode correct --password B05Synth-Correct-9f2a --zip-encryption zipcrypto
+<H>/b05_password_harness a zip t3_aes256_ascii.zip a.txt --password-mode correct --password B05Synth-Correct-9f2a --zip-encryption aes256
 ```
+**Method**: capture combined stdout/stderr and the process exit code. Record
+the `UpdateItems HRESULT` and `password-callback total calls` lines for each
+method. `--zip-encryption` is mandatory: the retained ZIP handler does not
+encrypt just because the callback supplies a password. The harness refuses a
+password-bearing ZIP create without this selector, so a plaintext archive
+cannot be mistaken for a password test.
+
+**Verification point**: both creates exit 0 and each prints
+`password-callback #1 fired: Update.CryptoGetTextPassword2`; this covers the
+legacy baseline's ASCII ZipCrypto and AES256 paths.
+
+**Negative control**: for EACH archive, create a fresh output directory and
+run `x` once with `--password-mode wrong --password B05Synth-WRONG-1234` and
+once with `--password-mode correct --password B05Synth-Correct-9f2a`. The
+wrong run must have a nonzero process exit and an `item result CODE=` line;
+the correct run must exit 0 with `items_ok=1 items_error=0`, and its output
+file must byte-match `a.txt`. A ZIP list alone is not a password control:
+unencrypted ZIP headers may list names without invoking the callback.
+
+### 3.6 correct non-ASCII password (ZIP, both methods) — expect rejection
+**Exact steps**:
+```
+<H>/b05_password_harness a zip t3_zipcrypto_nonascii.zip a.txt --password-mode correct --password "B05Synth-注重-éèü-テスト" --zip-encryption zipcrypto
+<H>/b05_password_harness a zip t3_aes256_nonascii.zip a.txt --password-mode correct --password "B05Synth-注重-éèü-テスト" --zip-encryption aes256
+```
+**Method**: capture combined stdout/stderr and the process exit code. Record
+the `UpdateItems HRESULT` and `password-callback total calls` lines verbatim
+for each method.
+
 **Verification point**: AI's own Linux observation: FAILS with
 `UpdateItems HRESULT=0x80070057` (E_INVALIDARG), exit 1. This matches the
 source at `CPP/7zip/Archive/Zip/ZipHandlerOut.cpp:415-416`
@@ -533,7 +598,9 @@ prediction to hold on your platform without checking.**
 
 **Negative control**: 3.4's SUCCESS with the identical non-ASCII password
 against the 7z format (not ZIP) proves the rejection is ZIP-format-specific
-behavior, not a harness bug that rejects all non-ASCII input.
+behavior, not a harness bug that rejects all non-ASCII input. In addition,
+3.5's successful ASCII creates prove that each ZIP encryption method itself
+is live before this rejection is judged.
 
 ## Section 4 — Redaction / no-leak
 
@@ -543,6 +610,9 @@ behavior, not a harness bug that rejects all non-ASCII input.
 ```
 python3 .github/tests/migration/b05/harness/check_no_leak.py --selftest
 ```
+**Method**: capture stdout/stderr and the process exit code in the Section
+4.0 evidence row.
+
 **Verification point**: prints `SELFTEST PASS: checker correctly detected
 the planted secret...`, exit 0. If this does not print PASS, the checker
 itself is broken — STOP, do not trust any other Section 4 result until
