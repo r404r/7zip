@@ -1,0 +1,195 @@
+archive_bridge_v1_bytes size 16 align 8
+archive_bridge_v1_bytes.data 0
+archive_bridge_v1_bytes.length 8
+archive_bridge_v1_text size 16 align 8
+archive_bridge_v1_text.data 0
+archive_bridge_v1_text.length 8
+archive_bridge_v1_path size 40 align 8
+archive_bridge_v1_path.tag 0
+archive_bridge_v1_path.reserved 4
+archive_bridge_v1_path.unix_bytes 8
+archive_bridge_v1_path.windows_units 24
+archive_bridge_v1_identity size 24 align 8
+archive_bridge_v1_identity.archive_id 0
+archive_bridge_v1_identity.generation 8
+archive_bridge_v1_identity.chain_position 16
+archive_bridge_v1_identity.item_index 20
+archive_bridge_v1_timestamp size 32 align 8
+archive_bridge_v1_timestamp.format 0
+archive_bridge_v1_timestamp.precision 4
+archive_bridge_v1_timestamp.raw_low 8
+archive_bridge_v1_timestamp.raw_high 16
+archive_bridge_v1_timestamp.defined 24
+archive_bridge_v1_timestamp.reserved 28
+archive_bridge_v1_value size 96 align 8
+archive_bridge_v1_value.tag 0
+archive_bridge_v1_value.original_type 4
+archive_bridge_v1_value.integer_width 8
+archive_bridge_v1_value.reserved 12
+archive_bridge_v1_value.signed_value 16
+archive_bridge_v1_value.unsigned_value 24
+archive_bridge_v1_value.text 32
+archive_bridge_v1_value.bytes 48
+archive_bridge_v1_value.timestamp 64
+archive_bridge_v1_property size 104 align 8
+archive_bridge_v1_property.property_id 0
+archive_bridge_v1_property.source_kind 4
+archive_bridge_v1_property.value 8
+archive_bridge_v1_scoped_property size 128 align 8
+archive_bridge_v1_scoped_property.scope 0
+archive_bridge_v1_scoped_property.name 16
+archive_bridge_v1_scoped_property.value 32
+archive_bridge_v1_diagnostic size 48 align 8
+archive_bridge_v1_diagnostic.domain 0
+archive_bridge_v1_diagnostic.code 4
+archive_bridge_v1_diagnostic.chain_position 8
+archive_bridge_v1_diagnostic.flags 12
+archive_bridge_v1_diagnostic.message 16
+archive_bridge_v1_diagnostic.properties 32
+archive_bridge_v1_diagnostic.property_count 40
+archive_bridge_v1_arc_error size 72 align 8
+archive_bridge_v1_arc_error.there_is_tail 0
+archive_bridge_v1_arc_error.unexpected_end 4
+archive_bridge_v1_arc_error.ignore_tail 8
+archive_bridge_v1_arc_error.error_flags_defined 12
+archive_bridge_v1_arc_error.error_flags 16
+archive_bridge_v1_arc_error.warning_flags 20
+archive_bridge_v1_arc_error.error_format_index 24
+archive_bridge_v1_arc_error.chain_position 28
+archive_bridge_v1_arc_error.tail_size 32
+archive_bridge_v1_arc_error.error_message 40
+archive_bridge_v1_arc_error.warning_message 56
+archive_bridge_v1_chain size 128 align 8
+archive_bridge_v1_chain.chain_position 0
+archive_bridge_v1_chain.format_index 4
+archive_bridge_v1_chain.item_count 8
+archive_bridge_v1_chain.offset 16
+archive_bridge_v1_chain.format_name 24
+archive_bridge_v1_chain.properties 40
+archive_bridge_v1_chain.property_count 48
+archive_bridge_v1_chain.error 56
+archive_bridge_v1_entry size 56 align 8
+archive_bridge_v1_entry.identity 0
+archive_bridge_v1_entry.name 24
+archive_bridge_v1_entry.properties 40
+archive_bridge_v1_entry.property_count 48
+archive_bridge_v1_info size 88 align 4
+archive_bridge_v1_info.struct_size 0
+archive_bridge_v1_info.abi_major 4
+archive_bridge_v1_info.revision 8
+archive_bridge_v1_info.pointer_bits 12
+archive_bridge_v1_info.target 16
+archive_bridge_v1_info.little_endian 20
+archive_bridge_v1_info.header_sha256 24
+archive_bridge_v1_info.build_manifest_sha256 56
+archive_bridge_v1_context_options size 96 align 4
+archive_bridge_v1_context_options.struct_size 0
+archive_bridge_v1_context_options.abi_major 4
+archive_bridge_v1_context_options.expected 8
+archive_bridge_v1_format size 72 align 8
+archive_bridge_v1_format.index 0
+archive_bridge_v1_format.registration_id 4
+archive_bridge_v1_format.flags 8
+archive_bridge_v1_format.time_flags 12
+archive_bridge_v1_format.has_reader 16
+archive_bridge_v1_format.has_writer 20
+archive_bridge_v1_format.name 24
+archive_bridge_v1_format.extensions 40
+archive_bridge_v1_format.additional_extensions 56
+archive_bridge_v1_method size 40 align 8
+archive_bridge_v1_method.method_id 0
+archive_bridge_v1_method.encoder 8
+archive_bridge_v1_method.decoder 12
+archive_bridge_v1_method.is_filter 16
+archive_bridge_v1_method.digest_size 20
+archive_bridge_v1_method.name 24
+archive_bridge_v1_capability_view size 64 align 8
+archive_bridge_v1_capability_view.struct_size 0
+archive_bridge_v1_capability_view.abi_major 4
+archive_bridge_v1_capability_view.formats 8
+archive_bridge_v1_capability_view.format_count 16
+archive_bridge_v1_capability_view.codecs 24
+archive_bridge_v1_capability_view.codec_count 32
+archive_bridge_v1_capability_view.hashers 40
+archive_bridge_v1_capability_view.hasher_count 48
+archive_bridge_v1_capability_view.qualified_operations 56
+archive_bridge_v1_question size 56 align 8
+archive_bridge_v1_question.struct_size 0
+archive_bridge_v1_question.kind 4
+archive_bridge_v1_question.task_id 8
+archive_bridge_v1_question.request_id 16
+archive_bridge_v1_question.archive_id 24
+archive_bridge_v1_question.generation 32
+archive_bridge_v1_question.volume_name 40
+archive_bridge_v1_reply size 72 align 8
+archive_bridge_v1_reply.struct_size 0
+archive_bridge_v1_reply.kind 4
+archive_bridge_v1_reply.request_id 8
+archive_bridge_v1_reply.password 16
+archive_bridge_v1_reply.volume_path 32
+archive_bridge_v1_progress size 40 align 8
+archive_bridge_v1_progress.struct_size 0
+archive_bridge_v1_progress.counter_kind 4
+archive_bridge_v1_progress.task_id 8
+archive_bridge_v1_progress.total 16
+archive_bridge_v1_progress.completed 24
+archive_bridge_v1_progress.total_defined 32
+archive_bridge_v1_progress.completed_defined 36
+archive_bridge_v1_operation size 48 align 8
+archive_bridge_v1_operation.struct_size 0
+archive_bridge_v1_operation.abi_major 4
+archive_bridge_v1_operation.task_id 8
+archive_bridge_v1_operation.user 16
+archive_bridge_v1_operation.is_cancelled 24
+archive_bridge_v1_operation.on_progress 32
+archive_bridge_v1_operation.ask 40
+archive_bridge_v1_open_type size 56 align 8
+archive_bridge_v1_open_type.format_index 0
+archive_bridge_v1_open_type.forced_flags 4
+archive_bridge_v1_open_type.main_flags 8
+archive_bridge_v1_open_type.wrong_extension_flags 12
+archive_bridge_v1_open_type.unknown_extension_flags 16
+archive_bridge_v1_open_type.recursive 20
+archive_bridge_v1_open_type.can_return_arc 24
+archive_bridge_v1_open_type.can_return_parser 28
+archive_bridge_v1_open_type.is_hash_type 32
+archive_bridge_v1_open_type.each_position 36
+archive_bridge_v1_open_type.zeros_tail_allowed 40
+archive_bridge_v1_open_type.max_start_offset_defined 44
+archive_bridge_v1_open_type.max_start_offset 48
+archive_bridge_v1_open_request size 168 align 8
+archive_bridge_v1_open_request.struct_size 0
+archive_bridge_v1_open_request.abi_major 4
+archive_bridge_v1_open_request.archive_id 8
+archive_bridge_v1_open_request.generation 16
+archive_bridge_v1_open_request.source 24
+archive_bridge_v1_open_request.open_type 64
+archive_bridge_v1_open_request.types 120
+archive_bridge_v1_open_request.type_count 128
+archive_bridge_v1_open_request.excluded_formats 136
+archive_bridge_v1_open_request.excluded_format_count 144
+archive_bridge_v1_open_request.properties 152
+archive_bridge_v1_open_request.property_count 160
+archive_bridge_v1_entries_request size 48 align 8
+archive_bridge_v1_entries_request.struct_size 0
+archive_bridge_v1_entries_request.abi_major 4
+archive_bridge_v1_entries_request.archive_id 8
+archive_bridge_v1_entries_request.generation 16
+archive_bridge_v1_entries_request.chain_position 24
+archive_bridge_v1_entries_request.reserved 28
+archive_bridge_v1_entries_request.first 32
+archive_bridge_v1_entries_request.count 40
+archive_bridge_v1_view size 160 align 8
+archive_bridge_v1_view.struct_size 0
+archive_bridge_v1_view.abi_major 4
+archive_bridge_v1_view.archive_id 8
+archive_bridge_v1_view.generation 16
+archive_bridge_v1_view.entries 24
+archive_bridge_v1_view.entry_count 32
+archive_bridge_v1_view.archive_properties 40
+archive_bridge_v1_view.archive_property_count 48
+archive_bridge_v1_view.diagnostics 56
+archive_bridge_v1_view.diagnostic_count 64
+archive_bridge_v1_view.chains 72
+archive_bridge_v1_view.chain_count 80
+archive_bridge_v1_view.non_open_error 88

@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:archive-bridge:engine-build:v1",
+  "schema_version": 1,
+  "title": "Q1 retained reference and matched facade build manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "status", "facade_commit", "qualified_application_operations", "builds"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "status": {"enum": ["retained-native-reference", "facade-qualified"]},
+    "facade_commit": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/commit"}]},
+    "qualified_application_operations": {
+      "type": "array", "uniqueItems": true,
+      "items": {"enum": ["capabilities", "open-list", "extract", "test", "create"]}
+    },
+    "builds": {"type": "array", "minItems": 3, "maxItems": 3, "items": {"$ref": "#/$defs/build"}}
+  },
+  "allOf": [
+    {"if": {"properties": {"status": {"const": "retained-native-reference"}}},
+     "then": {"properties": {"facade_commit": {"type": "null"}, "qualified_application_operations": {"maxItems": 0}}}},
+    {"if": {"properties": {"status": {"const": "facade-qualified"}}},
+     "then": {"properties": {"facade_commit": {"$ref": "#/$defs/commit"},
+       "builds": {"items": {"required": ["identity", "identity_sha256", "facade_artifacts", "qualification_evidence"]}}}}}
+  ],
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "input": {
+      "type": "object", "additionalProperties": false,
+      "required": ["path", "sha256", "license", "basis"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "license": {"enum": ["LGPL-2.1-or-later", "LGPL-2.1-or-later AND LicenseRef-unRAR-restriction", "LicenseRef-Public-Domain", "BSD-2-Clause", "BSD-3-Clause"]},
+        "basis": {"type": "string", "minLength": 1}
+      }
+    },
+    "product": {
+      "type": "object", "additionalProperties": false,
+      "required": ["units_and_resources", "make_inputs", "build_log_sha256"],
+      "properties": {
+        "units_and_resources": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/input"}},
+        "make_inputs": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/input"}},
+        "build_log_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "format_text": {
+      "type": "object", "additionalProperties": false,
+      "required": ["name", "flags_text", "time_flags_text", "raw"],
+      "properties": {"name": {"type": "string"}, "flags_text": {"type": "string"},
+        "time_flags_text": {"type": ["string", "null"]}, "raw": {"type": "string"}}
+    },
+    "registry": {
+      "type": "object", "additionalProperties": false,
+      "required": ["formats", "codecs", "hashers"],
+      "properties": {
+        "formats": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/format_text"}},
+        "codecs": {"type": "array", "minItems": 1, "items": {
+          "type": "object", "additionalProperties": false,
+          "required": ["name", "method_id", "flags_text", "raw"],
+          "properties": {"name": {"type": "string"}, "method_id": {"type": "integer", "minimum": 0},
+            "flags_text": {"type": "string"}, "raw": {"type": "string"}}}},
+        "hashers": {"type": "array", "minItems": 1, "items": {
+          "type": "object", "additionalProperties": false,
+          "required": ["name", "method_id", "digest_size", "raw"],
+          "properties": {"name": {"type": "string"}, "method_id": {"type": "integer", "minimum": 0},
+            "digest_size": {"type": "integer", "minimum": 1}, "raw": {"type": "string"}}}}
+      }
+    },
+    "identity": {
+      "description": "Input-only identity. Canonical UTF-8 sorted-key compact JSON with no trailing newline is hashed. Never include output artifact hashes or the identity hash itself here.",
+      "type": "object", "additionalProperties": false,
+      "required": ["schema_version", "oracle_commit", "facade_commit", "target", "rust_toolchain", "header_sha256", "toolchains_sha256", "inputs", "compile_commands", "link_command", "plugin_policy"],
+      "properties": {
+        "schema_version": {"const": 1}, "oracle_commit": {"$ref": "#/$defs/commit"},
+        "facade_commit": {"$ref": "#/$defs/commit"},
+        "target": {"enum": ["x86_64-unknown-linux-gnu", "x86_64-pc-windows-msvc", "aarch64-apple-darwin"]},
+        "rust_toolchain": {"const": "1.97.1"}, "header_sha256": {"$ref": "#/$defs/sha256"},
+        "toolchains_sha256": {"$ref": "#/$defs/sha256"},
+        "inputs": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/input"}},
+        "compile_commands": {"type": "array", "minItems": 1, "items": {"type": "array", "minItems": 1, "items": {"type": "string"}}},
+        "link_command": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "plugin_policy": {"const": "built-in-only-no-external-discovery"}
+      }
+    },
+    "build": {
+      "type": "object", "additionalProperties": false,
+      "required": ["system", "machine", "oracle_commit", "products", "standalone", "loaded", "format_registry", "coordinator_formats", "standalone_loaded_differences", "binary_sha256", "evidence"],
+      "properties": {
+        "system": {"enum": ["Linux", "Windows", "Darwin"]}, "machine": {"enum": ["x86_64", "AMD64", "arm64"]},
+        "oracle_commit": {"$ref": "#/$defs/commit"},
+        "products": {"type": "object", "additionalProperties": false, "required": ["Alone2", "Format7zF", "Console"],
+          "properties": {"Alone2": {"$ref": "#/$defs/product"}, "Format7zF": {"$ref": "#/$defs/product"}, "Console": {"$ref": "#/$defs/product"}}},
+        "standalone": {"$ref": "#/$defs/registry"}, "loaded": {"$ref": "#/$defs/registry"},
+        "format_registry": {"type": "array", "minItems": 1, "items": {
+          "type": "object", "additionalProperties": false,
+          "required": ["index", "registration_id", "flags", "time_flags", "writer", "name"],
+          "properties": {
+            "index": {"type": "integer", "minimum": 0}, "registration_id": {"type": "integer", "minimum": 0, "maximum": 255},
+            "flags": {"type": "integer", "minimum": 0}, "time_flags": {"type": "integer", "minimum": 0},
+            "writer": {"enum": [0, 1]}, "name": {"type": "string"}}}},
+        "coordinator_formats": {"type": "array", "minItems": 1, "maxItems": 1, "items": {
+          "type": "object", "additionalProperties": false,
+          "required": ["name", "registration_id", "source", "source_symbol", "observed"],
+          "properties": {"name": {"const": "Hash"}, "registration_id": {"type": "null"},
+            "source": {"const": "CPP/7zip/UI/Common/HashCalc.cpp"},
+            "source_symbol": {"const": "Codecs_AddHashArcHandler"}, "observed": {"$ref": "#/$defs/format_text"}}}},
+        "standalone_loaded_differences": {"type": "array", "items": {
+          "type": "object", "additionalProperties": false, "required": ["name", "standalone", "loaded"],
+          "properties": {"name": {"type": "string"}, "standalone": {"$ref": "#/$defs/format_text"}, "loaded": {"$ref": "#/$defs/format_text"}}}},
+        "binary_sha256": {"$ref": "#/$defs/sha256"},
+        "evidence": {"type": "object", "minProperties": 1, "additionalProperties": {"$ref": "#/$defs/sha256"}},
+        "identity": {"$ref": "#/$defs/identity"}, "identity_sha256": {"$ref": "#/$defs/sha256"},
+        "facade_artifacts": {"type": "object", "minProperties": 1, "additionalProperties": {"$ref": "#/$defs/sha256"}},
+        "qualification_evidence": {"type": "object", "minProperties": 1, "additionalProperties": {"$ref": "#/$defs/sha256"}}
+      }
+    }
+  }
+}
