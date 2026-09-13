@@ -2,13 +2,12 @@
 
 ## Status and scope of THIS document
 
-Task `t_5839f819`, branch `wt/t_5839f819`. This document is the runbook and
+Task `t_5839f819`, branch `wt/t_5839f819`. This is a Linux-only runbook and
 evidence template for B05 (`t_3859d918`, "Password callback states and
-encrypted error characterization"). It is produced under the operator's
-own-machine manual-execution authorization (Chinese original, recorded as
-board comment B03#168, 2026-09-12: 「可以在个人机器上验证。若有这样的
-task，请告诉我，我手工来做，但这些 task 必须标清楚验证步骤，验证方法，验证
-点。」and 「我有 Windows，macOS，Linux 机器。」).
+encrypted error characterization"). A recorded human decision narrowed this
+card after review established that Windows/macOS commands had not been
+native-verified. Do not use this document as Windows/macOS instructions;
+operator-confirmed entry points for those platforms belong to separate work.
 
 This card does **not** execute the campaign, does not pre-fill any result,
 does not mark any check PASS/FAIL, and does not close or narrow B05's own
@@ -18,14 +17,17 @@ harness and this runbook only.
 
 ## Qualification level this evidence can and cannot support
 
-- **Can support:** a documented, reproducible, human-witnessed observation
+- **Can support:** a documented, reproducible, human-witnessed Linux
+  observation
   of the retained legacy password callback boundary
   (`CPP/7zip/IPassword.h`: `ICryptoGetTextPassword`,
   `ICryptoGetTextPassword2`) as exercised through the unmodified 7-Zip
-  engine on one real, named machine per platform — suitable as the native
-  IPassword behavioral oracle B05 requires ("not CLI -p equivalent").
+  engine on one real, named Linux machine — suitable as a bounded input to
+  the native IPassword behavioral oracle B05 requires ("not CLI -p
+  equivalent").
 - **Cannot support:** qualified CI-runner acceptance, statistically
-  repeated or multi-machine coverage, release/publication readiness, or
+  repeated or multi-machine coverage, Windows/macOS coverage,
+  release/publication readiness, or
   RAR/CAB/ISO/multi-volume password behavior (out of scope — see
   `harness/BUILD.md`, "What this harness does NOT cover"). A single manual
   pass by one human on one machine is evidence, not certification; it must
@@ -51,14 +53,14 @@ undefined" (see `harness/BUILD.md`, "Why not just use the CLI"). This
 runbook is driven by a small, committed, inspectable harness
 (`.github/tests/migration/b05/harness/b05_password_harness.cpp`) that:
 
-- Loads the retained 7-Zip engine (`7z.dll`/`7z.so`) exactly the way the
+- Loads the retained 7-Zip engine (`7z.so`) exactly the way the
   repository's own retained sample client
   (`CPP/7zip/UI/Client7z/Client7z.cpp`) loads it.
 - Implements the same `ICryptoGetTextPassword`/`ICryptoGetTextPassword2`
   interfaces the console/GUI/FileManager callers already implement, with
   no new archive/codec/crypto/password semantics.
 - Adds a `--password-mode {undefined,defined-empty,wrong,correct,cancel,eof}`
-  selector so every state B05 requires is directly, unambiguously
+  states this Linux-only deliverable covers is directly, unambiguously
   selectable and its outcome is printed as plain, value-free, decidable
   text (HRESULT hex, item counts, per-item result codes).
 
@@ -69,28 +71,22 @@ repository's own existing build files (`CPP/7zip/Bundles/Format7zF`,
 
 ## Who can run this and what they need
 
-A careful human unfamiliar with this codebase, operating a real desktop or
-laptop they already own. No purchase, VM/guest install, or commercial
+A careful human unfamiliar with this codebase, operating a real Linux desktop
+or laptop they already own. No purchase, VM/guest install, or commercial
 licence is required or permitted (AGENTS.md excludes VM/guest as isolation
 qualification and forbids paid dependencies). Required software (all free):
 
-- **Windows**: MSVC (Visual Studio 2019+ Build Tools, "Desktop development
-  with C++" workload) — same toolchain `.github/workflows/build-windows.yml`
-  already uses.
 - **Linux**: `gcc`/`g++`, `make` (same toolchain this repository's own
   `makefile.gcc` build path already uses).
-- **macOS**: Xcode Command Line Tools (`clang`/`clang++`, `make`).
 - A source checkout of this repository at the exact commit the coordinator
   states.
 - Python 3 (already required elsewhere in this repository's own test
   scripts, e.g. `.github/tests/zip_name_encoding.py`) to run
   `check_no_leak.py`.
 
-Full build instructions per platform: `harness/BUILD.md`. **Only the Linux
-path in that document has been executed by the AI** while preparing this
-card (see this task's completion evidence). Windows and macOS instructions
-are derived from this repository's own existing build files but are
-otherwise unverified until the human's own run.
+The literal Linux build, working-directory setup, selftest and cleanup commands
+are in `harness/BUILD.md`. The Linux path was executed locally while preparing
+this card; the operator still must record their own Linux run.
 
 ## Machine / environment capture block
 
@@ -102,7 +98,7 @@ and never guess.
 
 ## Ordering
 
-1. **Section 0 — Build and selftest** (once per platform run). Build per
+1. **Section 0 — Build and selftest** (once per Linux run). Build per
    `harness/BUILD.md`; the build ends with `selftest-leak`, whose output
    must match exactly. Do not proceed if it does not match.
 2. **Section 1 — Open/list password states (7z)**. Independent of the
@@ -165,11 +161,9 @@ a section to guarantee `a` (create) does not fail on "already exists"
 
 ## Fixture setup (run once, before Section 1)
 
-Working directory: `<any writable dir>`, referred to below as `$W`. All
-commands assume the harness binary and `7z.dll`/`7z.so`/equivalent are in
-`$H` (the build output directory from Section 0), and are run as
-`$H/b05_password_harness` (Linux/macOS) or `$H\b05_password_harness.exe`
-(Windows) — substitute your actual build path.
+Working directory: `$W`, defined by the literal Linux build commands in
+`harness/BUILD.md`. Those commands also define `$H="$W/build/harness"`.
+Every command below is run from `$W` and invokes `"$H/b05_password_harness"`.
 
 Create two plaintext input files (any content is fine; these are not
 secrets), and pre-create the extraction output directories Section 2 uses
@@ -177,9 +171,10 @@ secrets), and pre-create the extraction output directories Section 2 uses
 Section 2.1):
 
 ```
-echo "line one" > $W/a.txt
-echo "line two" > $W/b.txt
-mkdir $W/out_correct $W/out_wrong $W/out_undef $W/out_cancel
+cd "$W"
+printf '%s\n' 'line one' > a.txt
+printf '%s\n' 'line two' > b.txt
+mkdir -p out_correct out_wrong out_undef out_cancel
 ```
 
 ## Section 1 — Open/list password states (7z)
@@ -188,8 +183,8 @@ mkdir $W/out_correct $W/out_wrong $W/out_undef $W/out_cancel
 
 **Exact steps** (working directory `$W`):
 ```
-<H>/b05_password_harness a 7z t1_plain.7z a.txt --password-mode undefined
-<H>/b05_password_harness l t1_plain.7z --password-mode undefined
+"$H/b05_password_harness" a 7z t1_plain.7z a.txt --password-mode undefined
+"$H/b05_password_harness" l t1_plain.7z --password-mode undefined
 ```
 **Method**: capture combined stdout of both commands and the second
 command's process exit code.
@@ -209,8 +204,8 @@ succeeding for an unrelated reason).
 
 **Exact steps**:
 ```
-<H>/b05_password_harness a 7z t1_he.7z a.txt --password-mode correct --password B05Synth-Correct-9f2a --header-encrypt
-<H>/b05_password_harness l t1_he.7z --password-mode undefined
+"$H/b05_password_harness" a 7z t1_he.7z a.txt --password-mode correct --password B05Synth-Correct-9f2a --header-encrypt
+"$H/b05_password_harness" l t1_he.7z --password-mode undefined
 ```
 **Method**: capture stdout + exit code of the `l` command.
 
@@ -233,8 +228,8 @@ harness/archive.
 
 **Exact steps**:
 ```
-<H>/b05_password_harness a 7z t1_empty.7z a.txt --password-mode defined-empty --header-encrypt
-<H>/b05_password_harness l t1_empty.7z --password-mode defined-empty
+"$H/b05_password_harness" a 7z t1_empty.7z a.txt --password-mode defined-empty --header-encrypt
+"$H/b05_password_harness" l t1_empty.7z --password-mode defined-empty
 ```
 **Method**: capture stdout + exit code of both commands.
 
@@ -253,7 +248,7 @@ engine, not the harness silently treating them the same.
 
 **Exact steps**:
 ```
-<H>/b05_password_harness l t1_he.7z --password-mode wrong --password B05Synth-WRONG-1234
+"$H/b05_password_harness" l t1_he.7z --password-mode wrong --password B05Synth-WRONG-1234
 ```
 (reuses the `t1_he.7z` archive from 1.2, correct password
 `B05Synth-Correct-9f2a`)
@@ -280,7 +275,7 @@ negative control; re-confirm here to bind it to this exact check run).
 
 **Exact steps**:
 ```
-<H>/b05_password_harness l t1_he.7z --password-mode correct --password B05Synth-Correct-9f2a > list_correct_transcript.txt 2>&1
+"$H/b05_password_harness" l t1_he.7z --password-mode correct --password B05Synth-Correct-9f2a > list_correct_transcript.txt 2>&1
 ```
 **Method**: capture the transcript to a FILE (needed later for Section 4's
 redaction check) and the exit code.
@@ -295,8 +290,8 @@ the negative control (already run).
 
 **Exact steps**:
 ```
-<H>/b05_password_harness a 7z t1_nonascii.7z a.txt --password-mode correct --password "B05Synth-注重-éèü-テスト" --header-encrypt
-<H>/b05_password_harness l t1_nonascii.7z --password-mode correct --password "B05Synth-注重-éèü-テスト" > list_nonascii_transcript.txt 2>&1
+"$H/b05_password_harness" a 7z t1_nonascii.7z a.txt --password-mode correct --password "B05Synth-注重-éèü-テスト" --header-encrypt
+"$H/b05_password_harness" l t1_nonascii.7z --password-mode correct --password "B05Synth-注重-éèü-テスト" > list_nonascii_transcript.txt 2>&1
 ```
 (quote the password exactly as shown, including the non-ASCII characters,
 so the shell passes it through as one argument)
@@ -317,7 +312,7 @@ the check is discriminating on the actual password value, not merely
 
 **Exact steps**:
 ```
-<H>/b05_password_harness l t1_he.7z --password-mode cancel
+"$H/b05_password_harness" l t1_he.7z --password-mode cancel
 ```
 **Method**: capture stdout + exit code.
 
@@ -337,7 +332,7 @@ it.
 
 **Exact steps**:
 ```
-<H>/b05_password_harness l t1_he.7z --password-mode eof
+"$H/b05_password_harness" l t1_he.7z --password-mode eof
 ```
 **Method**: capture stdout + exit code.
 
@@ -369,12 +364,34 @@ that requires a DIFFERENT harness that drives the actual console binary's
 stdin, which is a distinct future card — comment this gap on B05's own
 card (`t_3859d918`) rather than silently declaring it covered here.
 
+### 1.9 disconnect — explicitly excluded from this direct callback harness
+
+**Exact steps**: do not run a simulated `disconnect` command. No such command
+exists in this harness, deliberately.
+
+**Method**: record this source-backed exclusion verbatim in the evidence
+template: `IPassword.h:26-28,49-51` defines only BSTR output pointers (and an
+`Int32 *passwordIsDefined` output for version 2) plus the `HRESULT` return.
+The harness parses only the six modes at
+`b05_password_harness.cpp:539-544`, reads no stdin, and owns no stream or
+transport to disconnect.
+
+**Verification point**: record `EXCLUDED`, not PASS: a fake mode that merely
+returned a chosen HRESULT would not be a real IPassword disconnect and would
+weaken the behavioral oracle. A retained-console or transport harness is
+required if B05 needs disconnect behavior characterized.
+
+**Negative control**: impossible without fabricating a disconnect. The live
+control is the source inspection above: any claimed harness `disconnect` mode
+or transport operation contradicts the enumerated parser and must be recorded
+as FAIL/BLOCKED, not treated as covered.
+
 ## Section 2 — Extract password states (7z, header NOT encrypted)
 
 Setup (uses the plaintext-header archive style from 1.1, but with two
 files so per-item behavior is visible):
 ```
-<H>/b05_password_harness a 7z t2.7z a.txt b.txt --password-mode correct --password B05Synth-Correct-9f2a
+"$H/b05_password_harness" a 7z t2.7z a.txt b.txt --password-mode correct --password B05Synth-Correct-9f2a
 ```
 (no `--header-encrypt`: names are visible, item DATA is encrypted)
 
@@ -382,8 +399,8 @@ files so per-item behavior is visible):
 
 **Exact steps**:
 ```
-mkdir out_correct
-<H>/b05_password_harness x t2.7z out_correct/ --password-mode correct --password B05Synth-Correct-9f2a
+mkdir -p out_correct
+"$H/b05_password_harness" x t2.7z out_correct/ --password-mode correct --password B05Synth-Correct-9f2a
 ```
 (the output directory must already exist — like the repository's own
 `Client7z.cpp`, this harness does not create the top-level extraction
@@ -403,8 +420,8 @@ items_ok=2 items_error=0`, both files present with their original content.
 
 **Exact steps** (fresh output dir):
 ```
-mkdir out_wrong
-<H>/b05_password_harness x t2.7z out_wrong/ --password-mode wrong --password B05Synth-WRONG-1234
+mkdir -p out_wrong
+"$H/b05_password_harness" x t2.7z out_wrong/ --password-mode wrong --password B05Synth-WRONG-1234
 ```
 **Method**: capture stdout + exit code.
 
@@ -428,8 +445,8 @@ the distinction is caused by the password and not by the archive/file.
 
 **Exact steps**:
 ```
-mkdir out_undef
-<H>/b05_password_harness x t2.7z out_undef/ --password-mode undefined
+mkdir -p out_undef
+"$H/b05_password_harness" x t2.7z out_undef/ --password-mode undefined
 ```
 **Method**: capture combined stdout/stderr and the process exit code. Record
 the callback line, `Extract()` HRESULT, `items_ok`, and `items_error` in the
@@ -462,8 +479,8 @@ alone — record both counts.
 
 **Exact steps**:
 ```
-mkdir out_cancel
-<H>/b05_password_harness x t2.7z out_cancel/ --password-mode cancel
+mkdir -p out_cancel
+"$H/b05_password_harness" x t2.7z out_cancel/ --password-mode cancel
 ```
 **Method**: capture combined stdout/stderr and the process exit code. Record
 the `[harness] password prompt aborted (extract)` line, `Extract()` HRESULT,
@@ -488,7 +505,7 @@ result to force the expected contrast.
 ### 3.1 undefined password (7z)
 **Exact steps**:
 ```
-<H>/b05_password_harness a 7z t3_undef.7z a.txt --password-mode undefined
+"$H/b05_password_harness" a 7z t3_undef.7z a.txt --password-mode undefined
 ```
 **Method**: capture combined stdout/stderr and the process exit code. Record
 the `UpdateItems HRESULT` and `password-callback total calls` lines.
@@ -496,7 +513,7 @@ the `UpdateItems HRESULT` and `password-callback total calls` lines.
 **Verification point**: succeeds, exit 0 (creating an unencrypted archive
 needs no password) — AI's own observation: `UpdateItems HRESULT=0x00000000`.
 
-**Negative control**: run `<H>/b05_password_harness l t3_undef.7z
+**Negative control**: run `"$H/b05_password_harness" l t3_undef.7z
 --password-mode undefined`; it must list `item count=1`, while the
 header-encrypted archive in 3.2 must fail under the same mode. This proves
 that this create operation did not silently turn an undefined password into
@@ -505,7 +522,7 @@ an encrypted empty password.
 ### 3.2 defined-empty password, header-encrypt (7z)
 **Exact steps**:
 ```
-<H>/b05_password_harness a 7z t3_empty.7z a.txt --password-mode defined-empty --header-encrypt
+"$H/b05_password_harness" a 7z t3_empty.7z a.txt --password-mode defined-empty --header-encrypt
 ```
 **Method**: capture combined stdout/stderr and the process exit code. Record
 the `UpdateItems HRESULT` and `password-callback total calls` lines, then
@@ -517,19 +534,19 @@ an explicitly-empty-but-defined password (distinguishing this from
 3.1: 3.1's archive should be openable with `--password-mode undefined`,
 3.2's archive should NOT (behaves like a real, if weak, encrypted archive).
 
-**Negative control**: `<H>/b05_password_harness l t3_empty.7z
+**Negative control**: `"$H/b05_password_harness" l t3_empty.7z
 --password-mode undefined` must FAIL (mirrors Section 1.2/1.3's contrast).
 
 ### 3.3 correct password, header-encrypt (7z)
 **Exact steps**:
 ```
-<H>/b05_password_harness a 7z t3_correct.7z a.txt --password-mode correct --password B05Synth-Correct-9f2a --header-encrypt > create_correct_transcript.txt 2>&1
+"$H/b05_password_harness" a 7z t3_correct.7z a.txt --password-mode correct --password B05Synth-Correct-9f2a --header-encrypt > create_correct_transcript.txt 2>&1
 ```
 **Method**: save transcript to a file (needed for Section 4).
 
 **Verification point**: exit 0.
 
-**Negative control**: run `<H>/b05_password_harness l t3_correct.7z
+**Negative control**: run `"$H/b05_password_harness" l t3_correct.7z
 --password-mode wrong --password B05Synth-WRONG-1234`; it must fail. Then
 run it with `--password-mode correct --password B05Synth-Correct-9f2a`; it
 must list `item count=1`. Record both exit codes and key lines. This proves
@@ -539,7 +556,7 @@ than silently producing an unencrypted archive.
 ### 3.4 correct non-ASCII password, header-encrypt (7z)
 **Exact steps**:
 ```
-<H>/b05_password_harness a 7z t3_nonascii.7z a.txt --password-mode correct --password "B05Synth-注重-éèü-テスト" --header-encrypt
+"$H/b05_password_harness" a 7z t3_nonascii.7z a.txt --password-mode correct --password "B05Synth-注重-éèü-テスト" --header-encrypt
 ```
 **Method**: capture combined stdout/stderr and the process exit code. Record
 the `UpdateItems HRESULT` and `password-callback total calls` lines.
@@ -555,8 +572,8 @@ HRESULT/exit alongside this row.
 ### 3.5 correct ASCII password (ZIP: ZipCrypto and AES256)
 **Exact steps**:
 ```
-<H>/b05_password_harness a zip t3_zipcrypto_ascii.zip a.txt --password-mode correct --password B05Synth-Correct-9f2a --zip-encryption zipcrypto
-<H>/b05_password_harness a zip t3_aes256_ascii.zip a.txt --password-mode correct --password B05Synth-Correct-9f2a --zip-encryption aes256
+"$H/b05_password_harness" a zip t3_zipcrypto_ascii.zip a.txt --password-mode correct --password B05Synth-Correct-9f2a --zip-encryption zipcrypto
+"$H/b05_password_harness" a zip t3_aes256_ascii.zip a.txt --password-mode correct --password B05Synth-Correct-9f2a --zip-encryption aes256
 ```
 **Method**: capture combined stdout/stderr and the process exit code. Record
 the `UpdateItems HRESULT` and `password-callback total calls` lines for each
@@ -580,8 +597,8 @@ unencrypted ZIP headers may list names without invoking the callback.
 ### 3.6 correct non-ASCII password (ZIP, both methods) — expect rejection
 **Exact steps**:
 ```
-<H>/b05_password_harness a zip t3_zipcrypto_nonascii.zip a.txt --password-mode correct --password "B05Synth-注重-éèü-テスト" --zip-encryption zipcrypto
-<H>/b05_password_harness a zip t3_aes256_nonascii.zip a.txt --password-mode correct --password "B05Synth-注重-éèü-テスト" --zip-encryption aes256
+"$H/b05_password_harness" a zip t3_zipcrypto_nonascii.zip a.txt --password-mode correct --password "B05Synth-注重-éèü-テスト" --zip-encryption zipcrypto
+"$H/b05_password_harness" a zip t3_aes256_nonascii.zip a.txt --password-mode correct --password "B05Synth-注重-éèü-テスト" --zip-encryption aes256
 ```
 **Method**: capture combined stdout/stderr and the process exit code. Record
 the `UpdateItems HRESULT` and `password-callback total calls` lines verbatim
@@ -618,29 +635,71 @@ the planted secret...`, exit 0. If this does not print PASS, the checker
 itself is broken — STOP, do not trust any other Section 4 result until
 this is fixed.
 
-### 4.1 — 4.3: real transcripts do not contain the password
+**Negative control**: this check is itself the required negative control for
+the checker: its planted marker must be detected, not accepted. No second
+independent negative control exists without duplicating the same planted-marker
+mechanism; record `not applicable — 4.0 is the checker negative control` in
+the evidence template rather than silently leaving the field empty.
 
-**Exact steps** (repeat per transcript captured in earlier sections):
-```
-python3 .github/tests/migration/b05/harness/check_no_leak.py --secret "B05Synth-Correct-9f2a" list_correct_transcript.txt
-python3 .github/tests/migration/b05/harness/check_no_leak.py --secret "B05Synth-注重-éèü-テスト" list_nonascii_transcript.txt
-python3 .github/tests/migration/b05/harness/check_no_leak.py --secret "B05Synth-Correct-9f2a" create_correct_transcript.txt
-```
-**Method**: run each, capture stdout + exit code.
+### 4.1 correct-password list transcript
 
-**Verification point**: each prints `PASS: none of 1 secret(s) found...`,
-exit 0. AI's own Linux observation for the equivalent transcripts:
-confirmed PASS in all cases (see this task's completion evidence).
+**Exact steps**:
+```
+python3 "$R/.github/tests/migration/b05/harness/check_no_leak.py" --secret "B05Synth-Correct-9f2a" list_correct_transcript.txt
+```
+**Method**: capture stdout and exit code.
 
-**Negative control**: 4.0 is the negative control for the checker script
-itself. As an ADDITIONAL live negative control specific to these
-transcripts, deliberately create one contaminated copy and confirm FAIL:
+**Verification point**: prints `PASS: none of 1 secret(s) found...`, exit 0.
+
+**Negative control**:
 ```
-echo "test-leak: B05Synth-Correct-9f2a" >> list_correct_transcript_CONTAMINATED_COPY.txt
-python3 .github/tests/migration/b05/harness/check_no_leak.py --secret "B05Synth-Correct-9f2a" list_correct_transcript_CONTAMINATED_COPY.txt
+cp list_correct_transcript.txt list_correct_transcript_CONTAMINATED_COPY.txt
+printf '%s\n' 'test-leak: B05Synth-Correct-9f2a' >> list_correct_transcript_CONTAMINATED_COPY.txt
+python3 "$R/.github/tests/migration/b05/harness/check_no_leak.py" --secret "B05Synth-Correct-9f2a" list_correct_transcript_CONTAMINATED_COPY.txt
+rm -f list_correct_transcript_CONTAMINATED_COPY.txt
 ```
-Must print `FAIL: secret material found...`, exit 1. Delete the
-contaminated copy afterward — do not leave it in the evidence directory.
+The checker command must print `FAIL: secret material found...` with exit 1;
+the final cleanup command must run only after recording that result.
+
+### 4.2 non-ASCII-password list transcript
+
+**Exact steps**:
+```
+python3 "$R/.github/tests/migration/b05/harness/check_no_leak.py" --secret "B05Synth-注重-éèü-テスト" list_nonascii_transcript.txt
+```
+**Method**: capture stdout and exit code.
+
+**Verification point**: prints `PASS: none of 1 secret(s) found...`, exit 0.
+
+**Negative control**:
+```
+cp list_nonascii_transcript.txt list_nonascii_transcript_CONTAMINATED_COPY.txt
+printf '%s\n' 'test-leak: B05Synth-注重-éèü-テスト' >> list_nonascii_transcript_CONTAMINATED_COPY.txt
+python3 "$R/.github/tests/migration/b05/harness/check_no_leak.py" --secret "B05Synth-注重-éèü-テスト" list_nonascii_transcript_CONTAMINATED_COPY.txt
+rm -f list_nonascii_transcript_CONTAMINATED_COPY.txt
+```
+The checker command must print `FAIL: secret material found...` with exit 1;
+the final cleanup command must run only after recording that result.
+
+### 4.3 correct-password create transcript
+
+**Exact steps**:
+```
+python3 "$R/.github/tests/migration/b05/harness/check_no_leak.py" --secret "B05Synth-Correct-9f2a" create_correct_transcript.txt
+```
+**Method**: capture stdout and exit code.
+
+**Verification point**: prints `PASS: none of 1 secret(s) found...`, exit 0.
+
+**Negative control**:
+```
+cp create_correct_transcript.txt create_correct_transcript_CONTAMINATED_COPY.txt
+printf '%s\n' 'test-leak: B05Synth-Correct-9f2a' >> create_correct_transcript_CONTAMINATED_COPY.txt
+python3 "$R/.github/tests/migration/b05/harness/check_no_leak.py" --secret "B05Synth-Correct-9f2a" create_correct_transcript_CONTAMINATED_COPY.txt
+rm -f create_correct_transcript_CONTAMINATED_COPY.txt
+```
+The checker command must print `FAIL: secret material found...` with exit 1;
+the final cleanup command must run only after recording that result.
 
 ## Section 5 — Legacy non-ASCII ZIP rejection (recorded as observed)
 

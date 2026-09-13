@@ -1,6 +1,6 @@
-# B05 manual evidence record — one copy per platform run
+# B05 manual evidence record — one copy per Linux run
 
-Copy this file to `evidence-<platform>-<YYYYMMDD>.md` (do not edit this
+Copy this file to `evidence-linux-<YYYYMMDD>.md` (do not edit this
 template in place) and fill in every field. Never leave a result blank;
 write `BLOCKED: <reason>` if a check could not run. Never edit a filled-in
 result after the fact to make it match a different check's outcome.
@@ -10,15 +10,15 @@ result after the fact to make it match a different check's outcome.
 ```
 Run date/time (local, with UTC offset):
 Operator name (human executing, not the AI):
-Platform: [ ] Windows  [ ] Linux  [ ] macOS
-OS version/build (winver / uname -a / sw_vers):
+Platform: Linux
+OS version/build (uname -a):
 Filesystem of the working directory:
-Locale / code page (chcp on Windows; locale on Linux/macOS):
-Compiler and version (cl banner / g++ --version / clang++ --version):
+Locale / code page (locale):
+Compiler and version (g++ --version):
 Repository commit under test (git rev-parse HEAD):
 Harness binary path:
-Harness binary SHA-256 (sha256sum / certutil -hashfile ... SHA256 / shasum -a 256):
-Engine library path (7z.dll / 7z.so / equivalent):
+Harness binary SHA-256 (sha256sum):
+Engine library path (7z.so):
 Engine library SHA-256:
 selftest-leak output (paste verbatim, must match BUILD.md exactly):
 ```
@@ -35,6 +35,20 @@ selftest-leak output (paste verbatim, must match BUILD.md exactly):
 | 1.6 | correct, non-ASCII, header-encrypt=on | `l ... --password-mode correct --password "B05Synth-注重-éèü-テスト"` | | | | |
 | 1.7 | cancel | `l ... --password-mode cancel` | | | | |
 | 1.8 | eof | `l ... --password-mode eof` | | | | |
+
+## Disconnect boundary — explicitly excluded, not a PASS
+
+`ICryptoGetTextPassword`/`ICryptoGetTextPassword2` have only output-pointer
+arguments and an `HRESULT` return (`CPP/7zip/IPassword.h`). This direct
+callback harness reads no stdin and owns no transport, so it cannot generate a
+real disconnect without modifying retained code or inventing a result. Record
+the following statement verbatim; do not mark it PASS:
+
+```
+EXCLUDED: disconnect is not reachable at this direct IPassword callback boundary;
+no stream or transport exists in the interface/harness. Separate retained-console
+or transport characterization is required by B05 if disconnect evidence is needed.
+```
 
 ## Section 2 — Extract password states (7z, no header encryption: names visible, data encrypted)
 
