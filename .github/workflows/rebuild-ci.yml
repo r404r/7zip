@@ -82,7 +82,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Attempt retained-engine facade build
-        id: facade
+        id: facade-posix
+        if: runner.os != 'Windows'
         continue-on-error: true
         run: |
           set -o pipefail
@@ -101,21 +102,32 @@ jobs:
                 -f "$GITHUB_WORKSPACE/rust/bridge/makefile.gcc" \
                 O="$RUNNER_TEMP/rebuild-facade" > "$probe/facade.log" 2>&1
               ;;
-            Windows)
-              cmd.exe /d /c "nmake /NOLOGO /f rust\bridge\makefile" > "$probe/facade.log" 2>&1
-              ;;
             *)
               printf 'Unsupported runner OS: %s\n' "$RUNNER_OS" > "$probe/facade.log"
               exit 1
               ;;
           esac
+      - name: Attempt retained-engine facade build (MSVC declaration)
+        id: facade-windows
+        if: runner.os == 'Windows'
+        continue-on-error: true
+        shell: cmd
+        run: |
+          set "probe=%RUNNER_TEMP%\rebuild-facade-probe"
+          if not exist "%probe%" mkdir "%probe%"
+          nmake /NOLOGO /f rust\bridge\makefile > "%probe%\facade.log" 2>&1
       - name: Record facade probe result
         if: always()
         run: |
           set -euo pipefail
           probe="$RUNNER_TEMP/rebuild-facade-probe"
           mkdir -p "$probe"
-          if [ "${{ steps.facade.outcome }}" = success ]; then
+          if [ "$RUNNER_OS" = Windows ]; then
+            probe_outcome="${{ steps.facade-windows.outcome }}"
+          else
+            probe_outcome="${{ steps.facade-posix.outcome }}"
+          fi
+          if [ "$probe_outcome" = success ]; then
             outcome=passed
           else
             outcome=failed
