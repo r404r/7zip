@@ -138,15 +138,22 @@ jobs:
           {
             printf 'commit_sha=%s\n' "$GITHUB_SHA"
             printf 'branch=%s\n' "$GITHUB_REF_NAME"
+            printf 'toolchain_version=1.97.1\n'
             printf 'platform=%s\n' "$RUNNER_OS"
             printf 'architecture=%s\n' "$(uname -m)"
-            printf 'facade_probe_outcome=%s\n' "$outcome"
-            printf 'This probe is DEVELOPMENT evidence only; qualified_operations is 0.\n'
-            printf 'No archive operation is implemented. This is not a qualified CI/native release result.\n'
-          } > "$probe/outcome.txt"
+            printf 'component.native_facade=facade probe: %s\n' "$outcome"
+            printf 'component.rust_workspace=not run in this job; see the separate Rust workspace job\n'
+            printf '\n'
+            printf 'THIS IS A DEVELOPMENT artifact.\n'
+            printf 'qualified_operations is 0.\n'
+            printf 'No archive operation is implemented.\n'
+            printf 'This is not a qualified CI/native release result.\n'
+          } > "$probe/manifest.txt"
+          printf 'facade_probe_outcome=%s\n' "$outcome" > "$probe/outcome.txt"
+          cat "$probe/manifest.txt"
           cat "$probe/outcome.txt"
           cat "$probe/facade.log"
-      - name: Publish verbatim facade probe output
+      - name: Publish facade probe evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
