@@ -1,0 +1,162 @@
+# Stage 1 of the Rust/QML rebuild pipeline. This workflow deliberately does not
+# install, register, sign, package, or release anything. In particular, it does
+# not reuse the legacy MSI UpgradeCode, shell CLSID, 7-Zip-fork handler name, or
+# install folder. Later stages must make any identity decision explicitly.
+name: rebuild-stage1
+
+on:
+  push:
+    branches: ['wt/t_c4bda156']
+  pull_request:
+    paths: ['rust/**', '.github/workflows/rebuild-ci.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  rust-workspace:
+    name: Rust workspace / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Rust toolchain
+        run: rustup toolchain install 1.97.1 --profile minimal --component rustfmt --component clippy
+      - name: Check Rust workspace
+        working-directory: rust
+        run: |
+          set -euo pipefail
+          cargo +1.97.1 fmt --check
+          cargo +1.97.1 clippy --workspace --all-targets
+          cargo +1.97.1 build --workspace
+          cargo +1.97.1 test --workspace
+      - name: Stage Linux development artifact
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          set -euo pipefail
+          stage="$RUNNER_TEMP/rebuild-stage1-linux-development"
+          mkdir -p "$stage/rust-workspace-target"
+          cp -a rust/target/debug "$stage/rust-workspace-target/debug"
+          cat > "$stage/manifest.txt" <<EOF
+          commit_sha=$GITHUB_SHA
+          branch=$GITHUB_REF_NAME
+          toolchain_version=1.97.1
+          platform=Linux
+          architecture=$(uname -m)
+          component.rust_workspace=cargo fmt --check; cargo clippy --workspace --all-targets; cargo build --workspace; cargo test --workspace: passed
+          component.runnable_binary=none; the workspace has no binary target
+          component.native_facade=not included; see the separate facade-probe job artifact
+
+          THIS IS A DEVELOPMENT artifact.
+          qualified_operations is 0.
+          No archive operation is implemented.
+          This is not a qualified CI/native release result.
+          EOF
+      - name: Publish Linux development artifact
+        if: matrix.os == 'ubuntu-latest'
+        uses: actions/upload-artifact@v4
+        with:
+          name: rebuild-stage1-linux-development-${{ github.sha }}
+          path: ${{ runner.temp }}/rebuild-stage1-linux-development
+          if-no-files-found: error
+
+  facade-probe:
+    name: Retained facade probe / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - name: Attempt retained-engine facade build
+        id: facade-posix
+        if: runner.os != 'Windows'
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          probe="$RUNNER_TEMP/rebuild-facade-probe"
+          mkdir -p "$probe"
+          case "$RUNNER_OS" in
+            Linux)
+              make -C CPP/7zip/Bundles/Format7zF \
+                -f ../../var_gcc.mak -f ../../warn_gcc.mak \
+                -f "$GITHUB_WORKSPACE/rust/bridge/makefile.gcc" \
+                O="$RUNNER_TEMP/rebuild-facade" > "$probe/facade.log" 2>&1
+              ;;
+            macOS)
+              make -C CPP/7zip/Bundles/Format7zF \
+                -f ../../var_mac_arm64.mak -f ../../warn_clang_mac.mak \
+                -f "$GITHUB_WORKSPACE/rust/bridge/makefile.gcc" \
+                O="$RUNNER_TEMP/rebuild-facade" > "$probe/facade.log" 2>&1
+              ;;
+            *)
+              printf 'Unsupported runner OS: %s\n' "$RUNNER_OS" > "$probe/facade.log"
+              exit 1
+              ;;
+          esac
+      - name: Attempt retained-engine facade build (MSVC declaration)
+        id: facade-windows
+        if: runner.os == 'Windows'
+        continue-on-error: true
+        shell: cmd
+        run: |
+          set "probe=%RUNNER_TEMP%\rebuild-facade-probe"
+          if not exist "%probe%" mkdir "%probe%"
+          for /f "usebackq tokens=*" %%i in (`"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath`) do set "VSPATH=%%i"
+          if not defined VSPATH (echo Visual Studio with the C++ toolset was not found > "%probe%\facade.log" & exit /b 1)
+          call "%VSPATH%\VC\Auxiliary\Build\vcvars64.bat" > "%probe%\vcvars64.log" 2>&1 || exit /b 1
+          nmake /NOLOGO /f rust\bridge\makefile > "%probe%\facade.log" 2>&1
+      - name: Record facade probe result
+        if: always()
+        run: |
+          set -euo pipefail
+          probe="$RUNNER_TEMP/rebuild-facade-probe"
+          mkdir -p "$probe"
+          if [ "$RUNNER_OS" = Windows ]; then
+            probe_outcome="${{ steps.facade-windows.outcome }}"
+          else
+            probe_outcome="${{ steps.facade-posix.outcome }}"
+          fi
+          if [ "$probe_outcome" = success ]; then
+            outcome=passed
+          else
+            outcome=failed
+          fi
+          {
+            printf 'commit_sha=%s\n' "$GITHUB_SHA"
+            printf 'branch=%s\n' "$GITHUB_REF_NAME"
+            printf 'toolchain_version=1.97.1\n'
+            printf 'platform=%s\n' "$RUNNER_OS"
+            printf 'architecture=%s\n' "$(uname -m)"
+            printf 'component.native_facade=facade probe: %s\n' "$outcome"
+            printf 'component.rust_workspace=not run in this job; see the separate Rust workspace job\n'
+            printf '\n'
+            printf 'THIS IS A DEVELOPMENT artifact.\n'
+            printf 'qualified_operations is 0.\n'
+            printf 'No archive operation is implemented.\n'
+            printf 'This is not a qualified CI/native release result.\n'
+          } > "$probe/manifest.txt"
+          printf 'facade_probe_outcome=%s\n' "$outcome" > "$probe/outcome.txt"
+          cat "$probe/manifest.txt"
+          cat "$probe/outcome.txt"
+          cat "$probe/facade.log"
+      - name: Publish facade probe evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rebuild-stage1-facade-probe-${{ matrix.os }}-${{ github.sha }}
+          path: ${{ runner.temp }}/rebuild-facade-probe
+          if-no-files-found: error
