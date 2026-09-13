@@ -260,12 +260,17 @@ engine, not the harness silently treating them the same.
 
 **Method**: capture stdout + exit code.
 
-**Verification point**: fails. AI's own Linux observation:
-`Open()` returns HRESULT != 0 for both format candidates, final message
-`Cannot open file as archive`, exit 2 — same shape as "undefined" (1.2),
-because a wrong password and no password are indistinguishable to header
-decryption (both fail AES-GCM/HMAC verification the same way). Record
-whatever your platform actually shows.
+**Verification point**: fails. AI's own Linux observation: `Open() with
+format candidate 0 returned HRESULT=0x00000001` (S_FALSE), followed by
+`Open() with format candidate 1 returned HRESULT=0x00000001`, final
+`Cannot open file as archive (tried 7z, zip)`, exit 2. This is deliberately
+not the same per-call result as 1.2: there `--password-mode undefined`
+makes `CArchiveOpenCallback::CryptoGetTextPassword()` return E_ABORT at
+`b05_password_harness.cpp:242`, so the 7z handler does not receive a
+password to try for header decryption. Here a password value is supplied;
+the engine attempts header decryption with it and reports S_FALSE after that
+attempt fails. Record the exact per-candidate HRESULTs and exit code your
+platform produces; do not silently expect them to match these Linux values.
 
 **Negative control**: same archive with `--password-mode correct
 --password B05Synth-Correct-9f2a` succeeds (already proven in 1.2's
