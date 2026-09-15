@@ -30,6 +30,10 @@ def source_guard(bridge=BRIDGE):
         require(token not in text, "forbidden production build input: " + token)
     require("extern \"C\"" not in (bridge / "archive_bridge_registration.cpp").read_text(),
             "shim must use ordinary C++ linkage")
+    correspondence = (bridge / "archive_bridge_registration_correspondence.h").read_text() + "\n" \
+        + (bridge / "archive_bridge_registration_correspondence.cpp").read_text()
+    require("noexcept" not in correspondence and "throw()" not in correspondence,
+            "correspondence helper must not add an exception specification")
     make = (bridge / "makefile.gcc").read_text()
     selected = re.findall(r"\$O/([A-Za-z0-9]+)\.o", make[
         make.index("REGISTER_ARC_OBJS ="):make.index("$(REGISTER_ARC_OBJS):")])
@@ -68,6 +72,7 @@ def self_test():
     mutations = (
         ("archive_bridge_v1.cpp", "#include \"archive_bridge_registration.h\"", "--wrap", "forbidden linker wrapper"),
         ("archive_bridge_registration.cpp", "#include \"archive_bridge_registration.h\"", "extern \"C\"", "C linkage shim"),
+        ("archive_bridge_registration_correspondence.h", "bool ArchiveBridgeValidateRegistrationCorrespondence(", "noexcept bool ArchiveBridgeValidateRegistrationCorrespondence(", "correspondence exception specification"),
         ("makefile.gcc", "$O/ZipRegister.o", "$O/PhantomRegister.o", "selected-object drift"),
         ("makefile.gcc", "-DRegisterArc=ArchiveBridgeRegisterArc", "-DRegisterArc=WrongRegistrar", "missing redirection"),
         ("makefile.gcc", "archive_bridge_registration.o", "archive_bridge_removed.o", "missing shim object"),
