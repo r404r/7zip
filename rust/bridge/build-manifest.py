@@ -12,8 +12,9 @@ Schema relationship, stated precisely because it matters for review:
   three-platform qualification manifest. Its top-level `builds` array requires
   exactly three native systems, and `status: facade-qualified` additionally
   requires identity/facade_artifacts/qualification_evidence on every one of
-  them. S2a-DEV is a single-host development build: Windows and macOS facade
-  builds do not exist yet and are deferred obligations on S2a t_071e4cd7.
+  them. S2a-DEV is a single-host development build: each invocation records
+  only its current POSIX host; Windows remains guarded and full native
+  qualification is deferred to S2a t_071e4cd7.
 
   Emitting a three-element `builds` array from one host would mean inventing
   two platform records, which AGENTS.md forbids ("Deferred native obligations
@@ -114,10 +115,12 @@ class Recorder:
         return proc.stdout.decode('utf-8', errors='replace')
 
 
-def make_command(output_dir, build_digest):
+def make_command(output_dir, build_digest, system):
     """The exact retained-style build invocation, recorded verbatim."""
+    platform_make = '../../var_mac_arm64.mak' if system == 'Darwin' else '../../var_gcc.mak'
+    warning_make = '../../warn_clang_mac.mak' if system == 'Darwin' else '../../warn_gcc.mak'
     return ['make', '-j' + str(max(1, os.cpu_count() or 1)),
-            '-f', '../../var_gcc.mak', '-f', '../../warn_gcc.mak',
+            '-f', platform_make, '-f', warning_make,
             '-f', str(HERE / 'makefile.gcc'),
             'O=' + str(output_dir), 'BRIDGE_BUILD_SHA256=' + build_digest]
 
@@ -194,9 +197,9 @@ def main():
     target = TARGETS.get((system, machine))
     if target is None:
         raise SystemExit('FAIL: unsupported development host {}/{}'.format(system, machine))
-    if system != 'Linux':
-        raise SystemExit('FAIL: S2a-DEV builds the facade on a POSIX Linux development '
-                         'host only; native Windows/macOS remain deferred on t_071e4cd7')
+    if system not in ('Linux', 'Darwin'):
+        raise SystemExit('FAIL: S2a-DEV manifest builds only on POSIX Linux/macOS; '
+                         'Windows remains fail-closed pending t_071e4cd7')
 
     oracle_commit = recorder.run(['git', 'rev-parse', 'HEAD'], 'source-commit.txt').strip()
     # The facade commit is the same reviewed tree commit in this slice; the
@@ -216,11 +219,13 @@ def main():
     # with an all-zero identity, which no caller can match, so a pass-1 artifact
     # can never be mistaken for a matched build.
     unmatched = '0' * 64
-    log = recorder.run(make_command(build_dir, unmatched), 'build-pass1.log', BUNDLE)
+    log = recorder.run(make_command(build_dir, unmatched, system), 'build-pass1.log', BUNDLE)
     compile_commands, link_command, units = parse_build_log(log)
     make_inputs = sorted({
         (BUNDLE / name).resolve() for name in (
-            'Arc_gcc.mak', '../../var_gcc.mak', '../../warn_gcc.mak',
+            'Arc_gcc.mak',
+            '../../var_mac_arm64.mak' if system == 'Darwin' else '../../var_gcc.mak',
+            '../../warn_clang_mac.mak' if system == 'Darwin' else '../../warn_gcc.mak',
             '../../7zip_gcc.mak', '../../LzmaDec_gcc.mak')
     } | {HERE / 'makefile.gcc'})
     for path in make_inputs:
@@ -254,19 +259,26 @@ def main():
     for stale in (facade_object, artifact):
         if stale.exists():
             stale.unlink()
-    recorder.run(make_command(build_dir, identity_sha256), 'build-pass2.log', BUNDLE)
+    recorder.run(make_command(build_dir, identity_sha256, system), 'build-pass2.log', BUNDLE)
     if not artifact.is_file():
         raise SystemExit('FAIL: facade artifact missing after pass 2')
 
-    exports = recorder.run(['nm', '-D', '--defined-only', str(artifact)], 'exports.txt')
-    exported = sorted({match for match in re.findall(r'\barchive_bridge_v1_\w+', exports)})
+    nm_command = (['nm', '-gU', str(artifact)] if system == 'Darwin'
+                  else ['nm', '-D', '--defined-only', str(artifact)])
+    exports = recorder.run(nm_command, 'exports.txt')
+    # Mach-O's nm prefixes external C symbols with `_`; normalize that display
+    # convention while keeping the cross-platform export names exact.
+    exported = sorted({match for match in re.findall(r'(?:\b|_)archive_bridge_v1_\w+', exports)})
+    exported = [name.lstrip('_') for name in exported]
     in_scope = ['archive_bridge_v1_capabilities', 'archive_bridge_v1_create_context',
                 'archive_bridge_v1_destroy_context', 'archive_bridge_v1_handshake',
                 'archive_bridge_v1_result_destroy']
     if exported != in_scope:
         raise SystemExit('FAIL: exported facade surface is not exactly the four in-scope '
                          'operations: ' + repr(exported))
-    recorder.run(['ldd', str(artifact)], 'runtime.txt')
+    runtime_command = (['otool', '-L', str(artifact)] if system == 'Darwin'
+                       else ['ldd', str(artifact)])
+    recorder.run(runtime_command, 'runtime.txt')
 
     build = {
         'system': system,
@@ -291,7 +303,7 @@ def main():
         'development_build': build,
         'unmet_qualification_requirements': [
             'engine-build-schema.json requires exactly three native builds '
-            '(Linux, Windows, Darwin); only the Linux development host is built here.',
+            '(Linux, Windows, Darwin); only the current development host is built here.',
             'status facade-qualified additionally requires qualification_evidence on '
             'every build; none is claimed. Deferred to S2a t_071e4cd7.',
             'schema #/$defs/build additionally requires products '

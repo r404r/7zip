@@ -365,6 +365,7 @@ pub fn mutated_builds() -> Vec<(&'static str, MatchedBuild)> {
 // Frozen Q1 capability reference
 // ---------------------------------------------------------------------------
 
+#[derive(Clone, Debug)]
 pub struct FormatReference {
     pub name: String,
     pub registration_id: u32,
@@ -407,7 +408,9 @@ pub struct RegistryReference {
 /// registered a `CArcInfo` slot for it. `standalone` supplies the codec and
 /// hasher rows and the `Hash` row's effective flags.
 pub fn expected_registry() -> RegistryReference {
-    let path = repo_root().join("docs/ai-migration/qualification/engine-build.json");
+    let path = std::env::var_os("ARCHIVE_BRIDGE_V1_FROZEN_REFERENCE")
+        .map(PathBuf::from)
+        .unwrap_or_else(|| repo_root().join("docs/ai-migration/qualification/engine-build.json"));
     let text = std::fs::read_to_string(&path)
         .unwrap_or_else(|error| panic!("cannot read {}: {error}", path.display()));
     let manifest = parse_json(&text);
@@ -422,7 +425,7 @@ pub fn expected_registry() -> RegistryReference {
         .find(|entry| entry.get("system").string() == system)
         .unwrap_or_else(|| panic!("no frozen Q1 build for {system}"));
 
-    let mut formats: Vec<FormatReference> = build
+    let numeric_formats: BTreeMap<String, FormatReference> = build
         .get("format_registry")
         .array()
         .iter()
@@ -438,18 +441,35 @@ pub fn expected_registry() -> RegistryReference {
             effective_time_flags: 0,
             has_writer: row.get("writer").u32() == 1,
         })
+        .map(|row| (row.name.clone(), row))
         .collect();
 
-    // The coordinator-added Hash handler, from HashCalc.cpp's literal flags.
-    // Its registration id is the literal 256 (absent), not a fabricated ID.
-    formats.push(FormatReference {
-        name: "Hash".to_string(),
-        registration_id: 256,
-        flags: 12353,
-        raw_time_flags: 0,
-        effective_time_flags: 0,
-        has_writer: true,
-    });
+    // CCodecs exposes the loaded table in retained name-sort order. Join the
+    // numeric registration observer by name, but preserve this independent
+    // loaded order so a runtime reorder cannot compare equal to itself.
+    let formats: Vec<FormatReference> = build
+        .get("loaded")
+        .get("formats")
+        .array()
+        .iter()
+        .map(|row| {
+            let name = row.get("name").string();
+            if name == "Hash" {
+                return FormatReference {
+                    name: "Hash".to_string(),
+                    registration_id: 256,
+                    flags: 12353,
+                    raw_time_flags: 0,
+                    effective_time_flags: 0,
+                    has_writer: true,
+                };
+            }
+            numeric_formats
+                .get(name)
+                .unwrap_or_else(|| panic!("loaded format {name} has no registration row"))
+                .clone()
+        })
+        .collect();
 
     let standalone = build.get("standalone");
     let codecs = standalone

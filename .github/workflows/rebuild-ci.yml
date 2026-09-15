@@ -81,26 +81,44 @@ jobs:
         shell: bash
     steps:
       - uses: actions/checkout@v4
+      - name: Install pinned Rust toolchain for facade contracts
+        if: runner.os != 'Windows'
+        run: rustup toolchain install 1.97.1 --profile minimal
+      - name: Prepare evidence validator
+        if: runner.os != 'Windows'
+        run: |
+          python3 -m venv "$RUNNER_TEMP/evidence-venv"
+          "$RUNNER_TEMP/evidence-venv/bin/python" -m pip install jsonschema==4.25.1
       - name: Diagnose complete Apple Clang bridge warnings
         if: runner.os == 'macOS'
+        continue-on-error: true
         run: |
+          # Diagnostic only: keep -Werror, omit only the retained
+          # -Wfatal-errors so every bridge-owned warning lands in the artifact.
+          # The formal facade build below remains fail-closed and unchanged.
           probe="$RUNNER_TEMP/rebuild-facade-probe"
           mkdir -p "$probe"
+          status=0
           flags=(-arch arm64 -O2 -c -Werror -Wall -Wextra -Weverything
             -Wno-poison-system-directories -DNDEBUG -D_REENTRANT
             -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -fPIC -std=c++11)
           clang++ "${flags[@]}" -I rust/bridge -I . \
             rust/bridge/archive_bridge_v1.cpp \
             -o "$RUNNER_TEMP/archive_bridge_v1-warning-audit.o" \
-            > "$probe/apple-clang-archive_bridge_v1.log" 2>&1
+            > "$probe/apple-clang-archive_bridge_v1.log" 2>&1 || status=$?
           clang++ "${flags[@]}" -I rust/bridge -I . \
             rust/bridge/archive_bridge_registration.cpp \
             -o "$RUNNER_TEMP/archive_bridge_registration-warning-audit.o" \
-            > "$probe/apple-clang-archive_bridge_registration.log" 2>&1
+            > "$probe/apple-clang-archive_bridge_registration.log" 2>&1 || status=$?
           clang++ "${flags[@]}" -I rust/bridge \
             rust/bridge/archive_bridge_registration_correspondence.cpp \
             -o "$RUNNER_TEMP/archive_bridge_registration_correspondence-warning-audit.o" \
-            > "$probe/apple-clang-archive_bridge_registration_correspondence.log" 2>&1
+            > "$probe/apple-clang-archive_bridge_registration_correspondence.log" 2>&1 || status=$?
+          clang++ "${flags[@]}" -I rust/bridge -I . \
+            rust/bridge/test-registration-shim.cpp \
+            -o "$RUNNER_TEMP/test-registration-shim-warning-audit.o" \
+            > "$probe/apple-clang-test-registration-shim.log" 2>&1 || status=$?
+          exit "$status"
       - name: Attempt retained-engine facade build
         id: facade-posix
         if: runner.os != 'Windows'
@@ -108,24 +126,59 @@ jobs:
           set -o pipefail
           probe="$RUNNER_TEMP/rebuild-facade-probe"
           mkdir -p "$probe"
-          case "$RUNNER_OS" in
-            Linux)
-              make -C CPP/7zip/Bundles/Format7zF \
-                -f ../../var_gcc.mak -f ../../warn_gcc.mak \
-                -f "$GITHUB_WORKSPACE/rust/bridge/makefile.gcc" \
-                O="$RUNNER_TEMP/rebuild-facade" > "$probe/facade.log" 2>&1
-              ;;
-            macOS)
-              make -C CPP/7zip/Bundles/Format7zF \
-                -f ../../var_mac_arm64.mak -f ../../warn_clang_mac.mak \
-                -f "$GITHUB_WORKSPACE/rust/bridge/makefile.gcc" \
-                O="$RUNNER_TEMP/rebuild-facade" > "$probe/facade.log" 2>&1
-              ;;
-            *)
-              printf 'Unsupported runner OS: %s\n' "$RUNNER_OS" > "$probe/facade.log"
-              exit 1
-              ;;
-          esac
+          printf '%s\n' \
+            'python3 rust/bridge/build-manifest.py --output <probe>/development-evidence' \
+            > "$probe/facade-command.txt"
+          "$RUNNER_TEMP/evidence-venv/bin/python" rust/bridge/build-manifest.py \
+            --output "$probe/development-evidence" > "$probe/facade.log" 2>&1
+      - name: Run linked facade contracts and frozen-reference fault injection
+        id: facade-contract
+        if: runner.os != 'Windows'
+        run: |
+          set -euo pipefail
+          probe="$RUNNER_TEMP/rebuild-facade-probe"
+          evidence="$probe/development-evidence"
+          build="$evidence/build"
+          if [ "$RUNNER_OS" = macOS ]; then
+            cp "$build/libarchive_bridge_v1.so" "$build/libarchive_bridge_v1.dylib"
+            frozen_system=Darwin
+          else
+            frozen_system=Linux
+          fi
+          export ARCHIVE_BRIDGE_V1_DEV_MANIFEST="$evidence/facade-build-dev.json"
+          export RUSTFLAGS="-L native=$build -l dylib=archive_bridge_v1 -C link-arg=-Wl,-rpath,$build"
+          printf '%s\n' \
+            'cargo +1.97.1 test --manifest-path rust/Cargo.toml --locked --workspace --exclude archive-qt --features archive-engine/facade -- --nocapture' \
+            > "$probe/facade-contract-command.txt"
+          cargo +1.97.1 test --manifest-path rust/Cargo.toml --locked --workspace \
+            --exclude archive-qt --features archive-engine/facade -- --nocapture \
+            > "$probe/facade-contract.log" 2>&1
+
+          jq --arg system "$frozen_system" \
+            '(.builds[] | select(.system == $system) | .format_registry[0].registration_id) += 1' \
+            docs/ai-migration/qualification/engine-build.json \
+            > "$probe/frozen-reference-mutated.json"
+          set +e
+          ARCHIVE_BRIDGE_V1_FROZEN_REFERENCE="$probe/frozen-reference-mutated.json" \
+            cargo +1.97.1 test --manifest-path rust/Cargo.toml --locked \
+            -p archive-engine --features facade --test facade_capabilities \
+            capabilities_match_the_frozen_q1_reference_exactly -- --nocapture \
+            > "$probe/frozen-reference-fault-injection.log" 2>&1
+          fault_status=$?
+          set -e
+          if [ "$fault_status" -eq 0 ]; then
+            printf 'FAIL: runtime verifier accepted a mutated frozen registration id\n' >&2
+            exit 1
+          fi
+          if ! grep -F 'capabilities_match_the_frozen_q1_reference_exactly' \
+              "$probe/frozen-reference-fault-injection.log" >/dev/null || \
+             ! grep -F 'registration id differs for format ' \
+              "$probe/frozen-reference-fault-injection.log" >/dev/null; then
+            printf 'FAIL: frozen-reference fault injection failed for an unexpected reason\n' >&2
+            exit 1
+          fi
+          printf 'PASS: runtime verifier rejected a mutated frozen registration id (exit=%s)\n' \
+            "$fault_status" > "$probe/frozen-reference-fault-injection-result.txt"
       - name: Attempt retained-engine facade build (MSVC declaration)
         id: facade-windows
         if: runner.os == 'Windows'
@@ -136,6 +189,9 @@ jobs:
           for /f "usebackq tokens=*" %%i in (`"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath`) do set "VSPATH=%%i"
           if not defined VSPATH (echo Visual Studio with the C++ toolset was not found > "%probe%\facade.log" & exit /b 1)
           call "%VSPATH%\VC\Auxiliary\Build\vcvars64.bat" > "%probe%\vcvars64.log" 2>&1 || exit /b 1
+          cl > "%probe%\compiler.txt" 2>&1
+          link > "%probe%\linker.txt" 2>&1
+          nmake /? > "%probe%\driver.txt" 2>&1
           pushd CPP\7zip\Bundles\Format7zF
           nmake /NOLOGO /f "%GITHUB_WORKSPACE%\rust\bridge\makefile" PLATFORM=x64 O="%RUNNER_TEMP%\rebuild-facade" > "%probe%\facade.log" 2>&1
           popd
@@ -148,12 +204,44 @@ jobs:
           if [ "$RUNNER_OS" = Windows ]; then
             probe_outcome="${{ steps.facade-windows.outcome }}"
           else
-            probe_outcome="${{ steps.facade-posix.outcome }}"
+            if [ "${{ steps.facade-posix.outcome }}" = success ] && \
+               [ "${{ steps.facade-contract.outcome }}" = success ]; then
+              probe_outcome=success
+            else
+              probe_outcome=failure
+            fi
           fi
           if [ "$probe_outcome" = success ]; then
             outcome=passed
           else
             outcome=failed
+          fi
+          if [ "$RUNNER_OS" != Windows ]; then
+            {
+              cc --version
+              c++ --version
+            } > "$probe/compiler-and-cxx.txt" 2>&1
+            make --version > "$probe/driver.txt" 2>&1
+            rustc +1.97.1 --version --verbose > "$probe/rustc.txt" 2>&1
+            "$RUNNER_TEMP/evidence-venv/bin/python" -m pip freeze \
+              > "$probe/python-packages.txt"
+            if [ "$RUNNER_OS" = macOS ]; then
+              ld -v > "$probe/linker.txt" 2>&1
+              shasum -a 256 \
+                "$probe/development-evidence/build/libarchive_bridge_v1.so" \
+                rust/bridge/archive_bridge_v1.h rust/bridge/makefile.gcc \
+                docs/ai-migration/qualification/engine-build.json \
+                docs/ai-migration/qualification/native-observations.json \
+                > "$probe/critical-digests.txt"
+            else
+              ld --version > "$probe/linker.txt" 2>&1
+              sha256sum \
+                "$probe/development-evidence/build/libarchive_bridge_v1.so" \
+                rust/bridge/archive_bridge_v1.h rust/bridge/makefile.gcc \
+                docs/ai-migration/qualification/engine-build.json \
+                docs/ai-migration/qualification/native-observations.json \
+                > "$probe/critical-digests.txt"
+            fi
           fi
           {
             printf 'commit_sha=%s\n' "$GITHUB_SHA"

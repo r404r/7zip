@@ -1,7 +1,10 @@
 # S2a-DEV evidence: retained-engine facade handshake, context and capabilities
 
-Task: `t_178b131f`. Acceptance level: **DEVELOPMENT**, single host. This is
-**not** Windows/macOS/Linux release qualification. See
+Original task: `t_178b131f`. Acceptance level: **DEVELOPMENT**. The original
+evidence below is a single-host snapshot; the registration mechanism section is
+updated by S2a-R task `t_13a346c7`, whose exact-head CI artifacts provide
+Linux/macOS development evidence and the required Windows fail-closed record.
+None of those artifacts is Windows/macOS/Linux release qualification. See
 [development-first-sequencing.md](../development-first-sequencing.md) section 1
 for what this level does and does not mean.
 
@@ -52,6 +55,11 @@ Q1 `5f07f21a6516e345db199d3d78a3a984118574a5`,
 S1 `e809c92b2d493412882f8a623f05fbe2ee508ff2`.
 
 ## 2. Deliverables and digests
+
+The following hashes identify the original `t_178b131f` evidence snapshot. They
+are historical provenance, not hashes of the later S2a-R candidate; S2a-R's
+exact input and binary digests are emitted by `build-manifest.py` into its
+exact-head CI artifacts.
 
 | Path | SHA-256 |
 | --- | --- |
@@ -178,10 +186,10 @@ engine.
 * `create_context_rejects_a_mutated_handshake` — the same mutations are refused
   inside `create_context`, so skipping the handshake cannot produce an
   incompatible context.
-* `capabilities_match_the_frozen_q1_reference_exactly` — all 61 format rows
-  compared against the frozen Q1 reference by name and actual registration
-  identity, never by row index. Registration id, flags, effective time flags,
-  writer presence, reader presence and name all match.
+* `capabilities_match_the_frozen_q1_reference_exactly` — all 61 format rows are
+  compared in order against the independent frozen Q1 loaded-table reference.
+  Runtime index, name, registration id, flags, effective time flags, reader
+  presence and writer presence all match; a reordered candidate fails.
 * `the_hash_handler_is_the_only_coordinator_added_row_and_reports_256` — `Hash`
   is the sole row reporting the literal `256` (absent), with flags `12353` and
   time flags `0`, exactly as `Codecs_AddHashArcHandler` registers it.
@@ -336,22 +344,28 @@ branch additionally arms `CCodecs::CReleaser` and publishes the
 not exist, so there is no library cycle for `CReleaser` to break and the
 reference drop alone is the retained teardown.
 
-### Registration-byte recovery
+### Registration-byte recovery (S2a-R amendment)
 
-`CArcInfoEx` does not retain `CArcInfo::Id`, so the registration byte the card
-requires cannot be read back from `CCodecs::Formats`. Rather than edit a
-retained source file, the facade captures it at its source: the link wraps the
-retained registrar with GNU ld's `--wrap`, keyed on the Itanium C++ ABI
-mangling of `RegisterArc(const CArcInfo *)`. The wrapper records each built-in
-`CArcInfo` pointer and then calls `__real_`, so `CCodecs::Formats` is built
-exactly as before and no registration is dropped. Observed: 60 wrapped
-registrations and 61 format rows, the 61st being the coordinator-added `Hash`
-handler, which correctly reports the literal `256`.
+`CArcInfoEx` does not retain `CArcInfo::Id`, so the registration byte cannot be
+read back from `CCodecs::Formats`. S2a-R therefore compiles exactly the reviewed
+54 retained registration translation units with the source-level mapping
+`RegisterArc=ArchiveBridgeRegisterArc`. The mapping is applied per object only:
+`LoadCodecs.cpp`, the facade, and the bridge-owned shim are compiled without it.
+No retained source file is edited, and no linker wrapping, mangled symbol,
+interposition, alias or weak-symbol mechanism is used.
 
-This mechanism is GNU-linker specific. MSVC's `link.exe` has no `--wrap` and a
-different mangling, so Windows needs its own reviewed mechanism. That is
-recorded in `rust/bridge/makefile`, which **fails closed** with an `!ERROR` so
-no unqualified Windows binary can be produced by accident.
+The bridge-owned shim records each `CArcInfo` pointer in zero-initialized,
+module-lifetime POD storage and calls the true `RegisterArc(const CArcInfo *)`
+exactly once. Publication fails closed on overflow or any incomplete/ambiguous
+correspondence. The 60 captured native registrations are matched one-to-one to
+the pre-`Hash` loaded rows before the 61-row ordered table is published; only
+the coordinator-added `Hash` row reports the absent sentinel `256`.
+
+GCC and Apple Clang use explicit target-specific `-D` assignments. The NMAKE
+file declares the matching 54 explicit `/D` recipes plus bridge-owned recipes
+from the retained bundle directory, but its existing top-level `!ERROR` remains
+in force. Consequently MSVC is still unverified and Windows remains
+unqualified; the exact-head Windows CI job must stop at that guard.
 
 ## 6. Rust boundary and safety posture
 
@@ -467,10 +481,13 @@ remains open on its own card and must not be represented as passed.
 
 Additional limits of this evidence:
 
-* Single-host Linux development build. **Not** Windows/macOS/Linux release
-  qualification. No Windows or macOS facade binary exists.
-* No CI run; nothing pushed to a shared branch; no merge into `dev-main`; no
-  release.
+* The original `t_178b131f` snapshot remains a single-host Linux development
+  build. S2a-R adds exact-head Linux and Apple Clang/macOS development builds;
+  neither is Windows/macOS/Linux release qualification. No Windows facade
+  binary exists because the NMAKE path remains deliberately fail-closed.
+* S2a-R exact-head evidence is produced from the pushed isolated task branch.
+  Nothing is merged into `dev-main`, and no package, tag or release is
+  published.
 * `qualified_operations` stays the literal 0. No capability is enabled for any
   production caller. `archive-cli` behavior is unchanged.
 * No archive was opened, no fixture read, no password requested, no path
@@ -486,7 +503,8 @@ Additional limits of this evidence:
   does not substitute for the deferred sanitizer work. The defect it covers was
   found by independent review, not by the contract tests, which is itself
   evidence that enumeration-level tests do not cover error-path ownership.
-* Registration-byte recovery is proven only for the GNU-linker Itanium C++ ABI
-  toolchain on this host. The Windows mechanism is unsolved and fails closed.
+* Registration-byte recovery no longer depends on GNU linker wrapping or an
+  Itanium mangled symbol. It is development-tested with GCC and Apple Clang;
+  MSVC remains unverified and Windows remains fail-closed at the NMAKE guard.
 * Enumerating a capability is not qualifying an operation, and a writer factory
   is not proof of any create or update property.

@@ -105,8 +105,12 @@ REGISTER_ARC_OBJS = \
 
 $(REGISTER_ARC_OBJS): CXXFLAGS += -DRegisterArc=ArchiveBridgeRegisterArc
 
+.PHONY: registration-mis-scope-check
+registration-mis-scope-check: $O/LoadCodecs.o
+	@set -e; bad=$O/LoadCodecs.registration-mis-scoped.o; trap 'rm -f $$bad' EXIT; $(CXX) $(CXXFLAGS) -DRegisterArc=ArchiveBridgeRegisterArc -o $$bad ../../UI/Common/LoadCodecs.cpp; python3 $(BRIDGE_DIR)/check-registration-seam.py --source-only --expect-mis-scope $$bad; rm -f $$bad; trap - EXIT
+
 .PHONY: registration-seam-check
-registration-seam-check: $(REGISTER_ARC_OBJS) $O/LoadCodecs.o $O/archive_bridge_registration.o
+registration-seam-check: $(REGISTER_ARC_OBJS) $O/LoadCodecs.o $O/archive_bridge_registration.o registration-mis-scope-check
 	python3 $(BRIDGE_DIR)/test-registration-seam.py
 	python3 $(BRIDGE_DIR)/test-registration-correspondence.py
 	python3 $(BRIDGE_DIR)/check-registration-seam.py --object-dir $O

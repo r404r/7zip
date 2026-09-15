@@ -36,7 +36,7 @@ PROG = archive_bridge_v1.dll
 # its built-in registration tables and loads no external module.
 CFLAGS = $(CFLAGS)
 
-!include "../../CPP/7zip/Bundles/Format7zF/Arc.mak"
+!include "Arc.mak"
 
 # Only the two UI_COMMON_OBJS members that supply the retained capability
 # tables: LoadCodecs.obj for CCodecs/CArcInfoEx and HashCalc.obj for
@@ -63,7 +63,17 @@ CURRENT_OBJS = \
   $O\archive_bridge_registration.obj \
   $O\archive_bridge_registration_correspondence.obj \
 
-!include "../../CPP/7zip/7zip.mak"
+!include "../../7zip.mak"
+
+# Bridge-owned translation units are outside the retained inference-rule tree.
+# Compile them explicitly without the RegisterArc redirection and without the
+# retained StdAfx precompiled header.
+$O\archive_bridge_v1.obj: ../../../../rust/bridge/archive_bridge_v1.cpp
+	$(COMPLB_O2) /I"../../../../"
+$O\archive_bridge_registration.obj: ../../../../rust/bridge/archive_bridge_registration.cpp
+	$(COMPLB_O2) /I"../../../../"
+$O\archive_bridge_registration_correspondence.obj: ../../../../rust/bridge/archive_bridge_registration_correspondence.cpp
+	$(COMPLB_O2) /I"../../../../"
 
 # Kept below the fail-closed guard as a declaration for the future qualifying
 # card. This list is intentionally explicit and must match makefile.gcc by
@@ -84,26 +94,113 @@ REGISTER_ARC_OBJS = \
   $O\RarHandler.obj $O\Rar5Handler.obj $O\TarRegister.obj $O\UdfHandler.obj \
   $O\WimRegister.obj $O\ZipRegister.obj
 
-# The corresponding explicit per-object recipes are deliberately represented
-# as source/object pairs so the NMAKE qualifying card can retain every existing
-# COMPLB option and append only this one definition. The guard above prevents
-# this declaration from producing an unqualified Windows binary today.
-REGISTER_ARC_CPP = \
-  ../../Archive/ApfsHandler.cpp ../../Archive/ApmHandler.cpp ../../Archive/ArHandler.cpp ../../Archive/ArjHandler.cpp \
-  ../../Archive/Base64Handler.cpp ../../Archive/Bz2Handler.cpp ../../Archive/ComHandler.cpp ../../Archive/CpioHandler.cpp \
-  ../../Archive/CramfsHandler.cpp ../../Archive/DmgHandler.cpp ../../Archive/ElfHandler.cpp ../../Archive/ExtHandler.cpp \
-  ../../Archive/FatHandler.cpp ../../Archive/FlvHandler.cpp ../../Archive/GptHandler.cpp ../../Archive/GzHandler.cpp \
-  ../../Archive/HfsHandler.cpp ../../Archive/IhexHandler.cpp ../../Archive/LpHandler.cpp ../../Archive/LzhHandler.cpp \
-  ../../Archive/LzmaHandler.cpp ../../Archive/MachoHandler.cpp ../../Archive/MbrHandler.cpp ../../Archive/MslzHandler.cpp \
-  ../../Archive/MubHandler.cpp ../../Archive/NtfsHandler.cpp ../../Archive/PeHandler.cpp ../../Archive/PpmdHandler.cpp \
-  ../../Archive/QcowHandler.cpp ../../Archive/RpmHandler.cpp ../../Archive/SparseHandler.cpp ../../Archive/SplitHandler.cpp \
-  ../../Archive/SquashfsHandler.cpp ../../Archive/SwfHandler.cpp ../../Archive/UefiHandler.cpp ../../Archive/VdiHandler.cpp \
-  ../../Archive/VhdHandler.cpp ../../Archive/VhdxHandler.cpp ../../Archive/VmdkHandler.cpp ../../Archive/XarHandler.cpp \
-  ../../Archive/XzHandler.cpp ../../Archive/ZHandler.cpp ../../Archive/ZstdHandler.cpp ../../Archive/7z/7zRegister.cpp \
-  ../../Archive/Cab/CabRegister.cpp ../../Archive/Chm/ChmHandler.cpp ../../Archive/Iso/IsoRegister.cpp ../../Archive/Nsis/NsisRegister.cpp \
-  ../../Archive/Rar/RarHandler.cpp ../../Archive/Rar/Rar5Handler.cpp ../../Archive/Tar/TarRegister.cpp ../../Archive/Udf/UdfHandler.cpp \
-  ../../Archive/Wim/WimRegister.cpp ../../Archive/Zip/ZipRegister.cpp
-
-# Qualification-only recipe template: each member of REGISTER_ARC_OBJS must use
-# its paired REGISTER_ARC_CPP source and this exact additional definition.
-# $(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+# These explicit recipes take precedence over the retained inference rules and
+# append the redirection only to the selected registration translation units.
+$O\ApfsHandler.obj: ../../Archive/ApfsHandler.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\ApmHandler.obj: ../../Archive/ApmHandler.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\ArHandler.obj: ../../Archive/ArHandler.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\ArjHandler.obj: ../../Archive/ArjHandler.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\Base64Handler.obj: ../../Archive/Base64Handler.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\Bz2Handler.obj: ../../Archive/Bz2Handler.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\ComHandler.obj: ../../Archive/ComHandler.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\CpioHandler.obj: ../../Archive/CpioHandler.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\CramfsHandler.obj: ../../Archive/CramfsHandler.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\DmgHandler.obj: ../../Archive/DmgHandler.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\ElfHandler.obj: ../../Archive/ElfHandler.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\ExtHandler.obj: ../../Archive/ExtHandler.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\FatHandler.obj: ../../Archive/FatHandler.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\FlvHandler.obj: ../../Archive/FlvHandler.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\GptHandler.obj: ../../Archive/GptHandler.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\GzHandler.obj: ../../Archive/GzHandler.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\HfsHandler.obj: ../../Archive/HfsHandler.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\IhexHandler.obj: ../../Archive/IhexHandler.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\LpHandler.obj: ../../Archive/LpHandler.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\LzhHandler.obj: ../../Archive/LzhHandler.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\LzmaHandler.obj: ../../Archive/LzmaHandler.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\MachoHandler.obj: ../../Archive/MachoHandler.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\MbrHandler.obj: ../../Archive/MbrHandler.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\MslzHandler.obj: ../../Archive/MslzHandler.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\MubHandler.obj: ../../Archive/MubHandler.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\NtfsHandler.obj: ../../Archive/NtfsHandler.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\PeHandler.obj: ../../Archive/PeHandler.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\PpmdHandler.obj: ../../Archive/PpmdHandler.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\QcowHandler.obj: ../../Archive/QcowHandler.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\RpmHandler.obj: ../../Archive/RpmHandler.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\SparseHandler.obj: ../../Archive/SparseHandler.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\SplitHandler.obj: ../../Archive/SplitHandler.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\SquashfsHandler.obj: ../../Archive/SquashfsHandler.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\SwfHandler.obj: ../../Archive/SwfHandler.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\UefiHandler.obj: ../../Archive/UefiHandler.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\VdiHandler.obj: ../../Archive/VdiHandler.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\VhdHandler.obj: ../../Archive/VhdHandler.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\VhdxHandler.obj: ../../Archive/VhdxHandler.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\VmdkHandler.obj: ../../Archive/VmdkHandler.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\XarHandler.obj: ../../Archive/XarHandler.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\XzHandler.obj: ../../Archive/XzHandler.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\ZHandler.obj: ../../Archive/ZHandler.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\ZstdHandler.obj: ../../Archive/ZstdHandler.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\7zRegister.obj: ../../Archive/7z/7zRegister.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\CabRegister.obj: ../../Archive/Cab/CabRegister.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\ChmHandler.obj: ../../Archive/Chm/ChmHandler.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\IsoRegister.obj: ../../Archive/Iso/IsoRegister.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\NsisRegister.obj: ../../Archive/Nsis/NsisRegister.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\RarHandler.obj: ../../Archive/Rar/RarHandler.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\Rar5Handler.obj: ../../Archive/Rar/Rar5Handler.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\TarRegister.obj: ../../Archive/Tar/TarRegister.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\UdfHandler.obj: ../../Archive/Udf/UdfHandler.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\WimRegister.obj: ../../Archive/Wim/WimRegister.cpp
+	$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc
+$O\ZipRegister.obj: ../../Archive/Zip/ZipRegister.cpp
+	$(COMPLB) $(ZIP_FLAGS) /DRegisterArc=ArchiveBridgeRegisterArc

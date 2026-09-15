@@ -80,13 +80,48 @@ fn capabilities_match_the_frozen_q1_reference_exactly() {
         reference.formats.len(),
         "format row count differs from the frozen Q1 reference"
     );
+    println!(
+        "RUNTIME_COUNTS\tformats={}\tcodecs={}\thashers={}",
+        capabilities.formats.len(),
+        capabilities.codecs.len(),
+        capabilities.hashers.len()
+    );
 
-    // Compare by name and actual registration identity, never by row index:
-    // indices are local to this matched CCodecs table.
-    for expected in &reference.formats {
-        let row = capabilities
-            .format_by_name(&expected.name)
-            .unwrap_or_else(|| panic!("frozen format {} missing from the facade", expected.name));
+    // The loaded Q1 table is an ordered oracle. Candidate and expected rows
+    // remain separate so a reorder cannot become self-consistent.
+    for (index, (row, expected)) in capabilities
+        .formats
+        .iter()
+        .zip(&reference.formats)
+        .enumerate()
+    {
+        let name = String::from_utf16_lossy(row.name.units());
+        println!(
+            "RUNTIME_FORMAT\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
+            row.index,
+            name,
+            row.registration_id,
+            row.flags,
+            row.time_flags,
+            u32::from(row.has_reader),
+            u32::from(row.has_writer),
+            String::from_utf16_lossy(row.extensions.units()),
+            String::from_utf16_lossy(row.additional_extensions.units())
+        );
+        println!(
+            "FROZEN_FORMAT\t{}\t{}\t{}\t{}\t{}\t1\t{}",
+            index,
+            expected.name,
+            expected.registration_id,
+            expected.flags,
+            expected.effective_time_flags,
+            u32::from(expected.has_writer)
+        );
+        assert_eq!(
+            row.index, index as u32,
+            "runtime index differs at row {index}"
+        );
+        assert_eq!(name, expected.name, "format order differs at row {index}");
         assert_eq!(
             row.registration_id, expected.registration_id,
             "registration id differs for format {}",
@@ -126,12 +161,6 @@ fn capabilities_match_the_frozen_q1_reference_exactly() {
         );
         assert_eq!(row.name.units(), utf16(&expected.name));
     }
-
-    // Every row index in the table is distinct and covers 0..count.
-    let mut indices: Vec<u32> = capabilities.formats.iter().map(|row| row.index).collect();
-    indices.sort_unstable();
-    let expected_indices: Vec<u32> = (0..capabilities.formats.len() as u32).collect();
-    assert_eq!(indices, expected_indices);
 }
 
 #[test]
@@ -183,6 +212,15 @@ fn codecs_and_hashers_match_the_frozen_q1_reference_exactly() {
             .iter()
             .find(|row| row.name.units() == utf16(&expected.name))
             .unwrap_or_else(|| panic!("frozen codec {} missing", expected.name));
+        println!(
+            "RUNTIME_CODEC\t{}\t{}\t{}\t{}\t{}\t{}",
+            String::from_utf16_lossy(row.name.units()),
+            row.method_id,
+            u32::from(row.encoder),
+            u32::from(row.decoder),
+            u32::from(row.is_filter),
+            row.digest_size
+        );
         assert_eq!(
             row.method_id, expected.method_id,
             "method id differs for codec {}",
@@ -217,6 +255,12 @@ fn codecs_and_hashers_match_the_frozen_q1_reference_exactly() {
             .iter()
             .find(|row| row.name.units() == utf16(&expected.name))
             .unwrap_or_else(|| panic!("frozen hasher {} missing", expected.name));
+        println!(
+            "RUNTIME_HASHER\t{}\t{}\t{}",
+            String::from_utf16_lossy(row.name.units()),
+            row.method_id,
+            row.digest_size
+        );
         assert_eq!(row.method_id, expected.method_id);
         assert_eq!(
             row.digest_size, expected.digest_size,
