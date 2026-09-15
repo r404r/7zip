@@ -30,7 +30,7 @@ bool SameCaptureName(const wchar_t *row_name, const char *capture_name)
 bool ArchiveBridgeValidateRegistrationCorrespondence(
     const ArchiveBridgeRegistrationCapture *captures, unsigned capture_count,
     bool overflowed, const ArchiveBridgeRegistrationRow *rows,
-    const ArchiveBridgeRegistrationRow *expected_rows, unsigned row_count) throw()
+    const ArchiveBridgeRegistrationRow *expected_rows, unsigned row_count) noexcept
 {
   if (!captures || !rows || !expected_rows || overflowed || capture_count != kNativeRegistrationCount
       || row_count != kTotalFormatCount)

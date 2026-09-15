@@ -22,6 +22,6 @@ struct ArchiveBridgeRegistrationRow
 bool ArchiveBridgeValidateRegistrationCorrespondence(
     const ArchiveBridgeRegistrationCapture *captures, unsigned capture_count,
     bool overflowed, const ArchiveBridgeRegistrationRow *rows,
-    const ArchiveBridgeRegistrationRow *expected_rows, unsigned row_count) throw();
+    const ArchiveBridgeRegistrationRow *expected_rows, unsigned row_count) noexcept;
 
 #endif  // ARCHIVE_BRIDGE_REGISTRATION_CORRESPONDENCE_H
