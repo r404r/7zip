@@ -81,6 +81,30 @@ jobs:
         shell: bash
     steps:
       - uses: actions/checkout@v4
+      - name: Diagnose complete Apple Clang bridge warnings
+        if: runner.os == 'macOS'
+        continue-on-error: true
+        run: |
+          set +e
+          probe="$RUNNER_TEMP/rebuild-facade-probe"
+          mkdir -p "$probe"
+          flags=(-arch arm64 -O2 -c -Werror -Wall -Wextra -Weverything
+            -Wno-poison-system-directories -DNDEBUG -D_REENTRANT
+            -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -fPIC -std=c++11)
+          status=0
+          clang++ "${flags[@]}" -I rust/bridge -I . \
+            rust/bridge/archive_bridge_v1.cpp \
+            -o "$RUNNER_TEMP/archive_bridge_v1-warning-audit.o" \
+            > "$probe/apple-clang-archive_bridge_v1.log" 2>&1 || status=1
+          clang++ "${flags[@]}" -I rust/bridge -I . \
+            rust/bridge/archive_bridge_registration.cpp \
+            -o "$RUNNER_TEMP/archive_bridge_registration-warning-audit.o" \
+            > "$probe/apple-clang-archive_bridge_registration.log" 2>&1 || status=1
+          clang++ "${flags[@]}" -I rust/bridge \
+            rust/bridge/archive_bridge_registration_correspondence.cpp \
+            -o "$RUNNER_TEMP/archive_bridge_registration_correspondence-warning-audit.o" \
+            > "$probe/apple-clang-archive_bridge_registration_correspondence.log" 2>&1 || status=1
+          exit "$status"
       - name: Attempt retained-engine facade build
         id: facade-posix
         if: runner.os != 'Windows'

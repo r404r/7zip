@@ -18,7 +18,7 @@ bool SameCaptureName(const wchar_t *row_name, const char *capture_name)
     return false;
   while (*row_name && *capture_name)
   {
-    if ((wchar_t)(unsigned char)*capture_name != *row_name)
+    if (static_cast<wchar_t>(static_cast<unsigned char>(*capture_name)) != *row_name)
       return false;
     ++row_name;
     ++capture_name;

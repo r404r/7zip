@@ -6,9 +6,13 @@ import sys
 
 
 SCRIPT = Path(__file__).with_name("check-registration-seam.py")
+CORRESPONDENCE = Path(__file__).with_name("archive_bridge_registration_correspondence.cpp")
 
 
 def main():
+    source = CORRESPONDENCE.read_text()
+    if "(wchar_t)(unsigned char)*capture_name" in source:
+        raise SystemExit("correspondence helper contains an Apple Clang old-style cast")
     completed = subprocess.run(
         [sys.executable, str(SCRIPT), "--self-test"],
         check=False,
