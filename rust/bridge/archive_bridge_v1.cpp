@@ -42,6 +42,7 @@
 
 #include "archive_bridge_v1.h"
 #include "archive_bridge_registration.h"
+#include "archive_bridge_registration_correspondence.h"
 
 // The build system supplies the digests of the exact matched build. Absent or
 // empty values make every handshake fail closed rather than silently accept an
@@ -331,50 +332,40 @@ struct CBridgeContext
 // missing, duplicate, null, or unmatched rows fail the complete export.
 bool ValidateRegistrationCorrespondence(const CCodecs &codecs)
 {
-  if (ArchiveBridgeRegistrationOverflowed() || ArchiveBridgeRegisteredArcCount() != 60)
+  if (ArchiveBridgeRegistrationOverflowed() || ArchiveBridgeRegisteredArcCount() != 60
+      || codecs.Formats.Size() != 61)
     return false;
-  unsigned hash_count = 0;
-  unsigned consumed[60];
-  std::memset(consumed, 0, sizeof(consumed));
+  ArchiveBridgeRegistrationCapture captures[60];
+  ArchiveBridgeRegistrationRow rows[61];
   for (unsigned i = 0; i < 60; i++)
   {
     const CArcInfo *info = ArchiveBridgeRegisteredArcAt(i);
     if (!info || !info->Name || info->Name[0] == 0)
       return false;
-    for (unsigned previous = 0; previous < i; previous++)
-    {
-      const CArcInfo *other = ArchiveBridgeRegisteredArcAt(previous);
-      if (other && other->Name && std::strcmp(info->Name, other->Name) == 0)
-        return false;
-    }
+    captures[i].Name = info->Name;
+    captures[i].Id = (uint32_t)info->Id;
   }
   FOR_VECTOR (index, codecs.Formats)
   {
     const CArcInfoEx &format = codecs.Formats[index];
+    rows[index].Name = (const wchar_t *)format.Name;
+    rows[index].Id = UINT32_C(257);
     if (format.Name.IsEqualTo("Hash"))
-    {
-      hash_count++;
-      continue;
-    }
-    unsigned matches = 0;
+      rows[index].Id = UINT32_C(256);
     for (unsigned capture = 0; capture < 60; capture++)
     {
-      const CArcInfo *info = ArchiveBridgeRegisteredArcAt(capture);
-      if (format.Name.IsEqualTo(info->Name))
+      if (format.Name.IsEqualTo(captures[capture].Name))
       {
-        consumed[capture]++;
-        matches++;
+        rows[index].Id = captures[capture].Id;
+        break;
       }
     }
-    if (matches != 1)
-      return false;
   }
-  if (hash_count != 1 || codecs.Formats.Size() != 61)
-    return false;
-  for (unsigned i = 0; i < 60; i++)
-    if (consumed[i] != 1)
-      return false;
-  return true;
+  // The live retained table is immutable here. Its frozen ordered reference is
+  // checked by the Rust contract test; this helper closes every runtime
+  // capture/ID/Hash mismatch before any context or view can be published.
+  return ArchiveBridgeValidateRegistrationCorrespondence(
+      captures, 60, false, rows, rows, 61);
 }
 
 uint32_t RegistrationIdFor(const CArcInfoEx &format)

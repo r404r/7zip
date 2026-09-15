@@ -21,7 +21,10 @@ def require(condition, message):
 
 def source_guard(bridge=BRIDGE):
     inputs = [bridge / "archive_bridge_v1.cpp", bridge / "archive_bridge_registration.cpp",
-              bridge / "archive_bridge_registration.h", bridge / "makefile.gcc", bridge / "makefile"]
+              bridge / "archive_bridge_registration.h",
+              bridge / "archive_bridge_registration_correspondence.cpp",
+              bridge / "archive_bridge_registration_correspondence.h",
+              bridge / "makefile.gcc", bridge / "makefile"]
     text = "\n".join(path.read_text() for path in inputs)
     for token in FORBIDDEN:
         require(token not in text, "forbidden production build input: " + token)

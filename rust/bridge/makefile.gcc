@@ -75,6 +75,7 @@ WIN_OBJS_2 = \
 BRIDGE_OBJS = \
   $O/archive_bridge_v1.o \
   $O/archive_bridge_registration.o \
+  $O/archive_bridge_registration_correspondence.o \
 
 OBJS = \
   $(ARC_OBJS) \
@@ -107,6 +108,7 @@ $(REGISTER_ARC_OBJS): CXXFLAGS += -DRegisterArc=ArchiveBridgeRegisterArc
 .PHONY: registration-seam-check
 registration-seam-check: $(REGISTER_ARC_OBJS) $O/LoadCodecs.o $O/archive_bridge_registration.o
 	python3 $(BRIDGE_DIR)/test-registration-seam.py
+	python3 $(BRIDGE_DIR)/test-registration-correspondence.py
 	python3 $(BRIDGE_DIR)/check-registration-seam.py --object-dir $O
 
 $(PROGPATH): registration-seam-check
@@ -117,3 +119,6 @@ $O/archive_bridge_v1.o: $(BRIDGE_DIR)/archive_bridge_v1.cpp $(BRIDGE_DIR)/archiv
 
 $O/archive_bridge_registration.o: $(BRIDGE_DIR)/archive_bridge_registration.cpp $(BRIDGE_DIR)/archive_bridge_registration.h
 	$(CXX) $(CXXFLAGS) -I$(BRIDGE_DIR) -I../../../.. $<
+
+$O/archive_bridge_registration_correspondence.o: $(BRIDGE_DIR)/archive_bridge_registration_correspondence.cpp $(BRIDGE_DIR)/archive_bridge_registration_correspondence.h
+	$(CXX) $(CXXFLAGS) -I$(BRIDGE_DIR) $<
