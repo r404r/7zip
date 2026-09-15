@@ -7,12 +7,15 @@ import sys
 
 SCRIPT = Path(__file__).with_name("check-registration-seam.py")
 CORRESPONDENCE = Path(__file__).with_name("archive_bridge_registration_correspondence.cpp")
+CORRESPONDENCE_HEADER = Path(__file__).with_name("archive_bridge_registration_correspondence.h")
 
 
 def main():
     source = CORRESPONDENCE.read_text()
     if "(wchar_t)(unsigned char)*capture_name" in source:
         raise SystemExit("correspondence helper contains an Apple Clang old-style cast")
+    if CORRESPONDENCE_HEADER.read_text().count("uint32_t Reserved;") != 2:
+        raise SystemExit("correspondence records must make alignment storage explicit")
     completed = subprocess.run(
         [sys.executable, str(SCRIPT), "--self-test"],
         check=False,

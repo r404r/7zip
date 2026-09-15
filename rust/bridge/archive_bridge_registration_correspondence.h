@@ -9,12 +9,14 @@ struct ArchiveBridgeRegistrationCapture
 {
   const char *Name;
   uint32_t Id;
+  uint32_t Reserved;
 };
 
 struct ArchiveBridgeRegistrationRow
 {
   const wchar_t *Name;
   uint32_t Id;
+  uint32_t Reserved;
 };
 
 // Verifies the frozen 60 native rows plus exactly one coordinator-added Hash
