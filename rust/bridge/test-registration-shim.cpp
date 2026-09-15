@@ -1,7 +1,16 @@
-#include "archive_bridge_registration.h"
-
 #include <cstdio>
 #include <cstdlib>
+
+// Test-only declarations intentionally omit the retained C++98 throw()
+// spelling so Apple Clang can audit this isolated C++11 test translation unit
+// under -Weverything. The linked production shim retains its reviewed
+// declarations and ordinary C++ symbol names.
+struct CArcInfo;
+void ArchiveBridgeRegisterArc(const CArcInfo *arcInfo);
+unsigned ArchiveBridgeRegisteredArcCount();
+const CArcInfo *ArchiveBridgeRegisteredArcAt(unsigned index);
+bool ArchiveBridgeRegistrationOverflowed();
+void RegisterArc(const CArcInfo *arcInfo);
 
 namespace {
 const unsigned kExpectedCapacity = 72;
@@ -31,7 +40,7 @@ int main()
   const unsigned null_index = 17;
   for (unsigned i = 0; i < kExpectedCapacity; i++)
   {
-    const CArcInfo *arc = i == null_index ? 0 :
+    const CArcInfo *arc = i == null_index ? NULL :
         static_cast<const CArcInfo *>(static_cast<const void *>(&arc_tokens[i]));
     ArchiveBridgeRegisterArc(arc);
     Require(g_forwarded_count == i + 1, "true registrar must be called exactly once");
@@ -40,7 +49,7 @@ int main()
 
   Require(ArchiveBridgeRegisteredArcCount() == kExpectedCapacity,
           "capture count must reach the 72-slot bound");
-  Require(ArchiveBridgeRegisteredArcAt(null_index) == 0,
+  Require(ArchiveBridgeRegisteredArcAt(null_index) == NULL,
           "an in-range null must occupy its capture slot");
   Require(!ArchiveBridgeRegistrationOverflowed(),
           "the 72nd call must not overflow");
@@ -57,7 +66,7 @@ int main()
   Require(ArchiveBridgeRegistrationOverflowed(),
           "the 73rd call must set sticky overflow");
 
-  ArchiveBridgeRegisterArc(0);
+  ArchiveBridgeRegisterArc(NULL);
   Require(g_forwarded_count == kExpectedCapacity + 2,
           "post-overflow calls must still be forwarded exactly once");
   Require(ArchiveBridgeRegisteredArcCount() == kExpectedCapacity,
