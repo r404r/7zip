@@ -8,6 +8,7 @@ import sys
 SCRIPT = Path(__file__).with_name("check-registration-seam.py")
 CORRESPONDENCE = Path(__file__).with_name("archive_bridge_registration_correspondence.cpp")
 CORRESPONDENCE_HEADER = Path(__file__).with_name("archive_bridge_registration_correspondence.h")
+FACADE = Path(__file__).with_name("archive_bridge_v1.cpp")
 
 
 def main():
@@ -16,6 +17,8 @@ def main():
         raise SystemExit("correspondence helper contains an Apple Clang old-style cast")
     if CORRESPONDENCE_HEADER.read_text().count("uint32_t Reserved;") != 2:
         raise SystemExit("correspondence records must make alignment storage explicit")
+    if "rows, rows, 61" in FACADE.read_text():
+        raise SystemExit("production correspondence compares the runtime table to itself")
     completed = subprocess.run(
         [sys.executable, str(SCRIPT), "--self-test"],
         check=False,

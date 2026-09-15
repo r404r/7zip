@@ -326,6 +326,29 @@ struct CBridgeContext
   CBridgeContext(): Magic(0), Codecs(NULL) {}
 };
 
+// Frozen Q1 Linux/Windows/Darwin built-in CCodecs order and registration IDs,
+// transcribed from engine-build.json (SHA-256 4e9a98a95daced0f0b20f4db9011793c934a51328a63780a473685808195704b).
+// This is an immutable bridge-owned oracle, not a value generated from the
+// candidate table. Hash is the sole coordinator row and has no native ID.
+const ArchiveBridgeRegistrationRow kFrozenQ1FormatRows[61] = {
+  { L"7z", 7, 0 }, { L"APFS", 195, 0 }, { L"APM", 212, 0 }, { L"Ar", 236, 0 },
+  { L"Arj", 4, 0 }, { L"Base64", 197, 0 }, { L"COFF", 198, 0 }, { L"Cab", 8, 0 },
+  { L"Chm", 233, 0 }, { L"Compound", 229, 0 }, { L"Cpio", 237, 0 }, { L"CramFS", 211, 0 },
+  { L"Dmg", 228, 0 }, { L"ELF", 222, 0 }, { L"Ext", 199, 0 }, { L"FAT", 218, 0 },
+  { L"FLV", 214, 0 }, { L"GPT", 203, 0 }, { L"HFS", 227, 0 }, { L"Hxs", 206, 0 },
+  { L"IHex", 205, 0 }, { L"Iso", 231, 0 }, { L"LP", 193, 0 }, { L"Lzh", 6, 0 },
+  { L"MBR", 219, 0 }, { L"MachO", 223, 0 }, { L"MsLZ", 213, 0 }, { L"Mub", 226, 0 },
+  { L"NTFS", 217, 0 }, { L"Nsis", 9, 0 }, { L"PE", 221, 0 }, { L"Ppmd", 13, 0 },
+  { L"QCOW", 202, 0 }, { L"Rar", 3, 0 }, { L"Rar5", 204, 0 }, { L"Rpm", 235, 0 },
+  { L"SWF", 215, 0 }, { L"SWFc", 216, 0 }, { L"Sparse", 194, 0 }, { L"Split", 234, 0 },
+  { L"SquashFS", 210, 0 }, { L"TE", 207, 0 }, { L"UEFIc", 208, 0 }, { L"UEFIf", 209, 0 },
+  { L"Udf", 224, 0 }, { L"VDI", 201, 0 }, { L"VHD", 220, 0 }, { L"VHDX", 196, 0 },
+  { L"VMDK", 200, 0 }, { L"Xar", 225, 0 }, { L"Z", 5, 0 }, { L"bzip2", 2, 0 },
+  { L"gzip", 239, 0 }, { L"lzma", 10, 0 }, { L"lzma86", 11, 0 }, { L"tar", 238, 0 },
+  { L"wim", 230, 0 }, { L"xz", 12, 0 }, { L"zip", 1, 0 }, { L"zstd", 14, 0 },
+  { L"Hash", 256, 0 }
+};
+
 // Checks the complete native registration capture before a context or result
 // can be published. Hash is added by the coordinator and is the only row with
 // no native registration byte. The function deliberately performs no repair:
@@ -361,11 +384,11 @@ bool ValidateRegistrationCorrespondence(const CCodecs &codecs)
       }
     }
   }
-  // The live retained table is immutable here. Its frozen ordered reference is
-  // checked by the Rust contract test; this helper closes every runtime
-  // capture/ID/Hash mismatch before any context or view can be published.
+  // Compare the live retained table to the independent frozen Q1 order before
+  // allowing the arena to be built. Passing rows as both arguments would make
+  // reorder drift self-consistent and therefore invisible.
   return ArchiveBridgeValidateRegistrationCorrespondence(
-      captures, 60, false, rows, rows, 61);
+      captures, 60, false, rows, kFrozenQ1FormatRows, 61);
 }
 
 uint32_t RegistrationIdFor(const CArcInfoEx &format)

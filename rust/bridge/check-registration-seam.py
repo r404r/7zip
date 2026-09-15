@@ -38,7 +38,9 @@ def source_guard(bridge=BRIDGE):
     selected = re.findall(r"\$O/([A-Za-z0-9]+)\.o", make[
         make.index("REGISTER_ARC_OBJS ="):make.index("$(REGISTER_ARC_OBJS):")])
     require(selected == EXPECTED, "GNU selected registration objects drift")
-    require("-DRegisterArc=ArchiveBridgeRegisterArc" in make, "GNU redirection missing")
+    definition = "-DRegisterArc=ArchiveBridgeRegisterArc"
+    require(make.count(definition) == 1 and "$(REGISTER_ARC_OBJS): CXXFLAGS += " + definition in make,
+            "GNU redirection is missing or mis-scoped")
     bridge_start = make.index("BRIDGE_OBJS =")
     bridge_objects = make[bridge_start:make.index("\nOBJS =", bridge_start)]
     require("$O/archive_bridge_registration.o" in bridge_objects, "shim object missing")
@@ -47,7 +49,14 @@ def source_guard(bridge=BRIDGE):
             and "check-registration-seam.py --object-dir" in make
             and "$(PROGPATH): registration-seam-check" in make,
             "link preflight missing")
-    require("!ERROR" in (bridge / "makefile").read_text(), "Windows fail-closed guard removed")
+    nmake = (bridge / "makefile").read_text()
+    require("!ERROR" in nmake, "Windows fail-closed guard removed")
+    nmake_start = nmake.index("REGISTER_ARC_OBJS =")
+    nmake_end = nmake.index("REGISTER_ARC_CPP =", nmake_start)
+    nmake_selected = re.findall(r"\$O\\([A-Za-z0-9]+)\.obj", nmake[nmake_start:nmake_end])
+    require(nmake_selected == EXPECTED, "NMAKE selected registration objects drift")
+    require("$(COMPLB) /DRegisterArc=ArchiveBridgeRegisterArc" in nmake,
+            "NMAKE per-object redirection declaration missing")
 
 
 def replace_once(path, old, new):
@@ -75,6 +84,9 @@ def self_test():
         ("archive_bridge_registration_correspondence.h", "bool ArchiveBridgeValidateRegistrationCorrespondence(", "noexcept bool ArchiveBridgeValidateRegistrationCorrespondence(", "correspondence exception specification"),
         ("makefile.gcc", "$O/ZipRegister.o", "$O/PhantomRegister.o", "selected-object drift"),
         ("makefile.gcc", "-DRegisterArc=ArchiveBridgeRegisterArc", "-DRegisterArc=WrongRegistrar", "missing redirection"),
+        ("makefile.gcc", "$(REGISTER_ARC_OBJS): CXXFLAGS += -DRegisterArc=ArchiveBridgeRegisterArc",
+         "$(REGISTER_ARC_OBJS) $O/LoadCodecs.o: CXXFLAGS += -DRegisterArc=ArchiveBridgeRegisterArc",
+         "mis-scoped redirection"),
         ("makefile.gcc", "archive_bridge_registration.o", "archive_bridge_removed.o", "missing shim object"),
         ("makefile.gcc", "registration-seam-check", "registration-seam-removed", "missing link preflight"),
         ("makefile", "!ERROR", "!MESSAGE", "removed Windows guard"),
@@ -106,6 +118,12 @@ def object_guard(directory):
             "LoadCodecs registrar scope drift")
     require("ArchiveBridgeRegisterArc(CArcInfo const*)" in shim_symbols
             and "RegisterArc(CArcInfo const*)" in shim_symbols, "shim forwarding scope drift")
+    selected_names = set(EXPECTED) | {"archive_bridge_registration"}
+    for path in directory.glob("*.o"):
+        symbols = subprocess.check_output(["nm", "-C", str(path)], text=True)
+        if path.stem not in selected_names:
+            require("ArchiveBridgeRegisterArc(CArcInfo const*)" not in symbols,
+                    "unexpected redirected reference: " + path.name)
 
 
 def main():
