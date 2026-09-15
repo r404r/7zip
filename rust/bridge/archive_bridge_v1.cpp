@@ -41,6 +41,7 @@
 #include "CPP/7zip/UI/Common/LoadCodecs.h"
 
 #include "archive_bridge_v1.h"
+#include "archive_bridge_registration.h"
 
 // The build system supplies the digests of the exact matched build. Absent or
 // empty values make every handshake fail closed rather than silently accept an
@@ -51,51 +52,6 @@
 #ifndef ARCHIVE_BRIDGE_V1_BUILD_SHA256_HEX
 #define ARCHIVE_BRIDGE_V1_BUILD_SHA256_HEX ""
 #endif
-
-// ---------------------------------------------------------------------------
-// Retained CArcInfo registration-byte recovery
-// ---------------------------------------------------------------------------
-//
-// CCodecs::Formats holds CArcInfoEx, which does not retain CArcInfo::Id. The
-// registration byte is therefore captured at its source: the link wraps the
-// retained registrar so every built-in CArcInfo pointer passed to it is
-// recorded, and __real_ still runs, so CCodecs::Formats is built exactly as
-// before. No retained source file is edited and no registration is dropped.
-//
-// The wrapped symbol is the C++-mangled name of
-// RegisterArc(const CArcInfo *) as emitted by this host's Itanium C++ ABI
-// toolchain; rust/bridge/makefile.gcc passes the matching --wrap option.
-// Recovering this byte on a non-Itanium-ABI toolchain (native Windows MSVC) is
-// a deferred obligation of S2a t_071e4cd7, not something this development
-// slice claims to have solved.
-#define ARCHIVE_BRIDGE_V1_REGISTER_ARC_SYMBOL _Z11RegisterArcPK8CArcInfo
-#define ARCHIVE_BRIDGE_V1_CAT_(a, b) a##b
-#define ARCHIVE_BRIDGE_V1_CAT(a, b) ARCHIVE_BRIDGE_V1_CAT_(a, b)
-#define ARCHIVE_BRIDGE_V1_REAL_REGISTER_ARC \
-  ARCHIVE_BRIDGE_V1_CAT(__real_, ARCHIVE_BRIDGE_V1_REGISTER_ARC_SYMBOL)
-#define ARCHIVE_BRIDGE_V1_WRAP_REGISTER_ARC \
-  ARCHIVE_BRIDGE_V1_CAT(__wrap_, ARCHIVE_BRIDGE_V1_REGISTER_ARC_SYMBOL)
-
-extern "C" void ARCHIVE_BRIDGE_V1_REAL_REGISTER_ARC(const CArcInfo *arcInfo) throw();
-
-namespace {
-
-// Bound taken from the retained registrar itself (ArchiveExports.cpp:13 and
-// LoadCodecs.cpp:112 both use kNumArcsMax = 72).
-const unsigned kRegisteredArcsMax = 72;
-
-const CArcInfo *g_registered_arcs[kRegisteredArcsMax];
-unsigned g_registered_arc_count;
-
-}  // namespace
-
-extern "C" void ARCHIVE_BRIDGE_V1_WRAP_REGISTER_ARC(const CArcInfo *arcInfo) throw()
-{
-  // Static-initialization time, single-threaded, before any export runs.
-  if (arcInfo && g_registered_arc_count < kRegisteredArcsMax)
-    g_registered_arcs[g_registered_arc_count++] = arcInfo;
-  ARCHIVE_BRIDGE_V1_REAL_REGISTER_ARC(arcInfo);
-}
 
 // Retained built-in codec and hasher tables, declared exactly as the retained
 // CPP/7zip/UI/Console/Main.cpp:97-101 declares them.
@@ -369,20 +325,69 @@ struct CBridgeContext
   CBridgeContext(): Magic(0), Codecs(NULL) {}
 };
 
-// Maps a retained format name to the CArcInfo registration byte recorded at
-// registration time. Returns the literal 256 for a row that the retained
-// library never registered as a CArcInfo slot -- the coordinator-added Hash
-// handler from HashCalc.cpp. 256 explicitly means absent; it is never a
-// fabricated native ID.
+// Checks the complete native registration capture before a context or result
+// can be published. Hash is added by the coordinator and is the only row with
+// no native registration byte. The function deliberately performs no repair:
+// missing, duplicate, null, or unmatched rows fail the complete export.
+bool ValidateRegistrationCorrespondence(const CCodecs &codecs)
+{
+  if (ArchiveBridgeRegistrationOverflowed() || ArchiveBridgeRegisteredArcCount() != 60)
+    return false;
+  unsigned hash_count = 0;
+  unsigned consumed[60];
+  std::memset(consumed, 0, sizeof(consumed));
+  for (unsigned i = 0; i < 60; i++)
+  {
+    const CArcInfo *info = ArchiveBridgeRegisteredArcAt(i);
+    if (!info || !info->Name || info->Name[0] == 0)
+      return false;
+    for (unsigned previous = 0; previous < i; previous++)
+    {
+      const CArcInfo *other = ArchiveBridgeRegisteredArcAt(previous);
+      if (other && other->Name && std::strcmp(info->Name, other->Name) == 0)
+        return false;
+    }
+  }
+  FOR_VECTOR (index, codecs.Formats)
+  {
+    const CArcInfoEx &format = codecs.Formats[index];
+    if (format.Name.IsEqualTo("Hash"))
+    {
+      hash_count++;
+      continue;
+    }
+    unsigned matches = 0;
+    for (unsigned capture = 0; capture < 60; capture++)
+    {
+      const CArcInfo *info = ArchiveBridgeRegisteredArcAt(capture);
+      if (format.Name.IsEqualTo(info->Name))
+      {
+        consumed[capture]++;
+        matches++;
+      }
+    }
+    if (matches != 1)
+      return false;
+  }
+  if (hash_count != 1 || codecs.Formats.Size() != 61)
+    return false;
+  for (unsigned i = 0; i < 60; i++)
+    if (consumed[i] != 1)
+      return false;
+  return true;
+}
+
 uint32_t RegistrationIdFor(const CArcInfoEx &format)
 {
-  for (unsigned i = 0; i < g_registered_arc_count; i++)
+  if (format.Name.IsEqualTo("Hash"))
+    return UINT32_C(256);
+  for (unsigned i = 0; i < 60; i++)
   {
-    const CArcInfo *info = g_registered_arcs[i];
-    if (info && info->Name && format.Name.IsEqualTo(info->Name))
+    const CArcInfo *info = ArchiveBridgeRegisteredArcAt(i);
+    if (format.Name.IsEqualTo(info->Name))
       return (uint32_t)info->Id;
   }
-  return UINT32_C(256);
+  return UINT32_C(256);  // Unreachable after ValidateRegistrationCorrespondence().
 }
 
 void FillFormats(const CCodecs &codecs, CBridgeResult &result)
@@ -525,6 +530,11 @@ int32_t ARCHIVE_BRIDGE_V1_CALL archive_bridge_v1_create_context(
       // The retained coordinator-added Hash handler, preserved exactly as the
       // retained callers add it (Main.cpp:1015).
       Codecs_AddHashArcHandler(created->Codecs);
+      if (!ValidateRegistrationCorrespondence(*created->Codecs))
+      {
+        delete created;
+        return ARCHIVE_BRIDGE_V1_ENGINE_FAILURE;
+      }
       created->Magic = kContextMagic;
     }
     catch (...)
@@ -591,6 +601,8 @@ int32_t ARCHIVE_BRIDGE_V1_CALL archive_bridge_v1_capabilities(
     return ARCHIVE_BRIDGE_V1_STALE_ENTRY;
   try
   {
+    if (!ValidateRegistrationCorrespondence(*owned->Codecs))
+      return ARCHIVE_BRIDGE_V1_ENGINE_FAILURE;
     CBridgeResult *created = new (std::nothrow) CBridgeResult();
     if (!created)
       return ARCHIVE_BRIDGE_V1_ALLOCATION_FAILURE;

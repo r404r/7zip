@@ -13,16 +13,9 @@
 # actually qualifies it. An unqualified Windows binary must not be producible
 # by accident.
 #
-# Two Windows-specific problems the qualifying card must solve, neither of
-# which this development slice claims to have solved:
-#
-# 1. Registration-byte recovery. CArcInfoEx drops CArcInfo::Id, so
-#    rust/bridge/archive_bridge_v1.cpp recovers it by wrapping the retained
-#    registrar at link time with GNU ld's --wrap, keyed on the Itanium C++ ABI
-#    mangling of RegisterArc(const CArcInfo *). MSVC's link.exe has no --wrap
-#    and a different mangling, so Windows needs its own reviewed mechanism.
-#
-# 2. Calling convention. Per docs/ai-migration/qualification/abi-v1.md every
+# The Windows qualification card must verify the per-object preprocessor
+# redirection used by the portable shim and must also solve this independent
+# calling-convention issue. Per docs/ai-migration/qualification/abi-v1.md every
 #    exported and callback function must use __cdecl explicitly, overriding the
 #    retained engine's -Gr default set in CPP/Build.mak:53. The header's
 #    ARCHIVE_BRIDGE_V1_CALL macro already spells that; it must be verified

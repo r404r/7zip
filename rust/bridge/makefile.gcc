@@ -46,13 +46,6 @@ endif
 # (a Windows module-definition input the facade does not use).
 LDFLAGS_STATIC_3 = -shared
 
-# Recover the retained CArcInfo registration byte that CArcInfoEx does not keep.
-# --wrap redirects only the registrar call sites; __real_ still runs, so the
-# retained CCodecs::Formats table is built exactly as before. The symbol is the
-# Itanium C++ ABI mangling of RegisterArc(const CArcInfo *); the facade defines
-# the matching __wrap_/__real_ pair.
-LDFLAGS_STATIC_3 += -Wl,--wrap=_Z11RegisterArcPK8CArcInfo
-
 SYS_OBJS = \
   $O/MyWindows.o \
 
@@ -81,6 +74,7 @@ WIN_OBJS_2 = \
 
 BRIDGE_OBJS = \
   $O/archive_bridge_v1.o \
+  $O/archive_bridge_registration.o \
 
 OBJS = \
   $(ARC_OBJS) \
@@ -102,6 +96,23 @@ BRIDGE_BUILD_SHA256 ?=
 
 include ../../7zip_gcc.mak
 
+# Exactly the retained registration constructors selected by Format7zF. This
+# definition is deliberately target-specific: LoadCodecs, the facade, shim,
+# codecs, and every non-registration object retain their ordinary command line.
+REGISTER_ARC_OBJS = \
+  $O/ApfsHandler.o $O/ApmHandler.o $O/ArHandler.o $O/ArjHandler.o $O/Base64Handler.o $O/Bz2Handler.o $O/ComHandler.o $O/CpioHandler.o $O/CramfsHandler.o $O/DmgHandler.o $O/ElfHandler.o $O/ExtHandler.o $O/FatHandler.o $O/FlvHandler.o $O/GptHandler.o $O/GzHandler.o $O/HfsHandler.o $O/IhexHandler.o $O/LpHandler.o $O/LzhHandler.o $O/LzmaHandler.o $O/MachoHandler.o $O/MbrHandler.o $O/MslzHandler.o $O/MubHandler.o $O/NtfsHandler.o $O/PeHandler.o $O/PpmdHandler.o $O/QcowHandler.o $O/RpmHandler.o $O/SparseHandler.o $O/SplitHandler.o $O/SquashfsHandler.o $O/SwfHandler.o $O/UefiHandler.o $O/VdiHandler.o $O/VhdHandler.o $O/VhdxHandler.o $O/VmdkHandler.o $O/XarHandler.o $O/XzHandler.o $O/ZHandler.o $O/ZstdHandler.o $O/7zRegister.o $O/CabRegister.o $O/ChmHandler.o $O/IsoRegister.o $O/NsisRegister.o $O/RarHandler.o $O/Rar5Handler.o $O/TarRegister.o $O/UdfHandler.o $O/WimRegister.o $O/ZipRegister.o
+
+$(REGISTER_ARC_OBJS): CXXFLAGS += -DRegisterArc=ArchiveBridgeRegisterArc
+
+.PHONY: registration-seam-check
+registration-seam-check: $(REGISTER_ARC_OBJS) $O/LoadCodecs.o $O/archive_bridge_registration.o
+	python3 $(BRIDGE_DIR)/check-registration-seam.py --object-dir $O
+
+$(PROGPATH): registration-seam-check
+
 # One physical line so the echoed build log stays a single parseable command.
 $O/archive_bridge_v1.o: $(BRIDGE_DIR)/archive_bridge_v1.cpp $(BRIDGE_DIR)/archive_bridge_v1.h
 	$(CXX) $(CXXFLAGS) -DARCHIVE_BRIDGE_V1_HEADER_SHA256_HEX=\"$(BRIDGE_HEADER_SHA256)\" -DARCHIVE_BRIDGE_V1_BUILD_SHA256_HEX=\"$(BRIDGE_BUILD_SHA256)\" -I$(BRIDGE_DIR) -I../../../.. $<
+
+$O/archive_bridge_registration.o: $(BRIDGE_DIR)/archive_bridge_registration.cpp $(BRIDGE_DIR)/archive_bridge_registration.h
+	$(CXX) $(CXXFLAGS) -I$(BRIDGE_DIR) -I../../../.. $<
