@@ -3,8 +3,10 @@
 import argparse
 from pathlib import Path
 import re
+import shutil
 import subprocess
 import sys
+import tempfile
 
 ROOT = Path(__file__).resolve().parents[2]
 BRIDGE = ROOT / "rust/bridge"
@@ -17,23 +19,64 @@ def require(condition, message):
         raise ValueError(message)
 
 
-def source_guard():
-    inputs = [BRIDGE / "archive_bridge_v1.cpp", BRIDGE / "archive_bridge_registration.cpp",
-              BRIDGE / "archive_bridge_registration.h", BRIDGE / "makefile.gcc", BRIDGE / "makefile"]
+def source_guard(bridge=BRIDGE):
+    inputs = [bridge / "archive_bridge_v1.cpp", bridge / "archive_bridge_registration.cpp",
+              bridge / "archive_bridge_registration.h", bridge / "makefile.gcc", bridge / "makefile"]
     text = "\n".join(path.read_text() for path in inputs)
     for token in FORBIDDEN:
         require(token not in text, "forbidden production build input: " + token)
-    require("extern \"C\"" not in (BRIDGE / "archive_bridge_registration.cpp").read_text(),
+    require("extern \"C\"" not in (bridge / "archive_bridge_registration.cpp").read_text(),
             "shim must use ordinary C++ linkage")
-    make = (BRIDGE / "makefile.gcc").read_text()
+    make = (bridge / "makefile.gcc").read_text()
     selected = re.findall(r"\$O/([A-Za-z0-9]+)\.o", make[
         make.index("REGISTER_ARC_OBJS ="):make.index("$(REGISTER_ARC_OBJS):")])
     require(selected == EXPECTED, "GNU selected registration objects drift")
     require("-DRegisterArc=ArchiveBridgeRegisterArc" in make, "GNU redirection missing")
-    require("archive_bridge_registration.o" in make, "shim object missing")
-    require("registration-seam-check" in make and "check-registration-seam.py --object-dir" in make,
+    bridge_start = make.index("BRIDGE_OBJS =")
+    bridge_objects = make[bridge_start:make.index("\nOBJS =", bridge_start)]
+    require("$O/archive_bridge_registration.o" in bridge_objects, "shim object missing")
+    require(".PHONY: registration-seam-check" in make
+            and "registration-seam-check: $(REGISTER_ARC_OBJS) $O/LoadCodecs.o $O/archive_bridge_registration.o" in make
+            and "check-registration-seam.py --object-dir" in make
+            and "$(PROGPATH): registration-seam-check" in make,
             "link preflight missing")
-    require("!ERROR" in (BRIDGE / "makefile").read_text(), "Windows fail-closed guard removed")
+    require("!ERROR" in (bridge / "makefile").read_text(), "Windows fail-closed guard removed")
+
+
+def replace_once(path, old, new):
+    text = path.read_text()
+    require(old in text, "self-test anchor missing: " + old)
+    path.write_text(text.replace(old, new, 1))
+
+
+def expect_source_guard_failure(bridge, path, old, new, label):
+    replace_once(bridge / path, old, new)
+    try:
+        source_guard(bridge)
+    except ValueError:
+        return
+    raise ValueError("negative control did not fail closed: " + label)
+
+
+def self_test():
+    # Every mutation is applied to an isolated copy. Production sources and
+    # retained inputs stay immutable while the guard proves it rejects a bad
+    # bridge input before link.
+    mutations = (
+        ("archive_bridge_v1.cpp", "#include \"archive_bridge_registration.h\"", "--wrap", "forbidden linker wrapper"),
+        ("archive_bridge_registration.cpp", "#include \"archive_bridge_registration.h\"", "extern \"C\"", "C linkage shim"),
+        ("makefile.gcc", "$O/ZipRegister.o", "$O/PhantomRegister.o", "selected-object drift"),
+        ("makefile.gcc", "-DRegisterArc=ArchiveBridgeRegisterArc", "-DRegisterArc=WrongRegistrar", "missing redirection"),
+        ("makefile.gcc", "archive_bridge_registration.o", "archive_bridge_removed.o", "missing shim object"),
+        ("makefile.gcc", "registration-seam-check", "registration-seam-removed", "missing link preflight"),
+        ("makefile", "!ERROR", "!MESSAGE", "removed Windows guard"),
+    )
+    for path, old, new, label in mutations:
+        with tempfile.TemporaryDirectory() as temporary:
+            copied = Path(temporary) / "bridge"
+            shutil.copytree(BRIDGE, copied)
+            expect_source_guard_failure(copied, path, old, new, label)
+    print("PASS: registration seam negative controls")
 
 
 def object_guard(directory):
@@ -61,7 +104,11 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--source-only", action="store_true")
     parser.add_argument("--object-dir")
+    parser.add_argument("--self-test", action="store_true")
     args = parser.parse_args()
+    if args.self_test:
+        self_test()
+        return
     source_guard()
     if args.object_dir:
         object_guard(args.object_dir)

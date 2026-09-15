@@ -6,7 +6,7 @@ name: rebuild-stage1
 
 on:
   push:
-    branches: ['wt/t_c4bda156']
+    branches: ['wt/t_13a346c7']
   pull_request:
     paths: ['rust/**', '.github/workflows/rebuild-ci.yml']
   workflow_dispatch:
@@ -84,7 +84,6 @@ jobs:
       - name: Attempt retained-engine facade build
         id: facade-posix
         if: runner.os != 'Windows'
-        continue-on-error: true
         run: |
           set -o pipefail
           probe="$RUNNER_TEMP/rebuild-facade-probe"
@@ -110,7 +109,6 @@ jobs:
       - name: Attempt retained-engine facade build (MSVC declaration)
         id: facade-windows
         if: runner.os == 'Windows'
-        continue-on-error: true
         shell: cmd
         run: |
           set "probe=%RUNNER_TEMP%\rebuild-facade-probe"
@@ -118,7 +116,9 @@ jobs:
           for /f "usebackq tokens=*" %%i in (`"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath`) do set "VSPATH=%%i"
           if not defined VSPATH (echo Visual Studio with the C++ toolset was not found > "%probe%\facade.log" & exit /b 1)
           call "%VSPATH%\VC\Auxiliary\Build\vcvars64.bat" > "%probe%\vcvars64.log" 2>&1 || exit /b 1
-          nmake /NOLOGO /f rust\bridge\makefile > "%probe%\facade.log" 2>&1
+          pushd CPP\7zip\Bundles\Format7zF
+          nmake /NOLOGO /f "%GITHUB_WORKSPACE%\rust\bridge\makefile" PLATFORM=x64 O="%RUNNER_TEMP%\rebuild-facade" > "%probe%\facade.log" 2>&1
+          popd
       - name: Record facade probe result
         if: always()
         run: |
