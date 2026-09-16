@@ -123,20 +123,24 @@ appropriate disposition is `reject`, not a policy exception.
 
 After independent review of this packet, ask the operator exactly:
 
-> For each of `DRF-OLD`, `DRF-SOLID`, and `DRF-VOL`, do you choose `admit`,
-> `reject`, or `defer` for future native-oracle corpus use, given the public
-> path-level ISC evidence and notice obligations, the unresolved actual-member
-> provenance/rights and Debian-to-upstream identity, and the absence of an
-> authorized safe inspection path? The recommended choice is `defer` for all
-> three. Any `admit` choice must name the candidate(s), expressly accept those
-> disclosed evidence limits, preserve the full ISC notice, and authorize only a
-> separately scoped future import/inspection proposal; it does not authorize
-> execution now or qualify B01.
+> Under the evidence currently recorded in this packet, for each of `DRF-OLD`,
+> `DRF-SOLID`, and `DRF-VOL`, do you choose `reject` or `defer` for future
+> native-oracle corpus consideration? The recommended choice is `defer` for all
+> three because actual-member provenance/rights, Debian-to-upstream identity, and
+> an authorized safe inspection path remain unresolved. Neither choice authorizes
+> import, inspection, execution, native-oracle use, or B01 qualification.
 
-No candidate may be imported, inspected, or used in a native oracle until the
-operator answers that question explicitly and any resulting action has its own
-reviewed scope and safety authority. A notification, reviewer PASS, or prior
-quarantine-acquisition approval is not that decision.
+`admit` is not an available disposition under the current evidence. It may be
+considered only after material new evidence resolves the listed actual-member
+rights/provenance and identity gaps, that evidence is documented in a revised
+packet and independently reviewed, and the operator then makes a new explicit
+admission decision. Merely accepting the current evidence limits cannot substitute
+for that evidence or create an admission path.
+
+No candidate may be imported, inspected, or used in a native oracle under this
+packet or the operator's `reject`/`defer` answer. A notification, reviewer PASS,
+prior quarantine-acquisition approval, or acceptance of unresolved risk is not an
+admission decision or safety authority.
 
 ## External source retrieval ledger
 
