@@ -3,11 +3,13 @@
 
 import importlib.util
 import pathlib
+import subprocess
 import tempfile
 import unittest
 
 HERE = pathlib.Path(__file__).resolve().parent
 SCRIPT = HERE / "msvc-abi-convention-probe.py"
+WORKFLOW = HERE.parents[1] / ".github/workflows/rebuild-ci.yml"
 
 
 def load_probe():
@@ -84,6 +86,86 @@ class ProbeDriverTests(unittest.TestCase):
         00B 00000000 SECT3  notype ()    External     | _defined
         """
         self.assertEqual(self.probe.raw_symbols(symbols), {"_defined"})
+
+    def test_compile_diagnostic_sweep_runs_every_translation_unit_before_failing(self):
+        class FakeRunner:
+            def __init__(self, evidence):
+                self.evidence = evidence
+                self.names = []
+                self.commands = []
+
+            def run(self, name, command, *, cwd, expected=0):
+                del cwd, expected
+                self.names.append(name)
+                output = {
+                    "diagnostic-current-source": "current.cpp(1): error C2001: first\n",
+                    "diagnostic-probe": "probe.cpp(2): warning C4312: second\n",
+                }.get(name, "")
+                return_code = 2 if output else 0
+                self.commands.append(
+                    {"name": name, "command": subprocess.list2cmdline(command), "exit_code": return_code}
+                )
+                return subprocess.CompletedProcess([], return_code, output)
+
+        with tempfile.TemporaryDirectory() as temp:
+            root = pathlib.Path(temp) / "root"
+            output = pathlib.Path(temp) / "output"
+            evidence = output / "evidence" / "amd64"
+            evidence.mkdir(parents=True)
+            frozen = root / "docs/ai-migration/qualification/archive_bridge_v1.h"
+            frozen.parent.mkdir(parents=True)
+            frozen.write_text(self.probe.contract_header_mutation_fixture(), encoding="utf-8")
+            runner = FakeRunner(evidence)
+
+            with self.assertRaisesRegex(
+                RuntimeError,
+                "diagnostic-current-source.*C2001.*diagnostic-probe.*C4312",
+            ):
+                self.probe.compile_diagnostic_sweep(root, output, "amd64", runner)
+
+            self.assertEqual(
+                runner.names,
+                [
+                    "diagnostic-current-source",
+                    "diagnostic-typecheck-c",
+                    "diagnostic-typecheck-cpp",
+                    "diagnostic-probe",
+                    "diagnostic-c-caller",
+                ],
+            )
+            summary = (evidence / "compile-diagnostic-summary.txt").read_text(
+                encoding="utf-8"
+            )
+            self.assertIn("diagnostic-current-source: exit_code=2; diagnostics=C2001", summary)
+            self.assertIn("diagnostic-probe: exit_code=2; diagnostics=C4312", summary)
+            commands = (evidence / "compile-diagnostic-commands.json").read_text(
+                encoding="utf-8"
+            )
+            self.assertIn('"architecture": "amd64"', commands)
+            self.assertIn('"name": "diagnostic-current-source"', commands)
+            self.assertIn('"name": "diagnostic-c-caller"', commands)
+
+    def test_workflow_collects_both_architecture_sweeps_before_failing(self):
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        amd64 = workflow.index("--diagnostics-only amd64")
+        x86 = workflow.index("--diagnostics-only x86")
+        aggregate = workflow.index("MSVC compile diagnostic sweeps failed after both architectures")
+        formal_amd64 = workflow.index("--arch amd64", aggregate)
+        native_errors_disabled = workflow.index(
+            "$PSNativeCommandUseErrorActionPreference = $false"
+        )
+        native_errors_restored = workflow.index(
+            "$PSNativeCommandUseErrorActionPreference = $previousNativeErrorPreference"
+        )
+
+        self.assertLess(native_errors_disabled, amd64)
+        self.assertLess(amd64, x86)
+        self.assertLess(x86, native_errors_restored)
+        self.assertLess(native_errors_restored, aggregate)
+        self.assertLess(x86, aggregate)
+        self.assertLess(aggregate, formal_amd64)
+        between_sweeps = workflow[amd64:x86]
+        self.assertNotIn("exit $LASTEXITCODE", between_sweeps)
 
 
 if __name__ == "__main__":

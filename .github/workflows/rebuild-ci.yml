@@ -63,6 +63,32 @@ jobs:
             }
             if ($LASTEXITCODE -ne 0) { throw "vcvarsall failed for $target" }
           }
+          $previousNativeErrorPreference = $PSNativeCommandUseErrorActionPreference
+          $PSNativeCommandUseErrorActionPreference = $false
+          Import-VcVars 'amd64'
+          python rust/bridge/msvc-abi-convention-probe.py `
+            --root $env:GITHUB_WORKSPACE --output $evidence --diagnostics-only amd64
+          $amd64Diagnostics = $LASTEXITCODE
+          Import-VcVars 'x86'
+          python rust/bridge/msvc-abi-convention-probe.py `
+            --root $env:GITHUB_WORKSPACE --output $evidence --diagnostics-only x86
+          $x86Diagnostics = $LASTEXITCODE
+          $PSNativeCommandUseErrorActionPreference = $previousNativeErrorPreference
+          @(
+            "amd64_exit=$amd64Diagnostics"
+            "x86_exit=$x86Diagnostics"
+          ) | Set-Content -Encoding UTF8 `
+            (Join-Path $evidence 'evidence\compile-diagnostic-sweeps.txt')
+          foreach ($arch in @('amd64', 'x86')) {
+            $summary = Join-Path $evidence "evidence\$arch\compile-diagnostic-summary.txt"
+            if (Test-Path $summary) {
+              Write-Host "=== $arch compile diagnostic summary ==="
+              Get-Content $summary
+            }
+          }
+          if ($amd64Diagnostics -ne 0 -or $x86Diagnostics -ne 0) {
+            throw "MSVC compile diagnostic sweeps failed after both architectures were collected: AMD64=$amd64Diagnostics x86=$x86Diagnostics"
+          }
           Import-VcVars 'amd64'
           python rust/bridge/msvc-abi-convention-probe.py `
             --root $env:GITHUB_WORKSPACE --output $evidence --arch amd64
