@@ -12,11 +12,10 @@ at `f683cd35039ccb30e159f9e997097a7b3181fddb`
 
 ## Executive determination
 
-The M3-D2 conclusion is stale in one narrow respect. It was correct at its own
-cutoff, when the retained registration identity mechanism was GNU/Itanium-only
-and the MSVC facade remained only a fail-closed declaration. Later reviewed work
-has removed that implementation uncertainty without claiming native Windows
-qualification:
+The M3-D2 negative determination remains controlling for archive operations.
+Later reviewed work removed a registration-composition implementation
+uncertainty, but it did not supply the semantic, ownership, safety, or licensing
+inputs needed to implement retained-engine `open`, `entries`, or `close`:
 
 - P1 `t_c4bda156` added the staged facade-probe evidence path and was integrated
   by `e17b6b1`;
@@ -32,15 +31,19 @@ qualification:
   Linux/macOS facade jobs and all three Rust-workspace jobs. The Windows facade
   probe stopped at the retained `!ERROR` by design.
 
-A finite second DEVELOPMENT slice now exists: implement the already-reviewed Q1
-`open` / owned paged `entries` / `close` ABI behind the non-default internal
-facade, keep every product caller unable to reach it, and keep
-`qualified_operations=0`. This is implementation staging, not S2a qualification.
-It does not satisfy or remove B01, B03, B05, B06, S2a, B08, or S3.
+P1/P2/P3B/S2a-R make the already-disabled facade composition more portable and
+better tested. They do not overturn M3-D2's source-backed counterexamples for
+B01 ordered-chain/error semantics, B03 stream/failure cleanup, B05 pre-parse
+interaction, or B06 callback retention/quiescence. There is therefore no
+immediately routable second DEVELOPMENT coder slice under the current reviewed
+acceptance rules. `qualified_operations` remains `0`; no product caller or CLI
+may reach an archive operation.
 
-Because this changes migration sequencing and scopes a new implementation card,
-the recommendation below is a **draft requiring explicit operator approval after
-independent review of this report**. Reviewer PASS on this report is not that
+An operator could separately approve an architecture/acceptance amendment that
+permits implementation while those inputs remain unknown, but that would change
+the rule in AGENTS.md that input-bearing dependencies stay in force and would
+accept rework plus FFI lifetime/semantic risk. This report does not recommend or
+request that amendment. Independent review PASS would not constitute such
 approval.
 
 ## Decision rule
@@ -50,18 +53,16 @@ future result can confirm or reject the implementation without supplying a
 semantic choice, ownership rule, safety boundary, or licensing permission needed
 to write that slice. The parent stays input-bearing when its result determines
 what the code must do or whether the proposed activity may safely or legally run.
-No live dependency is deleted merely because a separate disabled slice can be
-staged.
+No live dependency is deleted. Disabled exposure alone is not a basis for
+reclassifying an input-bearing dependency as confirming evidence.
 
-The reviewed Q1 declaration and M2 ownership model already fix the ABI, native
-path representation, arena ownership, context/session generations, result
-destruction, error domains, callback lifetimes, and fail-before-effects rules.
-See [archive_bridge_v1.h](qualification/archive_bridge_v1.h) and
-[abi-v1.md](qualification/abi-v1.md). P3B and S2a-R now also fix and prove the
-portable retained-registration mechanism used to construct the matched facade.
-The unresolved native campaigns remain necessary before qualification and
-exposure, but they no longer prevent writing a disabled implementation that
-makes no compatibility claim.
+Q1 and M2 fix transport declarations and intended ownership constraints; they
+do not provide every legal retained-engine observation needed to implement those
+constraints. See [archive_bridge_v1.h](qualification/archive_bridge_v1.h) and
+[abi-v1.md](qualification/abi-v1.md). P3B and S2a-R fix and test portable
+retained-registration composition only. A non-product feature flag limits
+exposure; it does not turn unresolved implementation inputs into later
+confirmation. The per-gate application of this rule appears below.
 
 ## Live gate map
 
@@ -105,36 +106,63 @@ The later work changes only the first two implementation facts:
    still deliberately refused.
 
 This does **not** make Windows qualified, add sanitizers, qualify open/list, or
-change `qualified_operations`. It does remove the uncertainty about whether a
-portable, retained-source-preserving facade composition can be implemented at
-all. That makes a disabled open/list/close implementation finite and reversible.
+change `qualified_operations`. It removes uncertainty about portable,
+retained-source-preserving registration composition. It does not make a real
+`open`/`entries`/`close` implementation finite under the reviewed dependency
+rule because none of the following input-bearing counterexamples changed:
+
+- **B01:** Q1 requires ordered chain records, `CArcErrorInfo`, non-open errors,
+  properties, volume behavior, and contextual `S_FALSE`. The retained source
+  distinguishes error-field definedness (`CPP/7zip/UI/Common/OpenArchive.h:149-225`)
+  and `Open_Strict` can convert nominal `S_OK` to `S_FALSE` for a nested non-open
+  error (`OpenArchive.h:424-440`). Registration correspondence supplies no
+  fail-closed mapping for those legal outcomes.
+- **B03:** real Open owns an `IInStream`/`ISequentialInStream` and native path
+  (`OpenArchive.h:117-145`), repeatedly seeks and reads while probing
+  (`OpenArchive.cpp:2487-2507,3279-3297`), and consumes a Seek contract whose
+  `newPosition` is undefined on failure (`CPP/7zip/IStream.h:88-100`). Rejecting
+  malformed ABI envelopes does not choose short-read, seek-failure, EOF, large
+  offset, or failed-open cleanup behavior.
+- **B05:** `CryptoGetTextPassword` returns `E_NOTIMPL` without a provider and
+  otherwise forwards the request (`ArchiveOpenCallback.cpp:369-385`). A
+  header-encrypted input can ask during Open before the caller can classify it
+  as non-encrypted/non-interactive. Returning `INTERACTION_UNAVAILABLE` would be
+  a new outcome mapping, not a source-backed fail-closed precondition.
+- **B06:** Open polling is non-uniform (`ArchiveOpenCallback.cpp:389-403` and
+  `OpenArchive.cpp:2543-2555`), while multivolume streams retain callback state
+  after Open (`ArchiveOpenCallback.h:88-95` and
+  `ArchiveOpenCallback.cpp:357-363`). A synthetic callback invocation cannot
+  prove retained-handler lifetime, return-time quiescence, or safe close.
+
+Entries and close require the real session created by Open. A synthetic session
+would test a new mock rather than retained-engine item count, reverse release,
+and generation invalidation (`OpenArchive.h:267-346,390-443`;
+`OpenArchive.cpp:3172-3191`). No honest source-backed mapping avoids all four
+unresolved inputs, so the ordinary sequencing proposal is withdrawn.
 
 ## Candidate route assessment
 
-### A. Disabled internal open / entries / close DEVELOPMENT slice — viable
+### A. Disabled internal open / entries / close DEVELOPMENT slice — not viable under current rules
 
-This is the only recommended immediate implementation route. Q1 already fixes the
-revision-1 declarations and ownership rules. The implementation can be compiled
-and contract-tested behind the existing non-default `facade` feature while every
-product crate remains unable to call it. Tests can use repository-owned, public,
-non-password, non-hostile fixtures and synthetic fault controls. Native campaigns
-then qualify or correct it before exposure.
+Disabled exposure, allowlisted fixtures, and `qualified_operations=0` reduce user
+risk but do not resolve the B01/B03/B05/B06 inputs above. A repository-owned
+non-password fixture cannot prove before parsing that retained Open will not ask
+for a password or volume. Synthetic fault or callback injection can test local
+adapter validation only; it cannot establish retained Open outcomes, handler
+requests, retention, or quiescence. Routing this slice would therefore require
+an explicit operator-approved architecture/acceptance amendment, not an ordinary
+sequencing decision. No such amendment is requested here.
 
-This route must not claim that deferred semantic inputs are irrelevant. Instead,
-it creates a separate DEVELOPMENT card and leaves the existing S2a card and all
-its parents unchanged. Any disagreement with a later oracle is fixed in the
-implementation; it is not resolved by rewriting goldens or declaring the oracle
-“evidence-only” retroactively.
-
-### B. B08-owned lifetime/fault/concurrency harness before open/list — bounded but not first
+### B. B08-owned lifetime/fault/concurrency harness before open/list — not yet meaningful
 
 Some reusable fault-injection and ownership checks could be written against the
 current four-export facade. However, S2a-DEV already has nine capability and six
 lifetime contract tests, including mismatch, stale/foreign-context and result
 ownership paths. A new B08 sub-slice today would either duplicate those tests or
 invent blocked-open/session behavior before the exports exist. It becomes valuable
-immediately after Route A, when it can independently attack real session/result
-lifetimes. It should remain tester-owned and must not contain bridge fixes.
+only after qualified S2a provides real operation/session behavior. It should
+remain tester-owned and must not contain bridge fixes. A pre-operation synthetic
+harness proves only its own injection surface and cannot claim B08 evidence.
 
 ### C. No-operation `archive-cli` shell — reject
 
@@ -145,7 +173,7 @@ engine or unblocking S3. It could be mistaken for a product despite having no
 qualified behavior. There is no concrete downstream value that outweighs that
 confusion.
 
-### D. Resolve all input-bearing critical-path gates first — safest product path, slowest first code
+### D. Resolve the input-bearing critical path — only currently valid route
 
 The shortest path to **product** listing remains B01 plus bounded B03 and B05
 native evidence; resolve B04 containment or formally redesign the B06 dependency;
@@ -174,146 +202,51 @@ or reinterpret VM teardown as containment PASS.
 
 | Rank | Path | Time to first meaningful implementation | Safety | Compatibility risk | Retained obligations |
 | --- | --- | --- | --- | --- | --- |
-| 1 | Draft Route A: disabled internal open/list/close DEVELOPMENT slice | Short: one focused coder card after report review and explicit operator approval | High if fixture allowlist, no hostile/password inputs, no product reachability and fail-closed controls are enforced | Medium: real native/semantic differences are expected and must be corrected later; no user is exposed | All B01/B03/B04/B05/B06/S2a/B08/S3 obligations remain open; Windows facade remains fail-closed; `qualified_operations=0` |
-| 2 | Critical-path evidence resolution (Route D) | Long before code, but shortest to real product exposure | Highest when B04 remains frozen until proven containment and resource-heavy tests are redesigned | Lowest eventual product risk | Must resolve every listed input-bearing gate and native campaign; no waiver |
-| 3 | Independent B08 harness staging after Route A | Medium; useful as soon as real sessions exist | High; tester-owned and non-product | Low-to-medium, because it finds defects rather than selecting behavior | Does not pass B08 without native sanitizers/stress or release S3 |
+| 1 | Critical-path evidence resolution (Route D) | Long before operation code, but shortest valid route to meaningful retained-engine implementation and product exposure | Highest when B04 remains frozen until proven containment and resource-heavy tests are redesigned | Lowest eventual product risk | Must resolve every listed input-bearing gate and native campaign; no waiver |
+| 2 | Continue narrow hosted ABI/build/link/registration evidence | Short, but improves only the existing disabled facade | High when no hostile archives or product exposure are added | Low; cannot answer operation semantics | B01/B03/B04/B05/B06/S2a/B08/S3 all remain open; Windows `!ERROR` and `qualified_operations=0` remain |
+| 3 | Operator-approved architecture/acceptance amendment | Potentially short to code after a separate explicit decision | Lower: implementation proceeds with known semantic/lifetime gaps | High rework and compatibility risk; may encode behavior before its oracle exists | Does not qualify or expose operations; every native, safety, licensing, B08 and product obligation remains open |
 
-Recommendation: choose rank 1 as a draft sequencing change, then immediately
-follow it with rank 3 while continuing rank 2 in parallel where safe. This is not
-permission to implement yet. After independent review, the operator must explicitly
-approve or reject the new DEVELOPMENT scope. No recommendation here changes safety,
-license, data-handling, qualification, or release policy.
+Recommendation: choose rank 1 and retain M3-D2's negative determination. Rank 2
+may continue only where it has independent downstream value; it is not a bridge
+operation unblock. Rank 3 is documented for completeness, but is not recommended
+because it changes the input-bearing dependency rule and accepts avoidable
+semantic, ownership, and compatibility risk. Reviewer PASS on this report cannot
+approve rank 3.
 
-## One routable coder slice (draft; approval required)
+## Exact live dependency map and next bounded evidence
 
-Proposed title: `S2a-DEV2 — Disabled retained facade open/list/close implementation`
+No new sibling or coder card is proposed. The old and new dependency maps are
+identical; the explicit edges are:
 
-Proposed assignee: `coder`; same-card independent reviewer: `reviewer`.
+- S2a `t_071e4cd7` has exactly these nine parents:
+  `t_178b131f` (S2a-DEV), `t_22299c6f` (B01), `t_31358a3f` (S1),
+  `t_3859d918` (B05), `t_7019eca0` (B02), `t_82c76197` (M3),
+  `t_83983e9c` (B06), `t_bf92ce13` (B03), and `t_f4d107ea` (Q1).
+- B08 `t_0a04d8dd` has exactly `t_071e4cd7` (S2a) and `t_82c76197`
+  (M3) as parents.
+- S3 `t_481c87b0` has exactly `t_0a04d8dd` (B08), `t_22299c6f`
+  (B01), `t_7019eca0` (B02), and `t_82c76197` (M3) as parents.
+- Proposed new edges: none. Removed edges: none. There is no S2a-DEV2 sibling,
+  so there is no sibling-to-S2a, sibling-to-B08, or sibling-to-S3 connection.
 
-### Parent set
+The shortest critical path remains: resolve sufficient B01 ordered-chain/error
+and admission evidence, bounded B03 stream/failure-cleanup behavior, and actual
+B05 password/interaction behavior; resolve B04 containment before B06 native
+cancellation/quiescence work; then S2a, B08, and S3.
 
-Use only reviewed, completed design/development inputs:
+Exactly one bounded next evidence task is recommended: produce an independently
+reviewed **B01 admission decision packet** for the already-identified external
+RAR/multipart candidates, containing member-level provenance, redistribution/use
+terms, immutable hashes, and an explicit admit/reject recommendation, without
+opening or executing the archives. This converts the current licensing/admission
+unknown into a decision and determines whether those candidates may participate
+in later native oracle work. It does not itself supply Open semantics, qualify
+B01, or release any downstream card; if rights cannot be established, reject the
+candidates and retain quarantine rather than broadening policy.
 
-- Q1 `t_f4d107ea` (`5f07f21a6516e345db199d3d78a3a984118574a5`);
-- S1 `t_31358a3f` (`e809c92b2d493412882f8a623f05fbe2ee508ff2`);
-- B02 `t_7019eca0` (`72631ae748e1778af65c30d39e9fe68b8c6442a5`);
-- S2a-DEV `t_178b131f` (reviewed head `bc61a7b`);
-- S2a-R `t_13a346c7` (`f6ca43ab5d370ef7a379a58e1735b45b17cd91f9`);
-- the independently reviewed M3-D3 decision artifact, plus explicit operator
-  approval of this sequencing change.
-
-Do not remove, relink, complete or archive any parent of S2a `t_071e4cd7`.
-The new card is a sibling staging slice; S2a remains the qualification card.
-
-### Fixed API and behavior
-
-Implement exactly the existing revision-1 C declarations:
-
-- `archive_bridge_v1_open`;
-- `archive_bridge_v1_entries`;
-- `archive_bridge_v1_close`;
-- the ABI structs needed by those functions in `archive-engine-sys`;
-- a safe owned internal adapter that copies all result views before
-  `archive_bridge_v1_result_destroy` and remains `!Send`/`!Sync`.
-
-Reuse the existing handshake, context, capability and result ownership. Use
-retained `CArchiveLink` / `SetProperties`; never decode native names in Rust.
-Archive IDs are never reused in a context. Generations reject stale requests.
-`entries` is bounded by `first/count`; all caller envelopes, tags, reserved fields,
-counts and pointer/count pairs fail closed before effects. `close` is idempotent
-only where Q1 says so; otherwise return the fixed stale/invalid status rather than
-inventing behavior. Exceptions and Rust unwind are contained at their respective
-boundaries.
-
-The callback posture is deliberately narrow:
-
-- cancellation callback is present and uses a deterministic non-cancelled test
-  adapter plus a synthetic cancellation control;
-- progress may be absent;
-- question callback is absent, and any password or volume interaction returns
-  `INTERACTION_UNAVAILABLE` without supplying empty data;
-- no password, encrypted-header, multivolume, external-plugin, hostile-path,
-  extract, test, create, update or reopen fixture is used.
-
-If implementing even this narrow posture requires deciding behavior not fixed by
-Q1/M2, stop and block; do not infer it from CLI output.
-
-### Owned paths
-
-- `rust/bridge/archive_bridge_v1.cpp` and bridge-owned helpers/tests;
-- `rust/bridge/build-manifest.py`, `makefile.gcc`, and `makefile` only as needed
-  to compile/test these already-reserved exports;
-- `rust/crates/archive-engine-sys/**`;
-- `rust/crates/archive-engine/**`;
-- focused DEVELOPMENT documentation under `docs/ai-migration/qualification/`;
-- focused test wiring in `.github/workflows/rebuild-ci.yml` only if a separately
-  reviewed workflow edit is included in the same isolated card.
-
-### Forbidden paths and exposure
-
-No edits to `C/`, `CPP/`, `Asm/`, codecs, crypto, format handlers, frozen Q1/B01/B02
-records, fixtures/goldens, `archive_bridge_v1.h`, `archive-domain`, `archive-app`,
-`archive-cli`, Qt/QML, installers, registry/services, packaging/signing/release,
-legacy workflows, `AGENTS.md`, migration DAG, `dev-main`, or board edges/status.
-No public safe-engine port, command, binary or GUI route may call the new exports.
-
-### Exact dependency map
-
-Old product/qualification path (unchanged):
-
-`B01 + B03 + B05 + B06 + Q1 + S1 + S2a-DEV -> S2a -> B08 -> S3`
-
-New DEVELOPMENT-only staging path:
-
-`Q1 + S1 + B02 + S2a-DEV + S2a-R + reviewed M3-D3 + operator approval -> S2a-DEV2`
-
-Then S2a consumes S2a-DEV2 implementation while retaining every original live
-parent. B08 and S3 retain their current parents. No old edge is removed.
-
-### Required negative controls
-
-1. Restore `qualified_operations=0` as an exact assertion; any nonzero bit fails.
-2. Build/export audit must show exactly the intended current plus three new
-   operation exports and no CLI entry point.
-3. Feature-off workspace build must contain no facade link or callable operation.
-4. Link a mismatched header/manifest and prove handshake/context/open fail before
-   effects.
-5. Corrupt struct size, ABI major, tag, reserved field, pointer/count pair and
-   page bounds independently; each must fail closed with null result/zero view.
-6. Inject allocation failure and C++ exception at each arena/session construction
-   phase; no leak, double-free or live session on failure.
-7. Repeated result destruction, foreign-context result destruction, stale
-   generation, repeated close and context destroy with live session/result must
-   exercise their fixed status contracts.
-8. Remove or mis-scope one of the 54 registration redirects and prove the existing
-   correspondence guard fails.
-9. Attempt a password/volume interaction with no `ask` callback and prove
-   `INTERACTION_UNAVAILABLE`, never defined-empty password.
-10. Repository boundary test must prove `archive-app`, `archive-cli` and Qt have
-    no dependency or symbol reference to the operation adapter.
-
-### Build, test and CI requirements
-
-Run formatting, locked build/test and clippy for the default workspace and for the
-non-default facade feature. Build the matched facade on Linux and macOS hosted CI,
-run the new contract/lifetime/fault tests, layout checks, registration seam and
-correspondence tests, boundary tests, warning-as-error audit and existing frozen
-reference checks. The Windows job must continue to prove the retained `!ERROR`
-fail-closed state unless a separate future gate authorizes its removal. Preserve
-exact-head manifests, logs, digests and downloadable evidence artifacts.
-
-Runtime tests are applicable to that future coder card because it changes FFI and
-session ownership. They are not applicable to this research-only report, which
-changes no executable code.
-
-### Disabled exposure and deferred obligations
-
-`qualified_operations` remains literal zero in C++ and Rust. The safe adapter is
-internal, feature-gated, non-product and unreachable from all binaries. No artifact
-is described as an archive tool. B01, B03, B04, B05, B06, S2a, B08 and S3 remain
-open; native Windows facade, hostile-input containment, password semantics,
-cancellation/progress, sanitizer/stress, native differential and release evidence
-remain deferred but mandatory.
+Runtime tests would be required for any future operation implementation because
+it changes FFI/session ownership. They are not applicable to this research-only
+report, which changes no executable code.
 
 ## Bounded remedies for the actual gates
 
@@ -336,9 +269,9 @@ remain deferred but mandatory.
 - **B07:** if reopened, redesign to pure GUI observation with no registry mutation,
   deletion or custom checker. That scope needs independent safety review before
   operator use.
-- **B08:** after S2a-DEV2, add independent tests rather than bridge fixes. Use
-  sanitizers only where supported and record exclusions instead of inventing
-  parity.
+- **B08:** after qualified S2a supplies real operations and sessions, add
+  independent tests rather than bridge fixes. Use sanitizers only where supported
+  and record exclusions instead of inventing parity.
 
 All remedies preserve zero additional payment and avoid VM/guest installation,
 commercial tools, registry/services/mount mutation, shared-disk exhaustion and
@@ -369,14 +302,28 @@ This card changes one English Markdown report only. It modifies no runtime,
 workflow, fixture, golden, DAG, board edge/status, credential or production path;
 therefore native archive execution and runtime tests are not applicable. The
 required validation is document scope, links/paths, citation integrity, Git
-whitespace, reviewed-parent ancestry and preservation checks. Exact commands and
-results are recorded in the task handoff after execution.
+whitespace, reviewed-parent ancestry and preservation checks. External citation
+verification is ledger-independent: retrieve the two literal URLs in `## Sources`
+with `curl -L --fail --max-time 30` and require HTTP success. The optional
+`sources.py` ledger is not part of this artifact, and no profile-local cache or
+credential is required. Validation executed for the corrected report:
+
+- `python3 -m json.tool docs/ai-migration/migration-dag.json >/dev/null && python3 docs/ai-migration/validate-migration-dag.py` — PASS: 29 children, 104 edges, acyclic; amendment PASS; 10 negative controls PASS.
+- `git diff --check` — PASS.
+- `git diff --name-only` — PASS: only
+  `docs/ai-migration/m3-d3-mainline-unblock-reassessment.md`.
+- `git diff --exit-code -- C CPP Asm rust .github AGENTS.md docs/ai-migration/migration-dag.md docs/ai-migration/migration-dag.json docs/ai-migration/validate-migration-dag.py` — PASS: forbidden and graph paths unchanged.
+- `test -f AGENTS.md` and `git merge-base --is-ancestor` for `f6ca43ab5d370ef7a379a58e1735b45b17cd91f9` and `a01d9034a4ae0228a61bb5765e10cb1d9e0329dc` — PASS.
+- `test -f` for all three local Markdown targets and five cited retained-source
+  files — PASS.
+- `curl -L --fail --max-time 30` for both GitHub Docs sources and CI run
+  `34980048480` — PASS, HTTP 200 for all three URLs.
 
 ## Residual risks
 
-- The proposed slice can still expose incorrect retained-engine behavior to its
-  tests; disabled reachability limits user risk but does not make defects harmless
-  inside CI. Fault and lifetime controls remain mandatory.
+- The negative determination leaves operation implementation blocked until its
+  input-bearing gates resolve or a separately reviewed and explicitly approved
+  architecture/acceptance amendment changes the rule.
 - Windows implementation remains compile-declared and fail-closed, not built.
 - Later native oracle evidence may require implementation changes. That is expected
   and must not be recast as a reason to alter goldens.
