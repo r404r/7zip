@@ -6,7 +6,7 @@ name: rebuild-stage1
 
 on:
   push:
-    branches: ['wt/t_13a346c7']
+    branches: ['wt/t_13a346c7', 'wt/t_acdf81b3']
   pull_request:
     paths: ['rust/**', '.github/workflows/rebuild-ci.yml']
   workflow_dispatch:
@@ -15,6 +15,71 @@ permissions:
   contents: read
 
 jobs:
+  msvc-abi-convention-qualification:
+    name: MSVC ABI convention qualification (non-product)
+    runs-on: windows-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Rust toolchain and diagnostic target
+        run: |
+          rustup toolchain install 1.97.1 --profile minimal
+          rustup target add --toolchain 1.97.1-x86_64-pc-windows-msvc `
+            x86_64-pc-windows-msvc i686-pc-windows-msvc
+      - name: Run AMD64 normative and x86 diagnostic convention lanes
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $evidence = Join-Path $env:RUNNER_TEMP 'msvc-abi-convention-probe'
+          New-Item -ItemType Directory -Force -Path (Join-Path $evidence 'evidence') | Out-Null
+          @(
+            "runner.os=${{ runner.os }}"
+            "runner.arch=${{ runner.arch }}"
+            "ImageOS=$env:ImageOS"
+            "ImageVersion=$env:ImageVersion"
+            "PROCESSOR_ARCHITECTURE=$env:PROCESSOR_ARCHITECTURE"
+            "OSArchitecture=$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)"
+          ) | Set-Content -Encoding UTF8 (Join-Path $evidence 'evidence\runner.txt')
+          if ('${{ runner.os }}' -ne 'Windows' -or '${{ runner.arch }}' -ne 'X64' -or
+              $env:PROCESSOR_ARCHITECTURE -ne 'AMD64' -or
+              [System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture -ne
+                [System.Runtime.InteropServices.Architecture]::X64) {
+            throw 'The non-product qualification requires a Windows AMD64 runner.'
+          }
+          $vswhere = Join-Path ${env:ProgramFiles(x86)} `
+            'Microsoft Visual Studio\Installer\vswhere.exe'
+          $vs = & $vswhere -latest -products * `
+            -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 `
+            -property installationPath
+          if (-not $vs) { throw 'Visual Studio C++ x86/x64 tools were not found.' }
+          $vcvars = Join-Path $vs 'VC\Auxiliary\Build\vcvarsall.bat'
+          function Import-VcVars([string]$target) {
+            cmd /d /s /c "`"$vcvars`" $target >nul && set" | ForEach-Object {
+              if ($_ -match '^([^=]+)=(.*)$') {
+                [Environment]::SetEnvironmentVariable($matches[1], $matches[2], 'Process')
+              }
+            }
+            if ($LASTEXITCODE -ne 0) { throw "vcvarsall failed for $target" }
+          }
+          Import-VcVars 'amd64'
+          python rust/bridge/msvc-abi-convention-probe.py `
+            --root $env:GITHUB_WORKSPACE --output $evidence --arch amd64
+          Import-VcVars 'x86'
+          python rust/bridge/msvc-abi-convention-probe.py `
+            --root $env:GITHUB_WORKSPACE --output $evidence --arch x86
+          python rust/bridge/msvc-abi-convention-probe.py `
+            --root $env:GITHUB_WORKSPACE --output $evidence --finalize
+          Get-Content (Join-Path $evidence 'evidence\SUMMARY.txt')
+      - name: Publish non-product MSVC ABI evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: msvc-abi-convention-probe-${{ github.sha }}
+          path: ${{ runner.temp }}/msvc-abi-convention-probe/evidence
+          if-no-files-found: error
+
   rust-workspace:
     name: Rust workspace / ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
