@@ -104,12 +104,31 @@ def validate_source_inputs(root: pathlib.Path, expected_hash: str | None = FROZE
     for path in (frozen, production, makefile):
         if not path.is_file():
             raise RuntimeError(f"required input is missing: {path}")
-    frozen_hash = sha256(frozen)
-    production_hash = sha256(production)
-    if frozen_hash != production_hash:
+    frozen_worktree_hash = sha256(frozen)
+    production_worktree_hash = sha256(production)
+    if frozen_worktree_hash != production_worktree_hash:
         raise RuntimeError("frozen and production header hashes differ")
+    # actions/checkout can materialize CRLF on Windows.  The reviewed identity
+    # is the canonical Git blob, not a checkout's platform line ending.  Still
+    # require both materialized copies to be byte-identical before compiling.
+    try:
+        frozen_blob = subprocess.run(
+            ["git", "-C", str(root), "show", "HEAD:docs/ai-migration/qualification/archive_bridge_v1.h"],
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True,
+        ).stdout
+        production_blob = subprocess.run(
+            ["git", "-C", str(root), "show", "HEAD:rust/bridge/archive_bridge_v1.h"],
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True,
+        ).stdout
+        frozen_hash = hashlib.sha256(frozen_blob).hexdigest()
+        production_hash = hashlib.sha256(production_blob).hexdigest()
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        frozen_hash = frozen_worktree_hash
+        production_hash = production_worktree_hash
+    if frozen_hash != production_hash:
+        raise RuntimeError("canonical frozen and production header hashes differ")
     if expected_hash is not None and frozen_hash != expected_hash:
-        raise RuntimeError(f"frozen header hash drift: {frozen_hash}")
+        raise RuntimeError(f"canonical frozen header hash drift: {frozen_hash}")
     text = makefile.read_text(encoding="utf-8")
     guard = text.find("!ERROR S2a-DEV performs no Windows facade build.")
     target = text.find("PROG = archive_bridge_v1.dll")
@@ -119,6 +138,8 @@ def validate_source_inputs(root: pathlib.Path, expected_hash: str | None = FROZE
     return {
         "frozen_header_sha256": frozen_hash,
         "production_header_sha256": production_hash,
+        "frozen_header_worktree_sha256": frozen_worktree_hash,
+        "production_header_worktree_sha256": production_worktree_hash,
         "makefile_sha256": sha256(makefile),
     }
 

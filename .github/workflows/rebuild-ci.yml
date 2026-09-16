@@ -66,11 +66,14 @@ jobs:
           Import-VcVars 'amd64'
           python rust/bridge/msvc-abi-convention-probe.py `
             --root $env:GITHUB_WORKSPACE --output $evidence --arch amd64
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           Import-VcVars 'x86'
           python rust/bridge/msvc-abi-convention-probe.py `
             --root $env:GITHUB_WORKSPACE --output $evidence --arch x86
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python rust/bridge/msvc-abi-convention-probe.py `
             --root $env:GITHUB_WORKSPACE --output $evidence --finalize
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           Get-Content (Join-Path $evidence 'evidence\SUMMARY.txt')
       - name: Publish non-product MSVC ABI evidence
         if: always()
