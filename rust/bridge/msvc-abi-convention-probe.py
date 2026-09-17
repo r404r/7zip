@@ -674,6 +674,51 @@ def require_runtime_failure(
     )
 
 
+def rtc_handler_source(exit_code: int) -> str:
+    """Generate an RTC handler whose required return remains compiler-reachable."""
+    return f'''#include <windows.h>
+#include <rtcapi.h>
+#include <stdio.h>
+typedef void (WINAPI *exit_process_fn)(UINT);
+static int __cdecl rtc_handler(int t,const wchar_t*f,int l,const wchar_t*m,const wchar_t*fmt,...){{
+  exit_process_fn exit_process = ExitProcess;
+  (void)t;(void)f;(void)l;(void)m;(void)fmt;
+  puts("EXPECTED_RTC_STACK_MISMATCH"); fflush(stdout); exit_process({exit_code}); return 0;
+}}
+'''
+
+
+def runtime_negative_compile_diagnostic_sweep(
+    base: pathlib.Path, runner: EvidenceRunner
+) -> None:
+    """Compile every runtime-negative translation unit before formal execution."""
+    commands = (
+        ("runtime-diagnostic-fastcall-dll", ["cl", "/nologo", "/c", "/TC", "/Gr", "/W4", "/WX", str(base / "fastcall-dll.c"), "/Fo" + str(base / "diagnostic-fastcall-dll.obj")]),
+        ("runtime-diagnostic-fastcall-caller", ["cl", "/nologo", "/c", "/TC", "/Gd", "/W4", "/WX", "/Od", "/RTC1", str(base / "fastcall-caller.c"), "/Fo" + str(base / "diagnostic-fastcall-caller.obj")]),
+        ("runtime-diagnostic-stdcall-dll", ["cl", "/nologo", "/c", "/TC", "/Gz", "/W4", "/WX", str(base / "stdcall-dll.c"), "/Fo" + str(base / "diagnostic-stdcall-dll.obj")]),
+        ("runtime-diagnostic-stdcall-caller", ["cl", "/nologo", "/c", "/TC", "/Gd", "/W4", "/WX", "/Od", "/RTC1", str(base / "stdcall-caller.c"), "/Fo" + str(base / "diagnostic-stdcall-caller.obj")]),
+        ("runtime-diagnostic-callback-dll", ["cl", "/nologo", "/c", "/TC", "/Gd", "/W4", "/WX", "/Od", "/RTC1", str(base / "callback-dll.c"), "/Fo" + str(base / "diagnostic-callback-dll.obj")]),
+        ("runtime-diagnostic-callback-caller", ["cl", "/nologo", "/c", "/TC", "/Gd", "/W4", "/WX", str(base / "callback-caller.c"), "/Fo" + str(base / "diagnostic-callback-caller.obj")]),
+    )
+    failures: list[str] = []
+    summary: list[str] = []
+    for name, command in commands:
+        proc = runner.run(name, command, cwd=base, expected=None)
+        diagnostics = sorted(set(re.findall(r"\bC\d{4}\b", proc.stdout)))
+        diagnostic_text = ",".join(diagnostics) if diagnostics else "none"
+        summary.append(f"{name}: exit_code={proc.returncode}; diagnostics={diagnostic_text}")
+        if proc.returncode != 0:
+            failures.append(f"{name} [{diagnostic_text}]")
+    (runner.evidence / "runtime-negative-compile-diagnostic-summary.txt").write_text(
+        "\n".join(summary) + "\n", encoding="utf-8"
+    )
+    if failures:
+        raise RuntimeError(
+            "runtime negative compile diagnostic sweep failed after all translation units: "
+            + "; ".join(failures)
+        )
+
+
 def runtime_negative_controls(output: pathlib.Path, runner: EvidenceRunner) -> None:
     base = output / "work" / "x86" / "runtime-negatives"
     base.mkdir(parents=True, exist_ok=True)
@@ -681,68 +726,36 @@ def runtime_negative_controls(output: pathlib.Path, runner: EvidenceRunner) -> N
     # An omitted ARCHIVE_BRIDGE_V1_CALL inherits /Gr (__fastcall).  The caller
     # deliberately resolves the decorated name but calls through __cdecl; exact
     # argument sentinels make register/stack disagreement deterministic.
-    fast_dll = base / "fastcall-dll.c"
-    fast_caller = base / "fastcall-caller.c"
-    fast_dll.write_text(
+    (base / "fastcall-dll.c").write_text(
         "#include <windows.h>\n"
         "__declspec(dllexport) int __fastcall archive_bridge_v1_handshake(void *a, void *b) "
         "{ return a==(void*)0x11111111 && b==(void*)0x22222222 ? 901 : -901; }\n",
         encoding="utf-8",
     )
-    fast_caller.write_text(
-        "#include <windows.h>\n#include <rtcapi.h>\n#include <stdio.h>\n"
-        "static int __cdecl rtc_handler(int t,const wchar_t*f,int l,const wchar_t*m,const wchar_t*fmt,...){(void)t;(void)f;(void)l;(void)m;(void)fmt;puts(\"EXPECTED_RTC_STACK_MISMATCH\");fflush(stdout);ExitProcess(85);return 0;}\n"
-        "typedef int (__cdecl *fn)(void*,void*);\n"
+    (base / "fastcall-caller.c").write_text(
+        rtc_handler_source(85)
+        + "typedef int (__cdecl *fn)(void*,void*);\n"
         "int main(int n,char**v){ HMODULE m=n==2?LoadLibraryA(v[1]):0; "
         "union{FARPROC raw;fn typed;}u; u.raw=m?GetProcAddress(m,\"@archive_bridge_v1_handshake@8\"):0; fn f=u.typed; "
         "if(!f)return 2; _RTC_SetErrorFuncW(rtc_handler); if(f((void*)0x11111111,(void*)0x22222222)==-901){"
         "puts(\"EXPECTED_ARGUMENT_SENTINEL_MISMATCH\"); return 86;} return 3;}\n",
         encoding="utf-8",
     )
-    runner.run("runtime-fastcall-dll", ["cl", "/nologo", "/TC", "/Gr", "/W4", "/WX", "/LD", str(fast_dll), "/Fe:" + str(base / "fastcall.dll")], cwd=base)
-    fast_exports_text = runner.run("runtime-fastcall-exports", ["dumpbin", "/exports", str(base / "fastcall.dll")], cwd=base).stdout
-    fast_exports = pe_export_names(fast_exports_text)
-    if "@archive_bridge_v1_handshake@8" not in fast_exports or "archive_bridge_v1_handshake" in fast_exports:
-        raise RuntimeError("fastcall mutation did not expose the expected decorated PE name")
-    runner.run("runtime-fastcall-caller", ["cl", "/nologo", "/TC", "/Gd", "/W4", "/WX", "/Od", "/RTC1", str(fast_caller), "/Fe:" + str(base / "fastcall-caller.exe")], cwd=base)
-    require_runtime_failure(runner, "runtime-fastcall-run", [str(base / "fastcall-caller.exe"), str(base / "fastcall.dll")], base, 86, "EXPECTED_ARGUMENT_SENTINEL_MISMATCH")
-
-    rtc_handler = r'''
-#include <windows.h>
-#include <rtcapi.h>
-#include <stdio.h>
-static int __cdecl rtc_handler(int t,const wchar_t*f,int l,const wchar_t*m,const wchar_t*fmt,...){
-  (void)t;(void)f;(void)l;(void)m;(void)fmt;
-  puts("EXPECTED_RTC_STACK_MISMATCH"); fflush(stdout); ExitProcess(RTC_EXIT); return 0;
-}
-'''
-    std_dll = base / "stdcall-dll.c"
-    std_caller = base / "stdcall-caller.c"
-    std_dll.write_text("#include <windows.h>\n__declspec(dllexport) int __stdcall archive_bridge_v1_close(void*a,unsigned __int64 b,unsigned __int64 c){return a!=0 && b!=0 && c!=0;}\n", encoding="utf-8")
-    std_caller.write_text(
-        rtc_handler.replace("RTC_EXIT", "87")
+    (base / "stdcall-dll.c").write_text("#include <windows.h>\n__declspec(dllexport) int __stdcall archive_bridge_v1_close(void*a,unsigned __int64 b,unsigned __int64 c){return a!=0 && b!=0 && c!=0;}\n", encoding="utf-8")
+    (base / "stdcall-caller.c").write_text(
+        rtc_handler_source(87)
         + "typedef int (__cdecl *fn)(void*,unsigned __int64,unsigned __int64);\n"
           "int main(int n,char**v){ HMODULE m=n==2?LoadLibraryA(v[1]):0; union{FARPROC raw;fn typed;}u;u.raw=m?GetProcAddress(m,\"_archive_bridge_v1_close@20\"):0; if(!u.typed)return 2; _RTC_SetErrorFuncW(rtc_handler); (void)u.typed((void*)1,2,3); return 4;}\n",
         encoding="utf-8",
     )
-    runner.run("runtime-stdcall-dll", ["cl", "/nologo", "/TC", "/Gz", "/W4", "/WX", "/LD", str(std_dll), "/Fe:" + str(base / "stdcall.dll")], cwd=base)
-    std_exports_text = runner.run("runtime-stdcall-exports", ["dumpbin", "/exports", str(base / "stdcall.dll")], cwd=base).stdout
-    std_exports = pe_export_names(std_exports_text)
-    if "_archive_bridge_v1_close@20" not in std_exports or "archive_bridge_v1_close" in std_exports:
-        raise RuntimeError("stdcall mutation did not expose the expected decorated PE name")
-    runner.run("runtime-stdcall-caller", ["cl", "/nologo", "/TC", "/Gd", "/W4", "/WX", "/Od", "/RTC1", str(std_caller), "/Fe:" + str(base / "stdcall-caller.exe")], cwd=base)
-    require_runtime_failure(runner, "runtime-stdcall-run", [str(base / "stdcall-caller.exe"), str(base / "stdcall.dll")], base, 87, "EXPECTED_RTC_STACK_MISMATCH")
-
-    callback_dll = base / "callback-dll.c"
-    callback_caller = base / "callback-caller.c"
-    callback_dll.write_text(
-        rtc_handler.replace("RTC_EXIT", "88")
+    (base / "callback-dll.c").write_text(
+        rtc_handler_source(88)
         + "typedef unsigned (__stdcall *callback_fn)(void*);\n"
           "typedef struct operation { callback_fn callback; void *user; } operation;\n"
           "__declspec(dllexport) int __cdecl cc_probe_bad_callback(const operation*op){_RTC_SetErrorFuncW(rtc_handler); (void)op->callback(op->user); return 5;}\n",
         encoding="utf-8",
     )
-    callback_caller.write_text(
+    (base / "callback-caller.c").write_text(
         "#include <windows.h>\n"
         "typedef unsigned (__cdecl *cdecl_cb)(void*); typedef unsigned (__stdcall *stdcall_cb)(void*); "
         "typedef struct operation{stdcall_cb callback;void*user;}operation; "
@@ -751,8 +764,27 @@ static int __cdecl rtc_handler(int t,const wchar_t*f,int l,const wchar_t*m,const
         "int main(int n,char**v){HMODULE m=n==2?LoadLibraryA(v[1]):0;union{FARPROC raw;helper typed;}loader;union{cdecl_cb c;stdcall_cb s;}callback;operation op;loader.raw=m?GetProcAddress(m,\"cc_probe_bad_callback\"):0;if(!loader.typed)return 2;callback.c=cb;op.callback=callback.s;op.user=(void*)0x1234;(void)loader.typed(&op);return 6;}\n",
         encoding="utf-8",
     )
-    runner.run("runtime-callback-dll", ["cl", "/nologo", "/TC", "/Gd", "/W4", "/WX", "/Od", "/RTC1", "/LD", str(callback_dll), "/Fe:" + str(base / "callback.dll")], cwd=base)
-    runner.run("runtime-callback-caller", ["cl", "/nologo", "/TC", "/Gd", "/W4", "/WX", str(callback_caller), "/Fe:" + str(base / "callback-caller.exe")], cwd=base)
+
+    runtime_negative_compile_diagnostic_sweep(base, runner)
+
+    runner.run("runtime-fastcall-dll", ["cl", "/nologo", "/TC", "/Gr", "/W4", "/WX", "/LD", str(base / "fastcall-dll.c"), "/Fe:" + str(base / "fastcall.dll")], cwd=base)
+    fast_exports_text = runner.run("runtime-fastcall-exports", ["dumpbin", "/exports", str(base / "fastcall.dll")], cwd=base).stdout
+    fast_exports = pe_export_names(fast_exports_text)
+    if "@archive_bridge_v1_handshake@8" not in fast_exports or "archive_bridge_v1_handshake" in fast_exports:
+        raise RuntimeError("fastcall mutation did not expose the expected decorated PE name")
+    runner.run("runtime-fastcall-caller", ["cl", "/nologo", "/TC", "/Gd", "/W4", "/WX", "/Od", "/RTC1", str(base / "fastcall-caller.c"), "/Fe:" + str(base / "fastcall-caller.exe")], cwd=base)
+    require_runtime_failure(runner, "runtime-fastcall-run", [str(base / "fastcall-caller.exe"), str(base / "fastcall.dll")], base, 86, "EXPECTED_ARGUMENT_SENTINEL_MISMATCH")
+
+    runner.run("runtime-stdcall-dll", ["cl", "/nologo", "/TC", "/Gz", "/W4", "/WX", "/LD", str(base / "stdcall-dll.c"), "/Fe:" + str(base / "stdcall.dll")], cwd=base)
+    std_exports_text = runner.run("runtime-stdcall-exports", ["dumpbin", "/exports", str(base / "stdcall.dll")], cwd=base).stdout
+    std_exports = pe_export_names(std_exports_text)
+    if "_archive_bridge_v1_close@20" not in std_exports or "archive_bridge_v1_close" in std_exports:
+        raise RuntimeError("stdcall mutation did not expose the expected decorated PE name")
+    runner.run("runtime-stdcall-caller", ["cl", "/nologo", "/TC", "/Gd", "/W4", "/WX", "/Od", "/RTC1", str(base / "stdcall-caller.c"), "/Fe:" + str(base / "stdcall-caller.exe")], cwd=base)
+    require_runtime_failure(runner, "runtime-stdcall-run", [str(base / "stdcall-caller.exe"), str(base / "stdcall.dll")], base, 87, "EXPECTED_RTC_STACK_MISMATCH")
+
+    runner.run("runtime-callback-dll", ["cl", "/nologo", "/TC", "/Gd", "/W4", "/WX", "/Od", "/RTC1", "/LD", str(base / "callback-dll.c"), "/Fe:" + str(base / "callback.dll")], cwd=base)
+    runner.run("runtime-callback-caller", ["cl", "/nologo", "/TC", "/Gd", "/W4", "/WX", str(base / "callback-caller.c"), "/Fe:" + str(base / "callback-caller.exe")], cwd=base)
     require_runtime_failure(runner, "runtime-callback-run", [str(base / "callback-caller.exe"), str(base / "callback.dll")], base, 88, "EXPECTED_RTC_STACK_MISMATCH")
 
 

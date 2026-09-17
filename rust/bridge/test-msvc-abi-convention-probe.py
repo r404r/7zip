@@ -127,6 +127,13 @@ class ProbeDriverTests(unittest.TestCase):
         self.assertIn("question.kind = 0x7022", helper)
         self.assertIn("reply.kind = 0", helper)
 
+    def test_rtc_handler_calls_exit_process_indirectly(self):
+        source = self.probe.rtc_handler_source(85)
+        self.assertIn("typedef void (WINAPI *exit_process_fn)(UINT);", source)
+        self.assertIn("exit_process_fn exit_process = ExitProcess;", source)
+        self.assertIn("exit_process(85); return 0;", source)
+        self.assertNotIn("ExitProcess(85)", source)
+
     def test_export_decorated_header_is_isolated_to_probe_definition(self):
         frozen = (
             HERE.parents[1] / "docs/ai-migration/qualification/archive_bridge_v1.h"
@@ -227,6 +234,48 @@ class ProbeDriverTests(unittest.TestCase):
             self.assertIn('"architecture": "amd64"', commands)
             self.assertIn('"name": "diagnostic-current-source"', commands)
             self.assertIn('"name": "diagnostic-c-caller"', commands)
+
+    def test_runtime_negative_diagnostic_sweep_collects_every_translation_unit(self):
+        class FakeRunner:
+            def __init__(self, evidence):
+                self.evidence = evidence
+                self.names = []
+
+            def run(self, name, command, *, cwd, expected=0):
+                del command, cwd, expected
+                self.names.append(name)
+                output = {
+                    "runtime-diagnostic-fastcall-caller": "fastcall-caller.c(4): warning C4702\n",
+                    "runtime-diagnostic-callback-dll": "callback-dll.c(8): error C2001\n",
+                }.get(name, "")
+                return subprocess.CompletedProcess([], 2 if output else 0, output)
+
+        with tempfile.TemporaryDirectory() as temp:
+            base = pathlib.Path(temp) / "work"
+            evidence = pathlib.Path(temp) / "evidence"
+            base.mkdir()
+            evidence.mkdir()
+            runner = FakeRunner(evidence)
+
+            with self.assertRaisesRegex(RuntimeError, "C4702.*C2001"):
+                self.probe.runtime_negative_compile_diagnostic_sweep(base, runner)
+
+            self.assertEqual(
+                runner.names,
+                [
+                    "runtime-diagnostic-fastcall-dll",
+                    "runtime-diagnostic-fastcall-caller",
+                    "runtime-diagnostic-stdcall-dll",
+                    "runtime-diagnostic-stdcall-caller",
+                    "runtime-diagnostic-callback-dll",
+                    "runtime-diagnostic-callback-caller",
+                ],
+            )
+            summary = (evidence / "runtime-negative-compile-diagnostic-summary.txt").read_text(
+                encoding="utf-8"
+            )
+            self.assertIn("runtime-diagnostic-fastcall-caller: exit_code=2; diagnostics=C4702", summary)
+            self.assertIn("runtime-diagnostic-callback-dll: exit_code=2; diagnostics=C2001", summary)
 
     def test_workflow_collects_both_architecture_sweeps_before_failing(self):
         workflow = WORKFLOW.read_text(encoding="utf-8")
