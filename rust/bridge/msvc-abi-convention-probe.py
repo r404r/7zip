@@ -238,8 +238,8 @@ int32_t ARCHIVE_BRIDGE_V1_CALL archive_bridge_v1_entries(archive_bridge_v1_conte
 int32_t ARCHIVE_BRIDGE_V1_CALL archive_bridge_v1_close(archive_bridge_v1_context *a, uint64_t b, uint64_t c) { return a==(void*)(uintptr_t)0x67676767 && b==UINT64_C(0x1122334455667788) && c==UINT64_C(0x8877665544332211) ? 107 : -107; }
 int32_t ARCHIVE_BRIDGE_V1_CALL archive_bridge_v1_result_destroy(archive_bridge_v1_context *a, archive_bridge_v1_result *b) { return a==(void*)(uintptr_t)0x78787878 && b==(void*)(uintptr_t)0x89898989 ? 108 : -108; }
 __declspec(dllexport) int32_t ARCHIVE_BRIDGE_V1_CALL cc_probe_invoke_callbacks(const archive_bridge_v1_operation *op) {
-  archive_bridge_v1_progress progress = {0}; archive_bridge_v1_question question = {0}; archive_bridge_v1_reply reply = {0};
-  progress.counter_kind = 0x7011; question.kind = 0x7022;
+  archive_bridge_v1_progress progress; archive_bridge_v1_question question; archive_bridge_v1_reply reply;
+  progress.counter_kind = 0x7011; question.kind = 0x7022; reply.kind = 0;
   if (!op || !op->is_cancelled || !op->on_progress || !op->ask) return -1;
   if (op->is_cancelled(op->user) != 0xCA11u) return -2;
   if (op->on_progress(op->user, &progress) != 0x701) return -3;

@@ -119,6 +119,14 @@ class ProbeDriverTests(unittest.TestCase):
         self.assertIn("int __cdecl main()", self.probe.cpp_typecheck_source())
         self.assertIn("int __cdecl main(int argc", self.probe.c_caller_source())
 
+    def test_probe_callback_helper_initializes_only_observed_fields(self):
+        source = self.probe.definitions_source()
+        helper = source[source.index("cc_probe_invoke_callbacks") :]
+        self.assertNotIn("= {0}", helper)
+        self.assertIn("progress.counter_kind = 0x7011", helper)
+        self.assertIn("question.kind = 0x7022", helper)
+        self.assertIn("reply.kind = 0", helper)
+
     def test_export_decorated_header_is_isolated_to_probe_definition(self):
         frozen = (
             HERE.parents[1] / "docs/ai-migration/qualification/archive_bridge_v1.h"
