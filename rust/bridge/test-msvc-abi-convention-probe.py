@@ -73,6 +73,77 @@ class ProbeDriverTests(unittest.TestCase):
             self.assertNotEqual(text, source, name)
             self.assertIn("ARCHIVE_BRIDGE_V1_H", text)
 
+    def test_generated_probe_header_is_exact_frozen_view_plus_exports(self):
+        frozen = (
+            HERE.parents[1] / "docs/ai-migration/qualification/archive_bridge_v1.h"
+        ).read_text(encoding="utf-8")
+        generated = self.probe.generated_probe_header(frozen)
+        self.probe.validate_generated_probe_header(frozen, generated)
+        self.assertTrue(generated.startswith(self.probe.GENERATED_HEADER_PREAMBLE))
+        self.assertEqual(generated.count("__declspec(dllexport)"), 8)
+        for name in self.probe.EXPORT_ARGUMENT_BYTES:
+            self.assertIn(
+                "__declspec(dllexport) int32_t ARCHIVE_BRIDGE_V1_CALL " + name + "(",
+                generated,
+            )
+
+    def test_generated_probe_header_validator_rejects_drift(self):
+        frozen = (
+            HERE.parents[1] / "docs/ai-migration/qualification/archive_bridge_v1.h"
+        ).read_text(encoding="utf-8")
+        generated = self.probe.generated_probe_header(frozen)
+        mutations = (
+            generated.replace(
+                "const archive_bridge_v1_info *expected", "const void *expected", 1
+            ),
+            generated.replace(
+                "__declspec(dllexport) int32_t ARCHIVE_BRIDGE_V1_CALL "
+                "archive_bridge_v1_handshake(",
+                "int32_t ARCHIVE_BRIDGE_V1_CALL archive_bridge_v1_handshake(",
+                1,
+            ),
+            generated.replace(
+                "__declspec(dllexport) int32_t ARCHIVE_BRIDGE_V1_CALL "
+                "archive_bridge_v1_close(",
+                "__declspec(dllexport) int32_t archive_bridge_v1_close(",
+                1,
+            ),
+        )
+        for mutated in mutations:
+            self.assertNotEqual(mutated, generated)
+            with self.assertRaises(RuntimeError):
+                self.probe.validate_generated_probe_header(frozen, mutated)
+
+    def test_generated_sources_mark_all_entry_points_cdecl(self):
+        self.assertIn("int __cdecl main(void)", self.probe.typecheck_source())
+        self.assertIn("int __cdecl main()", self.probe.cpp_typecheck_source())
+        self.assertIn("int __cdecl main(int argc", self.probe.c_caller_source())
+
+    def test_export_decorated_header_is_isolated_to_probe_definition(self):
+        frozen = (
+            HERE.parents[1] / "docs/ai-migration/qualification/archive_bridge_v1.h"
+        ).read_text(encoding="utf-8")
+        with tempfile.TemporaryDirectory() as temp:
+            work = pathlib.Path(temp)
+            generated = self.probe.write_sources(work, frozen)
+            self.assertEqual(
+                (work / "archive_bridge_v1.h").read_text(encoding="utf-8"), frozen
+            )
+            self.assertEqual(
+                (work / "archive_bridge_v1_probe_exports.h").read_text(
+                    encoding="utf-8"
+                ),
+                generated,
+            )
+            self.assertIn(
+                '#include "archive_bridge_v1_probe_exports.h"',
+                (work / "probe.cpp").read_text(encoding="utf-8"),
+            )
+            self.assertIn(
+                '#include "archive_bridge_v1.h"',
+                (work / "caller.c").read_text(encoding="utf-8"),
+            )
+
     def test_dumpbin_parsers_ignore_filename_and_undefined_symbols(self):
         exports = """Dump of file archive_bridge_v1_cc_probe.dll
           ordinal hint RVA      name
@@ -114,7 +185,11 @@ class ProbeDriverTests(unittest.TestCase):
             evidence.mkdir(parents=True)
             frozen = root / "docs/ai-migration/qualification/archive_bridge_v1.h"
             frozen.parent.mkdir(parents=True)
-            frozen.write_text(self.probe.contract_header_mutation_fixture(), encoding="utf-8")
+            frozen.write_text(
+                (HERE.parents[1] / "docs/ai-migration/qualification/archive_bridge_v1.h")
+                .read_text(encoding="utf-8"),
+                encoding="utf-8",
+            )
             runner = FakeRunner(evidence)
 
             with self.assertRaisesRegex(

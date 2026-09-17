@@ -44,6 +44,10 @@ CURRENT_EXPORTS = (
     "archive_bridge_v1_capabilities",
     "archive_bridge_v1_result_destroy",
 )
+GENERATED_HEADER_PREAMBLE = (
+    "/* Build-time non-product probe header.  The validator requires this file to\n"
+    " * equal the frozen Q1 header after removing only the eight dllexport markers. */\n"
+)
 
 
 def sha256(path: pathlib.Path) -> str:
@@ -62,21 +66,64 @@ def expected_coff_symbol(arch: str, name: str) -> str:
     raise ValueError(f"unsupported architecture: {arch}")
 
 
+def generated_probe_header(frozen: str) -> str:
+    """Add direct probe-only exports without changing the frozen artifact."""
+    generated = frozen
+    for name in EXPORT_ARGUMENT_BYTES:
+        declaration = generated.find(name + "(")
+        if declaration < 0 or generated.find(name + "(", declaration + 1) >= 0:
+            raise RuntimeError(f"frozen export declaration is missing or ambiguous: {name}")
+        line_start = generated.rfind("\n", 0, declaration) + 1
+        if not generated.startswith("int32_t ", line_start):
+            raise RuntimeError(f"unexpected frozen export declaration shape: {name}")
+        generated = (
+            generated[:line_start]
+            + "__declspec(dllexport) "
+            + generated[line_start:]
+        )
+    result = GENERATED_HEADER_PREAMBLE + generated
+    validate_generated_probe_header(frozen, result)
+    return result
+
+
+def validate_generated_probe_header(frozen: str, generated: str) -> None:
+    """Prove the generated declaration view differs only by export attributes."""
+    if not generated.startswith(GENERATED_HEADER_PREAMBLE):
+        raise RuntimeError("generated probe header lacks its build-time non-product marker")
+    restored = generated[len(GENERATED_HEADER_PREAMBLE):]
+    for name in EXPORT_ARGUMENT_BYTES:
+        declaration = restored.find(name + "(")
+        if declaration < 0 or restored.find(name + "(", declaration + 1) >= 0:
+            raise RuntimeError(f"generated export declaration is missing or ambiguous: {name}")
+        line_start = restored.rfind("\n", 0, declaration) + 1
+        marker = "__declspec(dllexport) "
+        if not restored.startswith(marker, line_start):
+            raise RuntimeError(f"generated export lacks direct dllexport: {name}")
+        restored = restored[:line_start] + restored[line_start + len(marker):]
+    if "__declspec(dllexport)" in restored:
+        raise RuntimeError("generated probe header contains an unexpected dllexport")
+    if restored != frozen:
+        raise RuntimeError(
+            "generated probe header drifted from the frozen header beyond export attributes"
+        )
+
+
 def contract_header_mutation_fixture() -> str:
     return """#ifndef ARCHIVE_BRIDGE_V1_H
 #define ARCHIVE_BRIDGE_V1_H
+#include <stdint.h>
 #define ARCHIVE_BRIDGE_V1_CALL __cdecl
 typedef unsigned (ARCHIVE_BRIDGE_V1_CALL *archive_bridge_v1_is_cancelled)(void *);
-int ARCHIVE_BRIDGE_V1_CALL archive_bridge_v1_handshake(void *, void *);
-int ARCHIVE_BRIDGE_V1_CALL archive_bridge_v1_close(void *, unsigned long long, unsigned long long);
+int32_t ARCHIVE_BRIDGE_V1_CALL archive_bridge_v1_handshake(void *, void *);
+int32_t ARCHIVE_BRIDGE_V1_CALL archive_bridge_v1_close(void *, unsigned long long, unsigned long long);
 #endif
 """
 
 
 def build_mutations(source: str) -> dict[str, str]:
     without_call = source.replace(
-        "int ARCHIVE_BRIDGE_V1_CALL archive_bridge_v1_handshake",
-        "int archive_bridge_v1_handshake",
+        "int32_t ARCHIVE_BRIDGE_V1_CALL archive_bridge_v1_handshake",
+        "int32_t archive_bridge_v1_handshake",
         1,
     )
     callback_stdcall = source.replace(
@@ -85,8 +132,8 @@ def build_mutations(source: str) -> dict[str, str]:
         1,
     )
     close_stdcall = source.replace(
-        "int ARCHIVE_BRIDGE_V1_CALL archive_bridge_v1_close",
-        "int __stdcall archive_bridge_v1_close",
+        "int32_t ARCHIVE_BRIDGE_V1_CALL archive_bridge_v1_close",
+        "int32_t __stdcall archive_bridge_v1_close",
         1,
     )
     return {
@@ -178,20 +225,19 @@ class EvidenceRunner:
 
 
 def definitions_source() -> str:
-    return r'''#include "archive_bridge_v1.h"
+    return r'''#include "archive_bridge_v1_probe_exports.h"
 #include <stdint.h>
 extern "C" {
-#define PROBE_EXPORT __declspec(dllexport)
-PROBE_EXPORT extern const char cc_probe_not_product[] = "NOT_PRODUCT";
-PROBE_EXPORT int32_t ARCHIVE_BRIDGE_V1_CALL archive_bridge_v1_handshake(const archive_bridge_v1_info *a, archive_bridge_v1_info *b) { return a==(void*)(uintptr_t)0x10101010 && b==(void*)(uintptr_t)0x20202020 ? 101 : -101; }
-PROBE_EXPORT int32_t ARCHIVE_BRIDGE_V1_CALL archive_bridge_v1_create_context(const archive_bridge_v1_context_options *a, archive_bridge_v1_context **b) { return a==(void*)(uintptr_t)0x30303030 && b==(void*)(uintptr_t)0x40404040 ? 102 : -102; }
-PROBE_EXPORT int32_t ARCHIVE_BRIDGE_V1_CALL archive_bridge_v1_destroy_context(archive_bridge_v1_context *a) { return a==(void*)(uintptr_t)0x50505050 ? 103 : -103; }
-PROBE_EXPORT int32_t ARCHIVE_BRIDGE_V1_CALL archive_bridge_v1_capabilities(archive_bridge_v1_context *a, archive_bridge_v1_result **b, archive_bridge_v1_capability_view *c) { return a==(void*)(uintptr_t)0x60606060 && b==(void*)(uintptr_t)0x70707070 && c==(void*)(uintptr_t)0x80808080 ? 104 : -104; }
-PROBE_EXPORT int32_t ARCHIVE_BRIDGE_V1_CALL archive_bridge_v1_open(archive_bridge_v1_context *a, const archive_bridge_v1_open_request *b, const archive_bridge_v1_operation *c, archive_bridge_v1_result **d, archive_bridge_v1_view *e) { return a==(void*)(uintptr_t)0x11111111 && b==(void*)(uintptr_t)0x22222222 && c==(void*)(uintptr_t)0x33333333 && d==(void*)(uintptr_t)0x44444444 && e==(void*)(uintptr_t)0x55555555 ? 105 : -105; }
-PROBE_EXPORT int32_t ARCHIVE_BRIDGE_V1_CALL archive_bridge_v1_entries(archive_bridge_v1_context *a, const archive_bridge_v1_entries_request *b, const archive_bridge_v1_operation *c, archive_bridge_v1_result **d, archive_bridge_v1_view *e) { return a==(void*)(uintptr_t)0x12121212 && b==(void*)(uintptr_t)0x23232323 && c==(void*)(uintptr_t)0x34343434 && d==(void*)(uintptr_t)0x45454545 && e==(void*)(uintptr_t)0x56565656 ? 106 : -106; }
-PROBE_EXPORT int32_t ARCHIVE_BRIDGE_V1_CALL archive_bridge_v1_close(archive_bridge_v1_context *a, uint64_t b, uint64_t c) { return a==(void*)(uintptr_t)0x67676767 && b==UINT64_C(0x1122334455667788) && c==UINT64_C(0x8877665544332211) ? 107 : -107; }
-PROBE_EXPORT int32_t ARCHIVE_BRIDGE_V1_CALL archive_bridge_v1_result_destroy(archive_bridge_v1_context *a, archive_bridge_v1_result *b) { return a==(void*)(uintptr_t)0x78787878 && b==(void*)(uintptr_t)0x89898989 ? 108 : -108; }
-PROBE_EXPORT int32_t ARCHIVE_BRIDGE_V1_CALL cc_probe_invoke_callbacks(const archive_bridge_v1_operation *op) {
+__declspec(dllexport) extern const char cc_probe_not_product[] = "NOT_PRODUCT";
+int32_t ARCHIVE_BRIDGE_V1_CALL archive_bridge_v1_handshake(const archive_bridge_v1_info *a, archive_bridge_v1_info *b) { return a==(void*)(uintptr_t)0x10101010 && b==(void*)(uintptr_t)0x20202020 ? 101 : -101; }
+int32_t ARCHIVE_BRIDGE_V1_CALL archive_bridge_v1_create_context(const archive_bridge_v1_context_options *a, archive_bridge_v1_context **b) { return a==(void*)(uintptr_t)0x30303030 && b==(void*)(uintptr_t)0x40404040 ? 102 : -102; }
+int32_t ARCHIVE_BRIDGE_V1_CALL archive_bridge_v1_destroy_context(archive_bridge_v1_context *a) { return a==(void*)(uintptr_t)0x50505050 ? 103 : -103; }
+int32_t ARCHIVE_BRIDGE_V1_CALL archive_bridge_v1_capabilities(archive_bridge_v1_context *a, archive_bridge_v1_result **b, archive_bridge_v1_capability_view *c) { return a==(void*)(uintptr_t)0x60606060 && b==(void*)(uintptr_t)0x70707070 && c==(void*)(uintptr_t)0x80808080 ? 104 : -104; }
+int32_t ARCHIVE_BRIDGE_V1_CALL archive_bridge_v1_open(archive_bridge_v1_context *a, const archive_bridge_v1_open_request *b, const archive_bridge_v1_operation *c, archive_bridge_v1_result **d, archive_bridge_v1_view *e) { return a==(void*)(uintptr_t)0x11111111 && b==(void*)(uintptr_t)0x22222222 && c==(void*)(uintptr_t)0x33333333 && d==(void*)(uintptr_t)0x44444444 && e==(void*)(uintptr_t)0x55555555 ? 105 : -105; }
+int32_t ARCHIVE_BRIDGE_V1_CALL archive_bridge_v1_entries(archive_bridge_v1_context *a, const archive_bridge_v1_entries_request *b, const archive_bridge_v1_operation *c, archive_bridge_v1_result **d, archive_bridge_v1_view *e) { return a==(void*)(uintptr_t)0x12121212 && b==(void*)(uintptr_t)0x23232323 && c==(void*)(uintptr_t)0x34343434 && d==(void*)(uintptr_t)0x45454545 && e==(void*)(uintptr_t)0x56565656 ? 106 : -106; }
+int32_t ARCHIVE_BRIDGE_V1_CALL archive_bridge_v1_close(archive_bridge_v1_context *a, uint64_t b, uint64_t c) { return a==(void*)(uintptr_t)0x67676767 && b==UINT64_C(0x1122334455667788) && c==UINT64_C(0x8877665544332211) ? 107 : -107; }
+int32_t ARCHIVE_BRIDGE_V1_CALL archive_bridge_v1_result_destroy(archive_bridge_v1_context *a, archive_bridge_v1_result *b) { return a==(void*)(uintptr_t)0x78787878 && b==(void*)(uintptr_t)0x89898989 ? 108 : -108; }
+__declspec(dllexport) int32_t ARCHIVE_BRIDGE_V1_CALL cc_probe_invoke_callbacks(const archive_bridge_v1_operation *op) {
   archive_bridge_v1_progress progress = {0}; archive_bridge_v1_question question = {0}; archive_bridge_v1_reply reply = {0};
   progress.counter_kind = 0x7011; question.kind = 0x7022;
   if (!op || !op->is_cancelled || !op->on_progress || !op->ask) return -1;
@@ -229,7 +275,7 @@ static int32_t __cdecl probe_ask(void *p, const archive_bridge_v1_question *q, a
 static archive_bridge_v1_is_cancelled const cb1 = &probe_is_cancelled;
 static archive_bridge_v1_on_progress const cb2 = &probe_on_progress;
 static archive_bridge_v1_ask const cb3 = &probe_ask;
-int main(void) { return !(c1 && c2 && c3 && c4 && c5 && c6 && c7 && c8 && cb1 && cb2 && cb3); }
+int __cdecl main(void) { return !(c1 && c2 && c3 && c4 && c5 && c6 && c7 && c8 && cb1 && cb2 && cb3); }
 '''
     return exports
 
@@ -248,7 +294,7 @@ static_assert(std::is_same<decltype(&archive_bridge_v1_result_destroy), int32_t 
 static_assert(std::is_same<archive_bridge_v1_is_cancelled, uint32_t (__cdecl *)(void*)>::value, "cancel callback convention");
 static_assert(std::is_same<archive_bridge_v1_on_progress, int32_t (__cdecl *)(void*, const archive_bridge_v1_progress*)>::value, "progress callback convention");
 static_assert(std::is_same<archive_bridge_v1_ask, int32_t (__cdecl *)(void*, const archive_bridge_v1_question*, archive_bridge_v1_reply*)>::value, "ask callback convention");
-int main() { return 0; }
+int __cdecl main() { return 0; }
 '''
 
 
@@ -271,7 +317,7 @@ static uint32_t __cdecl cancelled(void *u) { if (u != (void*)(uintptr_t)0x1234) 
 static int32_t __cdecl progress(void *u, const archive_bridge_v1_progress *e) { if (u != (void*)(uintptr_t)0x1234 || !e || e->counter_kind != 0x7011) return -1; ++progress_count; return 0x701; }
 static int32_t __cdecl ask(void *u, const archive_bridge_v1_question *q, archive_bridge_v1_reply *r) { if (u != (void*)(uintptr_t)0x1234 || !q || q->kind != 0x7022 || !r) return -1; r->kind=0x7033; ++ask_count; return 0x702; }
 typedef int32_t (__cdecl *helper_fn)(const archive_bridge_v1_operation*);
-int main(int argc, char **argv) {
+int __cdecl main(int argc, char **argv) {
   if (argc != 2) return 10; char full[MAX_PATH]; if (!_fullpath(full, argv[1], MAX_PATH)) return 11;
   HMODULE module = LoadLibraryA(full); if (!module) return 12;
   LOAD(archive_bridge_v1_handshake, handshake_fn);
@@ -359,14 +405,83 @@ def assert_object_symbols(text: str, arch: str, names: Iterable[str]) -> None:
         raise RuntimeError(f"missing exact raw COFF symbols: {missing}")
 
 
-def write_sources(work: pathlib.Path, header: str) -> None:
+def write_sources(work: pathlib.Path, header: str) -> str:
     work.mkdir(parents=True, exist_ok=True)
+    generated_header = generated_probe_header(header)
+    # Consumers and type checks use the exact frozen declaration view.  Only the
+    # probe DLL definition unit includes the build-time export-decorated view;
+    # otherwise dllexport directives would leak into the dynamic C caller.
     (work / "archive_bridge_v1.h").write_text(header, encoding="utf-8")
+    (work / "archive_bridge_v1_probe_exports.h").write_text(
+        generated_header, encoding="utf-8"
+    )
     (work / "probe.cpp").write_text(definitions_source(), encoding="utf-8")
     (work / "typecheck.c").write_text(typecheck_source(), encoding="utf-8")
     (work / "typecheck.cpp").write_text(cpp_typecheck_source(), encoding="utf-8")
     (work / "caller.c").write_text(c_caller_source(), encoding="utf-8")
     (work / "caller.rs").write_text(rust_caller_source(), encoding="utf-8")
+    return generated_header
+
+
+def record_generated_header_contract(
+    frozen: str,
+    generated: str,
+    runner: EvidenceRunner,
+    *,
+    run_negative_controls: bool,
+) -> None:
+    validate_generated_probe_header(frozen, generated)
+    evidence: dict[str, object] = {
+        "relationship": (
+            "byte-identical to the frozen Q1 header after removing the build-time "
+            "marker and exactly eight direct __declspec(dllexport) attributes"
+        ),
+        "frozen_header_sha256": hashlib.sha256(frozen.encode("utf-8")).hexdigest(),
+        "generated_header_sha256": hashlib.sha256(generated.encode("utf-8")).hexdigest(),
+        "exports": list(EXPORT_ARGUMENT_BYTES),
+        "callback_typedefs": [
+            "archive_bridge_v1_is_cancelled",
+            "archive_bridge_v1_on_progress",
+            "archive_bridge_v1_ask",
+        ],
+        "positive_check": "PASS",
+    }
+    if run_negative_controls:
+        marker = "__declspec(dllexport) "
+        mutations = {
+            "parameter_type_drift": generated.replace(
+                "const archive_bridge_v1_info *expected",
+                "const void *expected",
+                1,
+            ),
+            "missing_export": generated.replace(
+                marker + "int32_t ARCHIVE_BRIDGE_V1_CALL archive_bridge_v1_handshake(",
+                "int32_t ARCHIVE_BRIDGE_V1_CALL archive_bridge_v1_handshake(",
+                1,
+            ),
+            "missing_call_macro": generated.replace(
+                marker + "int32_t ARCHIVE_BRIDGE_V1_CALL archive_bridge_v1_close(",
+                marker + "int32_t archive_bridge_v1_close(",
+                1,
+            ),
+        }
+        results: dict[str, str] = {}
+        for name, mutated in mutations.items():
+            if mutated == generated:
+                raise RuntimeError(f"generated-header negative control did not mutate: {name}")
+            try:
+                validate_generated_probe_header(frozen, mutated)
+            except RuntimeError as error:
+                results[name] = f"EXPECTED_REJECTION: {error}"
+            else:
+                raise RuntimeError(
+                    f"generated-header structural validator accepted drift: {name}"
+                )
+        evidence["negative_controls"] = results
+    (runner.evidence / "generated-probe-header-contract.json").write_text(
+        json.dumps(evidence, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
 
 
 def compile_diagnostic_sweep(
@@ -466,7 +581,13 @@ def compile_current_source(root: pathlib.Path, work: pathlib.Path, arch: str, ru
 def positive_lane(root: pathlib.Path, output: pathlib.Path, arch: str, runner: EvidenceRunner) -> None:
     work = output / "work" / arch / "positive"
     header = (root / "docs/ai-migration/qualification/archive_bridge_v1.h").read_text(encoding="utf-8")
-    write_sources(work, header)
+    generated_header = write_sources(work, header)
+    record_generated_header_contract(
+        header,
+        generated_header,
+        runner,
+        run_negative_controls=arch == "amd64",
+    )
     compile_current_source(root, work, arch, runner)
     typecheck_c = work / "typecheck-c.obj"
     typecheck_cpp = work / "typecheck-cpp.obj"
