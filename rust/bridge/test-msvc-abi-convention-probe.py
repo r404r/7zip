@@ -186,6 +186,16 @@ class ProbeDriverTests(unittest.TestCase):
                 symbols, "x86", {"archive_bridge_v1_handshake"}
             )
 
+    def test_namespace_filter_ignores_cpp_symbols_that_only_reference_contract_types(self):
+        symbols = {
+            "?archive_bridge_v1_unexpected@@YAHXZ",
+            "?push_back@?$vector@Uarchive_bridge_v1_format@@V?$allocator@Uarchive_bridge_v1_format@@@std@@@std@@QEAAXAEBUarchive_bridge_v1_format@@@Z",
+        }
+        self.assertEqual(
+            self.probe.bridge_namespace_symbols(symbols),
+            {"?archive_bridge_v1_unexpected@@YAHXZ"},
+        )
+
     def test_pe_parser_retains_internal_target_and_machine_check_fails_closed(self):
         exports = """
               1    0 00001000 archive_bridge_v1_handshake = _archive_bridge_v1_handshake

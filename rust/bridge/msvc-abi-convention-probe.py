@@ -466,7 +466,7 @@ def bridge_namespace_symbols(symbols: Iterable[str]) -> set[str]:
     """Collect plain and x86-decorated names in the Q1 public namespace."""
     found: set[str] = set()
     for symbol in symbols:
-        if symbol.startswith("?") and "archive_bridge_v1_" in symbol:
+        if symbol.startswith("?archive_bridge_v1_"):
             found.add(symbol)
             continue
         base = symbol
