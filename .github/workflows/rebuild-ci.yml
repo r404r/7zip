@@ -55,7 +55,26 @@ jobs:
             -property installationPath
           if (-not $vs) { throw 'Visual Studio C++ x86/x64 tools were not found.' }
           $vcvars = Join-Path $vs 'VC\Auxiliary\Build\vcvarsall.bat'
+          $pristineProcessEnvironment = @{}
+          [Environment]::GetEnvironmentVariables('Process').GetEnumerator() |
+            ForEach-Object {
+              $pristineProcessEnvironment[[string]$_.Key] = [string]$_.Value
+            }
+          function Restore-PristineProcessEnvironment {
+            $current = [Environment]::GetEnvironmentVariables('Process')
+            foreach ($name in @($current.Keys)) {
+              if (-not $pristineProcessEnvironment.ContainsKey([string]$name)) {
+                [Environment]::SetEnvironmentVariable([string]$name, $null, 'Process')
+              }
+            }
+            foreach ($entry in $pristineProcessEnvironment.GetEnumerator()) {
+              [Environment]::SetEnvironmentVariable(
+                [string]$entry.Key, [string]$entry.Value, 'Process'
+              )
+            }
+          }
           function Import-VcVars([string]$target) {
+            Restore-PristineProcessEnvironment
             cmd /d /s /c "`"$vcvars`" $target >nul && set" | ForEach-Object {
               if ($_ -match '^([^=]+)=(.*)$') {
                 [Environment]::SetEnvironmentVariable($matches[1], $matches[2], 'Process')

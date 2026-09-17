@@ -242,6 +242,23 @@ class ProbeDriverTests(unittest.TestCase):
         between_sweeps = workflow[amd64:x86]
         self.assertNotIn("exit $LASTEXITCODE", between_sweeps)
 
+    def test_workflow_restores_pristine_environment_before_each_vcvars_import(self):
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        snapshot = workflow.index("$pristineProcessEnvironment = @{}")
+        restore_function = workflow.index("function Restore-PristineProcessEnvironment")
+        import_function = workflow.index("function Import-VcVars")
+        restore_call = workflow.index("Restore-PristineProcessEnvironment", import_function)
+        vcvars_call = workflow.index('cmd /d /s /c "`"$vcvars`" $target', import_function)
+
+        self.assertLess(snapshot, restore_function)
+        self.assertLess(restore_function, import_function)
+        self.assertLess(import_function, restore_call)
+        self.assertLess(restore_call, vcvars_call)
+        self.assertIn(
+            "SetEnvironmentVariable([string]$name, $null, 'Process')",
+            workflow[restore_function:import_function],
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
