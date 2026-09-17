@@ -19,7 +19,7 @@ import re
 import shutil
 import subprocess
 import sys
-from typing import Iterable
+from typing import Any, Iterable
 
 FROZEN_HEADER_SHA256 = "eabe714b31e2076735b8313c06618e5dbb3db4ea924cbef244b78a8b107ee26d"
 EXPORT_ARGUMENT_BYTES = {
@@ -196,6 +196,29 @@ class EvidenceRunner:
         self.evidence = evidence
         self.evidence.mkdir(parents=True, exist_ok=True)
         self.commands: list[dict[str, object]] = []
+        self.artifact_audit: dict[str, dict[str, object]] = {}
+        self.acceptance_tables: dict[str, object] = {}
+        self.state_path = self.evidence / "runner-state.json"
+        if self.state_path.is_file():
+            state = json.loads(self.state_path.read_text(encoding="utf-8"))
+            self.commands = list(state.get("commands", []))
+            self.artifact_audit = dict(state.get("artifact_audit", {}))
+            self.acceptance_tables = dict(state.get("acceptance_tables", {}))
+
+    def save_state(self) -> None:
+        self.state_path.write_text(
+            json.dumps(
+                {
+                    "commands": self.commands,
+                    "artifact_audit": self.artifact_audit,
+                    "acceptance_tables": self.acceptance_tables,
+                },
+                indent=2,
+                sort_keys=True,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
 
     def run(
         self,
@@ -212,6 +235,7 @@ class EvidenceRunner:
         log.write_text(f"> {display}\nexit_code={proc.returncode}\n{proc.stdout}", encoding="utf-8")
         self.commands.append({"name": name, "command": display, "exit_code": proc.returncode,
                               "log": log.name})
+        self.save_state()
         if expected is not None and proc.returncode != expected:
             raise RuntimeError(f"{name}: expected exit {expected}, got {proc.returncode}; see {log}")
         return proc
@@ -219,6 +243,8 @@ class EvidenceRunner:
     def write_manifest(self, extra: dict[str, object]) -> None:
         payload = dict(extra)
         payload["commands"] = self.commands
+        payload["artifact_audit"] = self.artifact_audit
+        payload["acceptance_tables"] = self.acceptance_tables
         (self.evidence / "manifest.json").write_text(
             json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8"
         )
@@ -384,25 +410,218 @@ def defined_symbols(text: str) -> set[str]:
 
 
 def pe_export_names(text: str) -> set[str]:
-    names: set[str] = set()
+    return set(pe_exports(text))
+
+
+def pe_exports(text: str) -> dict[str, str | None]:
+    """Parse PE public names separately from DUMPBIN's optional internal target."""
+    exports: dict[str, str | None] = {}
     for line in text.splitlines():
-        match = re.match(r"^\s+\d+\s+[0-9A-Fa-f]+\s+[0-9A-Fa-f]+\s+(\S+)", line)
+        match = re.match(
+            r"^\s+\d+\s+[0-9A-Fa-f]+\s+[0-9A-Fa-f]+\s+(\S+)(?:\s+=\s+(\S+))?\s*$",
+            line,
+        )
         if match:
-            names.add(match.group(1))
-    return names
+            name, internal = match.groups()
+            if name in exports and exports[name] != internal:
+                raise RuntimeError(f"duplicate PE export has conflicting targets: {name}")
+            exports[name] = internal
+    return exports
 
 
-def assert_machine(text: str, arch: str) -> None:
-    needle = "8664 machine (x64)" if arch == "amd64" else "14C machine (x86)"
-    if needle.lower() not in text.lower():
-        raise RuntimeError(f"DUMPBIN machine mismatch: expected {needle}")
+def machine_value(text: str) -> str:
+    match = re.search(r"^\s*(8664|14C)\s+machine\s+\((x64|x86)\)\s*$", text, re.MULTILINE | re.IGNORECASE)
+    if not match:
+        raise RuntimeError("DUMPBIN headers lack a recognized machine field")
+    return match.group(1).upper()
 
 
-def assert_object_symbols(text: str, arch: str, names: Iterable[str]) -> None:
-    symbols = raw_symbols(text)
-    missing = [expected_coff_symbol(arch, name) for name in names if expected_coff_symbol(arch, name) not in symbols]
+def assert_machine(text: str, arch: str) -> str:
+    expected = "8664" if arch == "amd64" else "14C"
+    actual = machine_value(text)
+    if actual != expected:
+        raise RuntimeError(f"DUMPBIN machine mismatch: expected {expected}, got {actual}")
+    return actual
+
+
+def convention_symbols(symbols: Iterable[str], names: Iterable[str]) -> set[str]:
+    """Collect every ordinary/x86-decorated spelling in the controlled namespace."""
+    controlled = tuple(names)
+    found: set[str] = set()
+    for symbol in symbols:
+        for name in controlled:
+            if symbol == name or symbol == "_" + name:
+                found.add(symbol)
+                break
+            if re.fullmatch(r"@" + re.escape(name) + r"@\d+", symbol):
+                found.add(symbol)
+                break
+            if re.fullmatch(r"_" + re.escape(name) + r"@\d+", symbol):
+                found.add(symbol)
+                break
+    return found
+
+
+def bridge_namespace_symbols(symbols: Iterable[str]) -> set[str]:
+    """Collect plain and x86-decorated names in the Q1 public namespace."""
+    found: set[str] = set()
+    for symbol in symbols:
+        if symbol.startswith("?") and "archive_bridge_v1_" in symbol:
+            found.add(symbol)
+            continue
+        base = symbol
+        if base.startswith(("@", "_")):
+            base = base[1:]
+        base = re.sub(r"@\d+$", "", base)
+        if base.startswith("archive_bridge_v1_"):
+            found.add(symbol)
+    return found
+
+
+def assert_object_symbols(text: str, arch: str, names: Iterable[str]) -> dict[str, str]:
+    controlled = tuple(names)
+    expected = {expected_coff_symbol(arch, name) for name in controlled}
+    parsed = raw_symbols(text)
+    actual = convention_symbols(parsed, controlled)
+    if any(name.startswith("archive_bridge_v1_") for name in controlled):
+        actual |= bridge_namespace_symbols(parsed)
+    if actual != expected:
+        raise RuntimeError(
+            "raw COFF symbol set mismatch: "
+            f"missing={sorted(expected - actual)} extra={sorted(actual - expected)}"
+        )
+    return {
+        name: expected_coff_symbol(arch, name)
+        for name in controlled
+    }
+
+
+def audit_artifact(
+    runner: EvidenceRunner,
+    name: str,
+    path: pathlib.Path,
+    arch: str,
+    *,
+    symbols: bool,
+) -> dict[str, object]:
+    """Retain and validate headers plus, for objects, literal raw symbols."""
+    headers_text = runner.run(name + "-headers", ["dumpbin", "/headers", str(path)], cwd=path.parent).stdout
+    record: dict[str, object] = {
+        "path": str(path),
+        "kind": "object" if path.suffix.lower() == ".obj" else "dll",
+        "machine": assert_machine(headers_text, arch),
+        "headers_log": name + "-headers.log",
+    }
+    if symbols:
+        symbols_text = runner.run(name + "-symbols", ["dumpbin", "/symbols", str(path)], cwd=path.parent).stdout
+        record["symbols_log"] = name + "-symbols.log"
+        record["defined_symbols"] = sorted(defined_symbols(symbols_text))
+    runner.artifact_audit[str(path.resolve())] = record
+    runner.save_state()
+    return record
+
+
+def assert_complete_artifact_audit(
+    work_root: pathlib.Path,
+    runner: EvidenceRunner,
+    arch: str,
+) -> None:
+    expected_machine = "8664" if arch == "amd64" else "14C"
+    artifacts = sorted(
+        path.resolve()
+        for path in work_root.rglob("*")
+        if path.is_file() and path.suffix.lower() in {".obj", ".dll"}
+    )
+    missing = [str(path) for path in artifacts if str(path) not in runner.artifact_audit]
     if missing:
-        raise RuntimeError(f"missing exact raw COFF symbols: {missing}")
+        raise RuntimeError(f"artifact audit is missing object/DLL records: {missing}")
+    incomplete = []
+    for path in artifacts:
+        record = runner.artifact_audit[str(path)]
+        headers_log = record.get("headers_log")
+        symbols_log = record.get("symbols_log")
+        if not headers_log or not (runner.evidence / str(headers_log)).is_file():
+            incomplete.append(str(path) + ":headers")
+        if path.suffix.lower() == ".obj" and (
+            not symbols_log or not (runner.evidence / str(symbols_log)).is_file()
+        ):
+            incomplete.append(str(path) + ":symbols")
+    if incomplete:
+        raise RuntimeError(f"artifact audit is missing header/symbol records: {incomplete}")
+    wrong = [
+        str(path)
+        for path in artifacts
+        if runner.artifact_audit[str(path)]["machine"] != expected_machine
+    ]
+    if wrong:
+        raise RuntimeError(f"artifact audit contains wrong machine values: {wrong}")
+
+
+def assert_acceptance_tables(tables: dict[str, object], arch: str) -> None:
+    expected_exports = {
+        name: expected_coff_symbol(arch, name) for name in EXPORT_ARGUMENT_BYTES
+    }
+    expected_callbacks = {
+        name: expected_coff_symbol(arch, name) for name in CALLBACK_ARGUMENT_BYTES
+    }
+    if tables.get("export_coff_expected") != expected_exports:
+        raise RuntimeError("acceptance record export expected COFF table is incomplete")
+    if tables.get("export_coff_actual") != expected_exports:
+        raise RuntimeError("acceptance record export actual COFF table differs")
+    if tables.get("callback_coff_expected") != expected_callbacks:
+        raise RuntimeError("acceptance record callback expected COFF table is incomplete")
+    if tables.get("callback_coff_actual") != expected_callbacks:
+        raise RuntimeError("acceptance record callback actual COFF table differs")
+    expected_pe = {
+        name: {
+            "public_name": name,
+            "allowed_internal_targets": [None, expected_coff_symbol(arch, name)],
+        }
+        for name in EXPORT_ARGUMENT_BYTES
+    }
+    actual_pe = tables.get("export_pe_actual")
+    if tables.get("export_pe_expected") != expected_pe or not isinstance(actual_pe, dict):
+        raise RuntimeError("acceptance record PE export tables are incomplete")
+    if set(actual_pe) != set(expected_pe):
+        raise RuntimeError("acceptance record PE export actual table has missing/extra entries")
+    for name, expected in expected_pe.items():
+        actual = actual_pe[name]
+        if not isinstance(actual, dict) or actual.get("public_name") != name:
+            raise RuntimeError(f"acceptance record PE public name differs: {name}")
+        if actual.get("internal_target") not in expected["allowed_internal_targets"]:
+            raise RuntimeError(f"acceptance record PE internal target differs: {name}")
+    callbacks_pe = tables.get("callback_pe_exports")
+    if callbacks_pe != {name: "not_applicable_static_target" for name in CALLBACK_ARGUMENT_BYTES}:
+        raise RuntimeError("acceptance record callback PE applicability is incomplete")
+
+
+def assert_def_alias_evasion(exports_text: str, symbols_text: str) -> str:
+    """Prove PE normalization hid the wrong public spelling but COFF caught it."""
+    controlled_exports = {
+        name: internal
+        for name, internal in pe_exports(exports_text).items()
+        if bridge_namespace_symbols({name})
+    }
+    if set(controlled_exports) != {"archive_bridge_v1_handshake"}:
+        raise RuntimeError(
+            ".def evasion did not hide the decorated PE name exactly: "
+            f"{controlled_exports}"
+        )
+    alias_internal = controlled_exports["archive_bridge_v1_handshake"]
+    if alias_internal not in (None, "_archive_bridge_v1_handshake@8"):
+        raise RuntimeError(f".def evasion exposed an unexpected internal target: {alias_internal}")
+    try:
+        assert_object_symbols(
+            symbols_text,
+            "x86",
+            {"archive_bridge_v1_handshake"},
+        )
+    except RuntimeError as error:
+        rejection = str(error)
+        if "_archive_bridge_v1_handshake@8" not in rejection:
+            raise RuntimeError("raw COFF rejection omitted the wrong stdcall symbol") from error
+        return rejection
+    raise RuntimeError("raw COFF exact checker accepted .def alias evasion")
 
 
 def write_sources(work: pathlib.Path, header: str) -> str:
@@ -512,37 +731,44 @@ def compile_diagnostic_sweep(
                 str(root / "rust/bridge/archive_bridge_v1.cpp"),
                 "/Fo" + str(work / "current-source.obj"),
             ],
+            work / "current-source.obj",
         ),
         (
             "diagnostic-typecheck-c",
             ["cl", "/nologo", "/c", "/TC", "/Gr", "/W4", "/WX",
              str(work / "typecheck.c"), "/Fo" + str(work / "typecheck-c.obj")],
+            work / "typecheck-c.obj",
         ),
         (
             "diagnostic-typecheck-cpp",
             ["cl", "/nologo", "/c", "/TP", "/Gr", "/W4", "/WX", "/EHsc",
              str(work / "typecheck.cpp"), "/Fo" + str(work / "typecheck-cpp.obj")],
+            work / "typecheck-cpp.obj",
         ),
         (
             "diagnostic-probe",
             ["cl", "/nologo", "/c", "/TP", "/Gr", "/W4", "/WX", "/EHsc",
              str(work / "probe.cpp"), "/Fo" + str(work / "probe.obj")],
+            work / "probe.obj",
         ),
         (
             "diagnostic-c-caller",
             ["cl", "/nologo", "/c", "/TC", "/Gr", "/W4", "/WX", "/Od", "/RTC1",
              str(work / "caller.c"), "/Fo" + str(work / "caller.obj")],
+            work / "caller.obj",
         ),
     )
     failures: list[str] = []
     summary: list[str] = []
-    for name, command in commands:
+    for name, command, artifact in commands:
         proc = runner.run(name, command, cwd=work, expected=None)
         diagnostics = sorted(set(re.findall(r"\bC\d{4}\b", proc.stdout)))
         diagnostic_text = ",".join(diagnostics) if diagnostics else "none"
         summary.append(f"{name}: exit_code={proc.returncode}; diagnostics={diagnostic_text}")
         if proc.returncode != 0:
             failures.append(f"{name} [{diagnostic_text}]")
+        elif artifact.is_file():
+            audit_artifact(runner, name, artifact, arch, symbols=True)
     (runner.evidence / "compile-diagnostic-summary.txt").write_text(
         "\n".join(summary) + "\n", encoding="utf-8"
     )
@@ -572,9 +798,8 @@ def compile_current_source(root: pathlib.Path, work: pathlib.Path, arch: str, ru
         "/DARCHIVE_BRIDGE_V1_HEADER_SHA256_HEX=\"" + FROZEN_HEADER_SHA256 + "\"",
         "/DARCHIVE_BRIDGE_V1_BUILD_SHA256_HEX=\"" + ("0" * 64) + "\"", "/I", str(root), "/I", str(root / "rust/bridge"),
         str(root / "rust/bridge/archive_bridge_v1.cpp"), "/Fo" + str(obj)], cwd=work)
-    symbols = runner.run("current-source-symbols", ["dumpbin", "/symbols", str(obj)], cwd=work).stdout
-    headers = runner.run("current-source-headers", ["dumpbin", "/headers", str(obj)], cwd=work).stdout
-    assert_machine(headers, arch)
+    audit_artifact(runner, "current-source", obj, arch, symbols=True)
+    symbols = (runner.evidence / "current-source-symbols.log").read_text(encoding="utf-8")
     assert_object_symbols(symbols, arch, CURRENT_EXPORTS)
 
 
@@ -594,32 +819,71 @@ def positive_lane(root: pathlib.Path, output: pathlib.Path, arch: str, runner: E
     runner.run("typecheck-c", ["cl", "/nologo", "/c", "/TC", "/Gr", "/W4", "/WX", str(work / "typecheck.c"), "/Fo" + str(typecheck_c)], cwd=work)
     runner.run("typecheck-cpp", ["cl", "/nologo", "/c", "/TP", "/Gr", "/W4", "/WX", "/EHsc", str(work / "typecheck.cpp"), "/Fo" + str(typecheck_cpp)], cwd=work)
     for name, artifact in (("typecheck-c", typecheck_c), ("typecheck-cpp", typecheck_cpp)):
-        headers = runner.run(name + "-headers", ["dumpbin", "/headers", str(artifact)], cwd=work).stdout
-        assert_machine(headers, arch)
-        runner.run(name + "-symbols", ["dumpbin", "/symbols", str(artifact)], cwd=work)
-    callback_dump = runner.run("callback-target-symbols", ["dumpbin", "/symbols", str(typecheck_c)], cwd=work).stdout
+        audit_artifact(runner, name, artifact, arch, symbols=True)
+    callback_dump = (runner.evidence / "typecheck-c-symbols.log").read_text(encoding="utf-8")
     callback_symbols = defined_symbols(callback_dump)
     expected_callbacks = {expected_coff_symbol(arch, name) for name in CALLBACK_ARGUMENT_BYTES}
-    if not expected_callbacks.issubset(callback_symbols):
-        raise RuntimeError(f"missing callback target symbols: {sorted(expected_callbacks - callback_symbols)}")
+    actual_callbacks = convention_symbols(callback_symbols, CALLBACK_ARGUMENT_BYTES)
+    if actual_callbacks != expected_callbacks:
+        raise RuntimeError(
+            "callback target COFF symbol set mismatch: "
+            f"missing={sorted(expected_callbacks - actual_callbacks)} "
+            f"extra={sorted(actual_callbacks - expected_callbacks)}"
+        )
     probe_obj = work / "probe.obj"
     runner.run("probe-compile", ["cl", "/nologo", "/c", "/TP", "/Gr", "/W4", "/WX", "/EHsc", str(work / "probe.cpp"), "/Fo" + str(probe_obj)], cwd=work)
-    symbols = runner.run("probe-symbols", ["dumpbin", "/symbols", str(probe_obj)], cwd=work).stdout
-    assert_object_symbols(symbols, arch, EXPORT_ARGUMENT_BYTES)
+    audit_artifact(runner, "probe", probe_obj, arch, symbols=True)
+    symbols = (runner.evidence / "probe-symbols.log").read_text(encoding="utf-8")
+    actual_export_coff = assert_object_symbols(symbols, arch, EXPORT_ARGUMENT_BYTES)
     dll = work / "archive_bridge_v1_cc_probe.dll"
     lib = work / "archive_bridge_v1_cc_probe.lib"
     runner.run("probe-link", ["link", "/nologo", "/dll", "/noentry", str(probe_obj), "/out:" + str(dll), "/implib:" + str(lib)], cwd=work)
-    headers = runner.run("probe-dll-headers", ["dumpbin", "/headers", str(dll)], cwd=work).stdout
-    assert_machine(headers, arch)
+    audit_artifact(runner, "probe-dll", dll, arch, symbols=False)
     exports = runner.run("probe-exports", ["dumpbin", "/exports", str(dll)], cwd=work).stdout
-    export_names = pe_export_names(exports)
-    for name in EXPORT_ARGUMENT_BYTES:
-        if name not in export_names:
-            raise RuntimeError(f"missing PE export {name}")
-    public = {name for name in export_names if name.startswith("archive_bridge_v1_")}
-    if public != set(EXPORT_ARGUMENT_BYTES):
-        raise RuntimeError(f"unexpected archive_bridge_v1 PE exports: {sorted(public)}")
-    runner.run("c-caller-compile", ["cl", "/nologo", "/TC", "/Gr", "/W4", "/WX", "/Od", "/RTC1", str(work / "caller.c"), "/Fe:" + str(work / "c-caller.exe")], cwd=work)
+    parsed_exports = pe_exports(exports)
+    controlled_pe = {
+        name: internal
+        for name, internal in parsed_exports.items()
+        if bridge_namespace_symbols({name})
+    }
+    if set(controlled_pe) != set(EXPORT_ARGUMENT_BYTES):
+        raise RuntimeError(
+            "archive_bridge_v1 PE export set mismatch: "
+            f"missing={sorted(set(EXPORT_ARGUMENT_BYTES) - set(controlled_pe))} "
+            f"extra={sorted(set(controlled_pe) - set(EXPORT_ARGUMENT_BYTES))}"
+        )
+    runner.acceptance_tables = {
+        "export_coff_expected": {
+            name: expected_coff_symbol(arch, name) for name in EXPORT_ARGUMENT_BYTES
+        },
+        "export_coff_actual": actual_export_coff,
+        "export_pe_expected": {
+            name: {
+                "public_name": name,
+                "allowed_internal_targets": [None, expected_coff_symbol(arch, name)],
+            }
+            for name in EXPORT_ARGUMENT_BYTES
+        },
+        "export_pe_actual": {
+            name: {"public_name": name, "internal_target": internal}
+            for name, internal in controlled_pe.items()
+        },
+        "callback_coff_expected": {
+            name: expected_coff_symbol(arch, name) for name in CALLBACK_ARGUMENT_BYTES
+        },
+        "callback_coff_actual": {
+            name: expected_coff_symbol(arch, name) for name in CALLBACK_ARGUMENT_BYTES
+        },
+        "callback_pe_exports": {
+            name: "not_applicable_static_target" for name in CALLBACK_ARGUMENT_BYTES
+        },
+        "machine": "8664" if arch == "amd64" else "14C",
+    }
+    assert_acceptance_tables(runner.acceptance_tables, arch)
+    caller_obj = work / "c-caller.obj"
+    runner.run("c-caller-compile", ["cl", "/nologo", "/c", "/TC", "/Gr", "/W4", "/WX", "/Od", "/RTC1", str(work / "caller.c"), "/Fo" + str(caller_obj)], cwd=work)
+    audit_artifact(runner, "c-caller", caller_obj, arch, symbols=True)
+    runner.run("c-caller-link", ["link", "/nologo", str(caller_obj), "/out:" + str(work / "c-caller.exe")], cwd=work)
     runner.run("c-caller-run", [str(work / "c-caller.exe"), str(dll.resolve())], cwd=work)
     target = "x86_64-pc-windows-msvc" if arch == "amd64" else "i686-pc-windows-msvc"
     runner.run("rust-caller-compile", ["rustc", "+1.97.1", "--target", target, str(work / "caller.rs"), "-L", "native=" + str(work), "-o", str(work / "rust-caller.exe")], cwd=work)
@@ -636,6 +900,13 @@ def positive_lane(root: pathlib.Path, output: pathlib.Path, arch: str, runner: E
             write_sources(case, mutated_header)
             runner.run("amd64-nondiscriminator-" + mutation, ["cl", "/nologo", "/c", "/TC", "/Gr", "/W4", "/WX",
                 str(case / "typecheck.c"), "/Fo" + str(case / "typecheck.obj")], cwd=case)
+            audit_artifact(
+                runner,
+                "amd64-nondiscriminator-" + mutation,
+                case / "typecheck.obj",
+                arch,
+                symbols=True,
+            )
         (runner.evidence / "amd64-convention-collapse.txt").write_text(
             "PLATFORM_FACT: AMD64 accepted omitted/default, __stdcall, and __cdecl ordinary conventions; this is not negative-control evidence.\n",
             encoding="utf-8",
@@ -689,26 +960,28 @@ static int __cdecl rtc_handler(int t,const wchar_t*f,int l,const wchar_t*m,const
 
 
 def runtime_negative_compile_diagnostic_sweep(
-    base: pathlib.Path, runner: EvidenceRunner
+    base: pathlib.Path, runner: EvidenceRunner, arch: str = "x86"
 ) -> None:
     """Compile every runtime-negative translation unit before formal execution."""
     commands = (
-        ("runtime-diagnostic-fastcall-dll", ["cl", "/nologo", "/c", "/TC", "/Gr", "/W4", "/WX", str(base / "fastcall-dll.c"), "/Fo" + str(base / "diagnostic-fastcall-dll.obj")]),
-        ("runtime-diagnostic-fastcall-caller", ["cl", "/nologo", "/c", "/TC", "/Gd", "/W4", "/WX", "/Od", "/RTC1", str(base / "fastcall-caller.c"), "/Fo" + str(base / "diagnostic-fastcall-caller.obj")]),
-        ("runtime-diagnostic-stdcall-dll", ["cl", "/nologo", "/c", "/TC", "/Gz", "/W4", "/WX", str(base / "stdcall-dll.c"), "/Fo" + str(base / "diagnostic-stdcall-dll.obj")]),
-        ("runtime-diagnostic-stdcall-caller", ["cl", "/nologo", "/c", "/TC", "/Gd", "/W4", "/WX", "/Od", "/RTC1", str(base / "stdcall-caller.c"), "/Fo" + str(base / "diagnostic-stdcall-caller.obj")]),
-        ("runtime-diagnostic-callback-dll", ["cl", "/nologo", "/c", "/TC", "/Gd", "/W4", "/WX", "/Od", "/RTC1", str(base / "callback-dll.c"), "/Fo" + str(base / "diagnostic-callback-dll.obj")]),
-        ("runtime-diagnostic-callback-caller", ["cl", "/nologo", "/c", "/TC", "/Gd", "/W4", "/WX", str(base / "callback-caller.c"), "/Fo" + str(base / "diagnostic-callback-caller.obj")]),
+        ("runtime-diagnostic-fastcall-dll", ["cl", "/nologo", "/c", "/TC", "/Gr", "/W4", "/WX", str(base / "fastcall-dll.c"), "/Fo" + str(base / "diagnostic-fastcall-dll.obj")], base / "diagnostic-fastcall-dll.obj"),
+        ("runtime-diagnostic-fastcall-caller", ["cl", "/nologo", "/c", "/TC", "/Gd", "/W4", "/WX", "/Od", "/RTC1", str(base / "fastcall-caller.c"), "/Fo" + str(base / "diagnostic-fastcall-caller.obj")], base / "diagnostic-fastcall-caller.obj"),
+        ("runtime-diagnostic-stdcall-dll", ["cl", "/nologo", "/c", "/TC", "/Gz", "/W4", "/WX", str(base / "stdcall-dll.c"), "/Fo" + str(base / "diagnostic-stdcall-dll.obj")], base / "diagnostic-stdcall-dll.obj"),
+        ("runtime-diagnostic-stdcall-caller", ["cl", "/nologo", "/c", "/TC", "/Gd", "/W4", "/WX", "/Od", "/RTC1", str(base / "stdcall-caller.c"), "/Fo" + str(base / "diagnostic-stdcall-caller.obj")], base / "diagnostic-stdcall-caller.obj"),
+        ("runtime-diagnostic-callback-dll", ["cl", "/nologo", "/c", "/TC", "/Gd", "/W4", "/WX", "/Od", "/RTC1", str(base / "callback-dll.c"), "/Fo" + str(base / "diagnostic-callback-dll.obj")], base / "diagnostic-callback-dll.obj"),
+        ("runtime-diagnostic-callback-caller", ["cl", "/nologo", "/c", "/TC", "/Gd", "/W4", "/WX", str(base / "callback-caller.c"), "/Fo" + str(base / "diagnostic-callback-caller.obj")], base / "diagnostic-callback-caller.obj"),
     )
     failures: list[str] = []
     summary: list[str] = []
-    for name, command in commands:
+    for name, command, artifact in commands:
         proc = runner.run(name, command, cwd=base, expected=None)
         diagnostics = sorted(set(re.findall(r"\bC\d{4}\b", proc.stdout)))
         diagnostic_text = ",".join(diagnostics) if diagnostics else "none"
         summary.append(f"{name}: exit_code={proc.returncode}; diagnostics={diagnostic_text}")
         if proc.returncode != 0:
             failures.append(f"{name} [{diagnostic_text}]")
+        elif artifact.is_file():
+            audit_artifact(runner, name, artifact, arch, symbols=True)
     (runner.evidence / "runtime-negative-compile-diagnostic-summary.txt").write_text(
         "\n".join(summary) + "\n", encoding="utf-8"
     )
@@ -767,24 +1040,33 @@ def runtime_negative_controls(output: pathlib.Path, runner: EvidenceRunner) -> N
 
     runtime_negative_compile_diagnostic_sweep(base, runner)
 
-    runner.run("runtime-fastcall-dll", ["cl", "/nologo", "/TC", "/Gr", "/W4", "/WX", "/LD", str(base / "fastcall-dll.c"), "/Fe:" + str(base / "fastcall.dll")], cwd=base)
+    runner.run("runtime-fastcall-dll", ["cl", "/nologo", "/TC", "/Gr", "/W4", "/WX", "/LD", str(base / "fastcall-dll.c"), "/Fo" + str(base / "fastcall-dll.obj"), "/Fe:" + str(base / "fastcall.dll")], cwd=base)
+    audit_artifact(runner, "runtime-fastcall-dll-object", base / "fastcall-dll.obj", "x86", symbols=True)
+    audit_artifact(runner, "runtime-fastcall-dll", base / "fastcall.dll", "x86", symbols=False)
     fast_exports_text = runner.run("runtime-fastcall-exports", ["dumpbin", "/exports", str(base / "fastcall.dll")], cwd=base).stdout
     fast_exports = pe_export_names(fast_exports_text)
     if "@archive_bridge_v1_handshake@8" not in fast_exports or "archive_bridge_v1_handshake" in fast_exports:
         raise RuntimeError("fastcall mutation did not expose the expected decorated PE name")
-    runner.run("runtime-fastcall-caller", ["cl", "/nologo", "/TC", "/Gd", "/W4", "/WX", "/Od", "/RTC1", str(base / "fastcall-caller.c"), "/Fe:" + str(base / "fastcall-caller.exe")], cwd=base)
+    runner.run("runtime-fastcall-caller", ["cl", "/nologo", "/TC", "/Gd", "/W4", "/WX", "/Od", "/RTC1", str(base / "fastcall-caller.c"), "/Fo" + str(base / "fastcall-caller.obj"), "/Fe:" + str(base / "fastcall-caller.exe")], cwd=base)
+    audit_artifact(runner, "runtime-fastcall-caller", base / "fastcall-caller.obj", "x86", symbols=True)
     require_runtime_failure(runner, "runtime-fastcall-run", [str(base / "fastcall-caller.exe"), str(base / "fastcall.dll")], base, 86, "EXPECTED_ARGUMENT_SENTINEL_MISMATCH")
 
-    runner.run("runtime-stdcall-dll", ["cl", "/nologo", "/TC", "/Gz", "/W4", "/WX", "/LD", str(base / "stdcall-dll.c"), "/Fe:" + str(base / "stdcall.dll")], cwd=base)
+    runner.run("runtime-stdcall-dll", ["cl", "/nologo", "/TC", "/Gz", "/W4", "/WX", "/LD", str(base / "stdcall-dll.c"), "/Fo" + str(base / "stdcall-dll.obj"), "/Fe:" + str(base / "stdcall.dll")], cwd=base)
+    audit_artifact(runner, "runtime-stdcall-dll-object", base / "stdcall-dll.obj", "x86", symbols=True)
+    audit_artifact(runner, "runtime-stdcall-dll", base / "stdcall.dll", "x86", symbols=False)
     std_exports_text = runner.run("runtime-stdcall-exports", ["dumpbin", "/exports", str(base / "stdcall.dll")], cwd=base).stdout
     std_exports = pe_export_names(std_exports_text)
     if "_archive_bridge_v1_close@20" not in std_exports or "archive_bridge_v1_close" in std_exports:
         raise RuntimeError("stdcall mutation did not expose the expected decorated PE name")
-    runner.run("runtime-stdcall-caller", ["cl", "/nologo", "/TC", "/Gd", "/W4", "/WX", "/Od", "/RTC1", str(base / "stdcall-caller.c"), "/Fe:" + str(base / "stdcall-caller.exe")], cwd=base)
+    runner.run("runtime-stdcall-caller", ["cl", "/nologo", "/TC", "/Gd", "/W4", "/WX", "/Od", "/RTC1", str(base / "stdcall-caller.c"), "/Fo" + str(base / "stdcall-caller.obj"), "/Fe:" + str(base / "stdcall-caller.exe")], cwd=base)
+    audit_artifact(runner, "runtime-stdcall-caller", base / "stdcall-caller.obj", "x86", symbols=True)
     require_runtime_failure(runner, "runtime-stdcall-run", [str(base / "stdcall-caller.exe"), str(base / "stdcall.dll")], base, 87, "EXPECTED_RTC_STACK_MISMATCH")
 
-    runner.run("runtime-callback-dll", ["cl", "/nologo", "/TC", "/Gd", "/W4", "/WX", "/Od", "/RTC1", "/LD", str(base / "callback-dll.c"), "/Fe:" + str(base / "callback.dll")], cwd=base)
-    runner.run("runtime-callback-caller", ["cl", "/nologo", "/TC", "/Gd", "/W4", "/WX", str(base / "callback-caller.c"), "/Fe:" + str(base / "callback-caller.exe")], cwd=base)
+    runner.run("runtime-callback-dll", ["cl", "/nologo", "/TC", "/Gd", "/W4", "/WX", "/Od", "/RTC1", "/LD", str(base / "callback-dll.c"), "/Fo" + str(base / "callback-dll.obj"), "/Fe:" + str(base / "callback.dll")], cwd=base)
+    audit_artifact(runner, "runtime-callback-dll-object", base / "callback-dll.obj", "x86", symbols=True)
+    audit_artifact(runner, "runtime-callback-dll", base / "callback.dll", "x86", symbols=False)
+    runner.run("runtime-callback-caller", ["cl", "/nologo", "/TC", "/Gd", "/W4", "/WX", str(base / "callback-caller.c"), "/Fo" + str(base / "callback-caller.obj"), "/Fe:" + str(base / "callback-caller.exe")], cwd=base)
+    audit_artifact(runner, "runtime-callback-caller", base / "callback-caller.obj", "x86", symbols=True)
     require_runtime_failure(runner, "runtime-callback-run", [str(base / "callback-caller.exe"), str(base / "callback.dll")], base, 88, "EXPECTED_RTC_STACK_MISMATCH")
 
 
@@ -812,7 +1094,8 @@ def negative_controls(root: pathlib.Path, output: pathlib.Path, runner: Evidence
             continue
         (work / "probe.cpp").write_text(source, encoding="utf-8")
         runner.run(name + "-compile", ["cl", "/nologo", "/c", "/TP", "/Gr", "/W4", "/WX", "/EHsc", str(work / "probe.cpp"), "/Fo" + str(work / "probe.obj")], cwd=work)
-        dump = runner.run(name + "-symbols", ["dumpbin", "/symbols", str(work / "probe.obj")], cwd=work).stdout
+        audit_artifact(runner, name, work / "probe.obj", "x86", symbols=True)
+        dump = (runner.evidence / f"{name}-symbols.log").read_text(encoding="utf-8")
         symbols = raw_symbols(dump)
         if wrong not in symbols or correct in symbols:
             raise RuntimeError(f"{name}: expected wrong symbol {wrong} and absence of {correct}")
@@ -822,19 +1105,20 @@ def negative_controls(root: pathlib.Path, output: pathlib.Path, runner: Evidence
     # COFF evidence.  Build the evasion successfully, then reject its object.
     work = output / "work" / "x86" / "def_alias_evasion"
     work.mkdir(parents=True, exist_ok=True)
-    (work / "alias.c").write_text("__declspec(dllexport) int __stdcall archive_bridge_v1_handshake(void *a, void *b) { return a != b; }\n", encoding="utf-8")
+    (work / "alias.c").write_text("int __stdcall archive_bridge_v1_handshake(void *a, void *b) { return a != b; }\n", encoding="utf-8")
     (work / "alias.def").write_text("LIBRARY archive_bridge_v1_cc_probe_alias\nEXPORTS\n  archive_bridge_v1_handshake=_archive_bridge_v1_handshake@8\n", encoding="utf-8")
     runner.run("def-alias-compile", ["cl", "/nologo", "/c", "/TC", "/Gr", "/W4", "/WX", str(work / "alias.c"), "/Fo" + str(work / "alias.obj")], cwd=work)
+    audit_artifact(runner, "def-alias", work / "alias.obj", "x86", symbols=True)
     runner.run("def-alias-link", ["link", "/nologo", "/dll", "/noentry", str(work / "alias.obj"), "/def:" + str(work / "alias.def"), "/out:" + str(work / "alias.dll")], cwd=work)
+    audit_artifact(runner, "def-alias-dll", work / "alias.dll", "x86", symbols=False)
     exports = runner.run("def-alias-exports", ["dumpbin", "/exports", str(work / "alias.dll")], cwd=work).stdout
-    symbols_text = runner.run("def-alias-symbols", ["dumpbin", "/symbols", str(work / "alias.obj")], cwd=work).stdout
-    symbols = raw_symbols(symbols_text)
-    if "archive_bridge_v1_handshake" not in pe_export_names(exports):
-        raise RuntimeError(".def evasion did not normalize the PE export as intended")
-    if "_archive_bridge_v1_handshake@8" not in symbols or "_archive_bridge_v1_handshake" in symbols:
-        raise RuntimeError("raw COFF validator did not reject .def alias evasion")
+    symbols_text = (runner.evidence / "def-alias-symbols.log").read_text(encoding="utf-8")
+    rejection = assert_def_alias_evasion(exports, symbols_text)
     (runner.evidence / "def-alias-evasion-result.txt").write_text(
-        "EXPECTED_REJECTION: .def produced the public PE spelling, but raw COFF retained _archive_bridge_v1_handshake@8 and the cdecl object check rejected it.\n",
+        "EXPECTED_REJECTION: PE table contained only archive_bridge_v1_handshake; "
+        "raw COFF exact checker rejected _archive_bridge_v1_handshake@8. "
+        + rejection
+        + "\n",
         encoding="utf-8",
     )
 
@@ -858,7 +1142,14 @@ def negative_controls(root: pathlib.Path, output: pathlib.Path, runner: Evidence
         "/Fo" + str(current / "mutated.obj")]
     proc = runner.run("current-source-definition-mutation", command, cwd=current, expected=None)
     if proc.returncode == 0:
-        dump = runner.run("current-source-definition-mutation-symbols", ["dumpbin", "/symbols", str(current / "mutated.obj")], cwd=current).stdout
+        audit_artifact(
+            runner,
+            "current-source-definition-mutation",
+            current / "mutated.obj",
+            "x86",
+            symbols=True,
+        )
+        dump = (runner.evidence / "current-source-definition-mutation-symbols.log").read_text(encoding="utf-8")
         if "@archive_bridge_v1_handshake@8" not in raw_symbols(dump):
             raise RuntimeError("current-source definition mutation passed silently")
         outcome = "compiler accepted generated copy; raw COFF exposed @archive_bridge_v1_handshake@8"
@@ -960,7 +1251,9 @@ def run_lane(root: pathlib.Path, output: pathlib.Path, arch: str) -> None:
     positive_lane(root, output, arch, runner)
     if arch == "x86":
         negative_controls(root, output, runner)
-    runner.write_manifest({"schema": 1, "target_name": "msvc-abi-convention-probe", "not_product": True,
+    assert_complete_artifact_audit(work, runner, arch)
+    assert_acceptance_tables(runner.acceptance_tables, arch)
+    runner.write_manifest({"schema": 2, "target_name": "msvc-abi-convention-probe", "not_product": True,
                            "architecture": arch, "runner_machine": machine, "processor_architecture": processor,
                            "source_commit": source_commit, "source_tree_clean": True, "hashes": hashes,
                            "target_inputs": ["docs/ai-migration/qualification/archive_bridge_v1.h",
@@ -975,31 +1268,62 @@ def run_lane(root: pathlib.Path, output: pathlib.Path, arch: str) -> None:
 
 def finalize(output: pathlib.Path) -> None:
     evidence = output / "evidence"
+    manifests: dict[str, dict[str, Any]] = {}
     for arch in ("amd64", "x86"):
         manifest = evidence / arch / "manifest.json"
         if not manifest.is_file():
             raise RuntimeError(f"missing lane manifest: {manifest}")
+        manifests[arch] = json.loads(manifest.read_text(encoding="utf-8"))
+        assert_acceptance_tables(manifests[arch]["acceptance_tables"], arch)
     runnable_suffixes = {".dll", ".exe", ".lib", ".exp", ".obj", ".pdb", ".ilk"}
     work = output / "work"
     if work.exists():
         for path in work.rglob("*"):
             if path.is_file() and path.suffix.lower() in runnable_suffixes:
                 path.unlink()
-    digest_lines = []
-    for path in sorted(evidence.rglob("*")):
-        if path.is_file() and path.name != "SHA256SUMS.txt":
-            digest_lines.append(f"{sha256(path)}  {path.relative_to(evidence).as_posix()}")
-    (evidence / "SHA256SUMS.txt").write_text("\n".join(digest_lines) + "\n", encoding="utf-8")
-    summary = (
+    summary_lines = [
         "MSVC ABI convention qualification (non-product)\n"
         "AMD64 normative lane: PASS\n"
         "x86 compiler-semantic diagnostic lane (not a product target): PASS\n"
         "Failure injection: omitted call macro, callback __stdcall, export __stdcall, and .def alias evasion all rejected.\n"
         "The retained facade was not built. The fail-closed !ERROR guard remains authoritative.\n"
         "Windows facade qualification remains unauthorized and qualified_operations is 0.\n"
-        "This evidence does not qualify archive semantics, codecs, encryption, passwords, filesystem behavior, lifetimes, cancellation, registration, GUI, packaging, or release behavior.\n"
-    )
-    (evidence / "SUMMARY.txt").write_text(summary, encoding="utf-8")
+        "This evidence does not qualify archive semantics, codecs, encryption, passwords, filesystem behavior, lifetimes, cancellation, registration, GUI, packaging, or release behavior.\n",
+    ]
+    for arch in ("amd64", "x86"):
+        manifest = manifests[arch]
+        tables = manifest["acceptance_tables"]
+        audit = manifest["artifact_audit"]
+        summary_lines.append(
+            f"\n{arch.upper()} acceptance record: machine={tables['machine']}; "
+            f"audited objects/DLLs={len(audit)}\n"
+        )
+        summary_lines.append("Audited object/DLL machine values:\n")
+        for path, record in sorted(audit.items()):
+            summary_lines.append(
+                f"  {path}: {record['kind']} machine={record['machine']}\n"
+            )
+        summary_lines.append("Exports (expected COFF | actual COFF | expected PE/internal | actual PE/internal):\n")
+        for name in EXPORT_ARGUMENT_BYTES:
+            summary_lines.append(
+                f"  {name}: {tables['export_coff_expected'][name]} | "
+                f"{tables['export_coff_actual'][name]} | "
+                f"{tables['export_pe_expected'][name]} | "
+                f"{tables['export_pe_actual'][name]}\n"
+            )
+        summary_lines.append("Callback targets (expected COFF | actual COFF | PE):\n")
+        for name in CALLBACK_ARGUMENT_BYTES:
+            summary_lines.append(
+                f"  {name}: {tables['callback_coff_expected'][name]} | "
+                f"{tables['callback_coff_actual'][name]} | "
+                f"{tables['callback_pe_exports'][name]}\n"
+            )
+    (evidence / "SUMMARY.txt").write_text("".join(summary_lines), encoding="utf-8")
+    digest_lines = []
+    for path in sorted(evidence.rglob("*")):
+        if path.is_file() and path.name != "SHA256SUMS.txt":
+            digest_lines.append(f"{sha256(path)}  {path.relative_to(evidence).as_posix()}")
+    (evidence / "SHA256SUMS.txt").write_text("\n".join(digest_lines) + "\n", encoding="utf-8")
 
 
 def parse_args() -> argparse.Namespace:

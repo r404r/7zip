@@ -2,6 +2,7 @@
 """Host-independent tests for the non-product MSVC ABI probe driver."""
 
 import importlib.util
+import json
 import pathlib
 import subprocess
 import tempfile
@@ -172,6 +173,176 @@ class ProbeDriverTests(unittest.TestCase):
         00B 00000000 SECT3  notype ()    External     | _defined
         """
         self.assertEqual(self.probe.raw_symbols(symbols), {"_defined"})
+
+    def test_exact_symbol_checker_rejects_extra_calling_convention_spelling(self):
+        symbols = """
+        00A 00000000 SECT3  notype ()    External     | _archive_bridge_v1_handshake
+        00B 00000010 SECT3  notype ()    External     | @archive_bridge_v1_handshake@8
+        00C 00000020 SECT3  notype ()    External     | _archive_bridge_v1_surprise
+        00D 00000030 SECT3  notype ()    External     | ?archive_bridge_v1_handshake@@YAHPEAX0@Z
+        """
+        with self.assertRaisesRegex(RuntimeError, "extra=.*@archive_bridge_v1_handshake@8"):
+            self.probe.assert_object_symbols(
+                symbols, "x86", {"archive_bridge_v1_handshake"}
+            )
+
+    def test_pe_parser_retains_internal_target_and_machine_check_fails_closed(self):
+        exports = """
+              1    0 00001000 archive_bridge_v1_handshake = _archive_bridge_v1_handshake
+        """
+        self.assertEqual(
+            self.probe.pe_exports(exports),
+            {"archive_bridge_v1_handshake": "_archive_bridge_v1_handshake"},
+        )
+        with self.assertRaisesRegex(RuntimeError, "expected 8664, got 14C"):
+            self.probe.assert_machine("             14C machine (x86)\n", "amd64")
+
+    def test_def_alias_evasion_hides_public_decoration_but_coff_rejects_it(self):
+        exports = """
+              1    0 00001000 archive_bridge_v1_handshake = _archive_bridge_v1_handshake@8
+        """
+        symbols = """
+        00A 00000000 SECT3  notype ()    External     | _archive_bridge_v1_handshake@8
+        """
+        rejection = self.probe.assert_def_alias_evasion(exports, symbols)
+        self.assertIn("extra=['_archive_bridge_v1_handshake@8']", rejection)
+
+        visible_wrong_name = exports + """
+              2    1 00001000 _archive_bridge_v1_handshake@8
+        """
+        with self.assertRaisesRegex(RuntimeError, "did not hide"):
+            self.probe.assert_def_alias_evasion(visible_wrong_name, symbols)
+
+    def acceptance_tables(self, arch):
+        exports = {
+            name: self.probe.expected_coff_symbol(arch, name)
+            for name in self.probe.EXPORT_ARGUMENT_BYTES
+        }
+        callbacks = {
+            name: self.probe.expected_coff_symbol(arch, name)
+            for name in self.probe.CALLBACK_ARGUMENT_BYTES
+        }
+        return {
+            "export_coff_expected": exports,
+            "export_coff_actual": dict(exports),
+            "export_pe_expected": {
+                name: {
+                    "public_name": name,
+                    "allowed_internal_targets": [None, exports[name]],
+                }
+                for name in self.probe.EXPORT_ARGUMENT_BYTES
+            },
+            "export_pe_actual": {
+                name: {"public_name": name, "internal_target": None}
+                for name in self.probe.EXPORT_ARGUMENT_BYTES
+            },
+            "callback_coff_expected": callbacks,
+            "callback_coff_actual": dict(callbacks),
+            "callback_pe_exports": {
+                name: "not_applicable_static_target"
+                for name in self.probe.CALLBACK_ARGUMENT_BYTES
+            },
+            "machine": "8664" if arch == "amd64" else "14C",
+        }
+
+    def test_acceptance_tables_reject_missing_and_extra_actual_entries(self):
+        missing = self.acceptance_tables("x86")
+        del missing["export_coff_actual"]["archive_bridge_v1_close"]
+        with self.assertRaisesRegex(RuntimeError, "export actual COFF"):
+            self.probe.assert_acceptance_tables(missing, "x86")
+
+        extra = self.acceptance_tables("x86")
+        extra["export_pe_actual"]["_archive_bridge_v1_close@20"] = {
+            "public_name": "_archive_bridge_v1_close@20",
+            "internal_target": None,
+        }
+        with self.assertRaisesRegex(RuntimeError, "PE export actual"):
+            self.probe.assert_acceptance_tables(extra, "x86")
+
+    def test_artifact_audit_rejects_missing_object_record(self):
+        class FakeRunner:
+            artifact_audit = {}
+
+        with tempfile.TemporaryDirectory() as temp:
+            work = pathlib.Path(temp)
+            (work / "unrecorded.obj").write_bytes(b"not executable evidence")
+            with self.assertRaisesRegex(RuntimeError, "missing object/DLL records"):
+                self.probe.assert_complete_artifact_audit(
+                    work, FakeRunner(), "x86"
+                )
+
+    def test_artifact_audit_rejects_missing_header_or_symbol_log(self):
+        class FakeRunner:
+            def __init__(self, evidence):
+                self.evidence = evidence
+                self.artifact_audit = {}
+
+        with tempfile.TemporaryDirectory() as temp:
+            work = pathlib.Path(temp)
+            runner = FakeRunner(work)
+            obj = work / "recorded.obj"
+            obj.write_bytes(b"not executable evidence")
+            runner.artifact_audit[str(obj.resolve())] = {
+                "kind": "object",
+                "machine": "14C",
+            }
+            with self.assertRaisesRegex(RuntimeError, "header/symbol records"):
+                self.probe.assert_complete_artifact_audit(
+                    work, runner, "x86"
+                )
+
+    def test_artifact_audit_rejects_persisted_wrong_machine(self):
+        class FakeRunner:
+            def __init__(self, evidence):
+                self.evidence = evidence
+                self.artifact_audit = {}
+
+        with tempfile.TemporaryDirectory() as temp:
+            work = pathlib.Path(temp)
+            runner = FakeRunner(work)
+            obj = work / "wrong-machine.obj"
+            obj.write_bytes(b"not executable evidence")
+            (work / "headers.log").write_text("headers", encoding="utf-8")
+            (work / "symbols.log").write_text("symbols", encoding="utf-8")
+            runner.artifact_audit[str(obj.resolve())] = {
+                "kind": "object",
+                "machine": "8664",
+                "headers_log": "headers.log",
+                "symbols_log": "symbols.log",
+            }
+            with self.assertRaisesRegex(RuntimeError, "wrong machine values"):
+                self.probe.assert_complete_artifact_audit(
+                    work, runner, "x86"
+                )
+
+    def test_finalize_publishes_expected_actual_tables_in_summary(self):
+        with tempfile.TemporaryDirectory() as temp:
+            output = pathlib.Path(temp)
+            evidence = output / "evidence"
+            for arch in ("amd64", "x86"):
+                lane = evidence / arch
+                lane.mkdir(parents=True)
+                (lane / "manifest.json").write_text(
+                    json.dumps(
+                        {
+                            "acceptance_tables": self.acceptance_tables(arch),
+                            "artifact_audit": {
+                                "example": {
+                                    "kind": "object",
+                                    "machine": "8664" if arch == "amd64" else "14C",
+                                }
+                            },
+                        }
+                    ),
+                    encoding="utf-8",
+                )
+            self.probe.finalize(output)
+            summary = (evidence / "SUMMARY.txt").read_text(encoding="utf-8")
+            self.assertIn("AMD64 acceptance record: machine=8664", summary)
+            self.assertIn("X86 acceptance record: machine=14C", summary)
+            self.assertIn("archive_bridge_v1_handshake", summary)
+            sums = (evidence / "SHA256SUMS.txt").read_text(encoding="utf-8")
+            self.assertIn("SUMMARY.txt", sums)
 
     def test_compile_diagnostic_sweep_runs_every_translation_unit_before_failing(self):
         class FakeRunner:
