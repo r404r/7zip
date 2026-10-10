@@ -1,0 +1,15 @@
+[package]
+name = "archive-qt"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+archive-app = { path = "../archive-app" }
+archive-domain = { path = "../archive-domain" }
+archive-engine = { path = "../archive-engine" }
+archive-platform = { path = "../archive-platform" }

@@ -1,0 +1,2258 @@
+{
+  "schema_version": 1,
+  "status": "engineering-inventory-not-distribution-approval",
+  "inputs": [
+    {
+      "path": "Asm/arm64/LzmaDecOpt.S",
+      "sha256": "25ee0f34dd5f304ebfce3bb1b016fdee60c876a42e6a90981aa228d59c317552",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "Asm/x86/7zCrcOpt.asm",
+      "sha256": "9e9129aeb1f9cb9cca4ad23b6fa1c81c55bd3ae1f142c9eb610f536fe074f5e8",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "Asm/x86/AesOpt.asm",
+      "sha256": "97ba6ab772d9237ff2cc6dd4dbcab2fb5e202bc481d21ed137bbe35d405451bc",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "Asm/x86/LzFindOpt.asm",
+      "sha256": "f05c4454e14ddcad947488e3d633279c68ca30304eeca782459f3bf4dda5fe72",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "Asm/x86/LzmaDecOpt.asm",
+      "sha256": "bddfb31a59c49c8f25f75d19e7330437d2ca3ba81d9655fa427d7585521a3859",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "Asm/x86/Sha1Opt.asm",
+      "sha256": "a8e961201110816035f396a6741b0a3f2789213fbc1c5203ac29679cfda37526",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "Asm/x86/Sha256Opt.asm",
+      "sha256": "d173fb65c79ac8cb84c244004debbcb54820bf331d3700879a4055a5f52b9f4e",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "Asm/x86/Sort.asm",
+      "sha256": "d3224479344b420ba2b9d039d3c20529129b1295aa3b0d4da12de96b6f0e4f0d",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "Asm/x86/XzCrc64Opt.asm",
+      "sha256": "61023eac48d5a3f1174032529220dbe5ae79056a3d1d289b14a10784f0db70a8",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/7zBuf2.c",
+      "sha256": "bc1ad7f5f33f0e12044991cbcd707549e85bf3d54b8bc171247d1f24057d5b2a",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/7zCrc.c",
+      "sha256": "6c826585a824f991488d16fc4fa236ab6abe317b8f853fea77282e31d5160c54",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/7zCrcOpt.c",
+      "sha256": "df23d84d9297358f401e36c0a0a5b004304f72f588f0f1db346a74d30e10036a",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/7zStream.c",
+      "sha256": "835941df3324d828770bc09749a976bad8449e3733896d51bf102557c9ac0acb",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/Aes.c",
+      "sha256": "f9cd02c597bd27c87b39144911c75ae3f85e9956b2cbae66e532162be22be469",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/AesOpt.c",
+      "sha256": "65974526dac442b2da386dc39ed1827eb1c41f697f646445c47fc2517278927e",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/Alloc.c",
+      "sha256": "b23e008fdaca355bc566e696223655ecf5758e0233d644449946bb7c93127f71",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/Bcj2.c",
+      "sha256": "52f5c6bbaf512f867fe46a378d79888825a5b4e31abbd4c94f007058a890174e",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/Bcj2Enc.c",
+      "sha256": "1a666c3635c862273e2b1437a03c6014f200eceb63c4dab63b2c485ef805b9c0",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/Blake2s.c",
+      "sha256": "2a3471d49057ee07a5e5411ac1ff64de674370c59301ffc9023e551d07fe930c",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/Bra.c",
+      "sha256": "c90cbc0747a406d056daf3d7b2bf05cf88c55529777469db5ca15f754b7c38e8",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/Bra86.c",
+      "sha256": "0925d655955bdd2b7b25a01bbb3d2d395e5bac6d572f2cfd273141d1896af0ec",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/BraIA64.c",
+      "sha256": "29e249368a098988bee5585a7f0225b9067155e46b8e16d606c5e63e274e9c30",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/BwtSort.c",
+      "sha256": "f388f70496d55ba97f30a76b2b1f88ff5f2d02ff7e4b5dc98cfc41cbf9833903",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/CpuArch.c",
+      "sha256": "1e0f166e34946fc7da05647a85d8edeb64038282915e73eef676cd067d6a7527",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/Delta.c",
+      "sha256": "d5b3fad0896c21b428c9803760e537a30b82ed344faa525d39ca9a4b555a80f2",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/DllSecur.c",
+      "sha256": "c8d2dd7123a5d7520398e188adffc2ed6bfa5f156edcefb6dd15bcfc9cd4c268",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/HuffEnc.c",
+      "sha256": "9fd87f852d7d3f9927123fefa549141c942bce31ecd109c3a47c582b7d9b62a1",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/LzFind.c",
+      "sha256": "f73da68845094a85b006a0d2da80b3ecdec92a1ca0f85df637e565c642e8d5ba",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/LzFindMt.c",
+      "sha256": "6b04cd48e97c14a26f01865adde16440160f367e72a7b1ffda8ca084472ae223",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/LzFindOpt.c",
+      "sha256": "c8ac04141e38d825e74984e924842e76fc903d74472dd8354470f23ecbfd853a",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/Lzma2Dec.c",
+      "sha256": "3d691d30e4a1f4b661d56fc483db702167ff6a91781d143a017c793c1860476f",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/Lzma2DecMt.c",
+      "sha256": "9be6852324b9fb6d9f365590a273c9dbeb33f084ed01e2382981033a531f0f5e",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/Lzma2Enc.c",
+      "sha256": "4f53b9c04a7eca3c688b77ad869df26e5ed1d41f7e026295c642398457fbc6cc",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/LzmaDec.c",
+      "sha256": "4e6ec665a6df01f1722e2b2fc36dc5e3aa7c3890e0f8cb11c6a07c9a01f3309b",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/LzmaEnc.c",
+      "sha256": "67f23656339b5e19015acac41acbcf36ea7787a8419907dce91c1dd336a2fb0f",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/Md5.c",
+      "sha256": "0fc0a72915fd916f6a2863e619901239c12f739a11e3c0e10a93d0e384aef756",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/MtCoder.c",
+      "sha256": "bbb952acf0bb36ff2c7d5a79204696a3a7d8ac53ba3588d093541a5e016798d0",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/MtDec.c",
+      "sha256": "0ebeaf78be22e016702865507afbd1c94e6e76dbfd4e1d8a123e4c41e9bdcbcf",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/Ppmd7.c",
+      "sha256": "861cfd68c536ccc2040e1e68c4aeefe6c20982aa4d497a9a18516c35d5a62f3b",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/Ppmd7Dec.c",
+      "sha256": "d6459b7ac7f5287cf7f2c2cb7978ca36840af8f243fda542219566e271018fb7",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/Ppmd7Enc.c",
+      "sha256": "83440732b0eba08376f51ddb144c1ee5ce2cbbf06cec414e0d7c396f607a4e99",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/Ppmd7aDec.c",
+      "sha256": "5abe7e15f1a7fbee814ba5dc606c90be303c9dd2ba643120ebd951e41d12c274",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/Ppmd8.c",
+      "sha256": "7840da8860cb71209520cfa25b24fee1aac997ffc8ecee5f602c3f1bb6dfbe49",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/Ppmd8Dec.c",
+      "sha256": "481cd1477cf93a0b08afb06a424907f510c4ea9206238f74096c9aacb9d3a3f2",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/Ppmd8Enc.c",
+      "sha256": "8d1d2c23efcfa416d23d6686ecda091983119aa978959c3c0aa6a49359fef074",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/Sha1.c",
+      "sha256": "6c767a47face66a064dc0402f6e526bb3b9180d1a583f707d98101ef61398a03",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/Sha1Opt.c",
+      "sha256": "78546a5bc7b0e51963ca8389a5e5ad375c2e8b08b69434c91b09ef1e4647724b",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/Sha256.c",
+      "sha256": "4c7422ada8bb382f69eea7622951fc8391ca8bef97bb8a7ea9dedcaedd9e5039",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/Sha256Opt.c",
+      "sha256": "2e966144ef46243960cef6921fa2e08d3110cb7549b4cb03baac3e70f48023e6",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/Sha3.c",
+      "sha256": "ad909a245e28ee3ddf3caccb22810faa0399f3e6a7c3401cc52dea46920c2075",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/Sha512.c",
+      "sha256": "4e4a7fe5517a87cac92a08ff5f96a2c62e69b3546ef778ead4edef6f566d123f",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/Sha512Opt.c",
+      "sha256": "74a8a58eadaef679aaea01e266b6e1a73e674242db510268d2a17ab6ce221dd2",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/Sort.c",
+      "sha256": "4be533e494408d88701fa950c5be5c9129260a4ab27a9c3b2b28a6cfaefaa69d",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/SwapBytes.c",
+      "sha256": "270997f50a9496a5fa3ce171d865df08721f781857d23622fbfbb303d845d8bc",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/Threads.c",
+      "sha256": "db0a1f73472032a3e8a41372dd59606f07133c366cc0dd9c4e92e1e12f51e747",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/Xxh64.c",
+      "sha256": "f7f7681eeb0155cd25b65c871d1d6d2497ef8076ae03b957953ac6c47c4a1d2b",
+      "license": "BSD-2-Clause",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/Xz.c",
+      "sha256": "8ab273ec9835c8cbae6faf810647d85430eb156c3184b9afd9b27c01539ff744",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/XzCrc64.c",
+      "sha256": "188d92f49d76a9acd4768e09f4f478caf109d15583c40cbb0660627c54611f8c",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/XzCrc64Opt.c",
+      "sha256": "54aa33b09aa5cf1bf5661c226d30908499c89c0e345eb0b46a6d671ef9808a3f",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/XzDec.c",
+      "sha256": "9a9f9a444edac87ff50891f66a220f1caf1021abbf3a63fae39a3f522a4239c3",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/XzEnc.c",
+      "sha256": "add7b9feca234f636fb3b36717768f90bf13f44ca0d0b9736e6c34a53db66cf0",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/XzIn.c",
+      "sha256": "4ea4d70feb1d9a99c56f5cd252e39c086a639062aa10a54e6af988ca311c976e",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "C/ZstdDec.c",
+      "sha256": "83e016b3e45b2d9a27abb91570ddc732eb1a596c74039f1acdecdac524971ab5",
+      "license": "BSD-3-Clause",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/7zip.mak",
+      "sha256": "6d05c1ecf0955434a6db5662f4e2cc96f34b70fa6bfb31894aaf42dc22e73911",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/7zip_gcc.mak",
+      "sha256": "f517e8ae6127ab766d90b7d801a41e97223db6fcc11378d5d6c2e3058c027bd0",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Aes.mak",
+      "sha256": "a26e6c25b184def0e8f04db14228c9f5fe76cbdcb95b97045aee1a83b0e31f0a",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/7z/7zCompressionMode.cpp",
+      "sha256": "11e6e1e17215463fde1277e5db8439c048883cf17db0fa60c406ec422e9b3ad5",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/7z/7zDecode.cpp",
+      "sha256": "fc128ff7fe6c7c28c4869911767a1513c710f7612c640238f978e7052a702732",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/7z/7zEncode.cpp",
+      "sha256": "28cbb9e3dabfa7c4b4ee29d3c15b44ee99fea0cbd9c55f1b95805eab67544193",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/7z/7zExtract.cpp",
+      "sha256": "189f607ca66658b62f292cdecf7168ccd951d050c8ccc07c23326c079ab4e4c5",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/7z/7zFolderInStream.cpp",
+      "sha256": "e75e60ecfc11d4f5fda912833806e1e80a671308eb7ef7edfc9848f2bfffb3f6",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/7z/7zHandler.cpp",
+      "sha256": "d87d52234a3827807dab3e43ca5e4d3addceac6a2a0b98c3d6a33da52a15c66f",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/7z/7zHandlerOut.cpp",
+      "sha256": "a4f0368896d5f12acf7b4f3c87633f38854abbfee738627609dda55eb35509b4",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/7z/7zHeader.cpp",
+      "sha256": "bd9e621d8e57f9e97b533be461b8249add53619d76e4918f7a17a9bf00372c78",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/7z/7zIn.cpp",
+      "sha256": "7f088363a7032258ac58fed7f4a5f43685cd039f5bd217208f3aa6f447902a97",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/7z/7zOut.cpp",
+      "sha256": "5c4b214737efc80a0615ddc1072d118593539bfd38b287dc9e9b2895b4d13c2c",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/7z/7zProperties.cpp",
+      "sha256": "e57bcecac7de54ec41b704b3aca41cfbe3d7cd55419a4d4afbb10034593ae52d",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/7z/7zRegister.cpp",
+      "sha256": "1f15f44a16ca3dbed01edc21c2b105296f5e4684a238b7c187ec5e486de9fe8f",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/7z/7zSpecStream.cpp",
+      "sha256": "eb136cde35a623be7c75264f6fabfb926c164a74e1cf1b4478ef5cca4a5a03e3",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/7z/7zUpdate.cpp",
+      "sha256": "d8c7a91e9841fd7abbe17e2735398ce8c5a60e4807d63ec5eb313dfc0cb4daab",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/ApfsHandler.cpp",
+      "sha256": "8d8398938f5ec33bc7e89fd88c9ec210e7baa31327e2b4ea379a6066ec3264cf",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/ApmHandler.cpp",
+      "sha256": "6441d2abdc952ce298e38268bfc00c098c1726864f937f7ffe65fcb7e83624d3",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/ArHandler.cpp",
+      "sha256": "c2e3af21d131ff6d7e90465dca6a7d324cd15a4984742208414125cf69f95f77",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/ArchiveExports.cpp",
+      "sha256": "ef2c258d27a99c8b5138305b603ccf92c33194c4497b3a5bb22fc5565b107915",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/ArjHandler.cpp",
+      "sha256": "8fa5ef267201f31a8c139a6d4a0777084f2e77151c8e78000439f92d3e19c18f",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/Base64Handler.cpp",
+      "sha256": "1f544e9e1325a1858a1ebaf30774ea93b6bb70777f9d5bb28765eb75aa982c12",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/Bz2Handler.cpp",
+      "sha256": "79fc7ce2b8b7586e1bed54e71c6613a23b775261a57774309295448da5aa315f",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/Cab/CabBlockInStream.cpp",
+      "sha256": "6accf817131fdeca3dcd186f1aff85887e43b79a9d892b4eb3fb69420ce4fa95",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/Cab/CabHandler.cpp",
+      "sha256": "bcdba007a47567d2c59efa4fb033f05fd636403b9fd4f34ca97a9c9d033b0fba",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/Cab/CabHeader.cpp",
+      "sha256": "367c7486a226b265d479580c70f9f737153582a082a672d475ca893923802169",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/Cab/CabIn.cpp",
+      "sha256": "6a2eb03a33ef239c541914da91887e95eeddf724b5b6a86774e974410494cd75",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/Cab/CabRegister.cpp",
+      "sha256": "7be6f1e8551a5e59b3c06e707cbe960b79cb43c4ee439c9b138d0b50998ca3c9",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/Chm/ChmHandler.cpp",
+      "sha256": "81314a3a66716efa052e5e798dc9f2780ffb554c05fffb20170800f3c651f13d",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/Chm/ChmIn.cpp",
+      "sha256": "ea332fe7539f736c92bc70c446a475eb9ce6d501afbfb18dc116ab919ea8a597",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/ComHandler.cpp",
+      "sha256": "5a2871b0f441752b6e83a641e5a2b815efd21f0c8214c7d6cf4449a9be46e7fe",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/Common/CoderMixer2.cpp",
+      "sha256": "042af03c76506eb0b5c4590ef42fdf64eff078b6b5af27113708a89c63eb4f0d",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/Common/DummyOutStream.cpp",
+      "sha256": "298dfc542e87b3dfaa78002381fd902b8bd5d251a2f8324db9710c8cc0f8e582",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/Common/FindSignature.cpp",
+      "sha256": "9be9d7e8b16e1d2387c86bb8506749d1ab45f496e81cd75772468fc75c6d7509",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/Common/HandlerOut.cpp",
+      "sha256": "997113fbff3e4aeabbd3ab3a138f796cd8035d114387a33556ac9c064c7dd3a8",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/Common/InStreamWithCRC.cpp",
+      "sha256": "e8805eda623d2ec8573ce950b6e04f9364e7eb007d527244dcb8d70e15585cb7",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/Common/ItemNameUtils.cpp",
+      "sha256": "2b9ccd13d1d8c8edab95e76eb4a991fb122cb247f35655569bb487f96398fdf7",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/Common/MultiStream.cpp",
+      "sha256": "a3b5748ec51c57b9b89f1b64a86fb08137f13a1d19795203130ffb51ff5de09f",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/Common/OutStreamWithCRC.cpp",
+      "sha256": "30a3e99bc52cc86a614560e8091f24989abc113200ebfe4476cd1d7798da76e4",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/Common/OutStreamWithSha1.cpp",
+      "sha256": "607994b3dc161008ab40beb70e36353351b81b09a2371bd4fe0a9725d7bba897",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/Common/ParseProperties.cpp",
+      "sha256": "8a2ba8e2f9b8389a772fec5eb65bd1b1a019010997c1d3f7815a8700915b8c7d",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/CpioHandler.cpp",
+      "sha256": "1a19e6e0041f4d369f7f6b7771138131f6cf7dda3047f2747adbadcc4427c511",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/CramfsHandler.cpp",
+      "sha256": "fe7094c8edb5edeb4e1494665e9da72de49fe26f489cea9880dcd95933c877be",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/DeflateProps.cpp",
+      "sha256": "1badd278d4864d75152a7d89a97feaf6005b1e412281d6c017113bcbd501e5f3",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/DllExports2.cpp",
+      "sha256": "d637f845ff9c7d374233422b6bbdb8a067633174e992c8777e8816672dfb97bb",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/DmgHandler.cpp",
+      "sha256": "df388e9f4ec62e4dff173e7b34fe5e6a3c57d7c9d4bcce265269aa4ee9f79925",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/ElfHandler.cpp",
+      "sha256": "2ef77edc37968e2c47efffc788b46eec59c6470c0f4f9090e2e4e5ebd672467d",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/ExtHandler.cpp",
+      "sha256": "847a7ef66219073b14626f6bd33e641288c92d8381cb14335523832b14d25777",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/FatHandler.cpp",
+      "sha256": "e79cb34060c6fe28a6ce8d85ae3532f7848271d43921d594eaadf560dc417de1",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/FlvHandler.cpp",
+      "sha256": "ae273f375e1a290bdd65cc451a23ac7f4bb0dad6128ed6d2756609755e332197",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/GptHandler.cpp",
+      "sha256": "117764c1e0b5e858e03104ae96282b61cc44f371ae824bd99763ada349100e32",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/GzHandler.cpp",
+      "sha256": "715d1267ec2261593ea935a8eb698a32ec845f6bccff49ec3ac60d802335a5ee",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/HandlerCont.cpp",
+      "sha256": "9d42b9778558864b07f4ed099cb415a6e904e71021d64188303bd026f109beff",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/HfsHandler.cpp",
+      "sha256": "b2623be823291c398136030722dcf566c663106445f13bf55ed693a0e926a50f",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/IhexHandler.cpp",
+      "sha256": "383810052ac7f14761f081c584f9df5844cea2c8f2df4adccb11c3d994587851",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/Iso/IsoHandler.cpp",
+      "sha256": "d0c5de80890064825409ef070ab568c04f5016604867571564c46e74d486acc4",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/Iso/IsoHeader.cpp",
+      "sha256": "6bce9b2c0b44eca111522f4b4364b598c54a588b852dff8b7a0eb64c80a742e6",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/Iso/IsoIn.cpp",
+      "sha256": "105f89c95580d73937def06932fda4ce33017f89341598a50d6a04d8680883ad",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/Iso/IsoRegister.cpp",
+      "sha256": "d7f4bd1fbf3c519f81671aadccd8a94358b8474da68ec82cea0e7038a377eb91",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/LpHandler.cpp",
+      "sha256": "cb4ee9075a027b72cd4e6f1d65e2f111604c4cf592a487477dcbdd3ccb49b724",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/LzhHandler.cpp",
+      "sha256": "c122ef8152993f4c3a9a35d9403fa9199ec19f6f64ab6a5486c0efe782f7d983",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/LzmaHandler.cpp",
+      "sha256": "b11513e4545d7ec011a968790c86ea5a38dfdb638874076c8e1f8449acfd9c8a",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/MachoHandler.cpp",
+      "sha256": "9ed77fd026bd829161aa9c0bb93b28316aef3325af6e3e50ea1eb59693952b18",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/MbrHandler.cpp",
+      "sha256": "e87756d0ce49cc49ee51df22c62e1453dd83c1c401d49812bfb982032490528d",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/MslzHandler.cpp",
+      "sha256": "e1e8948568a59ce7d176aac8d91021a535eff57db92c9367bc0992068091e790",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/MubHandler.cpp",
+      "sha256": "085db06635b3da23725adcbedb2511219a473ffe35502120d6626fb8da78905d",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/Nsis/NsisDecode.cpp",
+      "sha256": "85627d9d1d29f4b21ca80099341ceac55d0af08dde6eaad2ad2e3914bff1e9d5",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/Nsis/NsisHandler.cpp",
+      "sha256": "d65b8117eb2e7ec3216d1d68eff1a94f849b430f7bd3ae80aa45ad1eed476fa8",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/Nsis/NsisIn.cpp",
+      "sha256": "5511bebbdfc680d7625d9eb9aa3a81569836a064c5fe691a18b35aac0b74a370",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/Nsis/NsisRegister.cpp",
+      "sha256": "9d161f8cb66714a20c44de7025cca7df3294db1ebc27f4f21498e88cccdda974",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/NtfsHandler.cpp",
+      "sha256": "f57236c17ed409014906b80ca3bcf0f5d4aaaebc2309bcb6eb236b16f9e11399",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/PeHandler.cpp",
+      "sha256": "ccf89a79629bbc020b2d88093ac910dade9c4dd18c622b88fd50365a66b4222d",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/PpmdHandler.cpp",
+      "sha256": "dcd986ccf07935b2c1babd86a1437ebed62739f567b223154bbc890dcde0fe8d",
+      "license": "LicenseRef-Public-Domain",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/QcowHandler.cpp",
+      "sha256": "10c2785f383f7bea7c9ab866f966e0d908165ec332b4fb8d4fcfb7f3b87d7f40",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/Rar/Rar5Handler.cpp",
+      "sha256": "a6665f3d319027211694052d38a7a28c3295f63bf3faab9a78af4bcedb94c072",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/Rar/RarHandler.cpp",
+      "sha256": "1cbb710d24800798829cd90532e744b7cc4f7245e1fcbeba974f7f3a5f23960a",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/RpmHandler.cpp",
+      "sha256": "b124b4bb9ab3e97349e1475dba896236503bd91587000777c9566d8aa78db7c2",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/SparseHandler.cpp",
+      "sha256": "cd87ef059de4be978dc6009910f7bcc913019ccad430d3a0738f1f6f2be5148c",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/SplitHandler.cpp",
+      "sha256": "7bb608a282c5b19e247e1899212ce1c610e25fe07f9b714c35ce6c2587f3e752",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/SquashfsHandler.cpp",
+      "sha256": "81641fe98d2b40a491f47a581106b93dd231c8e190aeb42ce3f68f97dd9f41be",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/SwfHandler.cpp",
+      "sha256": "96abf0a4a22c576e1950ba90efca39927dc335fbf124c3917639e2b2c9b3a7a4",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/Tar/TarHandler.cpp",
+      "sha256": "37fbb582284e76cc6d9955ff20453407875f5e0705fa09b7a5f6ecca20e2b099",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/Tar/TarHandlerOut.cpp",
+      "sha256": "44213e24aca241bd6d6476405a9c5ff3448a3ee7ce5d3c4b4731ce1bf47da2be",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/Tar/TarHeader.cpp",
+      "sha256": "1622f29d08aa6a89f245a22df3a60078df7411835db1074b4bed56aa9355e925",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/Tar/TarIn.cpp",
+      "sha256": "19c9c8ed18a54865519c16281d4ed1f47ef1e66065492be89a550ea06aa34be4",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/Tar/TarOut.cpp",
+      "sha256": "cc4023056a3be2a993fa039aee4d4a0e79e2db3ac1dbebc585c46f3092aeaa99",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/Tar/TarRegister.cpp",
+      "sha256": "0fcd91cc5e70d4ae28da1afea3b9ad76bcf02fd71bdad91f3aaa877d7708b7e5",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/Tar/TarUpdate.cpp",
+      "sha256": "72bd9bf86f639cbb50bd316e856e8a358ae5a290533f13feaa0fdba032305f25",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/Udf/UdfHandler.cpp",
+      "sha256": "d2a0a31bccd99c5ef95790c9ce619e4aaf1febd948250e4f23517b4c481daf7b",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/Udf/UdfIn.cpp",
+      "sha256": "b7f7b4f785af15f029d76a5b07658d36011ccaa05141dab75989237adf2b999b",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/UefiHandler.cpp",
+      "sha256": "1e7930670fb812f61ff96077a900624cba73553ede2bbf7732cf59c36ca0d16a",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/VdiHandler.cpp",
+      "sha256": "cc60d239c2545403dc2ad715a6e0b918347f4dbb637d34ec5b6487393f70aee7",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/VhdHandler.cpp",
+      "sha256": "73b52775937e2d20451dc9a4c87ccd226b728d1e4bc7288169f1b157552377af",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/VhdxHandler.cpp",
+      "sha256": "2956f3c02e39b94db8a47e6321f1dde1244446022ba5c02e79733c35af736fe6",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/VmdkHandler.cpp",
+      "sha256": "ae39767c65a2d0ed4c624c8a7238c9cb5d4cda0671c6e830eff404efef2ebbf3",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/Wim/WimHandler.cpp",
+      "sha256": "651c25a3062e1218c20aebed8f4145526dbb4b850608daa9deaf047db4ef63c2",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/Wim/WimHandlerOut.cpp",
+      "sha256": "147da4eda60f8d962c466aa54e9852eb4d2f7ae67d810132a103c37f55cda8e2",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/Wim/WimIn.cpp",
+      "sha256": "239c60df65f9f6c9025b0d3c0827103a469e8544d0ea62381b19dd81138d9d5f",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/Wim/WimRegister.cpp",
+      "sha256": "28e740f713d03823acd2951933c819bb272d6218d89a8bdec605304b475f721d",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/XarHandler.cpp",
+      "sha256": "82e01081ad8419f8d5970bad955237a3f18367805735b947894ac41a67afd362",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/XzHandler.cpp",
+      "sha256": "3609f536464e589b3954f73758931be6088d961b659206e5391aba4c0a110c8a",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/ZHandler.cpp",
+      "sha256": "43879ff41e569cf5137d4a6876d21576349498f4245e680760bd2caf25125e00",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/Zip/ZipAddCommon.cpp",
+      "sha256": "78cf7d8b18a3e63d5a065ad56c8caa3e8be67d681bfb9e84c5768b14421c338a",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/Zip/ZipHandler.cpp",
+      "sha256": "579287a77ab8213851638c574126e613109a0571701bc4b719fcc572458d0641",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/Zip/ZipHandlerOut.cpp",
+      "sha256": "b13f4ac758abb3c53b5c00587fec3ce5a95c1e80c96f61d451cc9ce6524c09a4",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/Zip/ZipIn.cpp",
+      "sha256": "b1807ef8358b92b541e632064f5f17656a51732f1baf3fb30857baeb186b2f21",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/Zip/ZipItem.cpp",
+      "sha256": "e4e9d21cfda5ece01c220e202b148ac1de916f5d6f4f5d58c7d3c7d1f1cd4720",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/Zip/ZipOut.cpp",
+      "sha256": "81cda2d6d3c0a376353b061e58f5ade1f87fb44515ed0ad144ce89de1dcd1deb",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/Zip/ZipRegister.cpp",
+      "sha256": "3de4a73c7b790e24ccaee553281b712732b7b1c056fec73b4b310b6a95f06a32",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/Zip/ZipUpdate.cpp",
+      "sha256": "83ac37901486089e75912361363e03bec264cee4d221a03b16dfa2b37734fb5b",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Archive/ZstdHandler.cpp",
+      "sha256": "569c306fdf3f80ceec34e817c06baca3ccf4e73df122ff26fca0aa1853c170eb",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Asm.mak",
+      "sha256": "d75b36ed9d64918a698ed198012d56a070222ac4b0854c0fbc741e8a0168e5fc",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Bundles/Alone2/StdAfx.cpp",
+      "sha256": "155da93b09a3f105855419c4932d28dfac0cbeb06c8a942ec2e07ff8b815d6a6",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Bundles/Alone2/makefile",
+      "sha256": "97e65e6fbef0952e063f0d1d94e77cadb1619cf9ed7ffd64adfb12ea55a36d22",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Bundles/Alone2/makefile.gcc",
+      "sha256": "72c6ce7f63e661331f5ff3e95f157ec39256e2a0f05202106a6017b5a718d9a4",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Bundles/Alone2/resource.rc",
+      "sha256": "fb001fc40390b6a4921da64bd09bee6467f1043e7b73294edc046845a8a19cdc",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Bundles/Format7zF/Arc.mak",
+      "sha256": "21bdec7ef04a92dbb7a19e71146929a85a851a6e7a4d992ac9529e963d9bf381",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Bundles/Format7zF/Arc_gcc.mak",
+      "sha256": "f24c12cc78399ffabe87ba27adbf4206ca3aad38607129efc7b4d3670f5ab435",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Bundles/Format7zF/StdAfx.cpp",
+      "sha256": "155da93b09a3f105855419c4932d28dfac0cbeb06c8a942ec2e07ff8b815d6a6",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Bundles/Format7zF/makefile",
+      "sha256": "b41b5344bf293c090251d4951698d8c28e1ed3f0f769d4728a67d4450d6aaff1",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Bundles/Format7zF/makefile.gcc",
+      "sha256": "a8cfd2cc3d6a1dc00f377f21ab68a06faaf13fca7e6fb401e70283eed7c3b079",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Bundles/Format7zF/resource.rc",
+      "sha256": "7b64c567769b1fa05cb079b5b446ebe0b1b11f6e6e29085b5899d1ae906a656a",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Common/CWrappers.cpp",
+      "sha256": "634a4942ebf51f68fe0e66e77d9f9d9794b0e36851604107f905019bd95a28d8",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Common/CreateCoder.cpp",
+      "sha256": "f004457b86d5c6fdfde24d43e7f34affac021c62ff177e6804e440c2eda77967",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Common/FilePathAutoRename.cpp",
+      "sha256": "ad0311a1d498989c21b6a80540f0e8d1d97cd6496092382138f4277f0ef017c7",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Common/FileStreams.cpp",
+      "sha256": "3dd954bf17ec8db80c979171813376a76c5138f42597b6cf9859177f51b17bfc",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Common/FilterCoder.cpp",
+      "sha256": "6b088f057452c9a2fb8719d5cd484e2a4590a66d495fe41c2033bc57fa7332e6",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Common/InBuffer.cpp",
+      "sha256": "7ebce0c2178a26f5396029b80adfcb1955d3650f41effb7aa96f20bf2b66cf10",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Common/InOutTempBuffer.cpp",
+      "sha256": "acd41de73af84fd31fceb71213b26bad287c8e07bd943d1f5bf4cf88bdcf79fd",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Common/LimitedStreams.cpp",
+      "sha256": "c4d3a9b59d7b35579fc9ba7be2a543ab503785c960e75d231a82f31aaaa6cfd5",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Common/LockedStream.cpp",
+      "sha256": "3ecc56d9c2c745e67f7f680b795ba08f8f85e173c3d09df6ce39524395b932a7",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Common/MemBlocks.cpp",
+      "sha256": "9114f9f443fa5e41460e08f95b311ba51d68e51ea5acf03bb1b505f334046388",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Common/MethodId.cpp",
+      "sha256": "bbf09d859a26f10a2786701e9656cddac837952e6067316a1bdede5b75ca8880",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Common/MethodProps.cpp",
+      "sha256": "3d596067c7863690886c563e66bff60ef39349fe067821e6fe8a1b044d887dec",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Common/MultiOutStream.cpp",
+      "sha256": "e21333d46c35c871ef39c970b0c7dba3eb18203fd5b8738519962f7440a8f47e",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Common/OffsetStream.cpp",
+      "sha256": "8eafce5957c22445f4cf2a194d69456790218d3f1e2c19fe3ccd4b550ec16685",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Common/OutBuffer.cpp",
+      "sha256": "f40102cb6a0217c844e44f71bae0367c8c307fdfc5adb7e362c54f05c14babbb",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Common/OutMemStream.cpp",
+      "sha256": "24b28255af51d0ae5037ebce05599152aa3645af7c44381d0bbdb420342902f0",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Common/ProgressMt.cpp",
+      "sha256": "928b84112ba1596ad04396d2e76cb83098e345f6cb7ea48d3d347c53621c67fc",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Common/ProgressUtils.cpp",
+      "sha256": "e7030e7ce90385b1249944af12047d67815a9e2d42af529a2d26917a1fdbc13b",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Common/PropId.cpp",
+      "sha256": "95299871ac4273de3a0e12605adf42b8dd1882a39a561e67704892f70a679182",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Common/StreamBinder.cpp",
+      "sha256": "6175d7379c9754396834515368a10fd64a5371bace0e3127c2acd1af9a885450",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Common/StreamObjects.cpp",
+      "sha256": "c8ffbc43c1cc267098eafc7823b16d5351ebd989f0f175de6fdd4255c634e76d",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Common/StreamUtils.cpp",
+      "sha256": "84278cec91bd90810b64d9d10e69f6d7bc802ff56cb88ea76465e8bca522565c",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Common/UniqBlocks.cpp",
+      "sha256": "56d8b9eec67fde6177f3b31a8876e54d28fcb94a45f68a47d57f76a51bec5e20",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Common/VirtThread.cpp",
+      "sha256": "2c37c092902862f1d4e39204861ef3428b3ad8027021fb1824b0867b1781ade9",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/BZip2Crc.cpp",
+      "sha256": "734414e7bdca6d843343e17b16d2660a2806b8d6c6b675659925999f07647827",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/BZip2Decoder.cpp",
+      "sha256": "44db08f8ae50560bf6e8d2b3562695c3c18ec684a22c6c3a4b2ed01b631af4d5",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/BZip2Encoder.cpp",
+      "sha256": "3cb46fe332c28ebc8651fd56a376aa10f8ecea6285125351480f7ff4e572d559",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/BZip2Register.cpp",
+      "sha256": "d6f352c7874263a4ccd65e5e5d67fc534232ed6c910fe6811deb05205b7f1b61",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/Bcj2Coder.cpp",
+      "sha256": "e9d973dcf8c78772ec72c63a494e58dbb238367fe8a973cad6d9f9e1ee652e05",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/Bcj2Register.cpp",
+      "sha256": "464138ce35b3ed4f4b2224466a4a90ef00315d8f2ac14889925124603c6bc24d",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/BcjCoder.cpp",
+      "sha256": "db4ec67a2c73cf130dfc312fea793d4eb0cf71f98dbed19939e923e06a3be58f",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/BcjRegister.cpp",
+      "sha256": "71a0aede917a055e98a45030089693e091e53e8de445460d0da6cd7e5fd518ab",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/BitlDecoder.cpp",
+      "sha256": "b6f83edd8d56abe264bf252da3ca5b4fa5fb0a0607f5197a061c501e167fb527",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/BranchMisc.cpp",
+      "sha256": "6e142d3f64dad154691f85a2e35f014c5d19196824fd5b13e5d2028228ec90cf",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/BranchRegister.cpp",
+      "sha256": "0c24665cf680327c4d7ac1020a1e9708251a9c2c70988c90de84128d8183b6ca",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/ByteSwap.cpp",
+      "sha256": "f889052b1a45df8bed10d8ec71717c5a02279d40ccda585f4075c5bdd32879e6",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/CodecExports.cpp",
+      "sha256": "4efd0603a316dddb900de91a4a203f6dcc8451afd9f02f12e2baac79f8aa1d48",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/CopyCoder.cpp",
+      "sha256": "9bc6c3589d448bfb233956f11549a5e3cda2f7571f8dadb8b16c668bf9b26ff7",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/CopyRegister.cpp",
+      "sha256": "0e337dc6d1f9c62ac6177b5b22a6e358bb7cbc789d860e4a271199aa7ff21016",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/Deflate64Register.cpp",
+      "sha256": "9026beffe20eea32f16e3490bfd39fac417825026e3e39b7b5445c7c6f15b8fa",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/DeflateDecoder.cpp",
+      "sha256": "286bb6e21316419b564d3f65c18fe16427c4c10d08d64755385f41e07ea855a4",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/DeflateEncoder.cpp",
+      "sha256": "c6ccc0d20bdc896cc22c150f06d9fab496a5992c32d6a21d7aef61b9fbd2497c",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/DeflateRegister.cpp",
+      "sha256": "2876414543ef93533df24fbc31eae2aaae156da54164e8940e0f30c07c6d5313",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/DeltaFilter.cpp",
+      "sha256": "ca8d2f7b88aea73e022a127f638a471ed15ca26a9d17f4af61a527f9bdbc469c",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/ImplodeDecoder.cpp",
+      "sha256": "b9960b13b9d2f9bb886fa534d411ab50baed6719ebfe5246930550446470be7a",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/LzOutWindow.cpp",
+      "sha256": "57a74877ac6dba00e9cee6963f10bdb373a3b47759b3715870c816a06b448c0c",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/LzfseDecoder.cpp",
+      "sha256": "f36f1eeb892053a8083d2f2fbfe3d045d959890dc69828b2c89a968101a51f8f",
+      "license": "BSD-3-Clause",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/LzhDecoder.cpp",
+      "sha256": "5a04a72ab6468ae695d11124a484b03384514c13219a9d3fa4d3b9e4c2d000e2",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/Lzma2Decoder.cpp",
+      "sha256": "7d12eed746a9c254c346dbe3179197c401126673044e22c4ab75269c2083ad52",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/Lzma2Encoder.cpp",
+      "sha256": "10f6059afd444667a21f6ce05b8214b93813c8aadadb634768cd551dfde6eef8",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/Lzma2Register.cpp",
+      "sha256": "185e4dac843d7209b2ae8b51598c7037fa214779a02e8ff14a9bfdad34b02bd9",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/LzmaDecoder.cpp",
+      "sha256": "6e156feca4d17e289037b9866d2a5a9fab3697333a96e856079b4ed767d92f36",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/LzmaEncoder.cpp",
+      "sha256": "3c0a04888dae0cf3c904acfda697e8ce9b55457fc51583cb8bb9a77f330deb94",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/LzmaRegister.cpp",
+      "sha256": "3980e2f6d71e1137627f65aa67d110aa298b2c0214267a76dfe149da0354378a",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/LzmsDecoder.cpp",
+      "sha256": "20ede485abedef236dceacedcbc494d878837f21f41d40e5a4a091579e0a8b94",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/LzxDecoder.cpp",
+      "sha256": "92844d4d58653c746439b79f146128bb8196aca1f9869e43810bffb4341fd5e6",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/PpmdDecoder.cpp",
+      "sha256": "75cf2077fbc683cc523c1b0b6862ead3b9b20a0a1369786359376f7c3d711055",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/PpmdEncoder.cpp",
+      "sha256": "1bf9955b258590419de6d6b1a7a28821c0c9e4ebeb652d7c5400e1ecefc00ab0",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/PpmdRegister.cpp",
+      "sha256": "bb5bbfd2369f6a12b2d7adca0366dee3da434891332d5e72ffcde34911282c39",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/PpmdZip.cpp",
+      "sha256": "958014b725b9635fa526f787378e8f76f6ea525a730bf0ce5781dc5656039831",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/QuantumDecoder.cpp",
+      "sha256": "251b7eab4bcbb76d9e99aab35cece2f6871f6e6a191a28ea1009b113a4908e4a",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/Rar1Decoder.cpp",
+      "sha256": "17728bf83bd61d4bc8c54b2cc13416dfbfccd5c254205e115e43550f9b93c7c3",
+      "license": "LGPL-2.1-or-later AND LicenseRef-unRAR-restriction",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/Rar2Decoder.cpp",
+      "sha256": "9139119359db432d4b80a9230ac6f5bb02a67d2b520edc2a8f59645a15a0b4bf",
+      "license": "LGPL-2.1-or-later AND LicenseRef-unRAR-restriction",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/Rar3Decoder.cpp",
+      "sha256": "7644910e191782dcfa790a2402ff8c27a6af545dfddc241070b80757aab830f0",
+      "license": "LGPL-2.1-or-later AND LicenseRef-unRAR-restriction",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/Rar3Vm.cpp",
+      "sha256": "f885647a09281832fb28c8d2332ff43c95def34463b31381a6984df03d177599",
+      "license": "LGPL-2.1-or-later AND LicenseRef-unRAR-restriction",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/Rar5Decoder.cpp",
+      "sha256": "ffe93de121b47a9dc6c55171cdee366ea730c4332b69f159d4f8bbc5d73881d0",
+      "license": "LGPL-2.1-or-later AND LicenseRef-unRAR-restriction",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/RarCodecsRegister.cpp",
+      "sha256": "9664a42ad6d71edb0feebc534b2fc7242df6fbbdbe28fdc8d793b2dd692daf19",
+      "license": "LGPL-2.1-or-later AND LicenseRef-unRAR-restriction",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/ShrinkDecoder.cpp",
+      "sha256": "bc97a561020f9687b1651d11084e469fda9343d2a608f9403843392e2a80f98d",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/XpressDecoder.cpp",
+      "sha256": "64d77643cebd668a7a4589a28e71ec55f55d7104fa31b3ba1d6d9827583e7e29",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/XzDecoder.cpp",
+      "sha256": "38117642a9dd0d1d2f0cb9ca17f6a50f72fe1b3e95e90036bb015c9eb8ce580e",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/XzEncoder.cpp",
+      "sha256": "8d5e5ebbc226b67534daf5b2b9771422a0222cef6972155e04a973d01b7a5843",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/ZDecoder.cpp",
+      "sha256": "76735d7b3ec58cba0563c17683533659b1d232cfd5a4b22c951cca04db5c55a8",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/ZlibDecoder.cpp",
+      "sha256": "366f098d2c90e66ca333519ac4920890585a6dd66e4187f0aa593f1ce3a23e63",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/ZlibEncoder.cpp",
+      "sha256": "7571e7f78879db41387725c722b3a2f4abb177d42aeb9fcb9e03e0770a949c9f",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Compress/ZstdDecoder.cpp",
+      "sha256": "2e3d25c1d138e353005752da00e8bc59f5e5bae6eaa8003bf39bafac366a5b9a",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Crc.mak",
+      "sha256": "bc4ff45a0a3de142e7c6f91ec455f2ee7eaea5d1d4f45af8b0eb0554e43f233c",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Crc64.mak",
+      "sha256": "ed0480ffe85e5253a809b5c68db1ebb1a0eaa55e913aa345670867c7b76fa7ec",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Crypto/7zAes.cpp",
+      "sha256": "ebea4a6c743a2b0281d5e78e68476d5c436f9fc5c0be098538ccb2b37702d89a",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Crypto/7zAesRegister.cpp",
+      "sha256": "a5d144837042544afe2482a7c6e25b2b48e405d6dae8f38cadc09491d978a206",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Crypto/HmacSha1.cpp",
+      "sha256": "0a9c819a3e87cf9fec3417591d817aa7922bd6cf4ef15132482355935a191788",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Crypto/HmacSha256.cpp",
+      "sha256": "aabffa957665a321847f522eec1645dd5a43fdbd6d4c4eae307c1a4d30bad110",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Crypto/MyAes.cpp",
+      "sha256": "8e2a1a469bd29dbb41c647b3cec4e463f37ea71b986a71fa659fa06285329ed2",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Crypto/MyAesReg.cpp",
+      "sha256": "c2cc695455b96c23d4d3b674f1a3c9fd1f7c8035a42d2eb44e8a9fd0dd380392",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Crypto/Pbkdf2HmacSha1.cpp",
+      "sha256": "6b463518a07ddf72530ddf01fc6a0b35a8c395ac1e74d5f297f39a41d4b9ad77",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Crypto/RandGen.cpp",
+      "sha256": "9141b5d7dd6a4057cb2c7d1d67f557bea24f371443eb64faa53cf20c80b65ab5",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Crypto/Rar20Crypto.cpp",
+      "sha256": "f9f16677a4e66ff558bbcad3be3a7605983c0b3166333a13184476305e56109a",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Crypto/Rar5Aes.cpp",
+      "sha256": "dc7be24d61bf68c814a6cf8cee8f5cf0b980da607a5728057b67d6db824e6165",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Crypto/RarAes.cpp",
+      "sha256": "9bba14ad6ce095070f8442616c866346621284299847928612352e027d76d935",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Crypto/WzAes.cpp",
+      "sha256": "fbeef3255fdb175bce1d4d150d9f3007ba27d9e43beb66e537b6c87e93e0bb2b",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Crypto/ZipCrypto.cpp",
+      "sha256": "16e7f1f7527c78fcd529285f08b68d4fbc80063fc2b93861d75f77e430b39afd",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Crypto/ZipStrong.cpp",
+      "sha256": "119c5f43e781aed0a7ac53ff20ec8a325e1e9a5fcac0186938e037b878b4f41b",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/LzFindOpt.mak",
+      "sha256": "30b3beaa2a12efe34f065bb5432a5434b5445c66f5b46dc27b5fdaaecc1da04e",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/LzmaDec.mak",
+      "sha256": "ebce12757aaac90cd1a5e05c75eff85776befe8d28063ff1c28bce35cf560eae",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/LzmaDec_gcc.mak",
+      "sha256": "7f420cac1c3c7b82c79270e09b1507507da923b64ec1392097806cd6eb178b12",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Sha1.mak",
+      "sha256": "d9887c72c0a6416732efc3466693a08bf526231ec3a3cb4ddf483dd1c59574f1",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Sha256.mak",
+      "sha256": "31a81fb6bbb10c7b4e9667954049fca3f6f9cb11eeeeffb106ebd1190a1a3e6b",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/Sort.mak",
+      "sha256": "72c55d37fdf40cf58d1620cc0c1a3ac260d45ad6af39c455625d02094e63637a",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/UI/Common/ArchiveCommandLine.cpp",
+      "sha256": "c0bc28c67a0de40ceabeecc3ddabcfda0194f1601bb459dce00b628ac94f4e0e",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/UI/Common/ArchiveExtractCallback.cpp",
+      "sha256": "7ae1d63306f6ce00a61a43b6aecfe0a94fc40a54b03c93e24f62a11114c512a1",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/UI/Common/ArchiveOpenCallback.cpp",
+      "sha256": "aaa3d13959827dee186f423e16cb0f2b0c1bc6d7e26fbfdf5d4596466b023778",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/UI/Common/Bench.cpp",
+      "sha256": "f051a1e1637f8ad90b7b600e2c8d7ce4af4252b7c9ec66d005dd1c4f58750f3e",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/UI/Common/DefaultName.cpp",
+      "sha256": "2adf65efdd3643f60ae207759156973a26dced321b6942b214faa84ba2cc802a",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/UI/Common/EnumDirItems.cpp",
+      "sha256": "4c53bedaffaa946da592afff472b4d9f46f16a3a248ea60215b9299fce97af49",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/UI/Common/Extract.cpp",
+      "sha256": "89488735a0ade5c03d5e95ca46b9d8fd2b78ae4f31941f4bbdaba26488734db8",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/UI/Common/ExtractingFilePath.cpp",
+      "sha256": "bc25989b042c9b444ce538713f0c856b5fd71c30a3133bb8f68adaad216033d1",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/UI/Common/HashCalc.cpp",
+      "sha256": "1b73b16a68834c91c2fce87ef33f969a840b8c4b463f667ca8518055d71d1336",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/UI/Common/LoadCodecs.cpp",
+      "sha256": "db38827ad9acdbd124a0146c2415772eda6869992ae81c6cdf8616c4d0575e26",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/UI/Common/OpenArchive.cpp",
+      "sha256": "c1284d8c54a7b9a76a8138660ff2ed58ab0a2d15e9337d0638ba15a39aa8bc02",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/UI/Common/PropIDUtils.cpp",
+      "sha256": "9471f8d2d7c20d663df9b0d6524daa1e53262b46cf6e6d772529c684feae9238",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/UI/Common/SetProperties.cpp",
+      "sha256": "4c245cf183cfb987e5f3fd855406d8fd58bf6f9ff02f5e8d7dd974bf5a43f2d2",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/UI/Common/SortUtils.cpp",
+      "sha256": "495064ae09943dd7397ab7eb127c9272b9fa721e27232ce02858d600c19eb4e7",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/UI/Common/TempFiles.cpp",
+      "sha256": "d43ad2e7f09c00fd6a5a52596c5418ce1f3a27a999f76a69983cb8d8e554edd9",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/UI/Common/Update.cpp",
+      "sha256": "28c6b2f4d7a494a7a683d4bd66a5c97dd1939aed58c3a1a05977ccf0a7573349",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/UI/Common/UpdateAction.cpp",
+      "sha256": "1594f2c27844f21e577cd5537ddd42725666932637fcec898353a2076aa49461",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/UI/Common/UpdateCallback.cpp",
+      "sha256": "ca76aeba1b257f8e552e1f61f74cc8c511fdee9e41ca96c3a34d3927c28016d5",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/UI/Common/UpdatePair.cpp",
+      "sha256": "224e795b382a0e3f6d0c430062e90dbba5335e235c2d908202c82f1df29b84e6",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/UI/Common/UpdateProduce.cpp",
+      "sha256": "04b2b9c43ec61ac5d8a606dc97fdfd42468f80512ff11f93efe0e0e754823e21",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/UI/Console/BenchCon.cpp",
+      "sha256": "924c2625b042d19420d9170f592a4a1e697b025e082db9a76b208e0f37336a61",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/UI/Console/Console.mak",
+      "sha256": "71986266930092548cb6f5bd1520780894d3ed039ac6c6f071133570a45996c4",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/UI/Console/ConsoleClose.cpp",
+      "sha256": "f26d73ac6a21abc351654d3e32e50979f6703d6f2f22602532b6f1e7a152e1cf",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/UI/Console/ExtractCallbackConsole.cpp",
+      "sha256": "c5fc32c0fddd41a6cbfc71cd7666c201d380e1c36f35439362e4e7f15b7152f0",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/UI/Console/HashCon.cpp",
+      "sha256": "de6eeea2195fec0fa15f0794870a265d40bc97dfa880eb1c4fee20f5b5378f7a",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/UI/Console/List.cpp",
+      "sha256": "97f30e7250917173046de3727591c17010c7d1bf340f585c6cb315968d7b7241",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/UI/Console/Main.cpp",
+      "sha256": "7d3d3cbd26f42be5f7c1934b4d02271a9bc9588ecd026ae8bffd9856f86b4edb",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/UI/Console/MainAr.cpp",
+      "sha256": "554038b576e2589d1bb9c9166b6dceca52d51ab4c0468d988cc5fd281ef197ef",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/UI/Console/OpenCallbackConsole.cpp",
+      "sha256": "627f21f55512c7db341ac936ce0fb9f8abcd20a133061a157790bc0704aef966",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/UI/Console/PercentPrinter.cpp",
+      "sha256": "ae766398743b7f5ee5864511039036e5cc2b142eb11e0f3b6775f3f7c996652f",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/UI/Console/StdAfx.cpp",
+      "sha256": "155da93b09a3f105855419c4932d28dfac0cbeb06c8a942ec2e07ff8b815d6a6",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/UI/Console/UpdateCallbackConsole.cpp",
+      "sha256": "30f81a037e4c2c040a8986a61b21e713f9a2faaaa5222ca17a2a65283d8e2b76",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/UI/Console/UserInputUtils.cpp",
+      "sha256": "19bd207cd9c17e0c42a33411e04e488139073aae5bc6f6ac5997d242e58cc4fb",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/UI/Console/makefile",
+      "sha256": "0f419cda8f7a09958fa14db300224e273e12dfc635a3ff26f9c8e97033263c1f",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/UI/Console/makefile.gcc",
+      "sha256": "9a38046421338cd7ea1a439e220e2e95e2fb5ebc27ecdea42cbaf1458a78993f",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/UI/Console/resource.rc",
+      "sha256": "47e183f3ff6e0cae6997901026fe59617324f3509f41197890515ae4774e6883",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/cmpl_gcc.mak",
+      "sha256": "c272919fefb1db330b754baa856e950334e8eeef25045cb7eeb4af096acedcff",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/cmpl_mac_arm64.mak",
+      "sha256": "8bd823af925cf3c137899ba2b951cb32225c93e9d7ab2e2d4fa2a331e6ca2fbf",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/var_gcc.mak",
+      "sha256": "cf0846894d1c61f1297c124e5c5745c5502511a0aa4c0e089e55ef8807cb745e",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/var_mac_arm64.mak",
+      "sha256": "8d828672460c98a389ab1b3af04aa7e3f715ef43a9b6411ee77d772f09dd2f67",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/warn_clang_mac.mak",
+      "sha256": "5c8c0f01da6fd33b8532929466dbf6bbfacd53b41c86642003752bb644a320a3",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/7zip/warn_gcc.mak",
+      "sha256": "7eab3007e6567d7d8244576c5c66503858f526476efb2b0977ce7ba8dfee4b36",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/Build.mak",
+      "sha256": "2fa73421ef3236655890cf479d6e5c8f0083667173248cea801e46fd698374df",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/Common/CRC.cpp",
+      "sha256": "3824e79d60edddad0b627ac61f25501a3d9d39a5cd18029571e9769de6a9e36b",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/Common/CommandLineParser.cpp",
+      "sha256": "59550bdcd39144d6ed595a556aebb193cd29a21363563253acf7265ba28901ab",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/Common/CrcReg.cpp",
+      "sha256": "6ddd0d6f2217583dfdf478f94b6731398e72c5d528ee2f2035a8d3e72fc381ef",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/Common/DynLimBuf.cpp",
+      "sha256": "c388716312330fa649575cb7c49df2f44fa0279312dd68d79cc2cd5358eab879",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/Common/IntToString.cpp",
+      "sha256": "4f075ba0d53e72fb5ed692cc7b2c1c00d76c1f9a281bf4a6e3deffc48b380d72",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/Common/ListFileUtils.cpp",
+      "sha256": "cd3c6f6469f0c0d309c96f43e9c79308cdab957b758f10f79fedb65a3b5f2fb8",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/Common/LzFindPrepare.cpp",
+      "sha256": "b0bc168361a5be0a8a42eee320be9fefb8fe1e1867cdfccb481a7f5a14980762",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/Common/Md5Reg.cpp",
+      "sha256": "2cc6ef4be12e623a980e200d3bdb6f784256e69ceb8454c7665a6c1ff44a0916",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/Common/MyMap.cpp",
+      "sha256": "fdebb0e8655b2665ef09ec68e36e9a60f7380c599357648bd1a67d473155ed56",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/Common/MyString.cpp",
+      "sha256": "c562b6078fd4411805ff2bf35be1b166c1f094cf4008a50d8e272fba3ccd51cc",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/Common/MyVector.cpp",
+      "sha256": "0b7383dc489bc8bf3d9f22509b47316c45cc843b367e8d6c05c4f76053e103f8",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/Common/MyWindows.cpp",
+      "sha256": "1af0079a6058e3dfea025fca2a263a223cc8541d60ec7e659a8e01f632abc801",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/Common/MyXml.cpp",
+      "sha256": "518c28c37cfdb074c8ff31ae55bf385e4d9701880a83fce509a69dae25391208",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/Common/NewHandler.cpp",
+      "sha256": "bbd6fb3ef884f97cd82fd0c02dc279a60eb414895d36f4b39ada9d8852f91f94",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/Common/Sha1Prepare.cpp",
+      "sha256": "10f4f2d96c5d4a5167868d52f0a7ccc10bb4095aad4050b1118fb210fe78a57a",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/Common/Sha1Reg.cpp",
+      "sha256": "72521eec1805dcee54852f5cd6b87e318966b436954a439a4068666717bc9836",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/Common/Sha256Prepare.cpp",
+      "sha256": "cfbb12c5591fe66fa818dc9921399d9ae921d7976710bee482a32777487b3466",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/Common/Sha256Reg.cpp",
+      "sha256": "59cec5abb249a89b3ff457edfb34fbd7189ba1ac1eaf487c0b6ed880eeb194ac",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/Common/Sha3Reg.cpp",
+      "sha256": "b485dff57d4b3b1638b8ec4d5f75b4fa2fe0bca2e9eaecc203a6945a6941a12c",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/Common/Sha512Prepare.cpp",
+      "sha256": "0052ebe4873797f762a4a55c425b7e3a90195c0458c51c4291ea3e45fe2ef065",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/Common/Sha512Reg.cpp",
+      "sha256": "44cbc073930dad3381932ea74df56ca4b8da1607ec83b5cee80cddb8369de023",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/Common/StdInStream.cpp",
+      "sha256": "fbfacfb5c915885bbcba1fee715ecb6c1fe5a044e74e1f78db7e24b8fb150f4b",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/Common/StdOutStream.cpp",
+      "sha256": "0db7d7f07e582a0df0aac2e69afd80a5c406cd59f41ed486f37c206e75e10aa3",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/Common/StringConvert.cpp",
+      "sha256": "6189e4a22fd074ea55ef2ec8651d96e8f3b7f720ef3d19caab752a1f735cc6ee",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/Common/StringToInt.cpp",
+      "sha256": "9ec787dbdf2b2468f733b1b2257f81abd27f9e76fe7dbbb6c1d75759169ca3d7",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/Common/UTFConvert.cpp",
+      "sha256": "0d91337649076df626e3bb3c50323e6a832ab39e157c51078ff509ae13415c93",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/Common/Wildcard.cpp",
+      "sha256": "5d105fdbe1aff5784ce73bac34a2d377bd1fde2c58c63608b6da255b120f0261",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/Common/Xxh64Reg.cpp",
+      "sha256": "bb8a30457de80cbb5efc4e7995fe9dbcb3f15b6f13afe41325803b4192eea384",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/Common/XzCrc64Init.cpp",
+      "sha256": "c6fa0efc29dcc05993ab59d05b45409925d70a672547504f9a9e7237843c8a46",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/Common/XzCrc64Reg.cpp",
+      "sha256": "180ab525017ccd26c2c4a8dead5fb5170910404654d1c263cf0292ccdec69f3e",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/Windows/DLL.cpp",
+      "sha256": "aa8c97e8e84b89a6eaf87cd6510f269658deb870a1d0574d9dc540c4e266edae",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/Windows/ErrorMsg.cpp",
+      "sha256": "8d32d5cde21a77d391bfc70fcad6d22eb27e06e8a146789f9b916c0ac2788da9",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/Windows/FileDir.cpp",
+      "sha256": "8f8528714fd788af2955cd949e1c59504c84551af8376f21629de3755af57506",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/Windows/FileFind.cpp",
+      "sha256": "c7ebf3f657a5bf666e3c5e5af3ad699d1bc32f8769e30ebcb0c73a3aad85c9c4",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/Windows/FileIO.cpp",
+      "sha256": "400ffdd5921d44e8e9c04a10e8cd658ab878edd1cf774395462820551092003b",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/Windows/FileLink.cpp",
+      "sha256": "b89829d50c15059c39f02d4807de100d307707b0a6610ef6042b9a885b116efb",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/Windows/FileName.cpp",
+      "sha256": "fbbd1054ba9615f5b8b6e7cd06ba98975be1dd0aaab2f65934dd786e69d34637",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/Windows/FileSystem.cpp",
+      "sha256": "6a98b230882ac3ff796ccaf1a49c7affc20cc64c3aee650542a5934bf33a7b1b",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/Windows/MemoryLock.cpp",
+      "sha256": "f4cab10d265174df4110f7ad63550ae0c5cf87b557dc43353f470f17ba60993c",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/Windows/PropVariant.cpp",
+      "sha256": "0c051295ab199a0438f05eb849daffea701eba3fdc95cbb09e51ca3c629873fd",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/Windows/PropVariantConv.cpp",
+      "sha256": "162cca9b61cd83aebac7bd3d030078139d4184f3120893769d70c594ea74eb38",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/Windows/PropVariantUtils.cpp",
+      "sha256": "0c1d3a76b3729c4298c140bd854aa4a8e4caaee714cb3fa9f09967c35d237c93",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/Windows/Registry.cpp",
+      "sha256": "506e4dd4a6654c39cb2a1f2d7ba2e2b6a111750ec9cb296637471f41e392501f",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/Windows/Synchronization.cpp",
+      "sha256": "1b8d9f0df21b090f951b4c31997e7621ca0e4056a9736126a88ffc2c1bd54b83",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/Windows/System.cpp",
+      "sha256": "c5e861d335bce454f7f7eb8f936f3b9d5a35df518fc7f9518ecbc4036a7900ae",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/Windows/SystemInfo.cpp",
+      "sha256": "ac1eed514fa19511c5c9704e89c10211bb8de70a82c90dcb9e8249d5e18cc41a",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    },
+    {
+      "path": "CPP/Windows/TimeUtils.cpp",
+      "sha256": "ea7dbc78a1a7b4f1b7250207614c9c5695d5bc69657367ef0407190b4992cbab",
+      "license": "LGPL-2.1-or-later",
+      "basis": "DOC/License.txt:8-30 and selected source header"
+    }
+  ],
+  "notices": [
+    {
+      "path": "DOC/License.txt",
+      "sha256": "dac8389b6bc39339537bc351772106afe7951cb242cdf03e855b67c3a683deb1"
+    },
+    {
+      "path": "DOC/copying.txt",
+      "sha256": "dc626520dcd53a22f727af3ee42c770e56c97a64fe3adb063799d8ab032fe551"
+    },
+    {
+      "path": "DOC/unRarLicense.txt",
+      "sha256": "17bd9fa4399092c777536fff045b41df76ec9d2ac4c9b8e7345d3b8b6ccc7976"
+    }
+  ]
+}

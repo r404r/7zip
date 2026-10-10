@@ -1,0 +1,2 @@
+# Normalize JSON container line endings; captured string values remain unchanged.
+*.json text eol=lf

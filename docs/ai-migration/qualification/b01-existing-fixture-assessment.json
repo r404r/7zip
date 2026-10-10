@@ -1,0 +1,462 @@
+{
+  "schema_version": 1,
+  "task_id": "t_c46854b9",
+  "scope": {
+    "project_limit": 3,
+    "candidate_set_limit": 8,
+    "projects_inspected": [
+      "junrar/junrar",
+      "markokr/rarfile",
+      "adamhathcock/sharpcompress"
+    ],
+    "archive_payloads_fetched": false,
+    "upstream_code_executed": false,
+    "spending": 0
+  },
+  "candidates": [
+    {
+      "id": "J5-STORE",
+      "upstream_url": "https://github.com/junrar/junrar",
+      "commit": "1d10acccc6505c756f6df4fca1925fd53a591df9",
+      "paths": [
+        "src/test/resources/com/github/junrar/rar5unpack/m0-plain-128k.rar"
+      ],
+      "blob_ids": [
+        {
+          "path": "src/test/resources/com/github/junrar/rar5unpack/m0-plain-128k.rar",
+          "algorithm": "git-blob-sha1",
+          "value": "8675d36f53fc2c68288ea41d3893c091998aabae",
+          "metadata_url": "https://api.github.com/repos/junrar/junrar/git/trees/1d10acccc6505c756f6df4fca1925fd53a591df9?recursive=1"
+        }
+      ],
+      "writer": "rar",
+      "writer_version": "7.23",
+      "generation_evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/junrar/junrar/1d10acccc6505c756f6df4fca1925fd53a591df9/src/test/resources/com/github/junrar/rar5unpack/README.md",
+          "quote": "`ArchiveRar5UnpackTest`. Produced with `rar 7.23` (`-ma5`); the expected payload",
+          "interpretation": "Upstream committed writer/version statement, not our binary verification or native measurement."
+        },
+        {
+          "url": "https://raw.githubusercontent.com/junrar/junrar/1d10acccc6505c756f6df4fca1925fd53a591df9/src/test/resources/com/github/junrar/rar5unpack/README.md",
+          "quote": "| `m0-plain-128k.rar` | `rar a -ma5 -m0 -md128k -ep <a> small.bin` |",
+          "interpretation": "Recipe names bind the declared generation to paths in this pinned tree; not independently reproduced."
+        }
+      ],
+      "container_license_evidence": null,
+      "payload_license_evidence": null,
+      "license_context": [
+        {
+          "url": "https://raw.githubusercontent.com/junrar/junrar/1d10acccc6505c756f6df4fca1925fd53a591df9/LICENSE",
+          "quote": "The source code of UnRAR utility is freeware. This means:",
+          "interpretation": "This source-code license is not an explicit fixture-container or synthetic-payload grant."
+        }
+      ],
+      "proposed_case_ids": [
+        "R5-STORE"
+      ],
+      "missing_evidence": [
+        "Exact container redistribution terms, rights-holder authority and required notices bound to all listed Git blobs.",
+        "Full payload and member-metadata rights chain and applicable redistribution grant; adjacent source license is not sufficient.",
+        "Writer statement is upstream-declared rar 7.23; exact executable build/hash, contemporaneous invocation logs and complete member-manifest binding were not established.",
+        "Complete small.bin source/metadata and rights attestation; deterministic-looking text is not assumed public domain."
+      ],
+      "assessment": "evidence_incomplete"
+    },
+    {
+      "id": "J5-SOLID",
+      "upstream_url": "https://github.com/junrar/junrar",
+      "commit": "1d10acccc6505c756f6df4fca1925fd53a591df9",
+      "paths": [
+        "src/test/resources/com/github/junrar/rar5unpack/m3-solid-128k.rar"
+      ],
+      "blob_ids": [
+        {
+          "path": "src/test/resources/com/github/junrar/rar5unpack/m3-solid-128k.rar",
+          "algorithm": "git-blob-sha1",
+          "value": "abe4f99044f4d1b5743962974f473965147be52b",
+          "metadata_url": "https://api.github.com/repos/junrar/junrar/git/trees/1d10acccc6505c756f6df4fca1925fd53a591df9?recursive=1"
+        }
+      ],
+      "writer": "rar",
+      "writer_version": "7.23",
+      "generation_evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/junrar/junrar/1d10acccc6505c756f6df4fca1925fd53a591df9/src/test/resources/com/github/junrar/rar5unpack/README.md",
+          "quote": "`ArchiveRar5UnpackTest`. Produced with `rar 7.23` (`-ma5`); the expected payload",
+          "interpretation": "Upstream committed writer/version statement, not our binary verification or native measurement."
+        },
+        {
+          "url": "https://raw.githubusercontent.com/junrar/junrar/1d10acccc6505c756f6df4fca1925fd53a591df9/src/test/resources/com/github/junrar/rar5unpack/README.md",
+          "quote": "| `m3-solid-128k.rar` | `rar a -ma5 -m3 -md128k -ep -s <a> s0..s4.bin` |",
+          "interpretation": "Recipe names bind the declared generation to paths in this pinned tree; not independently reproduced."
+        }
+      ],
+      "container_license_evidence": null,
+      "payload_license_evidence": null,
+      "license_context": [
+        {
+          "url": "https://raw.githubusercontent.com/junrar/junrar/1d10acccc6505c756f6df4fca1925fd53a591df9/LICENSE",
+          "quote": "The source code of UnRAR utility is freeware. This means:",
+          "interpretation": "This source-code license is not an explicit fixture-container or synthetic-payload grant."
+        }
+      ],
+      "proposed_case_ids": [
+        "R5-LZ-SOLID"
+      ],
+      "missing_evidence": [
+        "Exact container redistribution terms, rights-holder authority and required notices bound to all listed Git blobs.",
+        "Full payload and member-metadata rights chain and applicable redistribution grant; adjacent source license is not sufficient.",
+        "Writer statement is upstream-declared rar 7.23; exact executable build/hash, contemporaneous invocation logs and complete member-manifest binding were not established.",
+        "Complete pool/block-generation algorithm for s0..s4 and source/metadata rights; README seeds and dimensions alone do not specify every byte."
+      ],
+      "assessment": "evidence_incomplete"
+    },
+    {
+      "id": "J5-STORED-VOLUMES",
+      "upstream_url": "https://github.com/junrar/junrar",
+      "commit": "1d10acccc6505c756f6df4fca1925fd53a591df9",
+      "paths": [
+        "src/test/resources/com/github/junrar/volumes/rar5-part/stored.part1.rar",
+        "src/test/resources/com/github/junrar/volumes/rar5-part/stored.part2.rar",
+        "src/test/resources/com/github/junrar/volumes/rar5-part/stored.part3.rar"
+      ],
+      "blob_ids": [
+        {
+          "path": "src/test/resources/com/github/junrar/volumes/rar5-part/stored.part1.rar",
+          "algorithm": "git-blob-sha1",
+          "value": "e0923d70bf93e2733d2c31ade94dee0faeaa91fc",
+          "metadata_url": "https://api.github.com/repos/junrar/junrar/git/trees/1d10acccc6505c756f6df4fca1925fd53a591df9?recursive=1"
+        },
+        {
+          "path": "src/test/resources/com/github/junrar/volumes/rar5-part/stored.part2.rar",
+          "algorithm": "git-blob-sha1",
+          "value": "561c2afbd1761711d5368c58c4d5a495849edccd",
+          "metadata_url": "https://api.github.com/repos/junrar/junrar/git/trees/1d10acccc6505c756f6df4fca1925fd53a591df9?recursive=1"
+        },
+        {
+          "path": "src/test/resources/com/github/junrar/volumes/rar5-part/stored.part3.rar",
+          "algorithm": "git-blob-sha1",
+          "value": "f932e24c5cae2b9e9750b8bf5c62075a478199d4",
+          "metadata_url": "https://api.github.com/repos/junrar/junrar/git/trees/1d10acccc6505c756f6df4fca1925fd53a591df9?recursive=1"
+        }
+      ],
+      "writer": "rar",
+      "writer_version": "7.23",
+      "generation_evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/junrar/junrar/1d10acccc6505c756f6df4fca1925fd53a591df9/src/test/resources/com/github/junrar/volumes/rar5-part/README.md",
+          "quote": "`.partN.rar` RAR5 volume sets for `ArchiveRar5VolumeTest`, produced with `rar 7.23`",
+          "interpretation": "Upstream committed writer/version statement, not our binary verification or native measurement."
+        },
+        {
+          "url": "https://raw.githubusercontent.com/junrar/junrar/1d10acccc6505c756f6df4fca1925fd53a591df9/src/test/resources/com/github/junrar/volumes/rar5-part/README.md",
+          "quote": "| `stored.partN.rar` (N=1..3)| `rar a -ma5 -m0 -ep -v50k -qo- stored.rar stored2.bin` |",
+          "interpretation": "Recipe names bind the declared generation to paths in this pinned tree; not independently reproduced."
+        }
+      ],
+      "container_license_evidence": null,
+      "payload_license_evidence": null,
+      "license_context": [
+        {
+          "url": "https://raw.githubusercontent.com/junrar/junrar/1d10acccc6505c756f6df4fca1925fd53a591df9/LICENSE",
+          "quote": "The source code of UnRAR utility is freeware. This means:",
+          "interpretation": "This source-code license is not an explicit fixture-container or synthetic-payload grant."
+        }
+      ],
+      "proposed_case_ids": [
+        "R5-VOL"
+      ],
+      "missing_evidence": [
+        "Exact container redistribution terms, rights-holder authority and required notices bound to all listed Git blobs.",
+        "Full payload and member-metadata rights chain and applicable redistribution grant; adjacent source license is not sufficient.",
+        "Writer statement is upstream-declared rar 7.23; exact executable build/hash, contemporaneous invocation logs and complete member-manifest binding were not established."
+      ],
+      "assessment": "evidence_incomplete"
+    },
+    {
+      "id": "RF-OLD-VOLUMES",
+      "upstream_url": "https://github.com/markokr/rarfile",
+      "commit": "d2f7df6fc843dae356fd6b0a85971dc36fd6e757",
+      "paths": [
+        "test/files/rar3-old.rar",
+        "test/files/rar3-old.r00",
+        "test/files/rar3-old.r01"
+      ],
+      "blob_ids": [
+        {
+          "path": "test/files/rar3-old.rar",
+          "algorithm": "git-blob-sha1",
+          "value": "962d8b6f4b9d7e60396c1b5366f8962868c71fe1",
+          "metadata_url": "https://api.github.com/repos/markokr/rarfile/git/trees/d2f7df6fc843dae356fd6b0a85971dc36fd6e757?recursive=1"
+        },
+        {
+          "path": "test/files/rar3-old.r00",
+          "algorithm": "git-blob-sha1",
+          "value": "0ba628367eaae36c92a648217e9baf96125c2acb",
+          "metadata_url": "https://api.github.com/repos/markokr/rarfile/git/trees/d2f7df6fc843dae356fd6b0a85971dc36fd6e757?recursive=1"
+        },
+        {
+          "path": "test/files/rar3-old.r01",
+          "algorithm": "git-blob-sha1",
+          "value": "9bc19dde8cb2e46d3e064b83074c7fc4e7e5c3da",
+          "metadata_url": "https://api.github.com/repos/markokr/rarfile/git/trees/d2f7df6fc843dae356fd6b0a85971dc36fd6e757?recursive=1"
+        }
+      ],
+      "writer": null,
+      "writer_version": null,
+      "generation_evidence": null,
+      "container_license_evidence": null,
+      "payload_license_evidence": null,
+      "license_context": [
+        {
+          "url": "https://raw.githubusercontent.com/markokr/rarfile/d2f7df6fc843dae356fd6b0a85971dc36fd6e757/LICENSE",
+          "quote": "Permission to use, copy, modify, and/or distribute this software for any\npurpose with or without fee is hereby granted, provided that the above\ncopyright notice and this permission notice appear in all copies.",
+          "interpretation": "ISC software grant is meaningful context; exact archive and all payload applicability are not attested in inspected sources."
+        }
+      ],
+      "proposed_case_ids": [
+        "R4-OLDVOL"
+      ],
+      "missing_evidence": [
+        "Actual writer product/version and creation command or creator record bound to every listed blob; unknown, not inferred from filenames or reader format labels.",
+        "Exact container redistribution terms, rights-holder authority and required notices bound to all listed Git blobs.",
+        "Full payload and member-metadata rights chain and applicable redistribution grant; adjacent source license is not sufficient.",
+        "Proposed case mapping is a discovery hypothesis; actual stored method/classic format/old-volume behavior is not verified."
+      ],
+      "assessment": "evidence_incomplete"
+    },
+    {
+      "id": "SC-NONE",
+      "upstream_url": "https://github.com/adamhathcock/sharpcompress",
+      "commit": "e04d51176c5d87668c4c8779825342230c33aa74",
+      "paths": [
+        "tests/TestArchives/Archives/Rar.none.rar"
+      ],
+      "blob_ids": [
+        {
+          "path": "tests/TestArchives/Archives/Rar.none.rar",
+          "algorithm": "git-blob-sha1",
+          "value": "42c859b91f3c8a358972abd44b26ec8682a54bf8",
+          "metadata_url": "https://api.github.com/repos/adamhathcock/sharpcompress/git/trees/e04d51176c5d87668c4c8779825342230c33aa74?recursive=1"
+        }
+      ],
+      "writer": null,
+      "writer_version": null,
+      "generation_evidence": null,
+      "container_license_evidence": null,
+      "payload_license_evidence": null,
+      "license_context": [
+        {
+          "url": "https://raw.githubusercontent.com/adamhathcock/sharpcompress/e04d51176c5d87668c4c8779825342230c33aa74/LICENSE.txt",
+          "quote": "The above copyright notice and this permission notice shall be included in\nall copies or substantial portions of the Software.",
+          "interpretation": "MIT software notice obligation, not an independent chain of title for archive contents."
+        }
+      ],
+      "proposed_case_ids": [
+        "R4-STORE"
+      ],
+      "missing_evidence": [
+        "Actual writer product/version and creation command or creator record bound to every listed blob; unknown, not inferred from filenames or reader format labels.",
+        "Exact container redistribution terms, rights-holder authority and required notices bound to all listed Git blobs.",
+        "Full payload and member-metadata rights chain and applicable redistribution grant; adjacent source license is not sufficient.",
+        "Proposed case mapping is a discovery hypothesis; actual stored method/classic format/old-volume behavior is not verified."
+      ],
+      "assessment": "evidence_incomplete"
+    }
+  ],
+  "case_mapping": [
+    {
+      "case_id": "R4-STORE",
+      "candidate_ids": [
+        "SC-NONE"
+      ],
+      "qualified": false
+    },
+    {
+      "case_id": "R4-LZ",
+      "candidate_ids": [],
+      "qualified": false
+    },
+    {
+      "case_id": "R4-PPM",
+      "candidate_ids": [],
+      "qualified": false
+    },
+    {
+      "case_id": "R4-VOL",
+      "candidate_ids": [],
+      "qualified": false
+    },
+    {
+      "case_id": "R4-OLDVOL",
+      "candidate_ids": [
+        "RF-OLD-VOLUMES"
+      ],
+      "qualified": false
+    },
+    {
+      "case_id": "R5-STORE",
+      "candidate_ids": [
+        "J5-STORE"
+      ],
+      "qualified": false
+    },
+    {
+      "case_id": "R5-LZ-SOLID",
+      "candidate_ids": [
+        "J5-SOLID"
+      ],
+      "qualified": false
+    },
+    {
+      "case_id": "R5-VOL",
+      "candidate_ids": [
+        "J5-STORED-VOLUMES"
+      ],
+      "qualified": false
+    }
+  ],
+  "import_review_candidates": [],
+  "deferred_after_rights_review": [
+    "Authorized byte acquisition and full SHA-256 for archives, every volume and every member.",
+    "Original B01 native Windows/Linux/macOS list/test/extract, numeric error/volume/corruption controls and independent review."
+  ],
+  "evidence_sources": [
+    {
+      "project": "rarfile",
+      "commit": "d2f7df6fc843dae356fd6b0a85971dc36fd6e757",
+      "path": "LICENSE",
+      "url": "https://raw.githubusercontent.com/markokr/rarfile/d2f7df6fc843dae356fd6b0a85971dc36fd6e757/LICENSE",
+      "snapshot": ".b01-fixture-research/rarfile-LICENSE"
+    },
+    {
+      "project": "rarfile",
+      "commit": "d2f7df6fc843dae356fd6b0a85971dc36fd6e757",
+      "path": "README.rst",
+      "url": "https://raw.githubusercontent.com/markokr/rarfile/d2f7df6fc843dae356fd6b0a85971dc36fd6e757/README.rst",
+      "snapshot": ".b01-fixture-research/rarfile-README.rst"
+    },
+    {
+      "project": "rarfile",
+      "commit": "d2f7df6fc843dae356fd6b0a85971dc36fd6e757",
+      "path": "test/run_dump.sh",
+      "url": "https://raw.githubusercontent.com/markokr/rarfile/d2f7df6fc843dae356fd6b0a85971dc36fd6e757/test/run_dump.sh",
+      "snapshot": ".b01-fixture-research/rarfile-test_run_dump.sh"
+    },
+    {
+      "project": "junrar",
+      "commit": "1d10acccc6505c756f6df4fca1925fd53a591df9",
+      "path": "LICENSE",
+      "url": "https://raw.githubusercontent.com/junrar/junrar/1d10acccc6505c756f6df4fca1925fd53a591df9/LICENSE",
+      "snapshot": ".b01-fixture-research/junrar-LICENSE"
+    },
+    {
+      "project": "junrar",
+      "commit": "1d10acccc6505c756f6df4fca1925fd53a591df9",
+      "path": "generate-testdata.sh",
+      "url": "https://raw.githubusercontent.com/junrar/junrar/1d10acccc6505c756f6df4fca1925fd53a591df9/generate-testdata.sh",
+      "snapshot": ".b01-fixture-research/junrar-generate-testdata.sh"
+    },
+    {
+      "project": "junrar",
+      "commit": "1d10acccc6505c756f6df4fca1925fd53a591df9",
+      "path": "src/test/resources/com/github/junrar/rar5unpack/README.md",
+      "url": "https://raw.githubusercontent.com/junrar/junrar/1d10acccc6505c756f6df4fca1925fd53a591df9/src/test/resources/com/github/junrar/rar5unpack/README.md",
+      "snapshot": ".b01-fixture-research/junrar-src_test_resources_com_github_junrar_rar5unpack_README.md"
+    },
+    {
+      "project": "junrar",
+      "commit": "1d10acccc6505c756f6df4fca1925fd53a591df9",
+      "path": "src/test/resources/com/github/junrar/volumes/rar5-part/README.md",
+      "url": "https://raw.githubusercontent.com/junrar/junrar/1d10acccc6505c756f6df4fca1925fd53a591df9/src/test/resources/com/github/junrar/volumes/rar5-part/README.md",
+      "snapshot": ".b01-fixture-research/junrar-src_test_resources_com_github_junrar_volumes_rar5-part_README.md"
+    },
+    {
+      "project": "sharpcompress",
+      "commit": "e04d51176c5d87668c4c8779825342230c33aa74",
+      "path": "LICENSE.txt",
+      "url": "https://raw.githubusercontent.com/adamhathcock/sharpcompress/e04d51176c5d87668c4c8779825342230c33aa74/LICENSE.txt",
+      "snapshot": ".b01-fixture-research/sharpcompress-LICENSE.txt"
+    },
+    {
+      "project": "sharpcompress",
+      "commit": "e04d51176c5d87668c4c8779825342230c33aa74",
+      "path": "README.md",
+      "url": "https://raw.githubusercontent.com/adamhathcock/sharpcompress/e04d51176c5d87668c4c8779825342230c33aa74/README.md",
+      "snapshot": ".b01-fixture-research/sharpcompress-README.md"
+    },
+    {
+      "project": "junrar",
+      "commit": "1d10acccc6505c756f6df4fca1925fd53a591df9",
+      "path": "src/test/resources/com/github/junrar/volumes/rar5-part/gen_volume_payloads.py",
+      "url": "https://raw.githubusercontent.com/junrar/junrar/1d10acccc6505c756f6df4fca1925fd53a591df9/src/test/resources/com/github/junrar/volumes/rar5-part/gen_volume_payloads.py",
+      "snapshot": ".b01-fixture-research/junrar-src_test_resources_com_github_junrar_volumes_rar5-part_gen_volume_payloads.py",
+      "kind": "text"
+    },
+    {
+      "project": "rarfile",
+      "commit": "d2f7df6fc843dae356fd6b0a85971dc36fd6e757",
+      "path": "test/test_reading.py",
+      "url": "https://raw.githubusercontent.com/markokr/rarfile/d2f7df6fc843dae356fd6b0a85971dc36fd6e757/test/test_reading.py",
+      "snapshot": ".b01-fixture-research/rarfile-test_test_reading.py",
+      "kind": "text"
+    },
+    {
+      "project": "sharpcompress",
+      "commit": "e04d51176c5d87668c4c8779825342230c33aa74",
+      "path": "tests/SharpCompress.Test/Rar/RarArchiveTests.cs",
+      "url": "https://raw.githubusercontent.com/adamhathcock/sharpcompress/e04d51176c5d87668c4c8779825342230c33aa74/tests/SharpCompress.Test/Rar/RarArchiveTests.cs",
+      "snapshot": ".b01-fixture-research/sharpcompress-tests_SharpCompress.Test_Rar_RarArchiveTests.cs",
+      "kind": "text"
+    },
+    {
+      "project": "junrar",
+      "commit": "1d10acccc6505c756f6df4fca1925fd53a591df9",
+      "path": "src/test/resources/com/github/junrar/rar5unpack/README.md",
+      "url": "https://api.github.com/repos/junrar/junrar/commits?sha=1d10acccc6505c756f6df4fca1925fd53a591df9&path=src%2Ftest%2Fresources%2Fcom%2Fgithub%2Fjunrar%2Frar5unpack%2FREADME.md&per_page=100",
+      "snapshot": ".b01-fixture-research/junrar-src_test_resources_com_github_junrar_rar5unpack_README.md.history.json",
+      "kind": "history"
+    },
+    {
+      "project": "junrar",
+      "commit": "1d10acccc6505c756f6df4fca1925fd53a591df9",
+      "path": "src/test/resources/com/github/junrar/volumes/rar5-part/README.md",
+      "url": "https://api.github.com/repos/junrar/junrar/commits?sha=1d10acccc6505c756f6df4fca1925fd53a591df9&path=src%2Ftest%2Fresources%2Fcom%2Fgithub%2Fjunrar%2Fvolumes%2Frar5-part%2FREADME.md&per_page=100",
+      "snapshot": ".b01-fixture-research/junrar-src_test_resources_com_github_junrar_volumes_rar5-part_README.md.history.json",
+      "kind": "history"
+    },
+    {
+      "project": "rarfile",
+      "commit": "d2f7df6fc843dae356fd6b0a85971dc36fd6e757",
+      "path": "test/files/rar3-old.rar",
+      "url": "https://api.github.com/repos/markokr/rarfile/commits?sha=d2f7df6fc843dae356fd6b0a85971dc36fd6e757&path=test%2Ffiles%2Frar3-old.rar&per_page=100",
+      "snapshot": ".b01-fixture-research/rarfile-test_files_rar3-old.rar.history.json",
+      "kind": "history"
+    },
+    {
+      "project": "rarfile",
+      "commit": "d2f7df6fc843dae356fd6b0a85971dc36fd6e757",
+      "path": "test/files/rar3-old.r00",
+      "url": "https://api.github.com/repos/markokr/rarfile/commits?sha=d2f7df6fc843dae356fd6b0a85971dc36fd6e757&path=test%2Ffiles%2Frar3-old.r00&per_page=100",
+      "snapshot": ".b01-fixture-research/rarfile-test_files_rar3-old.r00.history.json",
+      "kind": "history"
+    },
+    {
+      "project": "rarfile",
+      "commit": "d2f7df6fc843dae356fd6b0a85971dc36fd6e757",
+      "path": "test/files/rar3-old.r01",
+      "url": "https://api.github.com/repos/markokr/rarfile/commits?sha=d2f7df6fc843dae356fd6b0a85971dc36fd6e757&path=test%2Ffiles%2Frar3-old.r01&per_page=100",
+      "snapshot": ".b01-fixture-research/rarfile-test_files_rar3-old.r01.history.json",
+      "kind": "history"
+    },
+    {
+      "project": "sharpcompress",
+      "commit": "e04d51176c5d87668c4c8779825342230c33aa74",
+      "path": "tests/TestArchives/Archives/Rar.none.rar",
+      "url": "https://api.github.com/repos/adamhathcock/sharpcompress/commits?sha=e04d51176c5d87668c4c8779825342230c33aa74&path=tests%2FTestArchives%2FArchives%2FRar.none.rar&per_page=100",
+      "snapshot": ".b01-fixture-research/sharpcompress-tests_TestArchives_Archives_Rar.none.rar.history.json",
+      "kind": "history"
+    }
+  ]
+}

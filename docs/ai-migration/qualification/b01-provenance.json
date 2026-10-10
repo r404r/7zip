@@ -1,0 +1,145 @@
+{
+  "schema_version": 1,
+  "task_id": "t_f337e38d",
+  "upstream_repository": "libarchive/libarchive",
+  "upstream_commit": "60b1d17ddf2fbabc6bca31dae01613d6dbea3cde",
+  "retrieved_utc_date": "2026-09-11",
+  "scope": "The B01 named basic RAR candidate and the four-volume classic RAR family referenced by its adjacent test; not an exhaustive audit of all RAR/RAR5 fixtures.",
+  "selected_candidates": [],
+  "corpus_bytes_downloaded": false,
+  "corpus_bytes_imported": false,
+  "b01_gate_resolved": false,
+  "source_numbers": "Numbered citations resolve in b01-provenance.md; immutable source identity is the commit/path or Git blob ID, not the mutable GitHub API envelope.",
+  "identity_note": "Git blob IDs and sizes describe upstream uuencoded files as reported by tree metadata. They are NOT independently calculated decoded archive SHA-256 digests.",
+  "missing_definitions": {
+    "G": "Actual archive writer product, exact version/build, generating command/options and a record binding that writer to these immutable bytes; do not use the reader or archive format version.",
+    "P-basic": "Creator/source and rights-holder confirmation for the test text, path/link metadata and archive container; a C assertion of expected text is not an authorship statement.",
+    "P-multi": "Creator/source and rights for the entire ppmd_lzss_conversion_test.txt, both LibarchiveAddingTest.html copies, testdir/test.txt and path/link metadata; identify the HTML revision and all incorporated material, not just tested tails.",
+    "L": "Explicit redistribution terms applicable to these exact encoded archives, decoded containers and all embedded payloads, including attribution/notice requirements and the grantor's authority; distribution-wide COPYING is context, not ignored or treated as prohibition.",
+    "H": "After evidence review and authorized acquisition, calculate encoded/decoded SHA-256 and full member hashes and bind them to the provenance record; this audit intentionally does not acquire corpus bytes.",
+    "N": "Subsequent B01 native Windows/Linux/macOS operation/error qualification and independent review; no upstream C assertion is a 7-Zip oracle."
+  },
+  "candidates": [
+    {
+      "id": "basic",
+      "path": "libarchive/test/test_read_format_rar.rar.uu",
+      "blob_sha1": "f197a2983302f5829de2719bdddcf43b8c59b201",
+      "encoded_size": 505,
+      "introduction_commit": "099075c11ce9143f7375ed4b1264a10a45a072f9",
+      "introduction_parent": "ab0f070f92105199e8b71d6de9afdbc05667e9d5",
+      "introduction_blob_sha1": "75f93b4c281a9512b24f094a6d6e23fcc17e0868",
+      "later_history_commit": "33140186cb7b918f2b84df68c2a2fdbbf8d4881a",
+      "history_sources": [3, 6, 13, 14],
+      "generator_product": null,
+      "generator_version": null,
+      "payload_source_status": "Expected test text and names established by source 2; authorship/rights chain unknown.",
+      "redistribution_status": "unknown_not_prohibited",
+      "missing": ["G", "P-basic", "L", "H", "N"],
+      "selected": false
+    },
+    {
+      "id": "part0001",
+      "path": "libarchive/test/test_read_format_rar_multivolume.part0001.rar.uu",
+      "blob_sha1": "bbe4be4c9070c0551dd9450cafa6ea0e617157ef",
+      "encoded_size": 82730,
+      "introduction_commit": "416694915449219d505531b1096384f3237dd6cc",
+      "introduction_parent": "7b543b13d813e529364c7b70ae204ce7c0eddfc3",
+      "introduction_blob_sha1": "7378a9b558e8312f4aa43ca010440227bdda2c3a",
+      "later_history_commit": "33140186cb7b918f2b84df68c2a2fdbbf8d4881a",
+      "history_sources": [4, 7, 15, 16, 18, 21],
+      "generator_product": null,
+      "generator_version": null,
+      "payload_source_status": "Set-level member names/sizes/tail assertions in source 2 only; full content provenance and distribution across volumes unverified.",
+      "redistribution_status": "unknown_not_prohibited",
+      "missing": ["G", "P-multi", "L", "H", "N"],
+      "selected": false
+    },
+    {
+      "id": "part0002",
+      "path": "libarchive/test/test_read_format_rar_multivolume.part0002.rar.uu",
+      "blob_sha1": "a61a2fbc73121a0593b2645e4804415c1e6de383",
+      "encoded_size": 82730,
+      "introduction_commit": "416694915449219d505531b1096384f3237dd6cc",
+      "introduction_parent": "7b543b13d813e529364c7b70ae204ce7c0eddfc3",
+      "introduction_blob_sha1": "696ff565bdfd5d55e51e9c7b3e03844cccd15358",
+      "later_history_commit": "33140186cb7b918f2b84df68c2a2fdbbf8d4881a",
+      "history_sources": [10, 7, 15, 16, 18, 21],
+      "generator_product": null,
+      "generator_version": null,
+      "payload_source_status": "Set-level evidence only, as for part0001; no per-volume ownership or generation attestation found.",
+      "redistribution_status": "unknown_not_prohibited",
+      "missing": ["G", "P-multi", "L", "H", "N"],
+      "selected": false
+    },
+    {
+      "id": "part0003",
+      "path": "libarchive/test/test_read_format_rar_multivolume.part0003.rar.uu",
+      "blob_sha1": "ef70b9eba606f7e2d03e8be7233495450d9dac83",
+      "encoded_size": 82730,
+      "introduction_commit": "416694915449219d505531b1096384f3237dd6cc",
+      "introduction_parent": "7b543b13d813e529364c7b70ae204ce7c0eddfc3",
+      "introduction_blob_sha1": "91b7f28c596825175f53ca42a17af836031df9a6",
+      "later_history_commit": "33140186cb7b918f2b84df68c2a2fdbbf8d4881a",
+      "history_sources": [11, 7, 15, 16, 18, 21],
+      "generator_product": null,
+      "generator_version": null,
+      "payload_source_status": "Set-level evidence only, as for part0001; no per-volume ownership or generation attestation found.",
+      "redistribution_status": "unknown_not_prohibited",
+      "missing": ["G", "P-multi", "L", "H", "N"],
+      "selected": false
+    },
+    {
+      "id": "part0004",
+      "path": "libarchive/test/test_read_format_rar_multivolume.part0004.rar.uu",
+      "blob_sha1": "20931f62c5858e1b17b5275f058fc45cdc51ddb9",
+      "encoded_size": 12740,
+      "introduction_commit": "416694915449219d505531b1096384f3237dd6cc",
+      "introduction_parent": "7b543b13d813e529364c7b70ae204ce7c0eddfc3",
+      "introduction_blob_sha1": "0bfad779e1bd8503ff9b1c5cc05a2b1ccaf98549",
+      "later_history_commit": "33140186cb7b918f2b84df68c2a2fdbbf8d4881a",
+      "history_sources": [12, 7, 15, 16, 18, 21],
+      "generator_product": null,
+      "generator_version": null,
+      "payload_source_status": "Set-level evidence only, as for part0001; no per-volume ownership or generation attestation found.",
+      "redistribution_status": "unknown_not_prohibited",
+      "missing": ["G", "P-multi", "L", "H", "N"],
+      "selected": false
+    }
+  ],
+  "mutable_observations": [
+    {
+      "url": "https://api.github.com/repos/libarchive/libarchive/issues/2043",
+      "response_sha256": "312a89c6552a072ad8a01743ec2115087545db9e09090a560878f132b69336ae",
+      "exact_excerpt": "The libarchive test harness always extracts these to the truncated source filename, ignoring the name in the `begin` line.",
+      "applicability": "Envelope filename maintenance, not archive writer/version evidence."
+    },
+    {
+      "url": "https://api.github.com/repos/libarchive/libarchive/commits/416694915449219d505531b1096384f3237dd6cc/pulls?per_page=100",
+      "response_sha256": "314c2e744596ee16bf08f247f8b78abf4fe031484c96da73ebbf5f97798d5d99",
+      "exact_excerpt": "This will enable multivolume support for libarchive. It includes support to read files split using the 'split' program, and also support to read RAR multivolume files.",
+      "applicability": "PR #2 associated with multipart introduction; split refers to an additional reader capability, not a demonstrated RAR generation command."
+    },
+    {
+      "url": "https://api.github.com/repos/libarchive/libarchive/issues/2/comments?per_page=100",
+      "response_sha256": "6e61d0158530e62d9dfdcfd8b101cb1caca498870266b513451475229a445a23",
+      "comment_permalink": "https://github.com/libarchive/libarchive/pull/2#issuecomment-4691702",
+      "exact_excerpt": "Libunrar does not support v3, which is what I'm looking to support first.",
+      "applicability": "Author's reader implementation discussion, not writer identification or payload licensing; seven comments inspected."
+    }
+  ],
+  "empty_endpoint_observations": [
+    "https://api.github.com/repos/libarchive/libarchive/issues/2043/comments?per_page=100",
+    "https://api.github.com/repos/libarchive/libarchive/commits/099075c11ce9143f7375ed4b1264a10a45a072f9/pulls?per_page=100",
+    "https://api.github.com/repos/libarchive/libarchive/commits/099075c11ce9143f7375ed4b1264a10a45a072f9/comments?per_page=100",
+    "https://api.github.com/repos/libarchive/libarchive/commits/416694915449219d505531b1096384f3237dd6cc/comments?per_page=100",
+    "https://api.github.com/repos/libarchive/libarchive/pulls/2/comments?per_page=100",
+    "https://api.github.com/repos/libarchive/libarchive/pulls/2/reviews?per_page=100"
+  ],
+  "empty_endpoint_exact_response": "[]",
+  "confidence": {
+    "path_and_introduction_identity": "high: full non-truncated trees and each path history checked",
+    "expected_members": "high for C assertions only, not independently extracted bytes",
+    "absence_of_required_provenance_in_inspected_material": "bounded: does not prove evidence does not exist elsewhere",
+    "legal_conclusion": "none; no license waiver, prohibition or import approval inferred"
+  }
+}
