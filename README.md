@@ -10,7 +10,7 @@ at the time of writing none of the PRs opened there had been merged (the maintai
 is active in the issue tracker instead). So instead of sending patches upstream,
 this fork carries them on top of each upstream release.
 
-Upstream: [ip7z/7zip](https://github.com/ip7z/7zip) · current base: **7-Zip 26.03**
+Upstream: [ip7z/7zip](https://github.com/ip7z/7zip) · current base: **7-Zip 26.04**
 
 ## What is different from 7-Zip
 
@@ -67,8 +67,8 @@ Take either from the latest [Release](https://github.com/r404r/7zip/releases):
 | `7zip-fork-<version>-portable-x64.zip` | `7zFM.exe`, `7zG.exe`, `7z.exe`, `7zz.exe`, `7z.dll`, `7-zip.dll`, SFX modules, `Lang\`, docs — run from anywhere |
 | `SHA256SUMS.txt` | Checksums of both |
 
-Version scheme: `26.03-fork.3` is the third fork release on top of 7-Zip 26.03; the MSI
-carries it as `26.3.3`. Release candidates end in `-rc.N`. Windows x64 only.
+Version scheme: `26.04-fork.3` is the third fork release on top of 7-Zip 26.04; the MSI
+carries it as `26.4.3`. Release candidates end in `-rc.N`. Windows x64 only.
 There is no help file, so the Help buttons do nothing. The OK / Cancel / Apply /
 Help buttons at the bottom of Options are drawn by Windows and follow the Windows
 display language, not the language chosen in 7-Zip — upstream is the same. The

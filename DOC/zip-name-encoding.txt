@@ -1,8 +1,8 @@
 Encoding of file names in zip archives
 --------------------------------------
 
-Version: 26.03 (fork)
-Date: 2026-09-05
+Version: 26.04 (fork)
+Date: 2026-10-10
 
 
 The problem
