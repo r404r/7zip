@@ -531,7 +531,7 @@ static int CompareRawProps(IArchiveGetRawProps *rawProps, unsigned arcIndex1, un
 
 // returns pointer to extension including '.'
 
-static const wchar_t *GetExtension(const wchar_t *name)
+static const wchar_t *GetExtension(const wchar_t *name Z7_lifetimebound)
 {
   for (const wchar_t *dotPtr = NULL;; name++)
   {
