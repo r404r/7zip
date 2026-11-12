@@ -1,7 +1,7 @@
 Encoding of file names in zip archives
 --------------------------------------
 
-Version: 26.04 (fork)
+Version: 26.06 (fork)
 Date: 2026-10-10
 
 
