@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "status": "candidate-pending-independent-review",
+  "rust": {
+    "toolchain": "1.97.1",
+    "msrv": "1.97.1",
+    "msrv_policy": "Exactly the qualified compiler; lower versions are not supported or claimed tested. Changes require owner review and native requalification.",
+    "edition": "2024",
+    "panic": "unwind",
+    "components": ["rustc", "cargo", "rust-std", "rustfmt", "clippy"],
+    "component_versions": {
+      "cargo": "cargo 1.97.1 (c980f4866 2026-06-30)",
+      "clippy": "clippy 0.1.97 (8bab26f4f6 2026-07-14)",
+      "rustfmt": "rustfmt 1.9.0-stable (8bab26f4f6 2026-07-14)"
+    },
+    "targets": ["x86_64-unknown-linux-gnu", "x86_64-pc-windows-msvc", "aarch64-apple-darwin"],
+    "cargo_lock": {
+      "path": "rust/Cargo.lock",
+      "format_version": 4,
+      "owner": "S1 generates the real workspace lockfile with this exact Cargo version; no fabricated Q1 application lockfile",
+      "policy": "Commit the workspace lockfile; all subsequent build/test/clippy invocations use --locked. Review dependency/source/license deltas before updates. No unbounded git branches or floating toolchain channels.",
+      "initial_external_dependencies": []
+    }
+  },
+  "native": {
+    "Linux": {
+      "machine": "x86_64",
+      "target": "x86_64-unknown-linux-gnu",
+      "runner_selector": "ubuntu-24.04",
+      "compiler_first_line": "gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+      "compiler_family": "GCC",
+      "compiler_version": "13.3.0-6ubuntu2~24.04.1",
+      "driver": "GNU Make 4.3",
+      "runtime_packages": {
+        "binutils": "2.42-4ubuntu2.10",
+        "libc6:amd64": "2.39-0ubuntu8.8",
+        "libgcc-s1:amd64": "14.2.0-4ubuntu2~24.04.1",
+        "libstdc++6:amd64": "14.2.0-4ubuntu2~24.04.1",
+        "make": "4.3-4.1build2"
+      },
+      "make_fragments": ["../../cmpl_gcc.mak"],
+      "mode": "Retained release -O2, NDEBUG, PIC, MT/pthread, portable C optimized units; no enabled USE_ASM or ST_MODE override",
+      "runtime_policy": "Matched libstdc++/libgcc/glibc; no Rust deallocation of native allocations"
+    },
+    "Windows": {
+      "machine": "AMD64",
+      "target": "x86_64-pc-windows-msvc",
+      "runner_selector": "windows-2022",
+      "compiler_first_line": "Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35228 for x64",
+      "compiler_family": "MSVC",
+      "compiler_version": "19.44.35228",
+      "driver": "Microsoft (R) Program Maintenance Utility Version 14.44.35228.0",
+      "VCToolsVersion": "14.44.35207",
+      "WindowsSDKVersion": "10.0.26100.0\\",
+      "UCRTVersion": "10.0.26100.0",
+      "build_command": ["nmake", "/G", "/NOLOGO", "PLATFORM=x64"],
+      "mode": "Retained -O1 -MT -EHsc -GR- -Gr -MP4, ml64 assembly; ABI exports and callbacks override -Gr with __cdecl",
+      "runtime_policy": "Retained static MSVC runtime inside the native module; every allocation is released by its allocating module. No CRT FILE*, STL, exceptions or native memory ownership crosses to Rust. This is not static-link distribution approval."
+    },
+    "Darwin": {
+      "machine": "arm64",
+      "target": "aarch64-apple-darwin",
+      "runner_selector": "macos-14",
+      "compiler_first_line": "Apple clang version 15.0.0 (clang-1500.3.9.4)",
+      "compiler_family": "Apple Clang",
+      "compiler_version": "clang-1500.3.9.4",
+      "driver": "GNU Make 3.81",
+      "xcode": "15.4",
+      "sdk": "14.5",
+      "observed_os": "14.8.9 (23J631)",
+      "runtime_versions": {"libSystem.B.dylib": "1345.120.2", "libc++.1.dylib": "1700.255.5"},
+      "make_fragments": ["../../cmpl_mac_arm64.mak"],
+      "mode": "Retained arm64 clang/PIC/MT build including selected arm64 assembly; natural C ABI layout",
+      "runtime_policy": "Matched Apple libc++ and SDK; legacy Format7zF uses the filename 7z.so even on macOS. That is not the eventual facade install name."
+    }
+  },
+  "policy": {
+    "runner_selectors_are_not_immutable_toolchain_pins": true,
+    "on_version_drift": "Fail closed against exact compiler, driver and selected runtime identity; retain logs and requalify a reviewed pin. Do not silently accept latest.",
+    "local_supplement": "Linux GCC 15.2.0-16ubuntu1 / GNU Make 4.4.1 also built the retained products locally. This does not replace the canonical native CI pins.",
+    "qt": "Not selected or installed by Q1; Q2 owns exact Qt 6/CXX-Qt/cxx pins after CLI/filesystem gates.",
+    "license": "Retained selected input obligations are in license-inventory.json and license-inventory.md. No release or GUI linkage authorization.",
+    "target_expansion": "Other OS/architecture/32-bit/MinGW/musl targets require separate native qualification before exposure."
+  }
+}

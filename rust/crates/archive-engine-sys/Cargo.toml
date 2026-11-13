@@ -1,0 +1,28 @@
+[package]
+name = "archive-engine-sys"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+# This crate deliberately does NOT inherit the workspace `unsafe_code = forbid`
+# lint: it is the single FFI boundary crate and needs scoped unsafe. `deny` (not
+# `allow`) keeps every unsafe site opt-in, so each one must carry an explicit
+# `#[allow(unsafe_code)]` next to its documented invariant and cannot appear by
+# accident. Every other workspace crate still inherits `forbid`, and
+# rust/tests/check_boundaries.py enforces exactly that split.
+[lints.rust]
+unsafe_code = "deny"
+
+[features]
+# Off by default: the default workspace build links no native code and is
+# behaviorally unchanged. Enabling this requires a matched facade built by
+# rust/bridge/makefile.gcc on the same host.
+default = []
+facade = []
+
+# Deliberately absent: no build script. The matched facade library location is
+# supplied by the application at build time (see
+# docs/ai-migration/qualification/s2a-dev.md); the crate never mutates PATH or
+# LD_LIBRARY_PATH globally and never searches for an arbitrary system facade,
+# per abi-v1.md "Handshake, initialization and errors".

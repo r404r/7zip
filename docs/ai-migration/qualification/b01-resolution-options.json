@@ -1,0 +1,1182 @@
+{
+  "schema_version": 1,
+  "task_id": "t_ec0aaad1",
+  "status": "proposal_for_independent_review",
+  "complete_solution_now": false,
+  "imports_authorized": false,
+  "native_results_produced": false,
+  "b01_state_changed": false,
+  "b01_task": "t_22299c6f",
+  "b01_status_observed": "triage",
+  "scope": {
+    "research_units": [
+      {
+        "id": "debian-libarchive",
+        "pin": "3.8.9-1",
+        "candidate_families": [
+          "DLA-BASIC",
+          "DLA-MULTI"
+        ],
+        "new_evidence": "Versioned Debian copyright file includes Files:libarchive/* coverage."
+      },
+      {
+        "id": "unarr",
+        "pin": "3307cd3fdcffe3b98326872c601bbf7235386441",
+        "candidate_families": [
+          "U4-STORE",
+          "U4-LZ",
+          "U4-PPM"
+        ],
+        "new_evidence": "Pinned tree, test registration and current-path histories; no fixture-specific rights statement established."
+      },
+      {
+        "id": "debian-python-rarfile",
+        "pin": "4.5-1",
+        "candidate_families": [
+          "DRF-OLD",
+          "DRF-SOLID",
+          "DRF-VOL"
+        ],
+        "new_evidence": "Versioned Debian ISC Files:* coverage, expected metadata and upstream author/history corroboration."
+      },
+      {
+        "id": "debian-unrar-free",
+        "pin": "1:0.3.3-1",
+        "candidate_families": [],
+        "new_evidence": "GPL-2+ package declaration; top-level screen and tests API absence only, no selected family."
+      }
+    ],
+    "maximum_research_units": 4,
+    "maximum_candidate_families": 8,
+    "archive_payload_downloads": 0,
+    "upstream_code_executions": 0,
+    "correspondence_sent": 0,
+    "spending": 0
+  },
+  "options": {
+    "O1": {
+      "rank": 1,
+      "title": "Two-track provenance policy and rights-reviewed acquired-fixture pilot",
+      "verified_facts": [
+        "M1 explicitly requires actual generator/version/license provenance, but does not name historical writer executable hashes.",
+        "B01-W specifies exact executable/package/argv binding for its proposed new-generation campaign.",
+        "Debian manifests assign file-path coverage, and rarfile contribution history aligns with named package author."
+      ],
+      "hypotheses": [
+        "Fixed immutable bytes can serve a differential replay experiment without the original writer binary.",
+        "DRF-OLD/DRF-SOLID/DRF-VOL could become suitable small pilot inputs after rights and native qualification."
+      ],
+      "proposed_policy_changes": [
+        "Explicit acquired-immutable class permits null unknown historical writer/version/hash with reason; generated-reproducible class retains prospective writer records.",
+        "Human-approved M1/B01 evidence requirement amendment and any B01-W recipe substitution; reviewed manifest validator extension, not implicit null acceptance."
+      ],
+      "sources": [
+        1,
+        3,
+        8,
+        10,
+        11,
+        16,
+        20,
+        21,
+        22
+      ],
+      "effort": "Estimate only: 1-2 engineer-days policy/rights review; 3-5 engineer-days small pilot/native captures if harness reusable; elapsed/CI time uncertain.",
+      "risks": [
+        "License path coverage does not establish exact member/source authority.",
+        "Unknown writer prevents named-writer interoperability claims and regeneration.",
+        "Metadata/test labels cannot replace native method evidence; missing other B01 requirements remain."
+      ],
+      "human_decision_needed": "Approve precise replay evidence-policy amendment; separately resolve exact rights and authorize finite acquisition/import pilot.",
+      "next_action": "Original B01 reviews DRF-OLD, DRF-SOLID, DRF-VOL rights under proposed policy; acquire only after explicit clearance, hash/quarantine and capture native results additively.",
+      "stop_condition": "Stop at three DRF families or unresolved rights, source/byte mismatch, unsafe resource demand, semantic disagreement; no automatic further search.",
+      "approved": false,
+      "incremental_product_fees": 0,
+      "currency": "USD",
+      "no_commercial_writer_execution": true,
+      "coverage_by_case": {
+        "R4-STORE": {
+          "qualified_now": false,
+          "effect": "Potential later acquired-fixture qualification only where candidate intent matches; gaps remain."
+        },
+        "R4-LZ": {
+          "qualified_now": false,
+          "effect": "Potential later acquired-fixture qualification only where candidate intent matches; gaps remain."
+        },
+        "R4-PPM": {
+          "qualified_now": false,
+          "effect": "Potential later acquired-fixture qualification only where candidate intent matches; gaps remain."
+        },
+        "R4-VOL": {
+          "qualified_now": false,
+          "effect": "Potential later acquired-fixture qualification only where candidate intent matches; gaps remain."
+        },
+        "R4-OLDVOL": {
+          "qualified_now": false,
+          "effect": "Potential later acquired-fixture qualification only where candidate intent matches; gaps remain."
+        },
+        "R5-STORE": {
+          "qualified_now": false,
+          "effect": "Potential later acquired-fixture qualification only where candidate intent matches; gaps remain."
+        },
+        "R5-LZ-SOLID": {
+          "qualified_now": false,
+          "effect": "Potential later acquired-fixture qualification only where candidate intent matches; gaps remain."
+        },
+        "R5-VOL": {
+          "qualified_now": false,
+          "effect": "Potential later acquired-fixture qualification only where candidate intent matches; gaps remain."
+        }
+      },
+      "other_b01_coverage_closed": [],
+      "remaining_other_b01_coverage": [
+        "Rar1/Rar2 streams",
+        "Rar3 PPM/LZ transitions and filters",
+        "classic compressed solid/multipart",
+        "compression levels/dictionary boundaries",
+        "RAR-specific unsupported methods/damaged compressed streams",
+        "encryption/password callback states B05",
+        "Unicode/fork code pages B02",
+        "filesystem metadata/links/permissions and large files B03/B04",
+        "recovery/SFX",
+        "nested/probing chains",
+        "external 7z/CAB/ISO/WIM and other inventory rows",
+        "list/create numeric outcomes and stable operation/item identity",
+        "FFI B08",
+        "GUI and desktop qualification"
+      ]
+    },
+    "O2": {
+      "rank": 2,
+      "title": "One narrow inquiry or voluntary licensed contribution round",
+      "verified_facts": [
+        "Current task authorizes drafting, not external correspondence or execution.",
+        "No fixture-specific complete container/member grant was established in inspected materials."
+      ],
+      "hypotheses": [
+        "A maintainer or contributor may confirm exact existing grants or contribute independently rights-cleared bytes.",
+        "Newly licensed contributions could eventually target every original B01-W case; no donor or suitable generation route is established."
+      ],
+      "proposed_policy_changes": [
+        "Human approval for at most two recipients, one message and one clarification, 14-calendar-day window.",
+        "If original writer metadata remains unknown, O1 evidence-class decision is additionally necessary; otherwise existing strict requirements continue."
+      ],
+      "sources": [
+        3,
+        5,
+        8
+      ],
+      "effort": "Estimate only: 0.5-1 engineer-day preparation/review; external response within proposed 14-day bound unknown; later native work separate.",
+      "risks": [
+        "Contributor may lack authority for borrowed members/container.",
+        "A reply is not native qualification or operator proprietary execution permission.",
+        "Fresh generation may remain infeasible under the no-commercial constraint."
+      ],
+      "human_decision_needed": "Approve exact unsent inquiry/recipients and rights-assessment process; no paid/trial/commercial generation commission.",
+      "next_action": "After approval, request exact grant scope, member authorship/source, unknown historical metadata and immutable binding; use the report donation manifest.",
+      "stop_condition": "One round only; stop after 14 days, unresolved authority, incompatible terms or commercial execution request; record outcome and choose another explicit path.",
+      "approved": false,
+      "incremental_product_fees": 0,
+      "currency": "USD",
+      "no_commercial_writer_execution": true,
+      "coverage_by_case": {
+        "R4-STORE": {
+          "qualified_now": false,
+          "effect": "Requested contribution target; availability and qualification unknown."
+        },
+        "R4-LZ": {
+          "qualified_now": false,
+          "effect": "Requested contribution target; availability and qualification unknown."
+        },
+        "R4-PPM": {
+          "qualified_now": false,
+          "effect": "Requested contribution target; availability and qualification unknown."
+        },
+        "R4-VOL": {
+          "qualified_now": false,
+          "effect": "Requested contribution target; availability and qualification unknown."
+        },
+        "R4-OLDVOL": {
+          "qualified_now": false,
+          "effect": "Requested contribution target; availability and qualification unknown."
+        },
+        "R5-STORE": {
+          "qualified_now": false,
+          "effect": "Requested contribution target; availability and qualification unknown."
+        },
+        "R5-LZ-SOLID": {
+          "qualified_now": false,
+          "effect": "Requested contribution target; availability and qualification unknown."
+        },
+        "R5-VOL": {
+          "qualified_now": false,
+          "effect": "Requested contribution target; availability and qualification unknown."
+        }
+      },
+      "other_b01_coverage_closed": [],
+      "remaining_other_b01_coverage": [
+        "Rar1/Rar2 streams",
+        "Rar3 PPM/LZ transitions and filters",
+        "classic compressed solid/multipart",
+        "compression levels/dictionary boundaries",
+        "RAR-specific unsupported methods/damaged compressed streams",
+        "encryption/password callback states B05",
+        "Unicode/fork code pages B02",
+        "filesystem metadata/links/permissions and large files B03/B04",
+        "recovery/SFX",
+        "nested/probing chains",
+        "external 7z/CAB/ISO/WIM and other inventory rows",
+        "list/create numeric outcomes and stable operation/item identity",
+        "FFI B08",
+        "GUI and desktop qualification"
+      ]
+    },
+    "O3": {
+      "rank": 3,
+      "title": "Explicit qualification/dependency partition with closed unqualified RAR surface",
+      "verified_facts": [
+        "Reviewed M3 directly gates B05/S2a/S3/S5 on B01 and public engine exposure on B08.",
+        "M2 permits opt-in incremental surface and forbids destructive double-execution fallback.",
+        "Q1/S1 and independent B02/B03/B04 lanes have their own prerequisites, not all directly B01-dependent."
+      ],
+      "hypotheses": [
+        "A bounded non-RAR opt-in surface can advance with separately qualified relevant prerequisites and pre-dispatch exclusion."
+      ],
+      "proposed_policy_changes": [
+        "Separate human-approved operation-format-platform qualification scopes and corresponding DAG contracts; never mark/ archive B01 done to satisfy dependencies.",
+        "Narrower preview/new-surface promise, not full parity; no codec or Qt architecture substitution."
+      ],
+      "sources": [],
+      "effort": "Estimate only: 1-2 engineer-days partition specification/review; gate enforcement, implementation and native qualification effort unknown.",
+      "risks": [
+        "Extension-only checks miss renamed/nested/probed RAR.",
+        "Deleting B01/B05 edges without replacement loses shared error/password/lifetime prerequisites.",
+        "Users may mistake legacy availability for new-app parity; no after-write automatic fallback."
+      ],
+      "human_decision_needed": "Approve narrower opt-in scope and separate graph/spec review; earlier full acceptance decision is not implicitly superseded.",
+      "next_action": "Orchestrator/architect propose an exact allowlist, remaining dependency owners, pre-dispatch enforcement tests and legacy preselection; change no graph on this report.",
+      "stop_condition": "Stop if exclusion cannot precede probing/writing, or full replacement parity is required now; retain current graph and corpus path.",
+      "approved": false,
+      "incremental_product_fees": 0,
+      "currency": "USD",
+      "no_commercial_writer_execution": true,
+      "coverage_by_case": {
+        "R4-STORE": {
+          "qualified_now": false,
+          "effect": "No qualification; keep affected RAR capability closed."
+        },
+        "R4-LZ": {
+          "qualified_now": false,
+          "effect": "No qualification; keep affected RAR capability closed."
+        },
+        "R4-PPM": {
+          "qualified_now": false,
+          "effect": "No qualification; keep affected RAR capability closed."
+        },
+        "R4-VOL": {
+          "qualified_now": false,
+          "effect": "No qualification; keep affected RAR capability closed."
+        },
+        "R4-OLDVOL": {
+          "qualified_now": false,
+          "effect": "No qualification; keep affected RAR capability closed."
+        },
+        "R5-STORE": {
+          "qualified_now": false,
+          "effect": "No qualification; keep affected RAR capability closed."
+        },
+        "R5-LZ-SOLID": {
+          "qualified_now": false,
+          "effect": "No qualification; keep affected RAR capability closed."
+        },
+        "R5-VOL": {
+          "qualified_now": false,
+          "effect": "No qualification; keep affected RAR capability closed."
+        }
+      },
+      "other_b01_coverage_closed": [],
+      "remaining_other_b01_coverage": [
+        "Rar1/Rar2 streams",
+        "Rar3 PPM/LZ transitions and filters",
+        "classic compressed solid/multipart",
+        "compression levels/dictionary boundaries",
+        "RAR-specific unsupported methods/damaged compressed streams",
+        "encryption/password callback states B05",
+        "Unicode/fork code pages B02",
+        "filesystem metadata/links/permissions and large files B03/B04",
+        "recovery/SFX",
+        "nested/probing chains",
+        "external 7z/CAB/ISO/WIM and other inventory rows",
+        "list/create numeric outcomes and stable operation/item identity",
+        "FFI B08",
+        "GUI and desktop qualification"
+      ]
+    }
+  },
+  "candidates": {
+    "DLA-BASIC": {
+      "research_unit": "debian-libarchive",
+      "qualified": false,
+      "import_approved": false,
+      "archive_sha256": null,
+      "member_sha256": null,
+      "writer": null,
+      "writer_version": null,
+      "writer_executable_sha256": null,
+      "objects": [
+        {
+          "path": "libarchive/test/test_read_format_rar.rar.uu",
+          "kind": "distribution-path-size",
+          "value": null,
+          "size": 505,
+          "metadata_source": 18
+        }
+      ],
+      "proposed_case_ids": [
+        "R4-STORE"
+      ],
+      "sources": [
+        3,
+        12
+      ],
+      "verified_facts": [
+        "Distribution declares BSD-2-clause path coverage; test source expects basic text and links."
+      ],
+      "hypotheses": [
+        "Stored classic lead from reviewed B01-P; no native confirmation."
+      ],
+      "missing_evidence": [
+        "Exact container/all member and metadata rights applicability; historical writer unknown; no byte acquisition."
+      ],
+      "rights_assessment": "Distribution declaration or source-code context only; exact container and all-member applicability not approved.",
+      "native_observations": [],
+      "history_scope": "Current-path metadata only; no claim of first creation, exhaustive rename history or complete creator authority."
+    },
+    "DLA-MULTI": {
+      "research_unit": "debian-libarchive",
+      "qualified": false,
+      "import_approved": false,
+      "archive_sha256": null,
+      "member_sha256": null,
+      "writer": null,
+      "writer_version": null,
+      "writer_executable_sha256": null,
+      "objects": [
+        {
+          "path": "libarchive/test/test_read_format_rar_multivolume.part0001.rar.uu",
+          "kind": "distribution-path-size",
+          "value": null,
+          "size": 82730,
+          "metadata_source": 18
+        },
+        {
+          "path": "libarchive/test/test_read_format_rar_multivolume.part0002.rar.uu",
+          "kind": "distribution-path-size",
+          "value": null,
+          "size": 82730,
+          "metadata_source": 18
+        },
+        {
+          "path": "libarchive/test/test_read_format_rar_multivolume.part0003.rar.uu",
+          "kind": "distribution-path-size",
+          "value": null,
+          "size": 82730,
+          "metadata_source": 18
+        },
+        {
+          "path": "libarchive/test/test_read_format_rar_multivolume.part0004.rar.uu",
+          "kind": "distribution-path-size",
+          "value": null,
+          "size": 12740,
+          "metadata_source": 18
+        }
+      ],
+      "proposed_case_ids": [],
+      "sources": [
+        3,
+        12
+      ],
+      "verified_facts": [
+        "Distribution declares BSD-2-clause path coverage; test source has a 241647978-byte member."
+      ],
+      "hypotheses": [
+        "Classic multipart behavior, not a stored/non-solid R4-VOL replacement."
+      ],
+      "missing_evidence": [
+        "Complete large text and HTML origin/rights; resource review; writer unknown; all part hashes pending."
+      ],
+      "rights_assessment": "Distribution declaration or source-code context only; exact container and all-member applicability not approved.",
+      "native_observations": [],
+      "history_scope": "Current-path metadata only; no claim of first creation, exhaustive rename history or complete creator authority."
+    },
+    "U4-STORE": {
+      "research_unit": "unarr",
+      "qualified": false,
+      "import_approved": false,
+      "archive_sha256": null,
+      "member_sha256": null,
+      "writer": null,
+      "writer_version": null,
+      "writer_executable_sha256": null,
+      "objects": [
+        {
+          "path": "test/corpus/integration/lipsum_rar4_store.rar",
+          "kind": "git-blob-sha1",
+          "value": "d74ec3996a59171bc1fc5f94e7bcb655d0c495b1",
+          "size": 3594,
+          "metadata_source": 4
+        }
+      ],
+      "proposed_case_ids": [
+        "R4-STORE"
+      ],
+      "sources": [
+        4,
+        5,
+        14
+      ],
+      "verified_facts": [
+        "Pinned tree and current-path integration-test history exist; AUTHORS discusses code LGPLv3."
+      ],
+      "hypotheses": [
+        "Stored classic method from name/test intent, not measured."
+      ],
+      "missing_evidence": [
+        "Fixture-specific container/payload applicability and creator authority; actual writer/version; full member binding."
+      ],
+      "rights_assessment": "Distribution declaration or source-code context only; exact container and all-member applicability not approved.",
+      "native_observations": [],
+      "history_scope": "Current-path metadata only; no claim of first creation, exhaustive rename history or complete creator authority."
+    },
+    "U4-LZ": {
+      "research_unit": "unarr",
+      "qualified": false,
+      "import_approved": false,
+      "archive_sha256": null,
+      "member_sha256": null,
+      "writer": null,
+      "writer_version": null,
+      "writer_executable_sha256": null,
+      "objects": [
+        {
+          "path": "test/corpus/integration/lipsum_rar4_default.rar",
+          "kind": "git-blob-sha1",
+          "value": "4708242397973935cf00aa89d34b45f2142b92cf",
+          "size": 846,
+          "metadata_source": 4
+        }
+      ],
+      "proposed_case_ids": [
+        "R4-LZ"
+      ],
+      "sources": [
+        4,
+        5,
+        15
+      ],
+      "verified_facts": [
+        "Pinned object and current-path history titled Add more integration tests."
+      ],
+      "hypotheses": [
+        "Default method may exercise LZ; not established by filename."
+      ],
+      "missing_evidence": [
+        "Fixture/payload rights and actual LZ stream; writer/version and member binding unknown."
+      ],
+      "rights_assessment": "Distribution declaration or source-code context only; exact container and all-member applicability not approved.",
+      "native_observations": [],
+      "history_scope": "Current-path metadata only; no claim of first creation, exhaustive rename history or complete creator authority."
+    },
+    "U4-PPM": {
+      "research_unit": "unarr",
+      "qualified": false,
+      "import_approved": false,
+      "archive_sha256": null,
+      "member_sha256": null,
+      "writer": null,
+      "writer_version": null,
+      "writer_executable_sha256": null,
+      "objects": [
+        {
+          "path": "test/corpus/integration/lipsum_rar4_ppmd.rar",
+          "kind": "git-blob-sha1",
+          "value": "7f8a7fb3543b5c853fe6be547436faa1485a45d1",
+          "size": 817,
+          "metadata_source": 4
+        }
+      ],
+      "proposed_case_ids": [
+        "R4-PPM"
+      ],
+      "sources": [
+        4,
+        5,
+        6,
+        7
+      ],
+      "verified_facts": [
+        "CMake registers text-compression integration test; history names rar4 ppmd/delta/wav."
+      ],
+      "hypotheses": [
+        "Potential PPM stream, not a fork-native measurement or complete transition coverage."
+      ],
+      "missing_evidence": [
+        "Container/payload licensing applicability; actual writer/build; method and full member inventory."
+      ],
+      "rights_assessment": "Distribution declaration or source-code context only; exact container and all-member applicability not approved.",
+      "native_observations": [],
+      "history_scope": "Current-path metadata only; no claim of first creation, exhaustive rename history or complete creator authority."
+    },
+    "DRF-OLD": {
+      "research_unit": "debian-python-rarfile",
+      "qualified": false,
+      "import_approved": false,
+      "archive_sha256": null,
+      "member_sha256": null,
+      "writer": null,
+      "writer_version": null,
+      "writer_executable_sha256": null,
+      "objects": [
+        {
+          "path": "test/files/rar3-old.rar",
+          "kind": "distribution-path-size",
+          "value": null,
+          "size": 102400,
+          "metadata_source": 19
+        },
+        {
+          "path": "test/files/rar3-old.r00",
+          "kind": "distribution-path-size",
+          "value": null,
+          "size": 102400,
+          "metadata_source": 19
+        },
+        {
+          "path": "test/files/rar3-old.r01",
+          "kind": "distribution-path-size",
+          "value": null,
+          "size": 2572,
+          "metadata_source": 19
+        }
+      ],
+      "proposed_case_ids": [
+        "R4-OLDVOL"
+      ],
+      "sources": [
+        8,
+        16,
+        22
+      ],
+      "verified_facts": [
+        "ISC Files:* declaration; expected metadata says meth=0 and SPLIT_AFTER; history names Marko Kreen."
+      ],
+      "hypotheses": [
+        "Stored old-name volume lead stronger than the previous naming-only lead."
+      ],
+      "missing_evidence": [
+        "Container/complete members grant applicability and authority assessment; writer unknown; byte/native evidence pending."
+      ],
+      "rights_assessment": "Distribution declaration or source-code context only; exact container and all-member applicability not approved.",
+      "native_observations": [],
+      "history_scope": "Current-path metadata only; no claim of first creation, exhaustive rename history or complete creator authority.",
+      "upstream_context_objects": [
+        {
+          "path": "test/files/rar3-old.rar",
+          "git_blob_sha1": "962d8b6f4b9d7e60396c1b5366f8962868c71fe1",
+          "metadata_source": 9,
+          "same_bytes_as_distribution": null
+        },
+        {
+          "path": "test/files/rar3-old.r00",
+          "git_blob_sha1": "0ba628367eaae36c92a648217e9baf96125c2acb",
+          "metadata_source": 9,
+          "same_bytes_as_distribution": null
+        },
+        {
+          "path": "test/files/rar3-old.r01",
+          "git_blob_sha1": "9bc19dde8cb2e46d3e064b83074c7fc4e7e5c3da",
+          "metadata_source": 9,
+          "same_bytes_as_distribution": null
+        }
+      ]
+    },
+    "DRF-SOLID": {
+      "research_unit": "debian-python-rarfile",
+      "qualified": false,
+      "import_approved": false,
+      "archive_sha256": null,
+      "member_sha256": null,
+      "writer": null,
+      "writer_version": null,
+      "writer_executable_sha256": null,
+      "objects": [
+        {
+          "path": "test/files/rar5-solid.rar",
+          "kind": "distribution-path-size",
+          "value": null,
+          "size": 169,
+          "metadata_source": 19
+        }
+      ],
+      "proposed_case_ids": [
+        "R5-LZ-SOLID"
+      ],
+      "sources": [
+        8,
+        10,
+        20
+      ],
+      "verified_facts": [
+        "ISC package declaration; expected dump says cmp_meth=3 and second member solid=True."
+      ],
+      "hypotheses": [
+        "Potential modern solid/LZ differential corpus; expected dump is not a native result."
+      ],
+      "missing_evidence": [
+        "Complete payload/source rights and container applicability; writer unknown; byte/native binding pending."
+      ],
+      "rights_assessment": "Distribution declaration or source-code context only; exact container and all-member applicability not approved.",
+      "native_observations": [],
+      "history_scope": "Current-path metadata only; no claim of first creation, exhaustive rename history or complete creator authority.",
+      "upstream_context_objects": [
+        {
+          "path": "test/files/rar5-solid.rar",
+          "git_blob_sha1": "277cfe7206417067faf2fbd7c3f0bd7a1bf878a2",
+          "metadata_source": 9,
+          "same_bytes_as_distribution": null
+        }
+      ]
+    },
+    "DRF-VOL": {
+      "research_unit": "debian-python-rarfile",
+      "qualified": false,
+      "import_approved": false,
+      "archive_sha256": null,
+      "member_sha256": null,
+      "writer": null,
+      "writer_version": null,
+      "writer_executable_sha256": null,
+      "objects": [
+        {
+          "path": "test/files/rar5-vols.part1.rar",
+          "kind": "distribution-path-size",
+          "value": null,
+          "size": 102400,
+          "metadata_source": 19
+        },
+        {
+          "path": "test/files/rar5-vols.part2.rar",
+          "kind": "distribution-path-size",
+          "value": null,
+          "size": 102400,
+          "metadata_source": 19
+        },
+        {
+          "path": "test/files/rar5-vols.part3.rar",
+          "kind": "distribution-path-size",
+          "value": null,
+          "size": 11384,
+          "metadata_source": 19
+        }
+      ],
+      "proposed_case_ids": [
+        "R5-VOL"
+      ],
+      "sources": [
+        8,
+        11,
+        21
+      ],
+      "verified_facts": [
+        "ISC package declaration; expected dump has cmp_meth=0, split flag and vol=2."
+      ],
+      "hypotheses": [
+        "Potential stored RAR5 volume lead, not native missing-volume coverage."
+      ],
+      "missing_evidence": [
+        "All part/member rights and byte hashes/order; writer/version unknown; native outcomes pending."
+      ],
+      "rights_assessment": "Distribution declaration or source-code context only; exact container and all-member applicability not approved.",
+      "native_observations": [],
+      "history_scope": "Current-path metadata only; no claim of first creation, exhaustive rename history or complete creator authority.",
+      "upstream_context_objects": [
+        {
+          "path": "test/files/rar5-vols.part1.rar",
+          "git_blob_sha1": "0926f2f8f6d74bd1a7e8c4c1ebe74432c0b8d4e2",
+          "metadata_source": 9,
+          "same_bytes_as_distribution": null
+        },
+        {
+          "path": "test/files/rar5-vols.part2.rar",
+          "git_blob_sha1": "d4f55a2f859d0c7b422b99e111db4fc5e8b7e34f",
+          "metadata_source": 9,
+          "same_bytes_as_distribution": null
+        },
+        {
+          "path": "test/files/rar5-vols.part3.rar",
+          "git_blob_sha1": "ba6e9924a6db984d321364b8788301cda8c3bfba",
+          "metadata_source": 9,
+          "same_bytes_as_distribution": null
+        }
+      ]
+    }
+  },
+  "case_mapping": {
+    "R4-STORE": {
+      "candidate_ids": [
+        "DLA-BASIC",
+        "U4-STORE"
+      ],
+      "qualified": false,
+      "replacement_recipe_equivalent": false
+    },
+    "R4-LZ": {
+      "candidate_ids": [
+        "U4-LZ"
+      ],
+      "qualified": false,
+      "replacement_recipe_equivalent": false
+    },
+    "R4-PPM": {
+      "candidate_ids": [
+        "U4-PPM"
+      ],
+      "qualified": false,
+      "replacement_recipe_equivalent": false
+    },
+    "R4-VOL": {
+      "candidate_ids": [],
+      "qualified": false,
+      "replacement_recipe_equivalent": false,
+      "gap": "DLA-MULTI is only a different classic multipart lead; stored/non-solid numbered-volume intent is not fulfilled."
+    },
+    "R4-OLDVOL": {
+      "candidate_ids": [
+        "DRF-OLD"
+      ],
+      "qualified": false,
+      "replacement_recipe_equivalent": false
+    },
+    "R5-STORE": {
+      "candidate_ids": [],
+      "qualified": false,
+      "replacement_recipe_equivalent": false,
+      "gap": "No new family assessed; B01-F J5-STORE remains unresolved parent context, not re-audited."
+    },
+    "R5-LZ-SOLID": {
+      "candidate_ids": [
+        "DRF-SOLID"
+      ],
+      "qualified": false,
+      "replacement_recipe_equivalent": false
+    },
+    "R5-VOL": {
+      "candidate_ids": [
+        "DRF-VOL"
+      ],
+      "qualified": false,
+      "replacement_recipe_equivalent": false
+    }
+  },
+  "remaining_other_b01_coverage": [
+    "Rar1/Rar2 streams",
+    "Rar3 PPM/LZ transitions and filters",
+    "classic compressed solid/multipart",
+    "compression levels/dictionary boundaries",
+    "RAR-specific unsupported methods/damaged compressed streams",
+    "encryption/password callback states B05",
+    "Unicode/fork code pages B02",
+    "filesystem metadata/links/permissions and large files B03/B04",
+    "recovery/SFX",
+    "nested/probing chains",
+    "external 7z/CAB/ISO/WIM and other inventory rows",
+    "list/create numeric outcomes and stable operation/item identity",
+    "FFI B08",
+    "GUI and desktop qualification"
+  ],
+  "sources": [
+    {
+      "id": 1,
+      "url": "https://www.debian.org/doc/packaging-manuals/copyright-format/1.0",
+      "snapshot_sha256": "e93fbce9f05da44a84b1c3d8258cf7a3f65f991156fa865f057b53eeb1dca005",
+      "snapshot_file": "dep5.txt",
+      "quotes": [
+        "Both match slashes ( / ) and leading dots, unlike shell globs."
+      ],
+      "kind": "html_text",
+      "pin_kind": "versioned_specification",
+      "limitation": "Response envelopes and site availability are not immutable; pinned content/quoted values must be rechecked.",
+      "retrieval_url": "https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/"
+    },
+    {
+      "id": 3,
+      "url": "https://sources.debian.org/data/main/liba/libarchive/3.8.9-1/debian/copyright",
+      "snapshot_sha256": "595719eda062573159bf7c1a144e8527c4a6fe3abc3184c80153d62f42feff4b",
+      "snapshot_file": "debian-copyright.txt",
+      "quotes": [
+        "Files: libarchive/*\nCopyright:\n (c) 2003-2014 Tim Kientzle",
+        " (c) 2011 Andres Mejia",
+        "Redistribution and use in source and binary forms, with or without\n modification, are permitted provided that the following conditions\n are met:"
+      ],
+      "kind": "text",
+      "pin_kind": "distribution_version",
+      "limitation": "Response envelopes and site availability are not immutable; pinned content/quoted values must be rechecked.",
+      "retrieval_url": "https://sources.debian.org/data/main/liba/libarchive/3.8.9-1/debian/copyright"
+    },
+    {
+      "id": 4,
+      "url": "https://api.github.com/repos/selmf/unarr/git/trees/61c07dab16fdf88c42694c512505564adca49d4e?recursive=1",
+      "snapshot_sha256": "1048ca4e225656496bb341184ebb84db57408bf2f7336de326658deb566b296d",
+      "snapshot_file": "unarr-tree.json",
+      "quotes": [
+        "\"path\": \"test/corpus/integration/lipsum_rar4_ppmd.rar\",\n      \"mode\": \"100644\",\n      \"type\": \"blob\""
+      ],
+      "kind": "tree",
+      "pin_kind": "git_revision",
+      "limitation": "Response envelopes and site availability are not immutable; pinned content/quoted values must be rechecked.",
+      "retrieval_url": "https://api.github.com/repos/selmf/unarr/git/trees/61c07dab16fdf88c42694c512505564adca49d4e?recursive=1"
+    },
+    {
+      "id": 5,
+      "url": "https://raw.githubusercontent.com/selmf/unarr/3307cd3fdcffe3b98326872c601bbf7235386441/AUTHORS",
+      "snapshot_sha256": "c48a43b79c6150a18369c9b9f10ae94bee61c7ad519b9f8f33014b2470bb9593",
+      "snapshot_file": "unarr-authors.txt",
+      "quotes": [
+        "Most code is licensed under LGPLv3 (see COPYING). Exceptions are in code\nincluded from other projects:"
+      ],
+      "kind": "text",
+      "pin_kind": "git_revision",
+      "limitation": "Response envelopes and site availability are not immutable; pinned content/quoted values must be rechecked.",
+      "retrieval_url": "https://raw.githubusercontent.com/selmf/unarr/3307cd3fdcffe3b98326872c601bbf7235386441/AUTHORS"
+    },
+    {
+      "id": 6,
+      "url": "https://raw.githubusercontent.com/selmf/unarr/3307cd3fdcffe3b98326872c601bbf7235386441/test/CMakeLists.txt",
+      "snapshot_sha256": "870f588f8bdada8f4b2605ebd6e82e261a3fb036263b7f01f758b75661164c57",
+      "snapshot_file": "unarr-cmake.txt",
+      "quotes": [
+        "# Non-standard compression methods\n  run_test(integration/lipsum_rar4_ppmd.rar) # Text"
+      ],
+      "kind": "text",
+      "pin_kind": "git_revision",
+      "limitation": "Response envelopes and site availability are not immutable; pinned content/quoted values must be rechecked.",
+      "retrieval_url": "https://raw.githubusercontent.com/selmf/unarr/3307cd3fdcffe3b98326872c601bbf7235386441/test/CMakeLists.txt"
+    },
+    {
+      "id": 7,
+      "url": "https://api.github.com/repos/selmf/unarr/commits?sha=3307cd3fdcffe3b98326872c601bbf7235386441&path=test%2Fcorpus%2Fintegration%2Flipsum_rar4_ppmd.rar&per_page=100",
+      "snapshot_sha256": "1ff8ada9909338d8bedd791349c89483982d3023e94db14310f42f9ff01d4f86",
+      "snapshot_file": "unarr-history.json",
+      "quotes": [
+        "Add integration tests for rar4 ppmd, delta and wav compression"
+      ],
+      "kind": "history",
+      "pin_kind": "git_revision",
+      "limitation": "Response envelopes and site availability are not immutable; pinned content/quoted values must be rechecked.",
+      "retrieval_url": "https://api.github.com/repos/selmf/unarr/commits?sha=3307cd3fdcffe3b98326872c601bbf7235386441&path=test%2Fcorpus%2Fintegration%2Flipsum_rar4_ppmd.rar&per_page=100"
+    },
+    {
+      "id": 8,
+      "url": "https://sources.debian.org/data/main/p/python-rarfile/4.5-1/debian/copyright",
+      "snapshot_sha256": "03bfd2007ce25db146e37f8448face658deb0989d0b1eb93d75dcb6af307a4f4",
+      "snapshot_file": "rarfile-copyright.txt",
+      "quotes": [
+        "Copyright: 2005-2026 Marko Kreen",
+        "Permission to use, copy, modify, and/or distribute this software for any\n  purpose with or without fee is hereby granted, provided that the above\n  copyright notice and this permission notice appear in all copies."
+      ],
+      "kind": "text",
+      "pin_kind": "distribution_version",
+      "limitation": "Response envelopes and site availability are not immutable; pinned content/quoted values must be rechecked.",
+      "retrieval_url": "https://sources.debian.org/data/main/p/python-rarfile/4.5-1/debian/copyright"
+    },
+    {
+      "id": 9,
+      "url": "https://api.github.com/repos/markokr/rarfile/git/trees/d2f7df6fc843dae356fd6b0a85971dc36fd6e757?recursive=1",
+      "snapshot_sha256": "cc4eab302a959c4196c804ad28b704c1e9a78d5845a906e7239533d65d17d79b",
+      "snapshot_file": "rarfile-tree.json",
+      "quotes": [
+        "\"path\": \"test/files/rar3-old.rar\",\n      \"mode\": \"100644\",\n      \"type\": \"blob\""
+      ],
+      "kind": "tree",
+      "pin_kind": "git_revision",
+      "limitation": "Response envelopes and site availability are not immutable; pinned content/quoted values must be rechecked.",
+      "retrieval_url": "https://api.github.com/repos/markokr/rarfile/git/trees/d2f7df6fc843dae356fd6b0a85971dc36fd6e757?recursive=1"
+    },
+    {
+      "id": 10,
+      "url": "https://sources.debian.org/data/main/p/python-rarfile/4.5-1/test/files/rar5-solid.rar.exp",
+      "snapshot_sha256": "ba2163f0462dca487c14e60d6a443132778d3ddba9f72e2744634b8d9631c656",
+      "snapshot_file": "rf-solid-exp.txt",
+      "quotes": [
+        "cmp_algo=0 cmp_meth=3 dict=3 solid=True"
+      ],
+      "kind": "text",
+      "pin_kind": "distribution_version",
+      "limitation": "Response envelopes and site availability are not immutable; pinned content/quoted values must be rechecked.",
+      "retrieval_url": "https://sources.debian.org/data/main/p/python-rarfile/4.5-1/test/files/rar5-solid.rar.exp"
+    },
+    {
+      "id": 11,
+      "url": "https://sources.debian.org/data/main/p/python-rarfile/4.5-1/test/files/rar5-vols.part1.rar.exp",
+      "snapshot_sha256": "e6b917e05b29fd7bef06b51a7939589f9031d8b467998491e3195211d27c9788",
+      "snapshot_file": "rf-vol-exp.txt",
+      "quotes": [
+        "cmp_algo=0 cmp_meth=0 dict=0 solid=False"
+      ],
+      "kind": "text",
+      "pin_kind": "distribution_version",
+      "limitation": "Response envelopes and site availability are not immutable; pinned content/quoted values must be rechecked.",
+      "retrieval_url": "https://sources.debian.org/data/main/p/python-rarfile/4.5-1/test/files/rar5-vols.part1.rar.exp"
+    },
+    {
+      "id": 12,
+      "url": "https://sources.debian.org/data/main/liba/libarchive/3.8.9-1/libarchive/test/test_read_format_rar.c",
+      "snapshot_sha256": "13bf0b066f5ff4514be453d478dbdda022fbec1dbc43690f1903156d06cd5466",
+      "snapshot_file": "debian-rar-test.c",
+      "quotes": [
+        "const char test_txt[] = \"test text document\\r\\n\";",
+        "int file1_size = 241647978;"
+      ],
+      "kind": "text",
+      "pin_kind": "distribution_version",
+      "limitation": "Response envelopes and site availability are not immutable; pinned content/quoted values must be rechecked.",
+      "retrieval_url": "https://sources.debian.org/data/main/liba/libarchive/3.8.9-1/libarchive/test/test_read_format_rar.c"
+    },
+    {
+      "id": 13,
+      "url": "https://sources.debian.org/api/src/unrar-free/1%3A0.3.3-1/tests",
+      "snapshot_sha256": "90e17c2a1b2ed759d3e58c2b89813ceebb19c1268965c97f08c0cc5c92a566e0",
+      "snapshot_file": "unrar-tests-tree.json",
+      "quotes": [],
+      "kind": "structured_negative",
+      "pin_kind": "distribution_version",
+      "limitation": "Response envelopes and site availability are not immutable; pinned content/quoted values must be rechecked.",
+      "retrieval_url": "https://sources.debian.org/api/src/unrar-free/1%3A0.3.3-1/tests/"
+    },
+    {
+      "id": 14,
+      "url": "https://api.github.com/repos/selmf/unarr/commits?sha=3307cd3fdcffe3b98326872c601bbf7235386441&path=test%2Fcorpus%2Fintegration%2Flipsum_rar4_store.rar&per_page=100",
+      "snapshot_sha256": "f2b6cdb7367d41ab91d0b246bdb903338b0e51696ba8b0b1f0203e8adcd1a249",
+      "snapshot_file": "unarr-store-history.json",
+      "quotes": [
+        "Add support for integration tests"
+      ],
+      "kind": "history",
+      "pin_kind": "git_revision",
+      "limitation": "Response envelopes and site availability are not immutable; pinned content/quoted values must be rechecked.",
+      "retrieval_url": "https://api.github.com/repos/selmf/unarr/commits?sha=3307cd3fdcffe3b98326872c601bbf7235386441&path=test%2Fcorpus%2Fintegration%2Flipsum_rar4_store.rar&per_page=100"
+    },
+    {
+      "id": 15,
+      "url": "https://api.github.com/repos/selmf/unarr/commits?sha=3307cd3fdcffe3b98326872c601bbf7235386441&path=test%2Fcorpus%2Fintegration%2Flipsum_rar4_default.rar&per_page=100",
+      "snapshot_sha256": "f6ea10b6baeafea6c857b2378cce229d560962fcbd40415b7027003d31df4739",
+      "snapshot_file": "unarr-default-history.json",
+      "quotes": [
+        "Add more integration tests"
+      ],
+      "kind": "history",
+      "pin_kind": "git_revision",
+      "limitation": "Response envelopes and site availability are not immutable; pinned content/quoted values must be rechecked.",
+      "retrieval_url": "https://api.github.com/repos/selmf/unarr/commits?sha=3307cd3fdcffe3b98326872c601bbf7235386441&path=test%2Fcorpus%2Fintegration%2Flipsum_rar4_default.rar&per_page=100"
+    },
+    {
+      "id": 16,
+      "url": "https://sources.debian.org/data/main/p/python-rarfile/4.5-1/test/files/rar3-old.rar.exp",
+      "snapshot_sha256": "6038272de71c6356f4f7daf855446ca93ee323480fc38c8b428c4f853af7f201",
+      "snapshot_file": "rf-old-exp.txt",
+      "quotes": [
+        "os=3:UNIX ver=20 mode=-rw-rw-r-- meth=0 cmp=205000 dec=205000 vol=0"
+      ],
+      "kind": "text",
+      "pin_kind": "distribution_version",
+      "limitation": "Response envelopes and site availability are not immutable; pinned content/quoted values must be rechecked.",
+      "retrieval_url": "https://sources.debian.org/data/main/p/python-rarfile/4.5-1/test/files/rar3-old.rar.exp"
+    },
+    {
+      "id": 17,
+      "url": "https://sources.debian.org/data/main/u/unrar-free/1%3A0.3.3-1/debian/copyright",
+      "snapshot_sha256": "fd67c2e7033514daf23ccd795b0a7579d54074d55563704715643450f9d44c53",
+      "snapshot_file": "unrar-copyright.txt",
+      "quotes": [
+        "This program is free software; you can redistribute it and/or"
+      ],
+      "kind": "text",
+      "pin_kind": "distribution_version",
+      "limitation": "Response envelopes and site availability are not immutable; pinned content/quoted values must be rechecked.",
+      "retrieval_url": "https://sources.debian.org/data/main/u/unrar-free/1%3A0.3.3-1/debian/copyright"
+    },
+    {
+      "id": 18,
+      "url": "https://sources.debian.org/api/src/libarchive/3.8.9-1/libarchive/test",
+      "snapshot_sha256": "98aaf3d62d99f549f1498553e6502f89ca7224c6b74f1e3b0c65b473f206185d",
+      "snapshot_file": "debian-test-tree.json",
+      "quotes": [],
+      "kind": "tree",
+      "pin_kind": "distribution_version",
+      "limitation": "Response envelopes and site availability are not immutable; pinned content/quoted values must be rechecked.",
+      "retrieval_url": "https://sources.debian.org/api/src/libarchive/3.8.9-1/libarchive/test/"
+    },
+    {
+      "id": 19,
+      "url": "https://sources.debian.org/api/src/python-rarfile/4.5-1/test/files",
+      "snapshot_sha256": "ad9d93ea1f36bc07f7cc86ab372fce65af10a3042a03d0672e5732946d2dc29e",
+      "snapshot_file": "rarfile-debian-files.json",
+      "quotes": [],
+      "kind": "tree",
+      "pin_kind": "distribution_version",
+      "limitation": "Response envelopes and site availability are not immutable; pinned content/quoted values must be rechecked.",
+      "retrieval_url": "https://sources.debian.org/api/src/python-rarfile/4.5-1/test/files/"
+    },
+    {
+      "id": 20,
+      "url": "https://api.github.com/repos/markokr/rarfile/commits?sha=d2f7df6fc843dae356fd6b0a85971dc36fd6e757&path=test%2Ffiles%2Frar5-solid.rar&per_page=100",
+      "snapshot_sha256": "6048a5e1dad4d6a6ac349dff1353244c2525f823b17e82cb8d5bb997337bad0d",
+      "snapshot_file": "rf-solid-history.json",
+      "quotes": [
+        "New test files for rar5"
+      ],
+      "kind": "history",
+      "pin_kind": "git_revision",
+      "limitation": "Response envelopes and site availability are not immutable; pinned content/quoted values must be rechecked.",
+      "retrieval_url": "https://api.github.com/repos/markokr/rarfile/commits?sha=d2f7df6fc843dae356fd6b0a85971dc36fd6e757&path=test%2Ffiles%2Frar5-solid.rar&per_page=100"
+    },
+    {
+      "id": 21,
+      "url": "https://api.github.com/repos/markokr/rarfile/commits?sha=d2f7df6fc843dae356fd6b0a85971dc36fd6e757&path=test%2Ffiles%2Frar5-vols.part1.rar&per_page=100",
+      "snapshot_sha256": "6048a5e1dad4d6a6ac349dff1353244c2525f823b17e82cb8d5bb997337bad0d",
+      "snapshot_file": "rf-vol-history.json",
+      "quotes": [
+        "New test files for rar5"
+      ],
+      "kind": "history",
+      "pin_kind": "git_revision",
+      "limitation": "Response envelopes and site availability are not immutable; pinned content/quoted values must be rechecked.",
+      "retrieval_url": "https://api.github.com/repos/markokr/rarfile/commits?sha=d2f7df6fc843dae356fd6b0a85971dc36fd6e757&path=test%2Ffiles%2Frar5-vols.part1.rar&per_page=100"
+    },
+    {
+      "id": 22,
+      "url": "https://api.github.com/repos/markokr/rarfile/commits?sha=d2f7df6fc843dae356fd6b0a85971dc36fd6e757&path=test%2Ffiles%2Frar3-old.rar&per_page=100",
+      "snapshot_sha256": "fb51619fbfc376650cc688af913d63f0fe0dd72d0eee1ac454aa617036edc973",
+      "snapshot_file": "rf-history.json",
+      "quotes": [
+        "New test files for rar5"
+      ],
+      "kind": "history",
+      "pin_kind": "git_revision",
+      "limitation": "Response envelopes and site availability are not immutable; pinned content/quoted values must be rechecked.",
+      "retrieval_url": "https://api.github.com/repos/markokr/rarfile/commits?sha=d2f7df6fc843dae356fd6b0a85971dc36fd6e757&path=test%2Ffiles%2Frar3-old.rar&per_page=100"
+    },
+    {
+      "id": 23,
+      "url": "https://sources.debian.org/api/src/unrar-free/1%3A0.3.3-1",
+      "snapshot_sha256": "370f85c6f84e53d340c742da8ce6a355ac68b994db82aa63112676b63697000d",
+      "snapshot_file": "unrar-tree.json",
+      "quotes": [
+        "\"name\": \"src\", \"percent_encoded_name\": \"src\""
+      ],
+      "kind": "tree",
+      "pin_kind": "distribution_version",
+      "limitation": "Response envelopes and site availability are not immutable; pinned content/quoted values must be rechecked.",
+      "retrieval_url": "https://sources.debian.org/api/src/unrar-free/1%3A0.3.3-1/"
+    },
+    {
+      "id": 24,
+      "url": "https://api.github.com/repos/selmf/unarr/git/commits/3307cd3fdcffe3b98326872c601bbf7235386441",
+      "snapshot_sha256": "52b4bad1405b14dac44291c3fe4b353732a005a8c96c2220c2e0e5904716e929",
+      "snapshot_file": "unarr-pinned-commit.json",
+      "quotes": [
+        "LZMA SDK: Update to v26.03"
+      ],
+      "kind": "text",
+      "pin_kind": "git_revision",
+      "limitation": "Response envelopes and site availability are not immutable; pinned content/quoted values must be rechecked.",
+      "retrieval_url": "https://api.github.com/repos/selmf/unarr/git/commits/3307cd3fdcffe3b98326872c601bbf7235386441"
+    }
+  ],
+  "structured_negatives": [
+    {
+      "source_id": 13,
+      "literal_response": {
+        "error": 404
+      },
+      "meaning": "Only queried tests path absent; not absence of all fixtures or license denial."
+    }
+  ],
+  "requirement_trace": [
+    {
+      "id": "AGENTS",
+      "path": "AGENTS.md",
+      "lines": "24-28,64-78",
+      "requirement": "Legacy behavioral oracle, retained engine, unchanged semantics/goldens and native platforms.",
+      "change_proposed": false
+    },
+    {
+      "id": "M1",
+      "path": "docs/ai-migration/characterization-baseline.md",
+      "lines": "155-173",
+      "requirement": "Actual generator/version/license provenance, immutable bytes/hashes, format/error/volume corpus.",
+      "change_proposed": "O1 explicitly proposes accepting unknown historical generator/version for replay class; human approval required."
+    },
+    {
+      "id": "M2",
+      "path": "docs/ai-migration/migration-stages.md",
+      "lines": "24-30,71-110",
+      "requirement": "Measured changed scope, reader digest, structured/native outcomes, no destructive fallback.",
+      "change_proposed": false
+    },
+    {
+      "id": "B01-W",
+      "path": "docs/ai-migration/qualification/b01-writer-plan.md",
+      "lines": "183-238,290-326",
+      "requirement": "Exact writer/package/executable/logs for prospective new-generation campaign.",
+      "change_proposed": "Do not universally extend this to historical acquired replay; no implemented change."
+    },
+    {
+      "id": "M3",
+      "path": "docs/ai-migration/migration-dag.md",
+      "lines": "93-123",
+      "requirement": "Real qualification dependencies B01/B05/S2a/S3/S5/B08.",
+      "change_proposed": "O3 separately reviewed partition only; no DAG modification here."
+    }
+  ],
+  "donation_manifest_proposal": {
+    "schema_version": 1,
+    "status": "template_not_a_grant_or_accepted_fixture",
+    "donation_id": null,
+    "public_contribution_commit": null,
+    "author_rightsholder_attribution": null,
+    "files": [],
+    "members": [],
+    "grant_scope": null,
+    "grantor_authority": null,
+    "notices": [],
+    "generation": {
+      "writer": null,
+      "version": null,
+      "executable_sha256": null,
+      "argv": null,
+      "unknown_reason": null
+    },
+    "coverage_intent": [
+      "R4-STORE",
+      "R4-LZ",
+      "R4-PPM",
+      "R4-VOL",
+      "R4-OLDVOL",
+      "R5-STORE",
+      "R5-LZ-SOLID",
+      "R5-VOL"
+    ],
+    "native_reports": [],
+    "qualified": false,
+    "commercial_execution_commissioned": false
+  },
+  "limitations": [
+    "Research evidence, not legal advice or a fixture-specific legal approval.",
+    "No source/expected dump upgraded to measured native behavior.",
+    "Versioned Debian bytes not compared to prior Git archive objects; archive/member SHA-256 unknown.",
+    "Current-path history is not exhaustive creation history; code authorship does not automatically confer member rights.",
+    "No complete B01 solution or automatic follow-up research/import/DAG change."
+  ],
+  "review_handoff": "Same-card reviewer must verify both artifacts, then only after PASS post reviewed commit/paths/options to B01 and read back; do not unblock/archive B01."
+}

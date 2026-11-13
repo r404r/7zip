@@ -1,0 +1,677 @@
+{
+  "files": {
+    "Darwin/build.json.gz": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 136610,
+      "source_sha256": "b1e08f165f53c85f1364b74856f085ca6bfeb8700311406d4c8c920a23b17f39",
+      "stored_bytes": 56479,
+      "stored_sha256": "b8c59494cbb9d35a339369543ce9093d2fb425b67ab81a232f9bb22d2d1d2453"
+    },
+    "Darwin/capture.json.gz": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 1775289,
+      "source_sha256": "825a71d46930d23801ad1dfd9f1ec09a67b9d15b9d2d849409e2d6407f4f6732",
+      "stored_bytes": 95391,
+      "stored_sha256": "869d28cc8fed6cbb5c81b958a6a814df66bd60fd66ccee0cd5f9386ea99f1950"
+    },
+    "Darwin/fixtures/byte-escape-collision.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 222,
+      "source_sha256": "3d72bb93a8602a651911a1a9506d0fe4da3bee26222a1fc0b52ff900c44b1de1",
+      "stored_bytes": 222,
+      "stored_sha256": "3d72bb93a8602a651911a1a9506d0fe4da3bee26222a1fc0b52ff900c44b1de1"
+    },
+    "Darwin/fixtures/case-collision.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 222,
+      "source_sha256": "a05643efbc5cc67fcf5be01bceef272c6460b85fd65106953e04da7a18a0fd49",
+      "stored_bytes": 222,
+      "stored_sha256": "a05643efbc5cc67fcf5be01bceef272c6460b85fd65106953e04da7a18a0fd49"
+    },
+    "Darwin/fixtures/cp932-tar.tar": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 2048,
+      "source_sha256": "25659eb77788abf9cc21af299197638fd239fdc76ac5ed4bad3e741c2df8a809",
+      "stored_bytes": 2048,
+      "stored_sha256": "25659eb77788abf9cc21af299197638fd239fdc76ac5ed4bad3e741c2df8a809"
+    },
+    "Darwin/fixtures/cp932-zip.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 126,
+      "source_sha256": "c2d8e56e72a8af500c569fb1e6a270aa082ef2357974185493d231cd4345be5c",
+      "stored_bytes": 126,
+      "stored_sha256": "c2d8e56e72a8af500c569fb1e6a270aa082ef2357974185493d231cd4345be5c"
+    },
+    "Darwin/fixtures/cp936-tar.tar": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 2048,
+      "source_sha256": "31fb34d2227805951a672bc94ac4891697f92377b4f4774ae3ec86ffc4dac73b",
+      "stored_bytes": 2048,
+      "stored_sha256": "31fb34d2227805951a672bc94ac4891697f92377b4f4774ae3ec86ffc4dac73b"
+    },
+    "Darwin/fixtures/cp936-zip.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 122,
+      "source_sha256": "a6a43f4bcecf1784d23b6d81e5008a365dde02ced3b621859ca1ba674ca4266e",
+      "stored_bytes": 122,
+      "stored_sha256": "a6a43f4bcecf1784d23b6d81e5008a365dde02ced3b621859ca1ba674ca4266e"
+    },
+    "Darwin/fixtures/duplicate-name.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 222,
+      "source_sha256": "30dfcc81ba5357277b9809a335b672e3bf319cfa4bf74cb6d37e45f04036b064",
+      "stored_bytes": 222,
+      "stored_sha256": "30dfcc81ba5357277b9809a335b672e3bf319cfa4bf74cb6d37e45f04036b064"
+    },
+    "Darwin/fixtures/efs-beats-extra.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 188,
+      "source_sha256": "ff53368f53eed4438733318f72b2a9cc5cc904edc430f542755e8e43fd4e349a",
+      "stored_bytes": 188,
+      "stored_sha256": "ff53368f53eed4438733318f72b2a9cc5cc904edc430f542755e8e43fd4e349a"
+    },
+    "Darwin/fixtures/efs-invalid-utf8.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 124,
+      "source_sha256": "9c5433b768604700c7cd53c0e145de14e1f93e529dbe7cd7a5688a9d9ede449e",
+      "stored_bytes": 124,
+      "stored_sha256": "9c5433b768604700c7cd53c0e145de14e1f93e529dbe7cd7a5688a9d9ede449e"
+    },
+    "Darwin/fixtures/efs-surrogate.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 128,
+      "source_sha256": "fcbf3778b29b878df64e8f7ce814aef6f04efc2f551579d73ed76ac045f45693",
+      "stored_bytes": 128,
+      "stored_sha256": "fcbf3778b29b878df64e8f7ce814aef6f04efc2f551579d73ed76ac045f45693"
+    },
+    "Darwin/fixtures/invalid-byte.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 128,
+      "source_sha256": "9364b79c0a62a7ed4554dcb945260650b50b6a951dc7cd8574e923f4a320ade1",
+      "stored_bytes": 128,
+      "stored_sha256": "9364b79c0a62a7ed4554dcb945260650b50b6a951dc7cd8574e923f4a320ade1"
+    },
+    "Darwin/fixtures/long-component.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 634,
+      "source_sha256": "c90680ed6a00859fafd0bc08b4c0b2c6e41262f5f698c25a1909739560865248",
+      "stored_bytes": 634,
+      "stored_sha256": "c90680ed6a00859fafd0bc08b4c0b2c6e41262f5f698c25a1909739560865248"
+    },
+    "Darwin/fixtures/long-path.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 734,
+      "source_sha256": "f0793d34c3834532eb5531dfce1403f19b38aca3031f9808102d98c0d195bfc3",
+      "stored_bytes": 734,
+      "stored_sha256": "f0793d34c3834532eb5531dfce1403f19b38aca3031f9808102d98c0d195bfc3"
+    },
+    "Darwin/fixtures/normalization-collision.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 216,
+      "source_sha256": "79864f469c842479ff9467b7b687546e716661be60299231eb35771408e347fe",
+      "stored_bytes": 216,
+      "stored_sha256": "79864f469c842479ff9467b7b687546e716661be60299231eb35771408e347fe"
+    },
+    "Darwin/fixtures/reserved.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 120,
+      "source_sha256": "262ecec46c762bd2586709f4dd6888ae174ec6aaae9046f485101b7ddc33611a",
+      "stored_bytes": 120,
+      "stored_sha256": "262ecec46c762bd2586709f4dd6888ae174ec6aaae9046f485101b7ddc33611a"
+    },
+    "Darwin/fixtures/trailing-dot-space.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 116,
+      "source_sha256": "fe2498c798bbb1c105087db94e1bcc28b5da52a8580e786a4658a4b305b81eb5",
+      "stored_bytes": 116,
+      "stored_sha256": "fe2498c798bbb1c105087db94e1bcc28b5da52a8580e786a4658a4b305b81eb5"
+    },
+    "Darwin/fixtures/unc-syntax.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 172,
+      "source_sha256": "e4e10365bd59250c2bf5510d0287fd1d0a72cdc171ff556c6848d8bda15226af",
+      "stored_bytes": 172,
+      "stored_sha256": "e4e10365bd59250c2bf5510d0287fd1d0a72cdc171ff556c6848d8bda15226af"
+    },
+    "Darwin/fixtures/unicode-bad-crc.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 184,
+      "source_sha256": "078061a39fbd164b407120250ca5d84a49ced4d99850a6b8e6e29d8251af3ab4",
+      "stored_bytes": 184,
+      "stored_sha256": "078061a39fbd164b407120250ca5d84a49ced4d99850a6b8e6e29d8251af3ab4"
+    },
+    "Darwin/fixtures/unicode-bad-version.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 184,
+      "source_sha256": "3f3c9fc605092f2323db27df3fb25cc796ef15000deb64477bbb11dca2997a86",
+      "stored_bytes": 184,
+      "stored_sha256": "3f3c9fc605092f2323db27df3fb25cc796ef15000deb64477bbb11dca2997a86"
+    },
+    "Darwin/fixtures/unicode-invalid-utf8.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 162,
+      "source_sha256": "c928159fa0332e307060bbc481106987edd7fb248a287d5b6f6f7507edad982e",
+      "stored_bytes": 162,
+      "stored_sha256": "c928159fa0332e307060bbc481106987edd7fb248a287d5b6f6f7507edad982e"
+    },
+    "Darwin/fixtures/unicode-valid.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 184,
+      "source_sha256": "5efeac997d1cbc97a214c0bce432510ac6e850c3cafc1d359386f6668ea1aa4f",
+      "stored_bytes": 184,
+      "stored_sha256": "5efeac997d1cbc97a214c0bce432510ac6e850c3cafc1d359386f6668ea1aa4f"
+    },
+    "Darwin/fixtures/utf-8-tar.tar": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 2048,
+      "source_sha256": "ec85fabd313945e9548a2fceeb0b710d8ce03e23cada0e870f4f9930ed575561",
+      "stored_bytes": 2048,
+      "stored_sha256": "ec85fabd313945e9548a2fceeb0b710d8ce03e23cada0e870f4f9930ed575561"
+    },
+    "Darwin/fixtures/utf-8-zip.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 146,
+      "source_sha256": "2cd1e5108f146aeee9f5b002d03f4e837ed2e9891f0e04334e446961c9aa1d58",
+      "stored_bytes": 146,
+      "stored_sha256": "2cd1e5108f146aeee9f5b002d03f4e837ed2e9891f0e04334e446961c9aa1d58"
+    },
+    "Darwin/plain-build.log.gz": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 105396,
+      "source_sha256": "6a901f9540f16a3900537c9ddff1fc1230ee7710d022b7695f087d43e2e81d2d",
+      "stored_bytes": 5076,
+      "stored_sha256": "2e4a8281c59c8874e298bb59f81d6ff787bbdcb9cada343d47164c2a05882b6b"
+    },
+    "Darwin/probe-build.log.gz": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 105396,
+      "source_sha256": "71507630fbcddcc375b17c551983d39b526c9b66ccf2f900ebf3440d9bf2f14a",
+      "stored_bytes": 5076,
+      "stored_sha256": "b5a43ba0f401ff1bead8c962126e2f40b1f5db123c17e816d230f1b152d7a8f0"
+    },
+    "Darwin/repeat.json.gz": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 1775289,
+      "source_sha256": "825a71d46930d23801ad1dfd9f1ec09a67b9d15b9d2d849409e2d6407f4f6732",
+      "stored_bytes": 95391,
+      "stored_sha256": "869d28cc8fed6cbb5c81b958a6a814df66bd60fd66ccee0cd5f9386ea99f1950"
+    },
+    "Linux/build.json.gz": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 136611,
+      "source_sha256": "335c3d9eca8403280213999debec9ca6a88ecf379b116f30e577170f9ea660d4",
+      "stored_bytes": 56501,
+      "stored_sha256": "e965cae62997a298f507a42bdcbc8236d852794c1cfe3fdadc48efbcddcc165e"
+    },
+    "Linux/capture.json.gz": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 1764244,
+      "source_sha256": "9b5cd7432040dbf3b4efacb36101c1e442d30cd8ee70f84869110b63952811f6",
+      "stored_bytes": 95512,
+      "stored_sha256": "62f85e4bbcae15996c9061fdb4490f020e1936192a21f8585db435000ba2dc2c"
+    },
+    "Linux/fixtures/byte-escape-collision.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 222,
+      "source_sha256": "3d72bb93a8602a651911a1a9506d0fe4da3bee26222a1fc0b52ff900c44b1de1",
+      "stored_bytes": 222,
+      "stored_sha256": "3d72bb93a8602a651911a1a9506d0fe4da3bee26222a1fc0b52ff900c44b1de1"
+    },
+    "Linux/fixtures/case-collision.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 222,
+      "source_sha256": "a05643efbc5cc67fcf5be01bceef272c6460b85fd65106953e04da7a18a0fd49",
+      "stored_bytes": 222,
+      "stored_sha256": "a05643efbc5cc67fcf5be01bceef272c6460b85fd65106953e04da7a18a0fd49"
+    },
+    "Linux/fixtures/cp932-tar.tar": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 2048,
+      "source_sha256": "25659eb77788abf9cc21af299197638fd239fdc76ac5ed4bad3e741c2df8a809",
+      "stored_bytes": 2048,
+      "stored_sha256": "25659eb77788abf9cc21af299197638fd239fdc76ac5ed4bad3e741c2df8a809"
+    },
+    "Linux/fixtures/cp932-zip.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 126,
+      "source_sha256": "c2d8e56e72a8af500c569fb1e6a270aa082ef2357974185493d231cd4345be5c",
+      "stored_bytes": 126,
+      "stored_sha256": "c2d8e56e72a8af500c569fb1e6a270aa082ef2357974185493d231cd4345be5c"
+    },
+    "Linux/fixtures/cp936-tar.tar": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 2048,
+      "source_sha256": "31fb34d2227805951a672bc94ac4891697f92377b4f4774ae3ec86ffc4dac73b",
+      "stored_bytes": 2048,
+      "stored_sha256": "31fb34d2227805951a672bc94ac4891697f92377b4f4774ae3ec86ffc4dac73b"
+    },
+    "Linux/fixtures/cp936-zip.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 122,
+      "source_sha256": "a6a43f4bcecf1784d23b6d81e5008a365dde02ced3b621859ca1ba674ca4266e",
+      "stored_bytes": 122,
+      "stored_sha256": "a6a43f4bcecf1784d23b6d81e5008a365dde02ced3b621859ca1ba674ca4266e"
+    },
+    "Linux/fixtures/duplicate-name.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 222,
+      "source_sha256": "30dfcc81ba5357277b9809a335b672e3bf319cfa4bf74cb6d37e45f04036b064",
+      "stored_bytes": 222,
+      "stored_sha256": "30dfcc81ba5357277b9809a335b672e3bf319cfa4bf74cb6d37e45f04036b064"
+    },
+    "Linux/fixtures/efs-beats-extra.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 188,
+      "source_sha256": "ff53368f53eed4438733318f72b2a9cc5cc904edc430f542755e8e43fd4e349a",
+      "stored_bytes": 188,
+      "stored_sha256": "ff53368f53eed4438733318f72b2a9cc5cc904edc430f542755e8e43fd4e349a"
+    },
+    "Linux/fixtures/efs-invalid-utf8.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 124,
+      "source_sha256": "9c5433b768604700c7cd53c0e145de14e1f93e529dbe7cd7a5688a9d9ede449e",
+      "stored_bytes": 124,
+      "stored_sha256": "9c5433b768604700c7cd53c0e145de14e1f93e529dbe7cd7a5688a9d9ede449e"
+    },
+    "Linux/fixtures/efs-surrogate.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 128,
+      "source_sha256": "fcbf3778b29b878df64e8f7ce814aef6f04efc2f551579d73ed76ac045f45693",
+      "stored_bytes": 128,
+      "stored_sha256": "fcbf3778b29b878df64e8f7ce814aef6f04efc2f551579d73ed76ac045f45693"
+    },
+    "Linux/fixtures/invalid-byte.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 128,
+      "source_sha256": "9364b79c0a62a7ed4554dcb945260650b50b6a951dc7cd8574e923f4a320ade1",
+      "stored_bytes": 128,
+      "stored_sha256": "9364b79c0a62a7ed4554dcb945260650b50b6a951dc7cd8574e923f4a320ade1"
+    },
+    "Linux/fixtures/long-component.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 634,
+      "source_sha256": "c90680ed6a00859fafd0bc08b4c0b2c6e41262f5f698c25a1909739560865248",
+      "stored_bytes": 634,
+      "stored_sha256": "c90680ed6a00859fafd0bc08b4c0b2c6e41262f5f698c25a1909739560865248"
+    },
+    "Linux/fixtures/long-path.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 734,
+      "source_sha256": "f0793d34c3834532eb5531dfce1403f19b38aca3031f9808102d98c0d195bfc3",
+      "stored_bytes": 734,
+      "stored_sha256": "f0793d34c3834532eb5531dfce1403f19b38aca3031f9808102d98c0d195bfc3"
+    },
+    "Linux/fixtures/normalization-collision.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 216,
+      "source_sha256": "79864f469c842479ff9467b7b687546e716661be60299231eb35771408e347fe",
+      "stored_bytes": 216,
+      "stored_sha256": "79864f469c842479ff9467b7b687546e716661be60299231eb35771408e347fe"
+    },
+    "Linux/fixtures/reserved.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 120,
+      "source_sha256": "262ecec46c762bd2586709f4dd6888ae174ec6aaae9046f485101b7ddc33611a",
+      "stored_bytes": 120,
+      "stored_sha256": "262ecec46c762bd2586709f4dd6888ae174ec6aaae9046f485101b7ddc33611a"
+    },
+    "Linux/fixtures/trailing-dot-space.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 116,
+      "source_sha256": "fe2498c798bbb1c105087db94e1bcc28b5da52a8580e786a4658a4b305b81eb5",
+      "stored_bytes": 116,
+      "stored_sha256": "fe2498c798bbb1c105087db94e1bcc28b5da52a8580e786a4658a4b305b81eb5"
+    },
+    "Linux/fixtures/unc-syntax.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 172,
+      "source_sha256": "e4e10365bd59250c2bf5510d0287fd1d0a72cdc171ff556c6848d8bda15226af",
+      "stored_bytes": 172,
+      "stored_sha256": "e4e10365bd59250c2bf5510d0287fd1d0a72cdc171ff556c6848d8bda15226af"
+    },
+    "Linux/fixtures/unicode-bad-crc.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 184,
+      "source_sha256": "078061a39fbd164b407120250ca5d84a49ced4d99850a6b8e6e29d8251af3ab4",
+      "stored_bytes": 184,
+      "stored_sha256": "078061a39fbd164b407120250ca5d84a49ced4d99850a6b8e6e29d8251af3ab4"
+    },
+    "Linux/fixtures/unicode-bad-version.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 184,
+      "source_sha256": "3f3c9fc605092f2323db27df3fb25cc796ef15000deb64477bbb11dca2997a86",
+      "stored_bytes": 184,
+      "stored_sha256": "3f3c9fc605092f2323db27df3fb25cc796ef15000deb64477bbb11dca2997a86"
+    },
+    "Linux/fixtures/unicode-invalid-utf8.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 162,
+      "source_sha256": "c928159fa0332e307060bbc481106987edd7fb248a287d5b6f6f7507edad982e",
+      "stored_bytes": 162,
+      "stored_sha256": "c928159fa0332e307060bbc481106987edd7fb248a287d5b6f6f7507edad982e"
+    },
+    "Linux/fixtures/unicode-valid.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 184,
+      "source_sha256": "5efeac997d1cbc97a214c0bce432510ac6e850c3cafc1d359386f6668ea1aa4f",
+      "stored_bytes": 184,
+      "stored_sha256": "5efeac997d1cbc97a214c0bce432510ac6e850c3cafc1d359386f6668ea1aa4f"
+    },
+    "Linux/fixtures/utf-8-tar.tar": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 2048,
+      "source_sha256": "ec85fabd313945e9548a2fceeb0b710d8ce03e23cada0e870f4f9930ed575561",
+      "stored_bytes": 2048,
+      "stored_sha256": "ec85fabd313945e9548a2fceeb0b710d8ce03e23cada0e870f4f9930ed575561"
+    },
+    "Linux/fixtures/utf-8-zip.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 146,
+      "source_sha256": "2cd1e5108f146aeee9f5b002d03f4e837ed2e9891f0e04334e446961c9aa1d58",
+      "stored_bytes": 146,
+      "stored_sha256": "2cd1e5108f146aeee9f5b002d03f4e837ed2e9891f0e04334e446961c9aa1d58"
+    },
+    "Linux/plain-build.log.gz": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 220032,
+      "source_sha256": "1a3c9dfad933b30c50eea1898339cd984f13724c5b690bc48002b433aea57cd4",
+      "stored_bytes": 6477,
+      "stored_sha256": "0c92e7f684f0e4c46e592c9ad2ac7b2eb99c8770623fb64370ea99466dab3e92"
+    },
+    "Linux/probe-build.log.gz": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 220032,
+      "source_sha256": "52c0e97183a67563c42d174d34420b28ab77953fb004f9a869c5a2587a34a1f9",
+      "stored_bytes": 6478,
+      "stored_sha256": "3c03f959fa384c4c1f6c3ef49ba220ff5a22281c8aae2dd0a0085dba34c77bd8"
+    },
+    "Linux/repeat.json.gz": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 1764244,
+      "source_sha256": "9b5cd7432040dbf3b4efacb36101c1e442d30cd8ee70f84869110b63952811f6",
+      "stored_bytes": 95512,
+      "stored_sha256": "62f85e4bbcae15996c9061fdb4490f020e1936192a21f8585db435000ba2dc2c"
+    },
+    "Windows/build.json.gz": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 137854,
+      "source_sha256": "6f5c5f826adc823a264b584931cefaa550fe2612fdd852bf4e53633b8b236dd0",
+      "stored_bytes": 56538,
+      "stored_sha256": "b2a19f14725a41237ae4da784f60e2601f5c5dfa616d3aa3834c106f3294178e"
+    },
+    "Windows/capture.json.gz": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 1798837,
+      "source_sha256": "72fb19013c7deda9eec091d50bb4ad86a81680281466587b382188869966e0b8",
+      "stored_bytes": 98632,
+      "stored_sha256": "e7019adf5b9ea8f621b110671c49ee76484480f25fc44c9edf9ce422b0d10790"
+    },
+    "Windows/fixtures/byte-escape-collision.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 222,
+      "source_sha256": "3d72bb93a8602a651911a1a9506d0fe4da3bee26222a1fc0b52ff900c44b1de1",
+      "stored_bytes": 222,
+      "stored_sha256": "3d72bb93a8602a651911a1a9506d0fe4da3bee26222a1fc0b52ff900c44b1de1"
+    },
+    "Windows/fixtures/case-collision.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 222,
+      "source_sha256": "a05643efbc5cc67fcf5be01bceef272c6460b85fd65106953e04da7a18a0fd49",
+      "stored_bytes": 222,
+      "stored_sha256": "a05643efbc5cc67fcf5be01bceef272c6460b85fd65106953e04da7a18a0fd49"
+    },
+    "Windows/fixtures/cp932-tar.tar": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 2048,
+      "source_sha256": "25659eb77788abf9cc21af299197638fd239fdc76ac5ed4bad3e741c2df8a809",
+      "stored_bytes": 2048,
+      "stored_sha256": "25659eb77788abf9cc21af299197638fd239fdc76ac5ed4bad3e741c2df8a809"
+    },
+    "Windows/fixtures/cp932-zip.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 126,
+      "source_sha256": "c2d8e56e72a8af500c569fb1e6a270aa082ef2357974185493d231cd4345be5c",
+      "stored_bytes": 126,
+      "stored_sha256": "c2d8e56e72a8af500c569fb1e6a270aa082ef2357974185493d231cd4345be5c"
+    },
+    "Windows/fixtures/cp936-tar.tar": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 2048,
+      "source_sha256": "31fb34d2227805951a672bc94ac4891697f92377b4f4774ae3ec86ffc4dac73b",
+      "stored_bytes": 2048,
+      "stored_sha256": "31fb34d2227805951a672bc94ac4891697f92377b4f4774ae3ec86ffc4dac73b"
+    },
+    "Windows/fixtures/cp936-zip.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 122,
+      "source_sha256": "a6a43f4bcecf1784d23b6d81e5008a365dde02ced3b621859ca1ba674ca4266e",
+      "stored_bytes": 122,
+      "stored_sha256": "a6a43f4bcecf1784d23b6d81e5008a365dde02ced3b621859ca1ba674ca4266e"
+    },
+    "Windows/fixtures/duplicate-name.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 222,
+      "source_sha256": "30dfcc81ba5357277b9809a335b672e3bf319cfa4bf74cb6d37e45f04036b064",
+      "stored_bytes": 222,
+      "stored_sha256": "30dfcc81ba5357277b9809a335b672e3bf319cfa4bf74cb6d37e45f04036b064"
+    },
+    "Windows/fixtures/efs-beats-extra.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 188,
+      "source_sha256": "ff53368f53eed4438733318f72b2a9cc5cc904edc430f542755e8e43fd4e349a",
+      "stored_bytes": 188,
+      "stored_sha256": "ff53368f53eed4438733318f72b2a9cc5cc904edc430f542755e8e43fd4e349a"
+    },
+    "Windows/fixtures/efs-invalid-utf8.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 124,
+      "source_sha256": "9c5433b768604700c7cd53c0e145de14e1f93e529dbe7cd7a5688a9d9ede449e",
+      "stored_bytes": 124,
+      "stored_sha256": "9c5433b768604700c7cd53c0e145de14e1f93e529dbe7cd7a5688a9d9ede449e"
+    },
+    "Windows/fixtures/efs-surrogate.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 128,
+      "source_sha256": "fcbf3778b29b878df64e8f7ce814aef6f04efc2f551579d73ed76ac045f45693",
+      "stored_bytes": 128,
+      "stored_sha256": "fcbf3778b29b878df64e8f7ce814aef6f04efc2f551579d73ed76ac045f45693"
+    },
+    "Windows/fixtures/invalid-byte.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 128,
+      "source_sha256": "9364b79c0a62a7ed4554dcb945260650b50b6a951dc7cd8574e923f4a320ade1",
+      "stored_bytes": 128,
+      "stored_sha256": "9364b79c0a62a7ed4554dcb945260650b50b6a951dc7cd8574e923f4a320ade1"
+    },
+    "Windows/fixtures/long-component.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 634,
+      "source_sha256": "c90680ed6a00859fafd0bc08b4c0b2c6e41262f5f698c25a1909739560865248",
+      "stored_bytes": 634,
+      "stored_sha256": "c90680ed6a00859fafd0bc08b4c0b2c6e41262f5f698c25a1909739560865248"
+    },
+    "Windows/fixtures/long-path.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 734,
+      "source_sha256": "f0793d34c3834532eb5531dfce1403f19b38aca3031f9808102d98c0d195bfc3",
+      "stored_bytes": 734,
+      "stored_sha256": "f0793d34c3834532eb5531dfce1403f19b38aca3031f9808102d98c0d195bfc3"
+    },
+    "Windows/fixtures/normalization-collision.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 216,
+      "source_sha256": "79864f469c842479ff9467b7b687546e716661be60299231eb35771408e347fe",
+      "stored_bytes": 216,
+      "stored_sha256": "79864f469c842479ff9467b7b687546e716661be60299231eb35771408e347fe"
+    },
+    "Windows/fixtures/reserved.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 120,
+      "source_sha256": "262ecec46c762bd2586709f4dd6888ae174ec6aaae9046f485101b7ddc33611a",
+      "stored_bytes": 120,
+      "stored_sha256": "262ecec46c762bd2586709f4dd6888ae174ec6aaae9046f485101b7ddc33611a"
+    },
+    "Windows/fixtures/trailing-dot-space.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 116,
+      "source_sha256": "fe2498c798bbb1c105087db94e1bcc28b5da52a8580e786a4658a4b305b81eb5",
+      "stored_bytes": 116,
+      "stored_sha256": "fe2498c798bbb1c105087db94e1bcc28b5da52a8580e786a4658a4b305b81eb5"
+    },
+    "Windows/fixtures/unc-syntax.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 172,
+      "source_sha256": "e4e10365bd59250c2bf5510d0287fd1d0a72cdc171ff556c6848d8bda15226af",
+      "stored_bytes": 172,
+      "stored_sha256": "e4e10365bd59250c2bf5510d0287fd1d0a72cdc171ff556c6848d8bda15226af"
+    },
+    "Windows/fixtures/unicode-bad-crc.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 184,
+      "source_sha256": "078061a39fbd164b407120250ca5d84a49ced4d99850a6b8e6e29d8251af3ab4",
+      "stored_bytes": 184,
+      "stored_sha256": "078061a39fbd164b407120250ca5d84a49ced4d99850a6b8e6e29d8251af3ab4"
+    },
+    "Windows/fixtures/unicode-bad-version.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 184,
+      "source_sha256": "3f3c9fc605092f2323db27df3fb25cc796ef15000deb64477bbb11dca2997a86",
+      "stored_bytes": 184,
+      "stored_sha256": "3f3c9fc605092f2323db27df3fb25cc796ef15000deb64477bbb11dca2997a86"
+    },
+    "Windows/fixtures/unicode-invalid-utf8.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 162,
+      "source_sha256": "c928159fa0332e307060bbc481106987edd7fb248a287d5b6f6f7507edad982e",
+      "stored_bytes": 162,
+      "stored_sha256": "c928159fa0332e307060bbc481106987edd7fb248a287d5b6f6f7507edad982e"
+    },
+    "Windows/fixtures/unicode-valid.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 184,
+      "source_sha256": "5efeac997d1cbc97a214c0bce432510ac6e850c3cafc1d359386f6668ea1aa4f",
+      "stored_bytes": 184,
+      "stored_sha256": "5efeac997d1cbc97a214c0bce432510ac6e850c3cafc1d359386f6668ea1aa4f"
+    },
+    "Windows/fixtures/utf-8-tar.tar": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 2048,
+      "source_sha256": "ec85fabd313945e9548a2fceeb0b710d8ce03e23cada0e870f4f9930ed575561",
+      "stored_bytes": 2048,
+      "stored_sha256": "ec85fabd313945e9548a2fceeb0b710d8ce03e23cada0e870f4f9930ed575561"
+    },
+    "Windows/fixtures/utf-8-zip.zip": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 146,
+      "source_sha256": "2cd1e5108f146aeee9f5b002d03f4e837ed2e9891f0e04334e446961c9aa1d58",
+      "stored_bytes": 146,
+      "stored_sha256": "2cd1e5108f146aeee9f5b002d03f4e837ed2e9891f0e04334e446961c9aa1d58"
+    },
+    "Windows/plain-build.log.gz": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 33770,
+      "source_sha256": "0c1a8faa134e5553cc49492914bd827e902b9fcf5a987f14a38893ce755f4cdd",
+      "stored_bytes": 4995,
+      "stored_sha256": "4302b2f5762522e042b22c120d414600c2fdde2b87abde7f119c4a75d1d18b01"
+    },
+    "Windows/probe-build.log.gz": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 33770,
+      "source_sha256": "0e999e578ee74f01f7e29d94c9fa2e6a2898a47adce33a84f478be1467c5f105",
+      "stored_bytes": 4996,
+      "stored_sha256": "b8b35db779a747312b47036fe3b2c2d06c4eb3814e9f3bcc8cc8fb88c2117348"
+    },
+    "Windows/repeat.json.gz": {
+      "run_attempt": "1",
+      "run_id": "34559743445",
+      "source_bytes": 1798837,
+      "source_sha256": "72fb19013c7deda9eec091d50bb4ad86a81680281466587b382188869966e0b8",
+      "stored_bytes": 98632,
+      "stored_sha256": "e7019adf5b9ea8f621b110671c49ee76484480f25fc44c9edf9ce422b0d10790"
+    }
+  },
+  "head": "88aed303858dac5565fa1dbf6e9cab50929e009f"
+}
